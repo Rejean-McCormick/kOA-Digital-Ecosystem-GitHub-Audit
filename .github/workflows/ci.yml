@@ -1,0 +1,21 @@
+name: Audit tool CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Unit tests (offline, no GitHub token)
+        run: python -m unittest discover -s tests -v
+      - name: Check Python syntax
+        run: python -m compileall -q koa_audit
+      - name: Validate bundled inventory
+        run: python -m koa_audit plan --inventory-source bundled > /dev/null

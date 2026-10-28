@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.legacy/
+reports/
+*.egg-info/
+dist/
+build/
+.env
+.env.*
+!.env.example
+
+# Local Windows helper scripts (including numbered copies)
+ZmartZnap*.pyw
+GitSink*.bat

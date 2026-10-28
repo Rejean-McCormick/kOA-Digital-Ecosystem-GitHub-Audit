@@ -1,0 +1,49 @@
+name: kOA ecosystem GitHub observation
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '27 8 * * 1'   # Weekly, Monday 08:27 UTC. GitHub scheduling is best effort.
+permissions:
+  contents: read
+concurrency:
+  group: koa-github-observe
+  cancel-in-progress: false
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Checkout central audit repository
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Mint short-lived GitHub App token (preferred)
+        id: app
+        if: ${{ vars.KOA_AUDIT_APP_ID != '' }}
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.KOA_AUDIT_APP_ID }}
+          private-key: ${{ secrets.KOA_AUDIT_APP_PRIVATE_KEY }}
+          owner: Rejean-McCormick
+      - name: Audit all repositories without mutation
+        env:
+          KOA_AUDIT_TOKEN: ${{ steps.app.outputs.token || secrets.KOA_AUDIT_READ_TOKEN }}
+        run: |
+          python -m koa_audit audit \
+            --inventory-source github \
+            --source-repo Rejean-McCormick/kOA-Digital-Ecosystem \
+            --workers 3 \
+            --max-age-days 30 \
+            --discover-public-owner \
+            --require-auth \
+            --out reports
+      - name: Upload sanitized reports as private workflow artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: koa-github-observation
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 14

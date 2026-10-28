@@ -1,0 +1,12 @@
+{
+  "catalog_version": "1.0",
+  "historical_only": true,
+  "sources": [
+    {"tool": "KonnaxionDiag", "schema": "konnaxiondiag.campaign-summary.v4", "summary_pattern": "**/summary.json", "target_hint": "Konnaxion; confirm actual run subject"},
+    {"tool": "KorDiag", "schema": "kordiag.summary.v1", "summary_pattern": ".kordiag/**/summary.json", "target_hint": "Kor (not currently listed in the 49-repository inventory)"},
+    {"tool": "KristalDiag", "schema": "kristaldiag.summary.v1", "summary_pattern": "**/summary.json", "target_hint": "Choose exact Kristal target; not necessarily KristalDiag"},
+    {"tool": "LevelUpDiag-Orgo", "schema": "levelupdiag.campaign-summary.v2", "summary_pattern": "verification/**/summary.json", "target_hint": "Orgo"},
+    {"tool": "LevelUpDiag-SemantiK", "schema": "levelupdiag.campaign-summary.v2", "summary_pattern": ".levelupdiag/**/summary.json", "target_hint": "SemantiK-Architect"},
+    {"tool": "LevelUpDiag-Skope", "schema": "levelupdiag.campaign-summary.v2", "summary_pattern": ".levelupdiag/**/summary.json", "target_hint": "Skope"}
+  ]
+}

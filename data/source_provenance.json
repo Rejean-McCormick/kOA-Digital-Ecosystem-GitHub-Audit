@@ -1,0 +1,9 @@
+{
+  "source_repository": "Rejean-McCormick/kOA-Digital-Ecosystem",
+  "source_path": "docs/inventory/repositories.json",
+  "supplied_snapshot": "znapshot_kOA_Digital_Ecosystem_10281027.zip",
+  "snapshot_date": "2026-10-28",
+  "inventory_sha256": "0fff4ea743dc4f25f9069c1b3094b904eab9929f51f0e761e7390ff3ae4aa546",
+  "inventory_count": 49,
+  "verification": "snapshot_only_not_live"
+}

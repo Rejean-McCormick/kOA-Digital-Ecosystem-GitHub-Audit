@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "kOA GitHub Audit read-only observation",
+  "type": "object",
+  "required": [
+    "format",
+    "generated_at",
+    "mode",
+    "mutations_performed",
+    "inventory",
+    "summary",
+    "repositories",
+    "historical_legacy"
+  ],
+  "properties": {
+    "format": {
+      "const": "koa_audit.observation.v1"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "const": "OBSERVE"
+    },
+    "mutations_performed": {
+      "const": false
+    },
+    "inventory": {
+      "type": "object",
+      "required": [
+        "kind",
+        "sha256",
+        "git_commit"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "bundled_snapshot",
+            "github_repository"
+          ]
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "git_commit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "type": "object"
+    },
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "repository",
+          "checked_at",
+          "access"
+        ],
+        "properties": {
+          "repository": {
+            "type": "string"
+          },
+          "access": {
+            "enum": [
+              "observed",
+              "unknown"
+            ]
+          }
+        }
+      }
+    },
+    "historical_legacy": {
+      "type": "array",
+      "items": {
+        "$ref": "./legacy-record.schema.json"
+      }
+    }
+  },
+  "additionalProperties": true
+}

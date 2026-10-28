@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Historical diagnostic metadata (not independently verified)",
+  "type": "object",
+  "required": [
+    "format",
+    "source_kind",
+    "tool",
+    "repository",
+    "source_schema",
+    "verdict",
+    "levels",
+    "source_sha256",
+    "evidence_independently_verified",
+    "current_security_conclusion",
+    "authority"
+  ],
+  "properties": {
+    "format": {
+      "const": "koa_audit.legacy_record.v1"
+    },
+    "source_kind": {
+      "const": "historical_legacy"
+    },
+    "tool": {
+      "enum": [
+        "KonnaxionDiag",
+        "KorDiag",
+        "KristalDiag",
+        "LevelUpDiag-Orgo",
+        "LevelUpDiag-SemantiK",
+        "LevelUpDiag-Skope"
+      ]
+    },
+    "repository": {
+      "type": "string"
+    },
+    "source_schema": {
+      "type": "string"
+    },
+    "verdict": {
+      "enum": [
+        "PASS",
+        "WARN",
+        "FAIL",
+        "SKIP",
+        "BLOCKED",
+        "PARTIAL",
+        "ERROR",
+        "INFRA_ERROR",
+        "CONFIG_ERROR"
+      ]
+    },
+    "levels": {
+      "type": "array"
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "evidence_independently_verified": {
+      "const": false
+    },
+    "current_security_conclusion": {
+      "const": "NOT_ASSESSED"
+    },
+    "authority": {
+      "const": "non_authoritative_observation"
+    }
+  },
+  "additionalProperties": true
+}

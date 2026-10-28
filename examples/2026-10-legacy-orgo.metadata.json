@@ -1,0 +1,53 @@
+{
+  "format": "koa_audit.legacy_record.v1",
+  "source_kind": "historical_legacy",
+  "tool": "LevelUpDiag-Orgo",
+  "repository": "Rejean-McCormick/Orgo",
+  "source_schema": "levelupdiag.campaign-summary.v2",
+  "run_id": "20260909T173406Z-3fc0ab1b",
+  "campaign": "embedded",
+  "verdict": "WARN",
+  "levels": [
+    {
+      "id": "N00",
+      "verdict": "PASS",
+      "findings_count": null
+    },
+    {
+      "id": "N01",
+      "verdict": "WARN",
+      "findings_count": null
+    },
+    {
+      "id": "N07",
+      "verdict": "PASS",
+      "findings_count": null
+    },
+    {
+      "id": "N08",
+      "verdict": "PASS",
+      "findings_count": null
+    },
+    {
+      "id": "N09",
+      "verdict": "PASS",
+      "findings_count": null
+    },
+    {
+      "id": "N10",
+      "verdict": "WARN",
+      "findings_count": null
+    }
+  ],
+  "reported_finished_at": "2026-09-09T17:34:21+00:00",
+  "subject_commit_declared": null,
+  "subject_digest_declared": null,
+  "evidence_digest_declared": null,
+  "evidence_integrity_section_present": false,
+  "evidence_independently_verified": false,
+  "source_sha256": "4f99deffde229f242b58bd5d1694850465abe6b01b0877bdb0d7877ab175e966",
+  "source_label": "summary.json",
+  "ingested_at": "2026-10-28T14:43:52+00:00",
+  "current_security_conclusion": "NOT_ASSESSED",
+  "authority": "non_authoritative_observation"
+}

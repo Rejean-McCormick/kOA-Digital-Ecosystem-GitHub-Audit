@@ -1,0 +1,73 @@
+{
+  "format": "koa_audit.legacy_record.v1",
+  "source_kind": "historical_legacy",
+  "tool": "KorDiag",
+  "repository": "Rejean-McCormick/Kor",
+  "source_schema": "kordiag.summary.v1",
+  "run_id": "20261003T194949Z-7861f1ed",
+  "campaign": "standard",
+  "verdict": "FAIL",
+  "levels": [
+    {
+      "id": "K00",
+      "verdict": "PASS",
+      "findings_count": 3
+    },
+    {
+      "id": "K01",
+      "verdict": "WARN",
+      "findings_count": 5
+    },
+    {
+      "id": "K02",
+      "verdict": "PASS",
+      "findings_count": 3
+    },
+    {
+      "id": "K03",
+      "verdict": "INFRA_ERROR",
+      "findings_count": 5
+    },
+    {
+      "id": "K04",
+      "verdict": "INFRA_ERROR",
+      "findings_count": 3
+    },
+    {
+      "id": "K05",
+      "verdict": "INFRA_ERROR",
+      "findings_count": 4
+    },
+    {
+      "id": "K06",
+      "verdict": "PASS",
+      "findings_count": 4
+    },
+    {
+      "id": "K07",
+      "verdict": "BLOCKED",
+      "findings_count": 1
+    },
+    {
+      "id": "K08",
+      "verdict": "PASS",
+      "findings_count": 3
+    },
+    {
+      "id": "K09",
+      "verdict": "BLOCKED",
+      "findings_count": 1
+    }
+  ],
+  "reported_finished_at": "2026-10-03T19:49:58.368036+00:00",
+  "subject_commit_declared": null,
+  "subject_digest_declared": "86c021944d1efb77018190b8e1da8825ad17443326311d7f0a7ca86407414422",
+  "evidence_digest_declared": "1ddf7f6c972247783a7f599dd079dbf8084dc25f4f5104c3002c5ec0f9e6d2da",
+  "evidence_integrity_section_present": false,
+  "evidence_independently_verified": false,
+  "source_sha256": "c2e15c1ba1d7666ed1592dc687ec1415019353c66bd488ab66fad44cff03c858",
+  "source_label": "summary.json",
+  "ingested_at": "2026-10-28T14:43:52+00:00",
+  "current_security_conclusion": "NOT_ASSESSED",
+  "authority": "non_authoritative_observation"
+}
