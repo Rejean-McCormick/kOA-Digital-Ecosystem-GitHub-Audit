@@ -53,7 +53,7 @@ class LocalTriageTest(unittest.TestCase):
         data = build_triage(self.root, self.audit)
         self.assertEqual(data["counts"]["repositories_rechecked"], 1)
         findings = data["repository_checks"][0]["finding_reviews"]
-        self.assertEqual(findings[0]["recheck"], "PATTERN_STILL_PRESENT")
+        self.assertEqual(findings[0]["recheck"], "TLS_BYPASS_API_STILL_PRESENT")
         self.assertEqual(findings[1]["recheck"], "REFERENCE_REQUIRES_REVIEW")
         self.assertEqual(findings[2]["git_tracked"], False)
         self.assertEqual(findings[3]["presence"], "INVALID_PATH")
@@ -69,6 +69,21 @@ class LocalTriageTest(unittest.TestCase):
             self.assertNotIn(b"DONT_COPY_STRING_123", contents)
         with self.assertRaises(FileExistsError):
             write_triage_zip(data, path)
+
+    def test_legacy_false_tls_report_is_reclassified_without_a_full_scan(self):
+        (self.repo / "capsule.py").write_text(
+            'warnings.append("capsule verification skipped by options.verify=False")\n'
+            '# remote import with verify=False\n'
+            'options = CapsuleImportOptions(verify=False)\n', encoding="utf-8")
+        self.report["repositories"][0]["findings"] = [
+            {"id": "PYTHON_SSL_VERIFY_DISABLED", "path": "capsule.py", "line": 1},
+            {"id": "PYTHON_SSL_VERIFY_DISABLED", "path": "capsule.py", "line": 2},
+            {"id": "PYTHON_SSL_VERIFY_DISABLED", "path": "capsule.py", "line": 3},
+        ]
+        self.audit.write_text(json.dumps(self.report), encoding="utf-8")
+        data = build_triage(self.root, self.audit)
+        rows = data["repository_checks"][0]["finding_reviews"]
+        self.assertEqual([r["recheck"] for r in rows], ["NOT_A_TLS_BYPASS_API"] * 3)
 
     def test_only_within_root_and_no_follow_symlinks(self):
         outside = self.root.parent / "sensitive-outside-file.txt"

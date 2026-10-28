@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .local_scan import discover_repositories, _git_info, SECRET_RE, CODE_HEURISTICS
+from .python_tls import tls_verification_disabled_lines
 
 FORMAT = "koa_audit.local_triage.v1"
 MAX_INPUT = 16 * 1024 * 1024
@@ -29,7 +30,7 @@ SAFE_LOCAL_ACTION = re.compile(r"^\./[a-zA-Z0-9_./-]+$")
 SENSITIVE_NAME = re.compile(r"(^|/)(?:\.env(?:\..*)?|[^/]+\.(?:pem|key|p12|pfx)|id_(?:rsa|ed25519|ecdsa))$", re.I)
 TEST_PATH = re.compile(r"(^|/)(?:tests?|fixtures?|examples?|docs?)(/|$)|(^|/)test_[^/]+", re.I)
 SAFE_FINDING_IDS = {name for name, *_ in [*SECRET_RE, *CODE_HEURISTICS]} | {
-    "WORKFLOW_UNPINNED_ACTION", "WORKFLOW_PULL_REQUEST_TARGET", "WORKFLOW_WRITE_ALL",
+    "PYTHON_SSL_VERIFY_DISABLED", "WORKFLOW_UNPINNED_ACTION", "WORKFLOW_PULL_REQUEST_TARGET", "WORKFLOW_WRITE_ALL",
     "WORKFLOW_REMOTE_SCRIPT", "SENSITIVE_FILENAME", "LARGE_FILE_NOT_INSPECTED", "READ_ERROR"
 }
 
@@ -103,12 +104,16 @@ def _matching_signal(file: Path, line_number: object, finding_id: str) -> str:
     try:
         if file.stat().st_size > MAX_SOURCE_BYTES:
             return "TOO_LARGE_TO_RECHECK"
-        content = file.read_text(encoding="utf-8", errors="replace").splitlines()
+        source = file.read_text(encoding="utf-8", errors="replace")
+        content = source.splitlines()
         if line_number > len(content):
             return "LINE_NO_LONGER_PRESENT"
         line = content[line_number - 1]
     except OSError:
         return "UNREADABLE"
+    if finding_id == "PYTHON_SSL_VERIFY_DISABLED":
+        return ("TLS_BYPASS_API_STILL_PRESENT" if line_number in tls_verification_disabled_lines(source)
+                else "NOT_A_TLS_BYPASS_API")
     for ident, regex in SECRET_RE:
         if ident == finding_id:
             return "PATTERN_STILL_PRESENT" if regex.search(line) else "PATTERN_NOT_AT_REPORTED_LINE"

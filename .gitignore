@@ -14,10 +14,3 @@ build/
 # Local Windows helper scripts (including numbered copies)
 ZmartZnap*.pyw
 GitSink*.bat
-
-# Offline workspace outputs / temporary local data
-*.tmp
-local_reports/
-
-# Local evidence bundles (possibly sensitive metadata)
-kOA-audit-triage-*.zip

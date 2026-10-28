@@ -16,6 +16,7 @@ from pathlib import Path
 
 from .inventory import bundled_inventory
 from .report import safe_csv
+from .python_tls import tls_verification_disabled_lines
 
 FORMAT = "koa_audit.local_observation.v1"
 EXCLUDED_DIRS = {".git", ".svn", ".hg", "node_modules", ".venv", "venv", "env", "__pycache__",
@@ -37,7 +38,6 @@ SECRET_RE = [
 ]
 CODE_HEURISTICS = [
     ("PYTHON_SHELL_TRUE", re.compile(r"\bshell\s*=\s*True\b"), "review", "Review shell=True invocation"),
-    ("PYTHON_SSL_VERIFY_DISABLED", re.compile(r"\bverify\s*=\s*False\b"), "review", "TLS verification may be disabled"),
     ("PYTHON_PICKLE_LOAD", re.compile(r"\bpickle\.(?:load|loads)\s*\("), "review", "Review deserialization of untrusted data"),
 ]
 
@@ -192,6 +192,8 @@ def scan_repository(folder: Path, *, inventory_name: str | None = None, max_file
             continue
         source_files += 1
         scanned_bytes += len(data)
+        tls_lines = (tls_verification_disabled_lines(content)
+                     if p.suffix.lower() in {".py", ".pyw"} else set())
         for num, line in enumerate(content.splitlines(), start=1):
             for code, pattern in SECRET_RE:
                 if pattern.search(line):
@@ -199,6 +201,12 @@ def scan_repository(folder: Path, *, inventory_name: str | None = None, max_file
                     if len(findings) < 100:
                         findings.append({"id": code, "severity": "high_review", "path": rel,
                                          "line": num, "message": "Potential credential material (value never recorded)"})
+            if num in tls_lines:
+                counts["PYTHON_SSL_VERIFY_DISABLED"] += 1
+                if len(findings) < 100:
+                    findings.append({"id": "PYTHON_SSL_VERIFY_DISABLED", "severity": "review",
+                                     "path": rel, "line": num,
+                                     "message": "Python HTTP/TLS API may disable certificate verification"})
             if p.suffix.lower() in {".py", ".pyw"}:
                 for code, pattern, sev, message in CODE_HEURISTICS:
                     if pattern.search(line):

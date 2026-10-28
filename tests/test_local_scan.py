@@ -83,3 +83,65 @@ class LocalAuditTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TlsRegressionTests(unittest.TestCase):
+    def test_capsule_verification_is_not_tls(self):
+        from koa_audit.python_tls import tls_verification_disabled_lines
+        code = '''
+from dataclasses import dataclass
+@dataclass
+class CapsuleImportOptions:
+    verify: bool = True
+warnings.append("capsule verification skipped by options.verify=False")
+# remote Agent should import with verify=False
+payload["verify"] = False
+options = CapsuleImportOptions(verify=False)
+request = DropletDeployRequest(verify=False, plan_only=True)
+'''
+        self.assertEqual(tls_verification_disabled_lines(code), set())
+
+    def test_http_clients_are_detected_without_line_regex_false_positives(self):
+        from koa_audit.python_tls import tls_verification_disabled_lines
+        code = '''
+import requests as rq
+import httpx as hx
+import ssl
+from requests import get as get_url
+rq.get("https://example.invalid", verify=False)
+hx.Client(verify=False)
+get_url("https://example.invalid", verify=False)
+session = rq.Session()
+session.verify = False
+# get_url("https://example.invalid", verify=False)
+message = "verify=False"
+ssl._create_unverified_context()
+'''
+        self.assertEqual(tls_verification_disabled_lines(code), {6, 7, 8, 10, 13})
+
+    def test_explicit_tls_flag_is_reported(self):
+        from koa_audit.python_tls import tls_verification_disabled_lines
+        code = """
+from kx_agent.runtime.healthchecks import run_healthchecks
+run_healthchecks("prod", scheme="https", verify_tls=False)
+options = CapsuleImportOptions(verify=False)
+"""
+        self.assertEqual(tls_verification_disabled_lines(code), {3})
+
+    def test_snapshot_tls_false_positives(self):
+        # Historical reproduction of the six misclassified snapshot lines.
+        from koa_audit.python_tls import tls_verification_disabled_lines
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp) / "repo"
+            repo.mkdir()
+            targets = {
+                "kx_agent/capsules/importer.py": 'warnings.append("capsule verification skipped by options.verify=False")\n',
+                "kx_manager/services/deploy.py": '# remote Agent to import capsule with verify=False\n',
+                "tests/test_capsule_verify.py": 'options = CapsuleImportOptions(verify=False)\n',
+            }
+            for relative, contents in targets.items():
+                path = repo / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(contents, encoding="utf-8")
+                self.assertEqual(tls_verification_disabled_lines(contents), set())
+            result = scan_repository(repo)
+            self.assertNotIn("PYTHON_SSL_VERIFY_DISABLED", result["finding_counts"])

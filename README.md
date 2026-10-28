@@ -33,6 +33,8 @@ Options: `--root` may be repeated; `--limit 5` limits inspections for a pilot; `
 - Runs **bounded heuristic pattern checks** for suspected private keys, GitHub/AWS key patterns, some risky Python calls and select GitHub Actions misconfigurations. Reports file paths, line numbers and rule names, **never secret contents**. These are leads requiring review, not definitive vulnerabilities.
 - Preserves support for importing historical KonnaxionDiag, KorDiag, KristalDiag, Orgo, Skope and SemantiK diagnostic summaries separately from current local findings. A historical `PASS` cannot turn a new scan into `PASS`.
 
+For the 2026-10-28 Konnaxion-Capsule-Manager snapshot, the six original generic `verify=False` alerts were false positives. The corrected rule also surfaced a separate genuine TLS verification bypass in runtime HTTPS healthchecks, which requires a targeted code review; **the audit app does not modify the source repository**.
+
 A clean local scan does **not** mean the code is vulnerability-free. It cannot replace a real CodeQL/Semgrep analysis, a dependency advisory database, the GitHub platform's secret-scanning engine or tests against an actual deployed environment. Unscanned, over-limit and missing content must never be treated as successful inspection.
 
 ## Report files and privacy
@@ -43,9 +45,11 @@ A clean local scan does **not** mean the code is vulnerability-free. It cannot r
 
 Source code is never copied to the report. Do not share reports publicly before checking local paths and operational information. The `.gitignore` excludes generated reports, evidence ZIPs, `.legacy/`, and the Windows helpers `ZmartZnap*.pyw` / `GitSink*.bat`.
 
-## Offline triage evidence ZIP (v0.4.0)
+## Offline triage evidence ZIP (v0.4.1)
 
 The **Vérification + ZIP** tab rechecks the previously reported finding locations without re-running target applications. It uses the current local Git index to determine whether flagged files are tracked, identifies duplicate Git remote mappings, records GitHub Actions `uses:` references and SHA pinning, and inventories Git-tracked source files above the original 256 KiB scan limit. All checks are offline and read-only.
+
+**v0.4.1 correction (TLS false positives):** A bare `verify=False` is **not** evidence of disabled HTTPS certificate verification. The local scanner now uses AST syntax inspection to identify direct HTTP client calls with `verify=False`, explicit `verify_tls=False`/similar flags, and `ssl._create_unverified_context()`; it ignores capsule verification options, comments, and strings. Historical `PYTHON_SSL_VERIFY_DISABLED` findings are requalified by the **Vérification + ZIP** flow as `NOT_A_TLS_BYPASS_API` or `TLS_BYPASS_API_STILL_PRESENT` without requiring another full audit. This remains a limited heuristic, not full security dataflow analysis.
 
 The ZIP includes `TRIAGE.json`, a human-readable `SUMMARY.md`, `workflows.json`, `duplicates.json`, `sensitive_tracked_names.json`, and `large_files.json`. **No raw source code, environment file contents, secret values or whole workflows are ever packaged.** Local paths and repository metadata are present, so treat the bundle as confidential. Run the audit first; the local triage accepts only a `koa_audit.local_observation.v1` report and never overwrites an existing ZIP. A rule still matching a line is not a confirmed exploit, and a missing match does not prove a vulnerability was fixed.
 
