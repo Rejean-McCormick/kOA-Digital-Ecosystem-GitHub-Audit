@@ -2,6 +2,10 @@
 
 Ce dépôt est un **observateur central, pas un outil de correction**. Il utilise l'inventaire officiel de `kOA-Digital-Ecosystem`, lit les validations GitHub déjà en place et peut consolider des résumés historiques de diagnostics spécialisés. Il ne modifie aucun des dépôts cibles.
 
+## Interface Windows
+
+Pour utiliser le dépôt sans terminal, **double-cliquer sur `kOA_GitHub_Audit_Launcher.pyw`** (Windows avec Python 3.11+ / Tkinter). Prévisualiser d'abord le périmètre avec l'inventaire `bundled`, puis lancer un audit en lecture seule avec un jeton configuré. Consulter les rapports dans le troisième onglet. [Instructions complètes](LAUNCHER_FR.md).
+
 ## Mise en route
 
 1. Créer un dépôt GitHub **privé** nommé `kOA-Digital-Ecosystem-GitHub-Audit`.

@@ -8,7 +8,7 @@
 
 The supplied snapshot dated 2026-10-28 declares **49 public repositories** owned by `Rejean-McCormick`. The copy in `data/initial_inventory.json` removes local Windows checkout paths and is for offline bootstrap only. The scheduled workflow retrieves the **latest inventory from its owning repository pinned to a specific Git commit** and records the source commit and SHA-256 in the audit output. A snapshot does not prove all those GitHub repositories are currently accessible.
 
-## What OBSERVE v0.1 implements
+## What OBSERVE v0.2 implements
 
 - Repository metadata including default branch, archived/disabled and pushed-at (no writes).
 - Existing GitHub Actions workflow inventory and a bounded sample of default-branch runs.
@@ -20,6 +20,12 @@ The supplied snapshot dated 2026-10-28 declares **49 public repositories** owned
 - Optional public-owner discovery to identify repositories missing from the declared inventory (not automatically adding them).
 
 **Not included:** triggering CodeQL, cloning repositories, running arbitrary repository commands, branch protection proof, changing security settings, automatically fixing code, publication/release authorization, proving every language scanned, certified compliance, production runtime scanning, automatic trust verification of legacy attestations.
+
+## Interface graphique Windows (.pyw) — startup diagnostiqué
+
+Après extraction complète du ZIP, double-cliquer sur **`kOA_GitHub_Audit_Launcher.pyw`** (Windows, Python 3.11+ avec Tkinter). Si le fichier `.pyw` a été téléchargé seul, un assistant propose maintenant de sélectionner le dossier de projet extrait. En cas de fenêtre absente, utiliser **`DIAGNOSTIC_LAUNCHER.cmd`**, qui garde les erreurs visibles et indique un journal de démarrage dans `%LOCALAPPDATA%/kOA-GitHub-Audit/launcher-startup.log`. Trois onglets : **Audit GitHub** (prévisualisation hors ligne ou audit OBSERVE), **Import historique** (association explicite des rapports au dépôt cible) et **Rapports** (aperçu + ouverture des fichiers). L'interface reste réactive pendant l'exécution et offre une annulation. Aucun jeton n'est demandé, affiché ou enregistré par l'interface ; `KOA_AUDIT_TOKEN` / `GH_TOKEN` doit être présent dans son environnement pour les accès authentifiés.
+
+Voir le [guide du lanceur Windows](docs/LAUNCHER_FR.md). Il ne modifie aucun dépôt cible et ne remplace pas les commandes CLI ni l'automatisation GitHub Actions.
 
 ## Quickstart
 
@@ -91,7 +97,7 @@ See [Legacy sources](docs/LEGACY_DIAGNOSTICS.md) and [Architecture and trust](do
 
 ## Docs
 
-[Architecture](docs/ARCHITECTURE.md) · [Deployment](docs/DEPLOYMENT.md) · [Legacy diagnostics](docs/LEGACY_DIAGNOSTICS.md) · [Operations](docs/OPERATIONS.md) · [Security](SECURITY.md)
+[Architecture](docs/ARCHITECTURE.md) · [Lanceur Windows](docs/LAUNCHER_FR.md) · [Deployment](docs/DEPLOYMENT.md) · [Legacy diagnostics](docs/LEGACY_DIAGNOSTICS.md) · [Operations](docs/OPERATIONS.md) · [Security](SECURITY.md)
 
 ## License
 

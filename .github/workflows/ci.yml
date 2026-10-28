@@ -16,6 +16,6 @@ jobs:
       - name: Unit tests (offline, no GitHub token)
         run: python -m unittest discover -s tests -v
       - name: Check Python syntax
-        run: python -m compileall -q koa_audit
+        run: python -m compileall -q koa_audit && python -m py_compile kOA_GitHub_Audit_Launcher.pyw
       - name: Validate bundled inventory
         run: python -m koa_audit plan --inventory-source bundled > /dev/null
