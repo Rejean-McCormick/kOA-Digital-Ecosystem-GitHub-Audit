@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "kOA local read-only audit observation",
+  "type": "object",
+  "required": ["format", "mode", "network_required", "token_required", "source_repositories_mutated", "roots", "repositories", "caveats"],
+  "properties": {
+    "format": {"const": "koa_audit.local_observation.v1"},
+    "mode": {"const": "LOCAL_OBSERVE"},
+    "network_required": {"const": false},
+    "token_required": {"const": false},
+    "source_repositories_mutated": {"const": false},
+    "roots": {"type": "array", "items": {"type": "string"}},
+    "repositories_scanned": {"type": "integer", "minimum": 0},
+    "inventory_repositories_missing_locally": {"type": "array", "items": {"type": "string"}},
+    "ambiguous_duplicates": {"type": "array", "items": {"type": "string"}},
+    "historical_legacy": {"type": "array"},
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repository", "location", "access", "status", "workflows", "finding_counts", "findings", "vulnerability_database_check"],
+        "properties": {
+          "repository": {"type": "string"},
+          "location": {"type": "string"},
+          "access": {"const": "local_observed"},
+          "status": {"enum": ["PARTIAL", "REVIEW", "INSPECTED_NO_PATTERN_MATCH"]},
+          "workflows": {"type": "array", "items": {"type": "string"}},
+          "vulnerability_database_check": {"const": "NOT_PERFORMED_OFFLINE"},
+          "finding_counts": {"type": "object"},
+          "findings": {"type": "array"}
+        }
+      }
+    },
+    "caveats": {"type": "array", "items": {"type": "string"}}
+  }
+}

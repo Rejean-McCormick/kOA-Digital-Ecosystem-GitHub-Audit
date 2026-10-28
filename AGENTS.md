@@ -1,10 +1,3 @@
-# Instructions to coding assistants and contributors
+# Contributor instructions
 
-**OBSERVE-only repository.** Do not add target-repository mutation APIs, secret exfiltration, automatic code execution, remote workflow dispatch or release approval features. Preserve GitHub owner permissions and kOA product authority boundaries. `kOA-Digital-Ecosystem` owns the scope; target applications and their specialists own native validations; this repository owns only consolidated observations.
-
-- Tests must be offline; do not require a live account or credentials.
-- Keep source and target code out of this repository.
-- Prefer short-lived, read-only GitHub App tokens; never print tokens, secret matches or raw REST response bodies.
-- Preserve UNKNOWN and PARTIAL separately from zero and PASS.
-- Historical evidence should remain separate, provenance-labeled and explicitly bound to target repositories; signatures are not validated here.
-- Do not introduce permission-changing tools into this repo without a separately approved authority design.
+Default mode is LOCAL_OBSERVE. All local commands must work offline and without any GitHub token. Do not send local code, scan contents, or report paths to external services. Do not execute or modify target repositories. Treat legacy diagnostic results as separate historical evidence, never current security PASS. Do not overstate vulnerability coverage; local static heuristics do not execute CodeQL or check CVE advisories. Keep source repository authority separate from observation.

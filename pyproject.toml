@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "koa-digital-ecosystem-github-audit"
-version = "0.2.0"
-description = "Read-only GitHub audit of the kOA Digital Ecosystem"
+version = "0.3.0"
+description = "Offline local repository audit for the kOA Digital Ecosystem"
 requires-python = ">=3.11"
 
 [tool.setuptools.packages.find]

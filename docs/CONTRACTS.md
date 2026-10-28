@@ -1,10 +1,7 @@
-# Data contracts
+# Contracts and confidence boundaries
 
-The observer's outputs use two contract identities:
+- `koa_audit.local_observation.v1`: offline file/workflow heuristic observation, with exact working-folder locations and coverage caveats. Schema: `schemas/local-observation.schema.json`. Does not attest to CI success, to CVE absence, or to CodeQL execution.
+- `koa_audit.legacy_record.v1`: historical specialist diagnostic summaries, bound explicitly to a repository. Schema: `schemas/legacy-record.schema.json`.
+- `koa_audit.observation.v1`: **legacy optional remote API** observations; no longer used by the Windows launcher or scheduled automation. Schema: `schemas/observation.schema.json`.
 
-- `koa_audit.observation.v1`: current GitHub API observations, inventory provenance, completeness and historic metadata in **separate** fields. Contract: `schemas/observation.schema.json`.
-- `koa_audit.legacy_record.v1`: a sanitized, historical, non-authoritative summary. Contract: `schemas/legacy-record.schema.json`.
-
-Native schemas are not rewritten: KonnaxionDiag's security/release authorities, KorDiag subject bindings, KristalDiag's independent qualification and LevelUpDiag's campaign semantics remain owned by those systems. These normalized records **do not** carry signatures or independent cryptographic verification.
-
-Version `v1` is a *report format*, not a declaration that these diagnostic source snapshots are currently active or that GitHub owners authorized any action. Treat unknown fields conservatively; do not generate a `PASS` or an approval from an observation report.
+These are observation formats only, never release or authorization contracts. An `INSPECTED_NO_PATTERN_MATCH` value is not a security PASS, and an `UNKNOWN`/`PARTIAL` cannot be converted to zero vulnerabilities.

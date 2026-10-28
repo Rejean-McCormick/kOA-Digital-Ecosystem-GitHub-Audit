@@ -37,11 +37,11 @@ python -m koa_audit import-legacy \
 
 For KonnaxionDiag, KristalDiag, SemantiK Architect and Skope, point to a genuine generated campaign summary; source code snapshots containing only schema definitions cannot establish completed historical campaigns.
 
-The importer does **not** scan all ZIP entries, follow code executables, make target GitHub writes, validate evidence signatures or call external runtime processes. It reads exactly one explicit JSON member or JSON path and exports a reduced record. It refuses unknown schema/verdicts. Run `audit --legacy-dir .legacy` to include in the distinct historical section. Do not commit `.legacy/` and do not publish original ZIPs.
+The importer does **not** scan all ZIP entries, follow code executables, make target GitHub writes, validate evidence signatures or call external runtime processes. It reads exactly one explicit JSON member or JSON path and exports a reduced record. It refuses unknown schema/verdicts. Run `local-audit --root C:\mycode --legacy-dir .legacy` to include in the distinct historical section. Do not commit `.legacy/` and do not publish original ZIPs.
 
 ## Migration from previous batch-security kit
 
-The earlier `koa-security-batch` kit read current alert counts, and offered **write-capable** `enable --apply` paths. This repository supersedes its **read-only audit** purpose and deliberately drops every write path. Historic batch counts are not imported as current results because they are time-bound; rerun the observer against GitHub for current alert metadata.
+The earlier `koa-security-batch` kit read current alert counts, and offered **write-capable** `enable --apply` paths. This repository supersedes its **read-only audit** purpose and deliberately drops every write path. Historic batch counts are not imported as current results because they are time-bound; use `local-audit` for fresh local file inspections; it cannot confirm GitHub alert metadata or online advisories.
 
 ## Future evidence verification (not in v0.1)
 

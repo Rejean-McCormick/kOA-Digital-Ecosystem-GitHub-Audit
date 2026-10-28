@@ -86,3 +86,30 @@ def make_legacy_args(*, tool: str, repo: str, source_path: Path,
     if member:
         args += ["--member", member]
     return args
+
+
+def make_local_args(*, command: str, root: Path, depth: object, limit: object,
+                    max_files: object = "6000", out: Path | None = None,
+                    only_inventory: bool = False, legacy_dir: Path | None = None) -> list[str]:
+    """No-token, offline command builder. Never sends or executes code remotely."""
+    if command not in ("local-plan", "local-audit"):
+        raise ValueError("Mode local inconnu")
+    folder = root.expanduser().resolve()
+    if not folder.is_dir():
+        raise ValueError(f"Dossier source introuvable : {folder}")
+    args = ["-m", "koa_audit", command, "--root", str(folder),
+            "--max-depth", _integer(depth, label="Profondeur", minimum=0, maximum=10),
+            "--limit", _integer(limit, label="Limite", minimum=0, maximum=100000)]
+    if command == "local-audit":
+        if out is None:
+            raise ValueError("Choisir le dossier des rapports")
+        args.extend(["--max-files", _integer(max_files, label="Fichiers par dépôt", minimum=1, maximum=100000),
+                     "--out", str(out.expanduser().resolve())])
+        if only_inventory:
+            args.append("--only-inventory")
+        if legacy_dir is not None:
+            folder = legacy_dir.expanduser().resolve()
+            if not folder.is_dir():
+                raise ValueError("Dossier des rapports historiques introuvable")
+            args.extend(["--legacy-dir", str(folder)])
+    return args

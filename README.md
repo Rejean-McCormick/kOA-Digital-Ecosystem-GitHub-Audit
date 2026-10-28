@@ -1,108 +1,65 @@
 # kOA-Digital-Ecosystem-GitHub-Audit
 
-> **Centralized, read-only GitHub auditing for the kOA Digital Ecosystem. Monitors repository security, GitHub Actions, CodeQL, Dependabot, secret scanning, and validation coverage. Produces consolidated, traceable reports without modifying source repositories.**
+> **Local, read-only repository auditor for the kOA Digital Ecosystem. No GitHub token or internet connection required.**
 
-## Why this repository exists
+## Getting started (Windows)
 
-`kOA-Digital-Ecosystem` remains the architectural and inventory reference. This separate repository observes GitHub security and CI for the declared perimeter, while **preserving existing owners, workflows, qualified diagnostic evidence and authority boundaries**. This is not a new source of truth for product state, not a release approver, and not a remote scanner executor.
+1. Extract the **entire** ZIP to a normal folder (never launch directly inside the ZIP).
+2. Install Python 3.11+ with Tkinter (normally included in the official Windows installer).
+3. Double-click **`kOA_GitHub_Audit_Launcher.pyw`**.
+4. In **Audit local**, choose the folder containing your local Git repositories, e.g. `C:\mycode`.
+5. Click **Découvrir les dépôts locaux**, then **Scanner localement**.
+6. Open **Rapports** to read `SUMMARY.md`, `audit.csv` and `audit.json`.
 
-The supplied snapshot dated 2026-10-28 declares **49 public repositories** owned by `Rejean-McCormick`. The copy in `data/initial_inventory.json` removes local Windows checkout paths and is for offline bootstrap only. The scheduled workflow retrieves the **latest inventory from its owning repository pinned to a specific Git commit** and records the source commit and SHA-256 in the audit output. A snapshot does not prove all those GitHub repositories are currently accessible.
+No GitHub credentials are requested, loaded or transmitted by the local mode. The launcher deliberately defaults to local analysis. If it does not open, run `DIAGNOSTIC_LAUNCHER.cmd` for a visible Windows error and an external diagnostic log.
 
-## What OBSERVE v0.2 implements
+## CLI (also fully offline)
 
-- Repository metadata including default branch, archived/disabled and pushed-at (no writes).
-- Existing GitHub Actions workflow inventory and a bounded sample of default-branch runs.
-- CodeQL *analysis evidence* on the default branch: most recent analysis age and commit, not just zero alerts.
-- Open Dependabot alerts, code-scanning alerts and **counts only** for secret-scanning alerts. Access errors stay **UNKNOWN**, never zero.
-- Explicit `ok`/`partial`/`unknown` observations, with pagination caps and contextual caveats.
-- Historic diagnostics imported from **KonnaxionDiag, KorDiag, KristalDiag, LevelUpDiag Orgo, SemantiK Architect, Skope**, kept separate as non-authoritative, not reverified evidence.
-- JSON, CSV (Excel-safe), concise Markdown summary, GitHub Actions weekly schedule, offline unit tests.
-- Optional public-owner discovery to identify repositories missing from the declared inventory (not automatically adding them).
+```powershell
+python -m koa_audit local-plan --root "C:\mycode" --max-depth 4
+python -m koa_audit local-audit --root "C:\mycode" --max-depth 4 --out reports
+```
 
-**Not included:** triggering CodeQL, cloning repositories, running arbitrary repository commands, branch protection proof, changing security settings, automatically fixing code, publication/release authorization, proving every language scanned, certified compliance, production runtime scanning, automatic trust verification of legacy attestations.
+Options: `--root` may be repeated; `--limit 5` limits inspections for a pilot; `--max-files 6000` controls per-repo inspection budget; `--only-inventory` excludes local repositories not in the 49-name snapshot. By default **all discovered Git repositories** are inspected, including previously unlisted projects. Reports are saved **only on your computer** under `reports/` (gitignored). The local scanner reads files and local Git metadata; it neither clones nor fetches repositories, runs target code, installs packages or modifies code.
 
-## Interface graphique Windows (.pyw) — startup diagnostiqué
+## What the offline scanner actually checks
 
-Après extraction complète du ZIP, double-cliquer sur **`kOA_GitHub_Audit_Launcher.pyw`** (Windows, Python 3.11+ avec Tkinter). Si le fichier `.pyw` a été téléchargé seul, un assistant propose maintenant de sélectionner le dossier de projet extrait. En cas de fenêtre absente, utiliser **`DIAGNOSTIC_LAUNCHER.cmd`**, qui garde les erreurs visibles et indique un journal de démarrage dans `%LOCALAPPDATA%/kOA-GitHub-Audit/launcher-startup.log`. Trois onglets : **Audit GitHub** (prévisualisation hors ligne ou audit OBSERVE), **Import historique** (association explicite des rapports au dépôt cible) et **Rapports** (aperçu + ouverture des fichiers). L'interface reste réactive pendant l'exécution et offre une annulation. Aucun jeton n'est demandé, affiché ou enregistré par l'interface ; `KOA_AUDIT_TOKEN` / `GH_TOKEN` doit être présent dans son environnement pour les accès authentifiés.
+- Finds working trees under selected local roots (`.git` directory or worktree marker), with a bounded directory search and no symlink traversal.
+- Matches them against a **snapshot inventory of 49 kOA repositories** (scope reference, not permission to modify). Reports missing and ambiguous matches separately.
+- Inventories GitHub Actions configuration files, indicators of CodeQL declarations and Dependabot configuration. **Does not run CI or CodeQL and does not know if GitHub runs succeeded.**
+- Inventories dependency manifests/lockfiles, counts files inspected and records a local Git commit when available. **Does not determine whether dependency versions have known CVEs.**
+- Runs **bounded heuristic pattern checks** for suspected private keys, GitHub/AWS key patterns, some risky Python calls and select GitHub Actions misconfigurations. Reports file paths, line numbers and rule names, **never secret contents**. These are leads requiring review, not definitive vulnerabilities.
+- Preserves support for importing historical KonnaxionDiag, KorDiag, KristalDiag, Orgo, Skope and SemantiK diagnostic summaries separately from current local findings. A historical `PASS` cannot turn a new scan into `PASS`.
 
-Voir le [guide du lanceur Windows](docs/LAUNCHER_FR.md). Il ne modifie aucun dépôt cible et ne remplace pas les commandes CLI ni l'automatisation GitHub Actions.
+A clean local scan does **not** mean the code is vulnerability-free. It cannot replace a real CodeQL/Semgrep analysis, a dependency advisory database, the GitHub platform's secret-scanning engine or tests against an actual deployed environment. Unscanned, over-limit and missing content must never be treated as successful inspection.
 
-## Quickstart
+## Report files and privacy
 
-Python 3.11+; standard library only for runtime and tests.
+- `reports/audit.json` — full bounded metadata and heuristic findings, local locations and local HEAD hashes.
+- `reports/audit.csv` — Excel-safe one-row-per-repository summary.
+- `reports/SUMMARY.md` — coverage and caveats.
 
-```bash
-# Offline scope preview: no GitHub connectivity required
-python -m koa_audit plan --inventory-source bundled
+Source code is never copied to the report. Do not share reports publicly before checking local paths and operational information. The `.gitignore` excludes generated reports, `.legacy/`, and the Windows helpers `ZmartZnap*.pyw` / `GitSink*.bat`.
 
-# Small pilot; will query the GitHub API
-export KOA_AUDIT_TOKEN='YOUR_READ_ONLY_TOKEN'  # set in your shell, never commit
-python -m koa_audit audit --inventory-source bundled --limit 5 --out reports
+## Historic diagnostic import
 
-# Full review against live inventory pinned to its current Git commit
-python -m koa_audit audit --inventory-source github --require-auth \
-  --discover-public-owner --workers 3 --out reports
+Select **Import historique** in the interface. Provide the diagnostic family, an explicit `owner/repo` target, a JSON summary (or exact member of a ZIP archive), and a local output folder. The import is metadata-only and preserves original schema/verdict provenance without re-verifying cryptographic evidence.
 
-# Offline tests
+## Architecture and boundaries
+
+- `kOA-Digital-Ecosystem` owns the architectural and repository scope reference.
+- Individual diagnostics own their own level meanings and authoritative qualification logic.
+- This repository owns only local, non-authoritative observation and aggregation (`LOCAL_OBSERVE`).
+- No source repository is changed, no GitHub permissions are requested, no remote workflows are triggered, and the reports do not authorize releases.
+
+The older optional CLI `audit` subcommand for remote GitHub API reads is retained for backward compatibility, but **is not used by the launcher or by scheduled automation**. The `local-audit` and `local-plan` subcommands never instantiate a GitHub client.
+
+## Verification
+
+```powershell
 python -m unittest discover -s tests -v
 ```
 
-Windows PowerShell:
+Detailed instructions: [guide Windows](docs/LAUNCHER_FR.md), [local architecture](docs/ARCHITECTURE.md), [historical imports](docs/LEGACY_DIAGNOSTICS.md).
 
-```powershell
-$env:KOA_AUDIT_TOKEN = "YOUR_READ_ONLY_TOKEN"
-python -m koa_audit plan --inventory-source bundled
-python -m koa_audit audit --inventory-source github --require-auth --out reports
-Remove-Item Env:KOA_AUDIT_TOKEN
-```
-
-A classic PAT is not recommended for production. Prefer a **GitHub App installation token** with repository permissions: Metadata read, Contents read (to read the authoritative inventory), Actions read, Code scanning alerts read, Dependabot alerts read, Secret scanning alerts read. Some features require a suitable plan and additional GitHub settings. See [Deployment](docs/DEPLOYMENT.md).
-
-## Outputs
-
-- `reports/audit.json`: redacted, machine-readable observations and source inventory provenance.
-- `reports/audit.csv`: one row per repository; `UNKNOWN_OR_PARTIAL` instead of a misleading zero.
-- `reports/SUMMARY.md`: high-level coverage counts and alert lower bounds.
-
-Reports can contain sensitive operational metadata. **Keep this repository and its artifacts private**. `reports/` is gitignored; workflow artifacts are retained for 14 days. No raw secret values, finding code snippets, API response bodies or legacy free-text findings are exported.
-
-## Historical diagnostics integration
-
-Existing specialist validators are not replaced. The `import-legacy` command accepts a **known summary JSON schema only** (or an exact member of a ZIP archive), stores SHA-256 provenance, tool, campaign, verdict and sanitized level counts, and marks all imported records as `historical_legacy`, `evidence_independently_verified=false`, `current_security_conclusion=NOT_ASSESSED`.
-
-Example with the Orgo historical summary provided in your snapshot (change the path to your own):
-
-```bash
-python -m koa_audit import-legacy \
-  --tool LevelUpDiag-Orgo --repo Rejean-McCormick/Orgo \
-  --input 'LevelUpDiag-Orgo_Code_snapshot(1).zip' \
-  --member verification/embedded/summary.json \
-  --out .legacy/orgo-2026-10.json
-
-python -m koa_audit audit --inventory-source github --require-auth \
-  --legacy-dir .legacy --out reports
-```
-
-**Explicit target binding is mandatory.** The diagnostic tool's own repository is not always its target. `Kor` is not in the current 49-repository snapshot; a KorDiag import must not be silently relabeled as another repository. Legacy records for targets outside the selected inventory are counted as out of scope, not merged into other repositories.
-
-See [Legacy sources](docs/LEGACY_DIAGNOSTICS.md) and [Architecture and trust](docs/ARCHITECTURE.md).
-
-## Authority and integrity
-
-1. `kOA-Digital-Ecosystem` owns the declared scope and architectural definitions.
-2. GitHub owns its workflow runs, alert records and analysis metadata.
-3. Each specialist diagnostic owns its qualification semantics and native evidence formats.
-4. This repository owns **only observational aggregation**. It neither verifies prior cryptographic assurances nor grants acceptance, release or execution authority.
-5. A `PASS` from a historic diagnostic is *not* a current security `PASS`; an API `404`, `403` or truncated result is *not* an empty alert list.
-
-## Docs
-
-[Architecture](docs/ARCHITECTURE.md) · [Lanceur Windows](docs/LAUNCHER_FR.md) · [Deployment](docs/DEPLOYMENT.md) · [Legacy diagnostics](docs/LEGACY_DIAGNOSTICS.md) · [Operations](docs/OPERATIONS.md) · [Security](SECURITY.md)
-
-## License
-
-No open-source license has been selected. Consult the owner before reusing or distributing outside this repository.
-
-[Data contracts](docs/CONTRACTS.md) define the independent, non-authoritative observation formats. No cross-system authority is transferred by normalization.
-
-**Documentation française :** [Guide rapide](docs/GUIDE_FR.md).
+No open-source license has been selected.

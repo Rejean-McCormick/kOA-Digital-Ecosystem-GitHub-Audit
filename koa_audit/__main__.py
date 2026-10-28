@@ -1,4 +1,4 @@
-"""Command-line entrypoint: all operations are read-only on GitHub."""
+"""CLI: default local scans are offline; legacy remote observer remains optional."""
 from __future__ import annotations
 
 import argparse
@@ -13,6 +13,7 @@ from .github_client import GitHubClient, ApiError
 from .inventory import bundled_inventory, remote_inventory, owner_public_discovery
 from .legacy import SCHEMAS, ingest, load_normalized_directory
 from .report import summarize, write_reports
+from .local_scan import run_local_audit, write_local_reports, discover_repositories
 
 DEFAULT_INVENTORY = Path(__file__).resolve().parent.parent / "data" / "initial_inventory.json"
 SOURCE_REPO = "Rejean-McCormick/kOA-Digital-Ecosystem"
@@ -36,6 +37,18 @@ def make_parser() -> argparse.ArgumentParser:
             p.add_argument("--legacy-dir", type=Path)
             p.add_argument("--discover-public-owner", action="store_true",
                            help="Compare inventory to public repositories; never automatically add them")
+    for name in ("local-plan", "local-audit"):
+        p = sub.add_parser(name, help="Offline inspection of local Git working trees (no API token)")
+        p.add_argument("--root", type=Path, action="append", required=True,
+                       help="Top-level folder containing local repositories; repeatable")
+        p.add_argument("--max-depth", type=int, default=4)
+        p.add_argument("--limit", type=int, default=0, help="0 = all")
+        if name == "local-audit":
+            p.add_argument("--out", type=Path, default=Path("reports"))
+            p.add_argument("--legacy-dir", type=Path)
+            p.add_argument("--max-files", type=int, default=6000)
+            p.add_argument("--only-inventory", action="store_true",
+                           help="Skip local Git repositories outside bundled inventory")
     p = sub.add_parser("import-legacy", help="Import a historical summary JSON as metadata-only evidence")
     p.add_argument("--tool", choices=sorted(SCHEMAS), required=True)
     p.add_argument("--repo", required=True, help="Explicit owner/repository binding")
@@ -46,6 +59,39 @@ def make_parser() -> argparse.ArgumentParser:
 
 
 def execute(args: argparse.Namespace) -> int:
+    if args.command in ("local-plan", "local-audit"):
+        if args.limit < 0 or not 0 <= args.max_depth <= 10:
+            raise ValueError("Invalid local scan limits")
+        for root in args.root:
+            if not root.expanduser().is_dir():
+                raise ValueError(f"Local source folder does not exist: {root}")
+        if args.command == "local-plan":
+            folders, meta = discover_repositories(args.root, max_depth=args.max_depth)
+            print(json.dumps({"mode": "LOCAL_OBSERVE", "repositories_found": len(folders),
+                              "folders": [str(p) for p in folders[:args.limit or None]],
+                              "discovery": meta}, indent=2, ensure_ascii=False))
+            return 0
+        if not 1 <= args.max_files <= 100000:
+            raise ValueError("--max-files must be between 1 and 100000")
+        report = run_local_audit(args.root, inventory_path=DEFAULT_INVENTORY,
+                                 max_depth=args.max_depth, max_files=args.max_files,
+                                 include_unlisted=not args.only_inventory, limit=args.limit,
+                                 progress=lambda line: print(line, flush=True))
+        if args.legacy_dir:
+            legacy, errors = load_normalized_directory(args.legacy_dir)
+            selected = {r["repository"].lower() for r in report["repositories"]}
+            report["historical_legacy"] = [r for r in legacy if r["repository"].lower() in selected]
+            report["legacy_ingestion"] = {"invalid_filenames": errors,
+                                          "out_of_scope_count": len(legacy) - len(report["historical_legacy"])}
+        else:
+            report["historical_legacy"] = []
+        write_local_reports(args.out, report)
+        print(json.dumps({"repositories_discovered": report["local_repositories_discovered"],
+                          "repositories_scanned": report["repositories_scanned"],
+                          "finding_patterns": report["findings_by_type"],
+                          "missing_locally": len(report["inventory_repositories_missing_locally"]),
+                          "reports": str(args.out.resolve())}, indent=2, ensure_ascii=False))
+        return 0
     if args.command == "import-legacy":
         result = ingest(args.tool, args.repo, args.input, member=args.member)
         args.out.parent.mkdir(parents=True, exist_ok=True)
