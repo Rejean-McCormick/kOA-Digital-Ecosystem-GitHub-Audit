@@ -1,0 +1,89 @@
+{
+  "format": "koa_audit.dashboard.v1",
+  "policy": "AGGREGATES_ONLY_NO_PATHS_NO_SECRETS",
+  "snapshots": [
+    {
+      "ambiguous": 2,
+      "at": "2026-10-28T18:56:09Z",
+      "coverage_truncated": false,
+      "declared": 49,
+      "discovered": 142,
+      "findings": {
+        "LARGE_FILE_NOT_INSPECTED": 62,
+        "PRIVATE_KEY_MATERIAL": 1,
+        "PYTHON_PICKLE_LOAD": 4,
+        "PYTHON_SHELL_TRUE": 5,
+        "PYTHON_SSL_VERIFY_DISABLED": 6,
+        "SENSITIVE_FILENAME": 10,
+        "WORKFLOW_UNPINNED_ACTION": 98
+      },
+      "historical_records": 0,
+      "inventory_scanned": 47,
+      "missing": 0,
+      "mode": "LOCAL_OBSERVE",
+      "other_rule_categories": 0,
+      "scanned": 47,
+      "statuses": {
+        "INSPECTED_NO_PATTERN_MATCH": 16,
+        "PARTIAL": 12,
+        "REVIEW": 19,
+        "UNKNOWN": 0
+      }
+    },
+    {
+      "ambiguous": 2,
+      "at": "2026-10-28T20:42:13Z",
+      "coverage_truncated": false,
+      "declared": 49,
+      "discovered": 142,
+      "findings": {
+        "LARGE_FILE_NOT_INSPECTED": 64,
+        "PRIVATE_KEY_MATERIAL": 1,
+        "PYTHON_PICKLE_LOAD": 4,
+        "PYTHON_SHELL_TRUE": 5,
+        "PYTHON_SSL_VERIFY_DISABLED": 6,
+        "SENSITIVE_FILENAME": 10,
+        "WORKFLOW_UNPINNED_ACTION": 98
+      },
+      "historical_records": 0,
+      "inventory_scanned": 47,
+      "missing": 0,
+      "mode": "LOCAL_OBSERVE",
+      "other_rule_categories": 0,
+      "scanned": 47,
+      "statuses": {
+        "INSPECTED_NO_PATTERN_MATCH": 16,
+        "PARTIAL": 12,
+        "REVIEW": 19,
+        "UNKNOWN": 0
+      }
+    },
+    {
+      "alerts": {
+        "code_scanning": {
+          "complete": false,
+          "observed_minimum": 0
+        },
+        "dependabot": {
+          "complete": false,
+          "observed_minimum": 0
+        },
+        "secret_scanning": {
+          "complete": false,
+          "observed_minimum": 0
+        }
+      },
+      "at": "2026-10-28T22:15:19Z",
+      "ci": {
+        "failure": 6,
+        "success": 4
+      },
+      "codeql_unknown": 49,
+      "declared": 49,
+      "historical_records": 0,
+      "mode": "OBSERVE",
+      "observed": 15,
+      "unknown": 34
+    }
+  ]
+}

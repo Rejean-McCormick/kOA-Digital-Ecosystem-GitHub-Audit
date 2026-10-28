@@ -2,6 +2,14 @@
 
 > **Local, read-only repository auditor for the kOA Digital Ecosystem. No GitHub token or internet connection required.**
 
+## Tableau de bord dynamique sur GitHub Pages (v0.5.0)
+
+L’application inclut un onglet **Tableau de bord** et un site interactif `docs/index.html` (statique, autonome, sans jeton). Les données proviennent exclusivement d’**agrégats publics** générés à partir de rapports choisis; les JSON bruts ne sont jamais publiés. L’onglet **Audit local** est le mode par défaut et **GitHub (optionnel)** reste distinct.
+
+Pour préparer une nouvelle campagne **sans rescanner** : sélectionner `audit.json` dans l’onglet Tableau de bord → **Mettre à jour le tableau de bord** → **Aperçu dans le navigateur** → publier les modifications de `/docs` avec Git. Pour activer le site : `Settings > Pages > Deploy from a branch > main > /docs`. Le tableau de bord se met à jour après publication d’un nouveau bilan (rafraîchissement dans le navigateur aux ~3 minutes), pas en temps réel avec le disque du PC. Voir [DASHBOARD_FR.md](docs/DASHBOARD_FR.md).
+
+La version inclut trois campagnes de référence (deux locales, une OBSERVE), **uniquement sous forme agrégée**. Les anciennes détections TLS de ces campagnes précèdent la règle améliorée et ne doivent pas être traitées comme des failles confirmées. Aucun secret ou chemin local n’est exporté dans `docs/data/dashboard.json`. Les Pages sont généralement accessibles publiquement : vérifier les données agrégées avant de publier.
+
 ## Getting started (Windows)
 
 1. Extract the **entire** ZIP to a normal folder (never launch directly inside the ZIP).

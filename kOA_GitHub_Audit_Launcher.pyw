@@ -12,6 +12,8 @@ import sys
 import tempfile
 import threading
 import traceback
+import functools
+import http.server
 import webbrowser
 from datetime import datetime, timezone
 from pathlib import Path
@@ -139,7 +141,7 @@ class AuditLauncher:
     def __init__(self, root: Tk) -> None:
         self.root = root
         self.root.title("kOA — GitHub Ecosystem Audit")
-        self.root.geometry("1040x760")
+        self.root.geometry("1110x790")
         self.root.minsize(830, 640)
         self.root.configure(bg=BG)
         self._events: queue.Queue[tuple] = queue.Queue()
@@ -153,8 +155,16 @@ class AuditLauncher:
         self.limit = StringVar(value="0")
         self.workers = StringVar(value="3")
         self.max_age = StringVar(value="30")
-        self.out_dir = StringVar(value=str(ROOT / "reports"))
-        self.require_auth = BooleanVar(value=True)
+        self.out_dir = StringVar(value=str(ROOT / "reports" / "local"))
+        self.remote_out_dir = StringVar(value=str(ROOT / "reports" / "github"))
+        self.local_root = StringVar(value=r"C:\mycode" if Path(r"C:\mycode").exists() else str(Path.home()))
+        self.local_depth = StringVar(value="4")
+        self.local_limit = StringVar(value="0")
+        self.dashboard_local = StringVar(value=str(ROOT / "reports" / "local" / "audit.json"))
+        self.dashboard_github = StringVar(value="")
+        self.triage_input = StringVar(value=str(ROOT / "reports" / "local" / "audit.json"))
+        self._preview_server = None
+        self.require_auth = BooleanVar(value=False)
         self.discover = BooleanVar(value=False)
         self.use_legacy = BooleanVar(value=(ROOT / ".legacy").is_dir())
         self.legacy_dir = StringVar(value=str(ROOT / ".legacy"))
@@ -196,20 +206,29 @@ class AuditLauncher:
         header = ttk.Frame(outer)
         header.pack(fill="x", pady=(0, 10))
         ttk.Label(header, text="kOA  /  GitHub Audit", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(header, text="OBSERVE — audit centralisé en lecture seule · aucun scan distant déclenché",
+        ttk.Label(header, text="LOCAL_OBSERVE — scanner local · Vérification ZIP · Dashboard GitHub Pages · sans jeton personnel",
                   style="Muted.TLabel").pack(anchor="w", pady=(3, 0))
 
         self.tabs = ttk.Notebook(outer)
         self.tabs.pack(fill="both", expand=True)
-        audit_tab = ttk.Frame(self.tabs, padding=14)
-        legacy_tab = ttk.Frame(self.tabs, padding=14)
+        local_tab = ttk.Frame(self.tabs, padding=14)
+        triage_tab = ttk.Frame(self.tabs, padding=14)
+        dashboard_tab = ttk.Frame(self.tabs, padding=14)
         reports_tab = ttk.Frame(self.tabs, padding=14)
-        self.tabs.add(audit_tab, text="  Audit GitHub  ")
-        self.tabs.add(legacy_tab, text="  Import historique  ")
+        legacy_tab = ttk.Frame(self.tabs, padding=14)
+        audit_tab = ttk.Frame(self.tabs, padding=14)
+        self.tabs.add(local_tab, text="  Audit local  ")
+        self.tabs.add(triage_tab, text="  Vérification + ZIP  ")
+        self.tabs.add(dashboard_tab, text="  Tableau de bord  ")
         self.tabs.add(reports_tab, text="  Rapports  ")
+        self.tabs.add(legacy_tab, text="  Import historique  ")
+        self.tabs.add(audit_tab, text="  GitHub (optionnel)  ")
         self._build_audit(audit_tab)
-        self._build_legacy(legacy_tab)
+        self._build_local(local_tab)
+        self._build_triage(triage_tab)
+        self._build_dashboard(dashboard_tab)
         self._build_reports(reports_tab)
+        self._build_legacy(legacy_tab)
 
         line = ttk.Separator(outer)
         line.pack(fill="x", pady=(9, 6))
@@ -241,7 +260,7 @@ class AuditLauncher:
         self._input_row(options, 1, "Nombre max de dépôts (0 = tous)", self.limit)
         self._input_row(options, 2, "Workers (1 à 8)", self.workers)
         self._input_row(options, 3, "Fraîcheur CodeQL (jours)", self.max_age)
-        self._input_row(options, 4, "Dossier des rapports", self.out_dir, browse=self._browse_report_folder)
+        self._input_row(options, 4, "Dossier des rapports GitHub", self.remote_out_dir, browse=self._browse_remote_report_folder)
         self._input_row(options, 5, "Dossier des diagnostics", self.legacy_dir,
                         browse=self._browse_legacy_folder)
         flags = ttk.Frame(options)
@@ -265,7 +284,125 @@ class AuditLauncher:
                                     state="disabled", bg="white", fg=NAVY, relief="solid", borderwidth=1)
         self.console.grid(row=4, column=0, sticky="nsew")
         tab.rowconfigure(4, weight=1)
-        self._log("Prêt. Commencez par « Prévisualiser le périmètre » (hors ligne si source=bundled).")
+        self._log("Prêt. Utilisez d’abord « Audit local ». L’API GitHub est facultative.")
+
+    def _build_local(self, tab: ttk.Frame) -> None:
+        tab.columnconfigure(0, weight=1)
+        frame = ttk.LabelFrame(tab, text="Inspection 100 % locale · aucune clé GitHub", padding=15)
+        frame.grid(row=0, column=0, sticky="ew")
+        frame.columnconfigure(1, weight=1)
+        self._input_row(frame, 0, "Dossier de départ", self.local_root, browse=self._browse_local_root, width=57)
+        self._input_row(frame, 1, "Dossier de rapports", self.out_dir, browse=self._browse_report_folder, width=57)
+        self._input_row(frame, 2, "Profondeur max (0-10)", self.local_depth)
+        self._input_row(frame, 3, "Dépôts max (0 = tous)", self.local_limit)
+        actions = ttk.Frame(frame)
+        actions.grid(row=4, column=0, columnspan=3, sticky="w", pady=(15, 4))
+        self._action_button(actions, "Découvrir les dépôts", self._run_local_plan).pack(side="left", padx=(0, 10))
+        self._action_button(actions, "Scanner localement", self._run_local_audit, primary=True).pack(side="left")
+        ttk.Label(tab, text="Le scanner ne clone, ne télécharge et ne modifie aucun dépôt. Il n’exécute pas les CI ni CodeQL.",
+                  style="Muted.TLabel", wraplength=900).grid(row=1, column=0, sticky="w", pady=14)
+
+    def _build_triage(self, tab: ttk.Frame) -> None:
+        tab.columnconfigure(0, weight=1)
+        frame = ttk.LabelFrame(tab, text="Contre-vérification ciblée — sans scanner à nouveau les dépôts", padding=15)
+        frame.grid(row=0, column=0, sticky="ew")
+        frame.columnconfigure(1, weight=1)
+        self._input_row(frame, 0, "Dossier local", self.local_root, browse=self._browse_local_root, width=57)
+        self._input_row(frame, 1, "audit.json existant", self.triage_input, browse=self._browse_triage_json, width=57)
+        self._action_button(frame, "Contre-vérifier et créer le ZIP", self._run_triage, primary=True).grid(row=2, column=1, sticky="w", pady=14)
+        ttk.Label(tab, text="ZIP de métadonnées expurgées : aucun .env, aucune valeur secrète, aucun fichier source brut.",
+                  style="Muted.TLabel", wraplength=900).grid(row=1, column=0, sticky="w", pady=14)
+
+    def _build_dashboard(self, tab: ttk.Frame) -> None:
+        tab.columnconfigure(0, weight=1)
+        frame = ttk.LabelFrame(tab, text="Bilan global pour GitHub Pages (données agrégées uniquement)", padding=15)
+        frame.grid(row=0, column=0, sticky="ew")
+        frame.columnconfigure(1, weight=1)
+        self._input_row(frame, 0, "Rapport local (JSON)", self.dashboard_local,
+                        browse=lambda: self._choose_json(self.dashboard_local), width=57)
+        self._input_row(frame, 1, "Rapport GitHub (optionnel)", self.dashboard_github,
+                        browse=lambda: self._choose_json(self.dashboard_github), width=57)
+        btns=ttk.Frame(frame)
+        btns.grid(row=2, column=0, columnspan=3, sticky="w", pady=(14, 5))
+        self._action_button(btns, "Mettre à jour le tableau de bord", self._run_dashboard, primary=True).pack(side="left", padx=(0, 9))
+        ttk.Button(btns, text="Aperçu dans le navigateur", command=self._preview_dashboard).pack(side="left", padx=(0, 9))
+        ttk.Button(btns, text="Ouvrir le dossier docs", command=lambda: self._open_file(ROOT / "docs")).pack(side="left")
+        note=("Les fichiers publiables sont docs/index.html, docs/assets/* et docs/data/dashboard.json. "
+              "Ils ne contiennent NI chemins locaux, NI noms des dépôts, NI codes sources, NI secrets. "
+              "Cette action ne pousse rien sur GitHub et ne relance aucun audit.")
+        ttk.Label(tab, text=note, wraplength=910, justify="left", style="Muted.TLabel").grid(row=1, column=0, sticky="w", pady=14)
+        ttk.Label(tab, text="Activation : GitHub > dépôt d’audit > Settings > Pages > Deploy from a branch > main > /docs. "
+                  "Publier ensuite les fichiers docs avec tes outils Git habituels. Le site actualise sa vue lorsque les données sont publiées.",
+                  wraplength=910, justify="left").grid(row=2, column=0, sticky="w", pady=8)
+
+    def _browse_local_root(self) -> None:
+        folder = filedialog.askdirectory(title="Choisir la racine des dépôts locaux", initialdir=self.local_root.get())
+        if folder: self.local_root.set(folder)
+
+    def _choose_json(self, variable: StringVar) -> None:
+        path=filedialog.askopenfilename(title="Choisir audit.json", filetypes=[("JSON", "*.json"), ("Tous", "*.*")])
+        if path: variable.set(path)
+
+    def _browse_triage_json(self) -> None:
+        self._choose_json(self.triage_input)
+
+    def _browse_remote_report_folder(self) -> None:
+        folder=filedialog.askdirectory(title="Dossier des rapports d’observation GitHub", initialdir=str(ROOT))
+        if folder: self.remote_out_dir.set(folder)
+
+    def _local_flags(self) -> list[str]:
+        root = Path(self.local_root.get()).expanduser()
+        if not root.is_dir(): raise ValueError("Dossier local introuvable")
+        depth = int(self.local_depth.get())
+        limit = int(self.local_limit.get())
+        if not 0 <= depth <= 10 or limit < 0: raise ValueError("Profondeur ou limite invalide")
+        return ["--root", str(root), "--max-depth", str(depth), "--limit", str(limit)]
+
+    def _run_local_plan(self) -> None:
+        try: args=["-m", "koa_audit", "local-plan", *self._local_flags()]
+        except ValueError as error:
+            messagebox.showerror("Options invalides", str(error));return
+        self._start(args, "Découverte locale")
+
+    def _run_local_audit(self) -> None:
+        try:
+            args=["-m", "koa_audit", "local-audit", *self._local_flags(),
+                  "--out", self.out_dir.get()]
+        except ValueError as error:
+            messagebox.showerror("Options invalides", str(error));return
+        self._start(args, "Audit local")
+
+    def _run_triage(self) -> None:
+        try:
+            source=Path(self.triage_input.get())
+            root=Path(self.local_root.get())
+            if not source.is_file() or not root.is_dir(): raise ValueError("Vérifier le rapport JSON et le dossier local")
+            out=ROOT / "reports" / "triage" / ("kOA-triage-"+datetime.now().strftime("%Y%m%d-%H%M%S-%f")+".zip")
+            args=["-m", "koa_audit", "local-triage", "--root", str(root),
+                  "--audit-json", str(source), "--out", str(out)]
+        except ValueError as error:
+            messagebox.showerror("Options invalides", str(error));return
+        self._start(args, "Vérification + ZIP")
+
+    def _run_dashboard(self) -> None:
+        sources=[Path(v.get()).expanduser() for v in (self.dashboard_local, self.dashboard_github) if v.get().strip()]
+        if not sources or not all(src.is_file() for src in sources):
+            messagebox.showerror("Rapports manquants", "Sélectionner un audit.json existant; le rapport GitHub est facultatif.")
+            return
+        args=["-m", "koa_audit", "dashboard-publish", "--out", str(ROOT / "docs")]
+        for source in sources: args += ["--audit-json", str(source)]
+        self._start(args, "Tableau de bord")
+
+    def _preview_dashboard(self) -> None:
+        try:
+            if self._preview_server is None:
+                handler=functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT / "docs"))
+                self._preview_server=http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+                server=self._preview_server
+                threading.Thread(target=server.serve_forever, daemon=True).start()
+            webbrowser.open(f"http://127.0.0.1:{self._preview_server.server_port}/")
+        except OSError as error:
+            messagebox.showerror("Aperçu indisponible", str(error))
 
     def _build_legacy(self, tab: ttk.Frame) -> None:
         tab.columnconfigure(0, weight=1)
@@ -342,8 +479,9 @@ class AuditLauncher:
             self.legacy_out.set(value)
 
     def _update_token_label(self) -> None:
-        self.token_status.set("Jeton API : présent" if local_token_present()
-                              else "Jeton API : absent (KOA_AUDIT_TOKEN / GH_TOKEN)")
+        self.token_status.set("Local : aucun jeton requis" if not self.require_auth.get()
+                              else ("Jeton API distant : présent" if local_token_present()
+                                    else "Jeton API distant : absent"))
 
     def _run_plan(self) -> None:
         try:
@@ -358,7 +496,7 @@ class AuditLauncher:
         if self.require_auth.get() and not local_token_present():
             messagebox.showwarning("Jeton GitHub absent", (
                 "KOA_AUDIT_TOKEN ou GH_TOKEN n'est pas défini dans l'environnement de ce programme.\n\n"
-                "Configurez un jeton en lecture seule avant de relancer. "
+                "L’observation GitHub est facultative; utilisez Audit local pour travailler sans jeton. "
                 "Vous pouvez décocher « Exiger un jeton » pour un essai public, "
                 "mais plusieurs contrôles resteront UNKNOWN."
             ))
@@ -369,7 +507,7 @@ class AuditLauncher:
             args = make_audit_args(
                 source=self.inventory_source.get(), limit=self.limit.get(),
                 workers=self.workers.get(), max_age_days=self.max_age.get(),
-                out=Path(self.out_dir.get()), require_auth=self.require_auth.get(),
+                out=Path(self.remote_out_dir.get()), require_auth=self.require_auth.get(),
                 discover_public_owner=self.discover.get(),
                 legacy_dir=Path(self.legacy_dir.get()) if self.use_legacy.get() else None,
             )
@@ -488,8 +626,14 @@ class AuditLauncher:
             if self._action == "Import historique":
                 self.legacy_dir.set(self.legacy_out.get())
                 self.use_legacy.set(True)
-            if self._action == "Audit GitHub OBSERVE":
+            if self._action == "Audit local":
+                self.triage_input.set(str(self._report_path("audit.json")))
+                self.dashboard_local.set(str(self._report_path("audit.json")))
                 self._refresh_report()
+            if self._action == "Audit GitHub OBSERVE":
+                self.dashboard_github.set(str(Path(self.remote_out_dir.get()) / "audit.json"))
+            if self._action == "Tableau de bord":
+                self._log("Fichiers docs prêts à publier avec Git; aucun push effectué.")
         else:
             self.status.set(f"Échec : {self._action} (code {exit_code})")
             self._log(f"✗ Échec (code {exit_code}).")
@@ -552,6 +696,9 @@ class AuditLauncher:
             if not messagebox.askyesno("Fermer le lanceur", "Une opération est en cours. L'annuler et fermer ?"):
                 return
             self._cancel()
+        if self._preview_server is not None:
+            self._preview_server.shutdown()
+            self._preview_server.server_close()
         self.root.destroy()
 
 

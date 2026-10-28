@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Tableau de bord global des audits kOA, données agrégées et non certificatives.">
+  <title>kOA / Observatoire de l'écosystème</title>
+  <link rel="stylesheet" href="assets/dashboard.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="rail" aria-label="Navigation principale">
+      <a class="logo" href="#accueil" aria-label="kOA — Accueil">k<span>O</span>A</a>
+      <div class="rail-line"></div>
+      <a href="#accueil" class="rail-icon active" aria-label="Vue d'ensemble" title="Vue d'ensemble">◫</a>
+      <a href="#tendances" class="rail-icon" aria-label="Tendances" title="Tendances">⌁</a>
+      <a href="#signaux" class="rail-icon" aria-label="Signaux" title="Signaux">≡</a>
+      <div class="rail-bottom"><span class="rail-lock" title="Données anonymisées">◇</span></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar" id="accueil">
+        <div class="breadcrumbs">kOA DIGITAL ECOSYSTEM <span>/</span> OBSERVATOIRE</div>
+        <div class="head-actions"><span class="live-point"></span><span id="connection">En attente des données</span><button type="button" id="refresh" aria-label="Actualiser le tableau de bord">↻ Actualiser</button></div>
+      </header>
+      <main>
+        <section class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow">CENTRE DE CONTRÔLE <span class="eyebrow-rule"></span> VERSION PUBLIQUE</div>
+            <h1>Vue d'ensemble <em>kOA.</em></h1>
+            <p>Une lecture centralisée de l'état de ton écosystème logiciel. Observations agrégées, suivi des campagnes et signaux à investiguer.</p>
+            <div class="mode-toggle" role="group" aria-label="Source d'observation">
+              <button type="button" class="is-active" id="mode-local" aria-pressed="true">◉ Audit local</button>
+              <button type="button" id="mode-github" aria-pressed="false">◈ GitHub / CI</button>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
+            <div class="core">kOA</div><div class="satellite sat-1"></div><div class="satellite sat-2"></div><div class="satellite sat-3"></div><div class="satellite sat-4"></div>
+          </div>
+        </section>
+        <div class="meta-strip"><span id="mode-description">Scan statique local · aucune connexion requise lors de l'analyse</span><span id="updated">Dernière publication : —</span></div>
+        <section class="metrics" aria-label="Indicateurs principaux">
+          <article class="metric"><span class="metric-label" id="metric-label-1">Dépôts déclarés</span><strong class="metric-value" id="metric-1">—</strong><div class="metric-bottom">Périmètre de référence <span class="square purple"></span></div></article>
+          <article class="metric"><span class="metric-label" id="metric-label-2">Dépôts audités</span><strong class="metric-value" id="metric-2">—</strong><div class="metric-bottom" id="metric-extra-2">Observation actuelle <span class="square teal"></span></div></article>
+          <article class="metric"><span class="metric-label" id="metric-label-3">Signalements heuristiques</span><strong class="metric-value" id="metric-3">—</strong><div class="metric-bottom" id="metric-extra-3">Non confirmés <span class="square orange"></span></div></article>
+          <article class="metric"><span class="metric-label" id="metric-label-4">Couverture</span><strong class="metric-value" id="metric-4">—</strong><div class="metric-bottom" id="metric-extra-4">Selon la source choisie <span class="square blue"></span></div></article>
+        </section>
+        <section class="split" id="tendances">
+          <article class="panel trend-panel"><div class="panel-heading"><div><div class="micro">HISTORIQUE</div><h2>Évolution des campagnes</h2></div><span class="small-pill" id="history-count">— campagnes</span></div><div id="trend-visual" class="trend-visual" role="img" aria-label="Tendance des campagnes"></div><div class="trend-legend"><span><i class="legend-dot"></i><span id="trend-legend-title">Signalements</span></span><span>Chaque point = un rapport publié</span></div></article>
+          <article class="panel coverage-panel"><div class="panel-heading"><div><div class="micro">COUVERTURE</div><h2 id="coverage-title">Statut des inspections</h2></div></div><div class="ring-layout"><div class="ring" id="ring"><div class="ring-inner"><strong id="ring-value">—</strong><small id="ring-caption">audités</small></div></div><div class="coverage-side" id="coverage-list"></div></div><p class="subtle-note" id="coverage-note">Les états partiels ne sont pas des résultats réussis.</p></article>
+        </section>
+        <section class="panel signals-panel" id="signaux"><div class="panel-heading"><div><div class="micro">PRIORITÉS DE REVUE</div><h2 id="signals-title">Signalements par catégorie</h2></div><span class="small-pill">Métadonnées uniquement</span></div><div id="signal-list" class="signals"></div><p class="subtle-note" id="signal-note">Les détections sont des pistes de vérification; elles ne constituent pas des vulnérabilités confirmées.</p></section>
+        <section class="disclosure"><div class="disclosure-icon">i</div><div><strong>Une observation, pas une certification.</strong><p>Les données visibles correspondent au dernier rapport <em>publié</em>, pas nécessairement à l'état actuel des dépôts. Les scans locaux, les observations GitHub et les résultats historiques ne sont pas fusionnés. Aucun secret, chemin Windows, source brute ou détail de vulnérabilité n'est publié par cet outil.</p><p id="caveat" class="caveat">—</p></div></section>
+      </main>
+      <footer>kOA Digital Ecosystem <span>•</span> Observatoire statique et interactif <span>•</span> Sans jeton personnel <span>•</span> <span id="footer-version">Format v1</span></footer>
+    </div>
+  </div>
+  <script src="assets/dashboard.js" defer></script>
+</body>
+</html>
