@@ -14,6 +14,7 @@ from .inventory import bundled_inventory, remote_inventory, owner_public_discove
 from .legacy import SCHEMAS, ingest, load_normalized_directory
 from .report import summarize, write_reports
 from .local_scan import run_local_audit, write_local_reports, discover_repositories
+from .triage import build_triage, write_triage_zip
 
 DEFAULT_INVENTORY = Path(__file__).resolve().parent.parent / "data" / "initial_inventory.json"
 SOURCE_REPO = "Rejean-McCormick/kOA-Digital-Ecosystem"
@@ -49,6 +50,11 @@ def make_parser() -> argparse.ArgumentParser:
             p.add_argument("--max-files", type=int, default=6000)
             p.add_argument("--only-inventory", action="store_true",
                            help="Skip local Git repositories outside bundled inventory")
+    p = sub.add_parser("local-triage", help="Recheck local findings and create a sanitized evidence ZIP, offline")
+    p.add_argument("--root", type=Path, required=True)
+    p.add_argument("--audit-json", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True, help="New .zip path; never overwrite")
+    p.add_argument("--max-depth", type=int, default=4)
     p = sub.add_parser("import-legacy", help="Import a historical summary JSON as metadata-only evidence")
     p.add_argument("--tool", choices=sorted(SCHEMAS), required=True)
     p.add_argument("--repo", required=True, help="Explicit owner/repository binding")
@@ -59,6 +65,19 @@ def make_parser() -> argparse.ArgumentParser:
 
 
 def execute(args: argparse.Namespace) -> int:
+    if args.command == "local-triage":
+        if not 0 <= args.max_depth <= 10:
+            raise ValueError("--max-depth must be between 0 and 10")
+        if not args.audit_json.is_file():
+            raise ValueError("audit.json introuvable")
+        if args.out.suffix.lower() != ".zip":
+            raise ValueError("--out doit être un chemin ZIP")
+        payload = build_triage(args.root, args.audit_json, max_depth=args.max_depth,
+                               progress=lambda line: print(line, flush=True))
+        output = write_triage_zip(payload, args.out)
+        print(json.dumps({"triage_zip": str(output), "counts": payload["counts"]},
+                         indent=2, ensure_ascii=False))
+        return 0
     if args.command in ("local-plan", "local-audit"):
         if args.limit < 0 or not 0 <= args.max_depth <= 10:
             raise ValueError("Invalid local scan limits")

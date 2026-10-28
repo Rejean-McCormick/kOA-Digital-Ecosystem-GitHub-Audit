@@ -113,3 +113,21 @@ def make_local_args(*, command: str, root: Path, depth: object, limit: object,
                 raise ValueError("Dossier des rapports historiques introuvable")
             args.extend(["--legacy-dir", str(folder)])
     return args
+
+
+def make_triage_args(*, root: Path, audit_json: Path, out_dir: Path,
+                     depth: object, now: datetime | None = None) -> list[str]:
+    root = root.expanduser().resolve()
+    audit_json = audit_json.expanduser().resolve()
+    out_dir = out_dir.expanduser().resolve()
+    if not root.is_dir():
+        raise ValueError("La racine des projets est introuvable.")
+    if not audit_json.is_file():
+        raise ValueError("Le rapport audit.json est introuvable; exécuter un audit local d'abord.")
+    timestamp = (now or datetime.now()).strftime("%Y%m%d-%H%M%S-%f")
+    out = out_dir / f"kOA-audit-triage-{timestamp}.zip"
+    if out.exists():
+        raise ValueError("Le ZIP de triage existe déjà.")
+    return ["-m", "koa_audit", "local-triage", "--root", str(root),
+            "--audit-json", str(audit_json), "--out", str(out),
+            "--max-depth", _integer(depth, label="Profondeur", minimum=0, maximum=10)]

@@ -101,7 +101,7 @@ def _choose_project_root(root: Tk) -> Path:
 
 
 def _initialize_project(folder: Path) -> None:
-    global ROOT, SCHEMAS, make_plan_args, make_audit_args, make_legacy_args, make_local_args
+    global ROOT, SCHEMAS, make_plan_args, make_audit_args, make_legacy_args, make_local_args, make_triage_args
     # Do not search arbitrary installed modules if the selected folder is incomplete.
     if not _valid_project_dir(folder):
         raise FileNotFoundError("Le dépôt n'est pas extrait complètement.")
@@ -109,13 +109,14 @@ def _initialize_project(folder: Path) -> None:
         sys.path.insert(0, str(folder))
     from koa_audit.launcher_support import (
         make_plan_args as plan, make_audit_args as audit, make_legacy_args as legacy,
-        make_local_args as local,
+        make_local_args as local, make_triage_args as triage,
     )
     from koa_audit.legacy import SCHEMAS as schemas
     ROOT = folder
     SCHEMAS = schemas
     make_plan_args, make_audit_args, make_legacy_args = plan, audit, legacy
     make_local_args = local
+    make_triage_args = triage
 BG = "#f5f7fa"
 NAVY = "#17324d"
 MUTED = "#596879"
@@ -165,6 +166,8 @@ class AuditLauncher:
         self.source_file = StringVar()
         self.zip_member = StringVar(value="verification/embedded/summary.json")
         self.legacy_out = StringVar(value=str(ROOT / ".legacy"))
+        self.triage_input = StringVar(value=str(ROOT / "reports" / "audit.json"))
+        self.triage_output = StringVar(value=str(ROOT / "reports"))
         self.status = StringVar(value="Prêt — aucun audit exécuté dans cette session")
         self.token_status = StringVar(value="100 % local · Aucun jeton")
 
@@ -206,12 +209,15 @@ class AuditLauncher:
         audit_tab = ttk.Frame(self.tabs, padding=14)
         legacy_tab = ttk.Frame(self.tabs, padding=14)
         reports_tab = ttk.Frame(self.tabs, padding=14)
+        triage_tab = ttk.Frame(self.tabs, padding=14)
         self.tabs.add(audit_tab, text="  Audit local  ")
         self.tabs.add(legacy_tab, text="  Import historique  ")
         self.tabs.add(reports_tab, text="  Rapports  ")
+        self.tabs.add(triage_tab, text="  Vérification + ZIP  ")
         self._build_audit(audit_tab)
         self._build_legacy(legacy_tab)
         self._build_reports(reports_tab)
+        self._build_triage(triage_tab)
 
         line = ttk.Separator(outer)
         line.pack(fill="x", pady=(9, 6))
@@ -290,6 +296,29 @@ class AuditLauncher:
             "Après l'import, revenir à « Audit local » et cocher « Inclure les diagnostics historiques normalisés »."
         ), style="Muted.TLabel", wraplength=780).grid(row=2, column=0, sticky="w")
 
+    def _build_triage(self, tab: ttk.Frame) -> None:
+        tab.columnconfigure(0, weight=1)
+        panel = ttk.LabelFrame(tab, text="Contre-vérification des observations locales", style="Card.TLabelframe", padding=14)
+        panel.grid(row=0, column=0, sticky="ew")
+        panel.columnconfigure(1, weight=1)
+        self._input_row(panel, 0, "Audit JSON existant", self.triage_input,
+                        browse=self._browse_triage_input, width=58)
+        self._input_row(panel, 1, "Destination des ZIP", self.triage_output,
+                        browse=self._browse_triage_output, width=58)
+        ttk.Label(panel, text="Racine analysée : identique à celle de l'onglet Audit local.",
+                  style="Muted.TLabel").grid(row=2, column=0, columnspan=3, sticky="w", pady=(7, 4))
+        self._action_button(panel, "Contre-vérifier et créer le ZIP", self._run_triage, primary=True).grid(
+            row=3, column=1, sticky="w", pady=(12, 9))
+        ttk.Label(tab, text=(
+            "Reprend les signalements de audit.json : présence des motifs aux lignes indiquées, "
+            "fichiers sensibles suivis par Git, références des GitHub Actions, gros fichiers "
+            "non inspectés et copies Git en doublon. Aucun code ni secret brut dans le ZIP. "
+            "Un motif retrouvé n'est PAS une vulnérabilité confirmée."
+        ), style="Muted.TLabel", wraplength=780, justify="left").grid(
+            row=1, column=0, sticky="w", pady=(14, 8))
+        ttk.Button(tab, text="Ouvrir le dossier des ZIP", command=self._open_triage_folder).grid(
+            row=2, column=0, sticky="w", pady=(7, 0))
+
     def _build_reports(self, tab: ttk.Frame) -> None:
         tab.columnconfigure(0, weight=1)
         buttons = ttk.Frame(tab)
@@ -318,6 +347,8 @@ class AuditLauncher:
         value = filedialog.askdirectory(title="Choisir le dossier des rapports", initialdir=ROOT)
         if value:
             self.out_dir.set(value)
+            self.triage_input.set(str(Path(value) / "audit.json"))
+            self.triage_output.set(value)
             self._refresh_report()
 
     def _browse_legacy_folder(self) -> None:
@@ -339,6 +370,32 @@ class AuditLauncher:
         value = filedialog.askdirectory(title="Choisir le dossier des imports", initialdir=ROOT)
         if value:
             self.legacy_out.set(value)
+
+    def _browse_triage_input(self) -> None:
+        selected = filedialog.askopenfilename(title="Choisir le rapport audit.json", initialdir=self.out_dir.get(),
+                                               filetypes=[("Rapports JSON", "*.json"), ("Tous les fichiers", "*.*")])
+        if selected:
+            self.triage_input.set(selected)
+
+    def _browse_triage_output(self) -> None:
+        selected = filedialog.askdirectory(title="Destination du ZIP de preuves", initialdir=self.out_dir.get())
+        if selected:
+            self.triage_output.set(selected)
+
+    def _open_triage_folder(self) -> None:
+        folder = Path(self.triage_output.get()).expanduser()
+        folder.mkdir(parents=True, exist_ok=True)
+        self._open_file(folder)
+
+    def _run_triage(self) -> None:
+        try:
+            args = make_triage_args(root=Path(self.workspace.get()),
+                                    audit_json=Path(self.triage_input.get()),
+                                    out_dir=Path(self.triage_output.get()), depth=self.depth.get())
+        except (ValueError, OSError) as error:
+            messagebox.showerror("Vérification locale", str(error))
+            return
+        self._start(args, "Contre-vérification + ZIP")
 
     def _browse_workspace(self) -> None:
         value = filedialog.askdirectory(title="Choisir la racine des dépôts Git",
@@ -481,6 +538,8 @@ class AuditLauncher:
                 self.legacy_dir.set(self.legacy_out.get())
                 self.use_legacy.set(True)
             if self._action == "Audit local OBSERVE":
+                self.triage_input.set(str(self._report_path("audit.json")))
+                self.triage_output.set(str(Path(self.out_dir.get()).expanduser().resolve()))
                 self._refresh_report()
         else:
             self.status.set(f"Échec : {self._action} (code {exit_code})")

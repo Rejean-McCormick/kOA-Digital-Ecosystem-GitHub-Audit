@@ -8,6 +8,7 @@
 4. Cliquer sur **Découvrir les dépôts locaux**. Confirmer les chemins détectés.
 5. Cliquer sur **Scanner localement**. Le traitement reste en lecture seule et le journal s'affiche à l'écran.
 6. Onglet **Rapports** : consulter `SUMMARY.md`, `audit.csv`, `audit.json`.
+7. Onglet **Vérification + ZIP** : sélectionner `audit.json` et cliquer sur **Contre-vérifier et créer le ZIP**. Il vérifie les fichiers signalés, les doublons, les chemins suivis par Git, les Actions non figées, et les gros fichiers non inspectés. Le ZIP contient seulement des métadonnées, **jamais des secrets ni le code brut**.
 
 **Aucun jeton GitHub, aucune connexion réseau, aucune configuration de compte.**
 
@@ -28,8 +29,9 @@ Lancer `DIAGNOSTIC_LAUNCHER.cmd` : les erreurs Python restent visibles. Le journ
 ```powershell
 python -m koa_audit local-plan --root 'C:\mycode'
 python -m koa_audit local-audit --root 'C:\mycode' --out reports
+python -m koa_audit local-triage --root 'C:\mycode' --audit-json 'reports/audit.json' --out 'reports/triage.zip' 
 ```
 
 ## Confidentialité
 
-Les rapports contiennent des chemins locaux et des indicateurs potentiellement sensibles : ne pas les publier. Les contenus de secrets ne sont jamais exportés. Aucun fichier du dépôt audité n'est modifié.
+Les rapports contiennent des chemins locaux et des indicateurs potentiellement sensibles : ne pas les publier. Les contenus de secrets et les fichiers sources bruts ne sont jamais exportés. Le ZIP de triage inclut les chemins locaux et doit rester privé. Aucun fichier du dépôt audité n'est modifié.

@@ -10,6 +10,7 @@
 4. In **Audit local**, choose the folder containing your local Git repositories, e.g. `C:\mycode`.
 5. Click **Découvrir les dépôts locaux**, then **Scanner localement**.
 6. Open **Rapports** to read `SUMMARY.md`, `audit.csv` and `audit.json`.
+7. Open **Vérification + ZIP**, select the newly generated `audit.json`, and click **Contre-vérifier et créer le ZIP** to produce a sanitized evidence bundle.
 
 No GitHub credentials are requested, loaded or transmitted by the local mode. The launcher deliberately defaults to local analysis. If it does not open, run `DIAGNOSTIC_LAUNCHER.cmd` for a visible Windows error and an external diagnostic log.
 
@@ -18,6 +19,7 @@ No GitHub credentials are requested, loaded or transmitted by the local mode. Th
 ```powershell
 python -m koa_audit local-plan --root "C:\mycode" --max-depth 4
 python -m koa_audit local-audit --root "C:\mycode" --max-depth 4 --out reports
+python -m koa_audit local-triage --root "C:\mycode" --audit-json reports/audit.json --out reports/triage.zip
 ```
 
 Options: `--root` may be repeated; `--limit 5` limits inspections for a pilot; `--max-files 6000` controls per-repo inspection budget; `--only-inventory` excludes local repositories not in the 49-name snapshot. By default **all discovered Git repositories** are inspected, including previously unlisted projects. Reports are saved **only on your computer** under `reports/` (gitignored). The local scanner reads files and local Git metadata; it neither clones nor fetches repositories, runs target code, installs packages or modifies code.
@@ -39,7 +41,13 @@ A clean local scan does **not** mean the code is vulnerability-free. It cannot r
 - `reports/audit.csv` — Excel-safe one-row-per-repository summary.
 - `reports/SUMMARY.md` — coverage and caveats.
 
-Source code is never copied to the report. Do not share reports publicly before checking local paths and operational information. The `.gitignore` excludes generated reports, `.legacy/`, and the Windows helpers `ZmartZnap*.pyw` / `GitSink*.bat`.
+Source code is never copied to the report. Do not share reports publicly before checking local paths and operational information. The `.gitignore` excludes generated reports, evidence ZIPs, `.legacy/`, and the Windows helpers `ZmartZnap*.pyw` / `GitSink*.bat`.
+
+## Offline triage evidence ZIP (v0.4.0)
+
+The **Vérification + ZIP** tab rechecks the previously reported finding locations without re-running target applications. It uses the current local Git index to determine whether flagged files are tracked, identifies duplicate Git remote mappings, records GitHub Actions `uses:` references and SHA pinning, and inventories Git-tracked source files above the original 256 KiB scan limit. All checks are offline and read-only.
+
+The ZIP includes `TRIAGE.json`, a human-readable `SUMMARY.md`, `workflows.json`, `duplicates.json`, `sensitive_tracked_names.json`, and `large_files.json`. **No raw source code, environment file contents, secret values or whole workflows are ever packaged.** Local paths and repository metadata are present, so treat the bundle as confidential. Run the audit first; the local triage accepts only a `koa_audit.local_observation.v1` report and never overwrites an existing ZIP. A rule still matching a line is not a confirmed exploit, and a missing match does not prove a vulnerability was fixed.
 
 ## Historic diagnostic import
 
