@@ -45,3 +45,22 @@ Aucune publication sur GitHub n'est déclenchée par notre application. Le dép�
 Les anciens rapports locaux 2026-10-28 ont utilisé une règle TLS trop large : leurs 6 alertes historiques sont **des motifs à requalifier**, pas 6 contournements HTTPS confirmés. Le correctif de règle date de la version 0.4.1; ce dashboard ne modifie pas rétroactivement les résultats antérieurs. Le problème `backend/.env` a été réglé plus tard : le dashboard ne constitue pas un suivi de corrections individuelles.
 
 Le rapport `OBSERVE` du 2026-10-28 n'a pu observer que **15/49 dépôts**, et les alertes CodeQL/Dependabot/Secret Scanning sont **inconnues**. Aucun zéro d'alertes ne représente une attestation de sécurité.
+
+## Publication automatisée (v0.6.0)
+
+Le bouton **Publier sur GitHub (1 clic)** du launcher envoie le JSON agrégé et
+le workflow Pages vers le **seul dépôt d'audit**, via les identifiants déjà
+pris en charge par Git pour Windows. Aucun nouvel audit n'est lancé.
+Cette étape est une écriture distante explicite, demandant confirmation dans l'interface.
+Une activation initiale de GitHub Pages, source **GitHub Actions**, peut être requise.
+La publication du workflow peut être refusée si le compte Git ne possède pas
+les permissions correspondantes. Il n'existe aucun push forcé dans cette fonction.
+
+## Dépannage aperçu Windows (v0.6.1)
+
+Si Chrome affichait `ERR_EMPTY_RESPONSE` sur `127.0.0.1`, c'était causé
+par les journaux HTTP tentant d'écrire dans la console absente de `pythonw.exe`.
+Le serveur d'aperçu a été corrigé. Fermer l'ancienne application, décompresser
+la v0.6.1 et relancer le launcher. Puis cliquer « Aperçu dans le navigateur ».
+Le site d'aperçu est accessible uniquement tant que l'application reste ouverte.
+Aucun nouveau scan ou `push` n'est nécessaire.

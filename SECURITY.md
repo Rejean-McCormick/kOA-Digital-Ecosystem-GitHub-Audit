@@ -9,3 +9,5 @@ Offline heuristics cannot establish the absence of vulnerabilities and do not re
 The optional dashboard writes ONLY allowlisted aggregate counts to `docs/data/dashboard.json` and ships a static browser client. It never publishes raw `audit.json`, `audit.csv`, repo names, exact file paths, Git SHAs or secret-bearing code excerpts. Previous dashboard snapshots are also re-sanitized on each update. The source report remains in the ignored `reports/` folder.
 
 GitHub Pages generally serves **public** sites. Inspect the aggregate JSON before enabling publishing. The application does not automatically git commit or push a dashboard, and will never send the full local audit report to GitHub.
+
+La publication v0.6 ne copie aucun rapport brut ou fichier source, uniquement docs/data/dashboard.json (liste d’attributs autorisés) et le workflow GitHub Pages. Vérifier les permissions de GitHub Pages : site potentiellement public.

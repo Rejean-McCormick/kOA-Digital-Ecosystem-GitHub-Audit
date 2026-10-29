@@ -1,85 +1,156 @@
-# kOA-Digital-Ecosystem-GitHub-Audit
+<div align="center">
+  <img src="docs/assets/logo.svg" alt="kOA Digital Ecosystem" width="90" />
 
-> **Local, read-only repository auditor for the kOA Digital Ecosystem. No GitHub token or internet connection required.**
+  # kOA Digital Ecosystem — GitHub Audit
 
-## Tableau de bord dynamique sur GitHub Pages (v0.5.0)
+  **Offline repository auditing, engineering profiles, manual compliance tracking, and a public-safe dashboard.**
 
-L’application inclut un onglet **Tableau de bord** et un site interactif `docs/index.html` (statique, autonome, sans jeton). Les données proviennent exclusivement d’**agrégats publics** générés à partir de rapports choisis; les JSON bruts ne sont jamais publiés. L’onglet **Audit local** est le mode par défaut et **GitHub (optionnel)** reste distinct.
+  **Version 0.7.1 · Documentation release**
+</div>
 
-Pour préparer une nouvelle campagne **sans rescanner** : sélectionner `audit.json` dans l’onglet Tableau de bord → **Mettre à jour le tableau de bord** → **Aperçu dans le navigateur** → publier les modifications de `/docs` avec Git. Pour activer le site : `Settings > Pages > Deploy from a branch > main > /docs`. Le tableau de bord se met à jour après publication d’un nouveau bilan (rafraîchissement dans le navigateur aux ~3 minutes), pas en temps réel avec le disque du PC. Voir [DASHBOARD_FR.md](docs/DASHBOARD_FR.md).
+> **Default operation is local, read-only, and token-free.** The application inspects existing local Git working trees without cloning, fetching, executing project code, changing source repositories, or requiring a GitHub API token.
 
-La version inclut trois campagnes de référence (deux locales, une OBSERVE), **uniquement sous forme agrégée**. Les anciennes détections TLS de ces campagnes précèdent la règle améliorée et ne doivent pas être traitées comme des failles confirmées. Aucun secret ou chemin local n’est exporté dans `docs/data/dashboard.json`. Les Pages sont généralement accessibles publiquement : vérifier les données agrégées avant de publier.
+## What this project does
 
-## Getting started (Windows)
+The audit repository provides a single place to **observe and review** the kOA Digital Ecosystem. It uses a bundled reference inventory of **49 repositories** without claiming that this inventory is live or that every repository has been inspected.
 
-1. Extract the **entire** ZIP to a normal folder (never launch directly inside the ZIP).
-2. Install Python 3.11+ with Tkinter (normally included in the official Windows installer).
-3. Double-click **`kOA_GitHub_Audit_Launcher.pyw`**.
-4. In **Audit local**, choose the folder containing your local Git repositories, e.g. `C:\mycode`.
-5. Click **Découvrir les dépôts locaux**, then **Scanner localement**.
-6. Open **Rapports** to read `SUMMARY.md`, `audit.csv` and `audit.json`.
-7. Open **Vérification + ZIP**, select the newly generated `audit.json`, and click **Contre-vérifier et créer le ZIP** to produce a sanitized evidence bundle.
+| Capability | What you get | Important boundary |
+| --- | --- | --- |
+| **Local audit** | Inventory of Git working trees, workflow/configuration indicators, bounded static checks, JSON/CSV/Markdown reports | Does not execute CI, CodeQL, tests, or CVE lookups |
+| **Evidence triage** | Targeted rechecks of existing findings and a sanitized evidence ZIP | No raw source or secrets copied into the ZIP |
+| **Engineering & security profiles** | Local Markdown profiles by repository, imported through the launcher | Engineering scale is **not** a quality or release-readiness score |
+| **Manual compliance checklist** | 33 architecture practices + 53 security practices with four review states | States are user assessments, not automatic certifications |
+| **Dashboard** | Visual aggregate metrics, campaign history, inspection/CI visibility, engineering indicators | Public dashboard uses approved aggregate counts only |
+| **Historical diagnostics** | Metadata imports from existing kOA diagnostic tool families | Historical outcomes remain separate from current observations |
 
-No GitHub credentials are requested, loaded or transmitted by the local mode. The launcher deliberately defaults to local analysis. If it does not open, run `DIAGNOSTIC_LAUNCHER.cmd` for a visible Windows error and an external diagnostic log.
+The application uses the kOA brand color **`#1e6864`** and the supplied logo in the dashboard.
 
-## CLI (also fully offline)
+## Quick start — Windows
 
-```powershell
-python -m koa_audit local-plan --root "C:\mycode" --max-depth 4
-python -m koa_audit local-audit --root "C:\mycode" --max-depth 4 --out reports
-python -m koa_audit local-triage --root "C:\mycode" --audit-json reports/audit.json --out reports/triage.zip
+**Requirements:** Windows, Python **3.11+** with Tkinter, and locally available Git repositories. Git for Windows is useful for local Git metadata and is required when using the optional GitHub publication feature.
+
+1. Download and **extract the complete ZIP** into a normal folder. Do not run the launcher from inside the archive.
+2. Double-click **`kOA_GitHub_Audit_Launcher.pyw`**.
+3. Open **Audit local**, select a root folder such as `C:\mycode`, and choose **Discover local repositories**, then **Scan locally** (the interface buttons are currently labeled in French).
+4. Use **Reports** to view `SUMMARY.md`, `audit.csv`, and `audit.json`.
+5. Use **Verification + ZIP** if a finding needs targeted confirmation. You do **not** need to repeat a full audit for a known finding.
+6. Open **Profiles & compliance** to view or import engineering/security profiles and review each repository's checklist.
+7. Open **Dashboard** to preview aggregated data. Publishing to GitHub is an **explicit, separate** action.
+
+If the launcher does not open, run **`DIAGNOSTIC_LAUNCHER.cmd`** for visible troubleshooting output. Since v0.6.1, the local preview server handles `pythonw.exe` without a console.
+
+## Engineering and security profiles
+
+The **Profiles & compliance** tab covers the 49 repositories and reads:
+
+```text
+profiles/
+├── catalog.json                         # 86 catalog entries
+├── library/                             # Source pattern Markdown
+├── repositories/
+│   └── <repository-name>/
+│       ├── ENGINEERING_PROFILE.md
+│       └── SECURITY_PROFILE.md
+└── templates/                            # Templates for future profiles
 ```
 
-Options: `--root` may be repeated; `--limit 5` limits inspections for a pilot; `--max-files 6000` controls per-repo inspection budget; `--only-inventory` excludes local repositories not in the 49-name snapshot. By default **all discovered Git repositories** are inspected, including previously unlisted projects. Reports are saved **only on your computer** under `reports/` (gitignored). The local scanner reads files and local Git metadata; it neither clones nor fetches repositories, runs target code, installs packages or modifies code.
+The bundled catalog includes **33 architecture patterns** and **53 security patterns**. Each entry can be marked:
 
-## What the offline scanner actually checks
+- **Not assessed** (`Non évalué`) — default; no conclusion has been made.
+- **Not applicable** (`Pas applicable`) — the reviewer considers it outside the repository's scope.
+- **Needs improvement** (`À améliorer`) — improvement is warranted.
+- **Applied** (`Appliqué`) — the reviewer has evidence supporting implementation.
 
-- Finds working trees under selected local roots (`.git` directory or worktree marker), with a bounded directory search and no symlink traversal.
-- Matches them against a **snapshot inventory of 49 kOA repositories** (scope reference, not permission to modify). Reports missing and ambiguous matches separately.
-- Inventories GitHub Actions configuration files, indicators of CodeQL declarations and Dependabot configuration. **Does not run CI or CodeQL and does not know if GitHub runs succeeded.**
-- Inventories dependency manifests/lockfiles, counts files inspected and records a local Git commit when available. **Does not determine whether dependency versions have known CVEs.**
-- Runs **bounded heuristic pattern checks** for suspected private keys, GitHub/AWS key patterns, some risky Python calls and select GitHub Actions misconfigurations. Reports file paths, line numbers and rule names, **never secret contents**. These are leads requiring review, not definitive vulnerabilities.
-- Preserves support for importing historical KonnaxionDiag, KorDiag, KristalDiag, Orgo, Skope and SemantiK diagnostic summaries separately from current local findings. A historical `PASS` cannot turn a new scan into `PASS`.
+Add an explanatory note or evidence reference where useful, without including passwords, tokens, or private material. Manual assessments are stored **outside the extracted application** at `%LOCALAPPDATA%\kOA-GitHub-Audit\profiles\assessments.json` so replacing the app ZIP does not overwrite them. They are **not published by the dashboard button**.
 
-For the 2026-10-28 Konnaxion-Capsule-Manager snapshot, the six original generic `verify=False` alerts were false positives. The corrected rule also surfaced a separate genuine TLS verification bypass in runtime HTTPS healthchecks, which requires a targeted code review; **the audit app does not modify the source repository**.
+Three initial profile folders are included:
 
-A clean local scan does **not** mean the code is vulnerability-free. It cannot replace a real CodeQL/Semgrep analysis, a dependency advisory database, the GitHub platform's secret-scanning engine or tests against an actual deployed environment. Unscanned, over-limit and missing content must never be treated as successful inspection.
+| Repository | Status of engineering profile |
+| --- | --- |
+| **Konnaxion** | Supplied RepoSurveyor profile (September 16, 2026); repository attribution is **provisional** and explicitly noted in `PROVENANCE.md` |
+| **Orgo** | Preliminary profile using available local-audit observations; RepoSurveyor code/complexity measures not yet provided |
+| **kOA-Linux-Koali** | Preliminary profile using available local-audit observations; RepoSurveyor code/complexity measures not yet provided |
 
-## Report files and privacy
+No missing profile or unreviewed practice is silently classified as compliant. An `ENGINEERING_PROFILE.md` describes **engineering size/surface**; it does not establish feature completion, code quality, security certification, or release readiness.
 
-- `reports/audit.json` — full bounded metadata and heuristic findings, local locations and local HEAD hashes.
-- `reports/audit.csv` — Excel-safe one-row-per-repository summary.
-- `reports/SUMMARY.md` — coverage and caveats.
+For adding profiles, select the repository and profile type, then **Importer .md** in the tab. A profile is installed under **this audit application only**; audited source repositories stay unchanged.
 
-Source code is never copied to the report. Do not share reports publicly before checking local paths and operational information. The `.gitignore` excludes generated reports, evidence ZIPs, `.legacy/`, and the Windows helpers `ZmartZnap*.pyw` / `GitSink*.bat`.
+## Dashboard and GitHub Pages
 
-## Offline triage evidence ZIP (v0.4.1)
+`docs/index.html` is a static dashboard with local-audit and GitHub/CI views kept separate. It displays **aggregate** metrics such as inventory coverage, inspection findings, files inspected, engineering-control indicators, and campaign trends. The displayed figures describe **published snapshots**, not a live filesystem feed.
 
-The **Vérification + ZIP** tab rechecks the previously reported finding locations without re-running target applications. It uses the current local Git index to determine whether flagged files are tracked, identifies duplicate Git remote mappings, records GitHub Actions `uses:` references and SHA pinning, and inventories Git-tracked source files above the original 256 KiB scan limit. All checks are offline and read-only.
+- **Preview locally:** Dashboard → **Aperçu dans le navigateur**.
+- **Build aggregated data without rerunning an audit:** Dashboard → **Mettre à jour le tableau de bord**, or use the `dashboard-publish` CLI command.
+- **Publish (optional):** Dashboard → **Publier sur GitHub (1 clic)**. It uses the PC's existing Git credentials and normally pushes only the allowlisted aggregate dashboard data and Pages deployment workflow to the **audit repository**, never to the 49 source repositories. GitHub permissions may prevent the push.
+- **First-time Pages configuration:** In the audit repository, choose **Settings → Pages → Source: GitHub Actions** if required. `.github/workflows/dashboard-pages.yml` deploys `docs/` after the relevant push.
 
-**v0.4.1 correction (TLS false positives):** A bare `verify=False` is **not** evidence of disabled HTTPS certificate verification. The local scanner now uses AST syntax inspection to identify direct HTTP client calls with `verify=False`, explicit `verify_tls=False`/similar flags, and `ssl._create_unverified_context()`; it ignores capsule verification options, comments, and strings. Historical `PYTHON_SSL_VERIFY_DISABLED` findings are requalified by the **Vérification + ZIP** flow as `NOT_A_TLS_BYPASS_API` or `TLS_BYPASS_API_STILL_PRESENT` without requiring another full audit. This remains a limited heuristic, not full security dataflow analysis.
+The browser checks for updated published data approximately every **three minutes**; it cannot access `C:\mycode` remotely. **GitHub Pages and GitHub Wiki are different services.** The wiki source pages live in the `wiki/` folder and need their own optional publishing step.
 
-The ZIP includes `TRIAGE.json`, a human-readable `SUMMARY.md`, `workflows.json`, `duplicates.json`, `sensitive_tracked_names.json`, and `large_files.json`. **No raw source code, environment file contents, secret values or whole workflows are ever packaged.** Local paths and repository metadata are present, so treat the bundle as confidential. Run the audit first; the local triage accepts only a `koa_audit.local_observation.v1` report and never overwrites an existing ZIP. A rule still matching a line is not a confirmed exploit, and a missing match does not prove a vulnerability was fixed.
+**Privacy:** the dashboard does not publish raw `audit.json`/CSV, repository names, Windows paths, source code, secrets, or per-repository findings. Inspect `docs/data/dashboard.json` before making it public. Detailed Markdown profiles and checklist assessments are **not** automatically published to Pages.
 
-## Historic diagnostic import
+## Command line
 
-Select **Import historique** in the interface. Provide the diagnostic family, an explicit `owner/repo` target, a JSON summary (or exact member of a ZIP archive), and a local output folder. The import is metadata-only and preserves original schema/verdict provenance without re-verifying cryptographic evidence.
-
-## Architecture and boundaries
-
-- `kOA-Digital-Ecosystem` owns the architectural and repository scope reference.
-- Individual diagnostics own their own level meanings and authoritative qualification logic.
-- This repository owns only local, non-authoritative observation and aggregation (`LOCAL_OBSERVE`).
-- No source repository is changed, no GitHub permissions are requested, no remote workflows are triggered, and the reports do not authorize releases.
-
-The older optional CLI `audit` subcommand for remote GitHub API reads is retained for backward compatibility, but **is not used by the launcher or by scheduled automation**. The `local-audit` and `local-plan` subcommands never instantiate a GitHub client.
-
-## Verification
+Run these commands from the extracted project root:
 
 ```powershell
+# Inventory without a scan (offline)
+python -m koa_audit local-plan --root "C:\mycode" --max-depth 4
+
+# Full local audit: reports are written on your PC only
+python -m koa_audit local-audit --root "C:\mycode" --max-depth 4 --out reports
+
+# Targeted recheck of existing results (offline)
+python -m koa_audit local-triage --root "C:\mycode" --audit-json reports/audit.json --out reports/triage.zip
+
+# Regenerate public-safe data from an existing report (no scan, no push)
+python -m koa_audit dashboard-publish --audit-json reports/audit.json --out docs
+
+# Optional publication via existing Git credentials
+python -m koa_audit dashboard-sync
+
+# Run the repository's test suite
 python -m unittest discover -s tests -v
 ```
 
-Detailed instructions: [guide Windows](docs/LAUNCHER_FR.md), [local architecture](docs/ARCHITECTURE.md), [historical imports](docs/LEGACY_DIAGNOSTICS.md).
+Selected options: repeat `--root` for multiple folders; use `--limit` for a pilot; use `--max-files` to adjust the per-repository inspection budget; use `--only-inventory` to skip locally discovered repositories outside the bundled 49-repository inventory. The older `audit` and `plan` subcommands access the **remote GitHub API** and are optional; they are **not** required for local auditing.
 
-No open-source license has been selected.
+## Understanding results
+
+- **`INSPECTED_NO_PATTERN_MATCH`** means no configured static pattern matched the inspected content — **not** that a repository is secure.
+- **`REVIEW`** means a heuristic finding should be checked in context.
+- **`PARTIAL`** means the inspection had limitations, such as files above its scanning budget.
+- Missing CodeQL/CI/security-alert data is **unknown**, not zero and not passed.
+- The **manual compliance checklist** is independent of these automated observation statuses.
+- Historical diagnostics retain their provenance and never replace new audit findings.
+
+> A known false positive should be resolved by **targeted triage**, not by rerunning the complete 49-repository audit. In the October 2026 `Konnaxion-Capsule-Manager` investigation, the older generic `verify=False` rule produced six false TLS alerts. The improved v0.4.1 rule identifies HTTP/TLS contexts more precisely; separate HTTPS health-check behavior still requires its own review.
+
+## Project structure
+
+```text
+koa_audit/            # Local scanner, triage, reporting, profiles, dashboard
+profiles/             # Pattern catalog, original pattern library, repository profiles
+wiki/                 # English GitHub Wiki page sources (publish separately)
+docs/                 # GitHub Pages site and reference documentation
+config/               # Historical diagnostic catalog
+data/                 # Reference inventory snapshot and provenance
+tests/                # Automated tests
+reports/              # Local generated reports (ignored by Git)
+```
+
+## Documentation
+
+- **[Wiki home](wiki/Home.md)** — English user and maintainer guides (source files, usable without publishing).
+- **[Wiki quick start](wiki/Quick-Start.md)** — Windows setup and main workflows.
+- **[Profiles and checklist](wiki/Repository-Profiles-and-Checklist.md)** — importing reports and recording assessments.
+- **[Dashboard and publishing](wiki/Dashboard-and-Publishing.md)** — preview, publication, and privacy.
+- **[Troubleshooting](wiki/Troubleshooting.md)** — Windows launcher, preview and Git publishing problems.
+- [Existing technical documentation](docs/ARCHITECTURE.md) and [French UI guide](docs/LAUNCHER_FR.md).
+
+**GitHub Wiki publication:** `wiki/` is a set of ready-to-use Wiki Markdown pages, not an automatically published GitHub Wiki. GitHub Wikis are separate repositories. See [Wiki-Publishing](wiki/Wiki-Publishing.md) for the one-time setup and safe publishing steps.
+
+## Security, governance, and license
+
+This audit repository has **no authority to change source projects, approve releases, or certify security**. The `kOA-Digital-Ecosystem` repository retains inventory/governance authority; specialized diagnostics retain their own qualification meaning. The application does not replace CodeQL, advisory-database analysis, secret scanning, or production tests. See [SECURITY.md](SECURITY.md).
+
+**No open-source license has been selected.**

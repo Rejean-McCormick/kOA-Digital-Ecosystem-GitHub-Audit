@@ -31,6 +31,19 @@ ROOT = Path(__file__).resolve().parent
 SCHEMAS = ()
 
 
+class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
+    """Serve dashboard assets even under pythonw.exe (where sys.stderr is None).
+
+    BaseHTTPRequestHandler logs every response to sys.stderr *before* sending
+    headers. On Windows pythonw.exe, this raises AttributeError and Chrome
+    displays ERR_EMPTY_RESPONSE. An HTTP preview must not depend on a console.
+    """
+
+    def log_message(self, format: str, *args: object) -> None:
+        # Preview is loopback-only. Never write HTTP logs to a missing stderr.
+        pass
+
+
 def diagnostic_log(error: BaseException) -> Path | None:
     """Persist startup failures outside Git and without reading API credentials."""
     base = Path(os.environ.get("LOCALAPPDATA") or tempfile.gettempdir()) / "kOA-GitHub-Audit"
@@ -117,9 +130,9 @@ def _initialize_project(folder: Path) -> None:
     SCHEMAS = schemas
     make_plan_args, make_audit_args, make_legacy_args = plan, audit, legacy
 BG = "#f5f7fa"
-NAVY = "#17324d"
+NAVY = "#154c49"
 MUTED = "#596879"
-ACCENT = "#16659b"
+ACCENT = "#1e6864"
 
 
 def child_python() -> str:
@@ -164,6 +177,15 @@ class AuditLauncher:
         self.dashboard_github = StringVar(value="")
         self.triage_input = StringVar(value=str(ROOT / "reports" / "local" / "audit.json"))
         self._preview_server = None
+        self.profile_repo = StringVar(value="Rejean-McCormick/Konnaxion")
+        self.profile_kind = StringVar(value="ENGINEERING_PROFILE.md")
+        self.profile_family = StringVar(value="Tous")
+        self.profile_status = StringVar(value="Non évalué")
+        self.profile_note = StringVar(value="")
+        self.profile_overview = StringVar(value="")
+        self.profile_audit_context = StringVar(value="")
+        self.profile_catalog_items = {}
+        self.profile_current_id = None
         self.require_auth = BooleanVar(value=False)
         self.discover = BooleanVar(value=False)
         self.use_legacy = BooleanVar(value=(ROOT / ".legacy").is_dir())
@@ -196,7 +218,7 @@ class AuditLauncher:
                         font=("Segoe UI Semibold", 10))
         style.configure("TButton", font=("Segoe UI", 10), padding=(10, 7))
         style.configure("Primary.TButton", foreground="white", background=ACCENT)
-        style.map("Primary.TButton", background=[("active", "#0f4c79"), ("disabled", "#8aa8bb")])
+        style.map("Primary.TButton", background=[("active", "#15504d"), ("disabled", "#8aa8bb")])
         style.configure("TNotebook", background=BG)
         style.configure("TNotebook.Tab", font=("Segoe UI", 10), padding=(14, 9))
 
@@ -215,12 +237,14 @@ class AuditLauncher:
         triage_tab = ttk.Frame(self.tabs, padding=14)
         dashboard_tab = ttk.Frame(self.tabs, padding=14)
         reports_tab = ttk.Frame(self.tabs, padding=14)
+        profiles_tab = ttk.Frame(self.tabs, padding=14)
         legacy_tab = ttk.Frame(self.tabs, padding=14)
         audit_tab = ttk.Frame(self.tabs, padding=14)
         self.tabs.add(local_tab, text="  Audit local  ")
         self.tabs.add(triage_tab, text="  Vérification + ZIP  ")
         self.tabs.add(dashboard_tab, text="  Tableau de bord  ")
         self.tabs.add(reports_tab, text="  Rapports  ")
+        self.tabs.add(profiles_tab, text="  Profils & conformité  ")
         self.tabs.add(legacy_tab, text="  Import historique  ")
         self.tabs.add(audit_tab, text="  GitHub (optionnel)  ")
         self._build_audit(audit_tab)
@@ -228,6 +252,7 @@ class AuditLauncher:
         self._build_triage(triage_tab)
         self._build_dashboard(dashboard_tab)
         self._build_reports(reports_tab)
+        self._build_profiles(profiles_tab)
         self._build_legacy(legacy_tab)
 
         line = ttk.Separator(outer)
@@ -325,15 +350,213 @@ class AuditLauncher:
         btns=ttk.Frame(frame)
         btns.grid(row=2, column=0, columnspan=3, sticky="w", pady=(14, 5))
         self._action_button(btns, "Mettre à jour le tableau de bord", self._run_dashboard, primary=True).pack(side="left", padx=(0, 9))
+        self._action_button(btns, "Publier sur GitHub (1 clic)", self._sync_dashboard, primary=True).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Aperçu dans le navigateur", command=self._preview_dashboard).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Ouvrir le dossier docs", command=lambda: self._open_file(ROOT / "docs")).pack(side="left")
-        note=("Les fichiers publiables sont docs/index.html, docs/assets/* et docs/data/dashboard.json. "
-              "Ils ne contiennent NI chemins locaux, NI noms des dépôts, NI codes sources, NI secrets. "
-              "Cette action ne pousse rien sur GitHub et ne relance aucun audit.")
+        note=("« Publier sur GitHub » envoie uniquement le bilan agrégé dans le dépôt d'audit. "
+              "Aucun jeton à saisir, aucun nouvel audit, aucun code source ou secret publié. "
+              "Git pour Windows utilise votre connexion GitHub existante. Le bouton local d'aperçu ne publie rien.")
         ttk.Label(tab, text=note, wraplength=910, justify="left", style="Muted.TLabel").grid(row=1, column=0, sticky="w", pady=14)
-        ttk.Label(tab, text="Activation : GitHub > dépôt d’audit > Settings > Pages > Deploy from a branch > main > /docs. "
-                  "Publier ensuite les fichiers docs avec tes outils Git habituels. Le site actualise sa vue lorsque les données sont publiées.",
+        ttk.Label(tab, text="Une seule configuration GitHub peut être nécessaire : Settings > Pages > Source : GitHub Actions. "
+                  "Ensuite, le site se déploie automatiquement après chaque publication. Ne pas utiliser le bouton d'audit distant.",
                   wraplength=910, justify="left").grid(row=2, column=0, sticky="w", pady=8)
+
+    def _build_profiles(self, tab: ttk.Frame) -> None:
+        """Read standardized files and let the user review architecture/security patterns."""
+        from koa_audit import profiles
+        inventory = profiles.inventory(ROOT)
+        top = ttk.Frame(tab)
+        top.pack(fill="x", pady=(0, 9))
+        ttk.Label(top, text="Dépôt", style="TLabel").pack(side="left", padx=(0, 8))
+        repo_box = ttk.Combobox(top, textvariable=self.profile_repo, state="readonly",
+                                values=inventory, width=39)
+        repo_box.pack(side="left", padx=(0, 12))
+        repo_box.bind("<<ComboboxSelected>>", lambda _e: self._profiles_refresh())
+        ttk.Label(top, text="Famille").pack(side="left", padx=(0, 7))
+        family_box = ttk.Combobox(top, textvariable=self.profile_family, state="readonly",
+                                  values=["Tous", "Architecture", "Sécurité"], width=15)
+        family_box.pack(side="left", padx=(0, 10))
+        family_box.bind("<<ComboboxSelected>>", lambda _e: self._profiles_refresh())
+        ttk.Button(top, text="Rafraîchir", command=self._profiles_refresh).pack(side="left")
+
+        ttk.Label(tab, textvariable=self.profile_overview, style="Muted.TLabel").pack(fill="x", pady=(0, 7))
+        ttk.Label(tab, textvariable=self.profile_audit_context, style="Muted.TLabel").pack(fill="x", pady=(0, 8))
+        panes = ttk.Panedwindow(tab, orient="horizontal")
+        panes.pack(fill="both", expand=True)
+        left = ttk.Frame(panes)
+        right = ttk.Frame(panes)
+        panes.add(left, weight=3)
+        panes.add(right, weight=2)
+        tree_area = ttk.Frame(left)
+        tree_area.pack(fill="both", expand=True)
+        self.profile_tree = ttk.Treeview(tree_area, columns=("pattern", "state"),
+                                          show="headings", selectmode="browse")
+        self.profile_tree.heading("pattern", text="Pratique (source fournie)")
+        self.profile_tree.heading("state", text="Statut")
+        self.profile_tree.column("pattern", width=370, minwidth=230, stretch=True)
+        self.profile_tree.column("state", width=122, minwidth=100, stretch=False)
+        self.profile_tree.pack(side="left", fill="both", expand=True)
+        scroll = ttk.Scrollbar(tree_area, orient="vertical", command=self.profile_tree.yview)
+        scroll.pack(side="right", fill="y")
+        self.profile_tree.configure(yscrollcommand=scroll.set)
+        self.profile_tree.bind("<<TreeviewSelect>>", self._profile_selected)
+        ttk.Label(left, text="Sélectionne une pratique, puis son statut. Aucun statut n'est attribué automatiquement.",
+                  style="Muted.TLabel", wraplength=480).pack(anchor="w", pady=7)
+        chooser = ttk.Frame(left)
+        chooser.pack(fill="x", pady=(3, 2))
+        ttk.Label(chooser, text="Statut").pack(side="left", padx=(0, 6))
+        self.profile_status_box = ttk.Combobox(chooser, textvariable=self.profile_status,
+                            values=profiles.STATUSES, state="readonly", width=18)
+        self.profile_status_box.pack(side="left")
+        ttk.Button(chooser, text="Enregistrer", command=self._profile_save,
+                   style="Primary.TButton").pack(side="left", padx=(12, 0))
+        ttk.Label(left, text="Justification / preuve (facultatif, conservé sur ce PC)",
+                  style="Muted.TLabel").pack(anchor="w", pady=(8, 2))
+        ttk.Entry(left, textvariable=self.profile_note).pack(fill="x")
+
+        ttk.Label(right, text="Profil standardisé", style="Card.TLabelframe.Label").pack(anchor="w")
+        choose = ttk.Frame(right)
+        choose.pack(fill="x", pady=7)
+        kind = ttk.Combobox(choose, textvariable=self.profile_kind, state="readonly",
+                            values=profiles.PROFILE_NAMES, width=28)
+        kind.pack(side="left", padx=(0, 8))
+        kind.bind("<<ComboboxSelected>>", lambda _e: self._profile_show_document())
+        ttk.Button(choose, text="Importer .md", command=self._profile_import).pack(side="left")
+        doc_tabs = ttk.Notebook(right)
+        doc_tabs.pack(fill="both", expand=True)
+        doc_page = ttk.Frame(doc_tabs)
+        practice_page = ttk.Frame(doc_tabs)
+        doc_tabs.add(doc_page, text="Rapport du dépôt")
+        doc_tabs.add(practice_page, text="Fiche de pratique")
+        self.profile_preview = ScrolledText(doc_page, height=23, wrap="word", font=("Consolas", 9),
+                                             background="#ffffff", foreground="#223d3b")
+        self.profile_preview.pack(fill="both", expand=True)
+        self.profile_preview.configure(state="disabled")
+        self.pattern_preview = ScrolledText(practice_page, height=23, wrap="word", font=("Consolas", 9),
+                                             background="#ffffff", foreground="#223d3b")
+        self.pattern_preview.pack(fill="both", expand=True)
+        self.pattern_preview.configure(state="disabled")
+        self.profile_doc_tabs = doc_tabs
+        ttk.Button(right, text="Ouvrir le dossier de ce dépôt",
+                   command=self._profile_open_folder).pack(anchor="w", pady=(8, 0))
+        ttk.Label(right, text="Les documents restent dans profiles/repositories/ et ne sont pas envoyés au dashboard public.",
+                  style="Muted.TLabel", wraplength=410).pack(anchor="w", pady=(6, 0))
+        self._profiles_refresh()
+
+    def _profiles_refresh(self) -> None:
+        from koa_audit import profiles
+        repo = self.profile_repo.get()
+        progress = profiles.progress(ROOT, repo)
+        self.profile_overview.set(
+            f"{repo}  |  Pratiques : {progress['reviewed']}/{progress['total']} examinées  |  "
+            f"Appliqué : {progress['Appliqué']}  |  À améliorer : {progress['À améliorer']}  |  "
+            f"Non applicable : {progress['Pas applicable']}")
+        report = Path(self.dashboard_local.get()).expanduser()
+        try:
+            ctx = profiles.audit_context(ROOT, repo, report)
+            if ctx:
+                self.profile_audit_context.set(
+                    f"Dernier audit JSON choisi : {ctx['status']} · "
+                    f"{ctx['files_inspected']}/{ctx['files_enumerated']} fichiers inspectés · "
+                    f"{ctx['findings']} observations · commit {ctx['head']}")
+            else:
+                self.profile_audit_context.set("Aucun rapport d'audit local associé à ce dépôt (sélectionner audit.json dans Tableau de bord).")
+        except (ValueError, OSError, TypeError):
+            self.profile_audit_context.set("Rapport d'audit local non disponible ou invalide.")
+        self.profile_current_id = None
+        self.profile_note.set("")
+        self.profile_status.set("Non évalué")
+        self.profile_tree.delete(*self.profile_tree.get_children())
+        self.profile_catalog_items = {p['id']:p for p in profiles.catalog(ROOT)}
+        for item in self.profile_catalog_items.values():
+            if self.profile_family.get() == "Architecture" and item["family"] != "architecture":
+                continue
+            if self.profile_family.get() == "Sécurité" and item["family"] != "security":
+                continue
+            status = profiles.get_assessment(ROOT, repo, item['id'])["status"]
+            self.profile_tree.insert("", "end", iid=item["id"], values=(item['id']+" · "+item['title'],status))
+        self._profile_show_document()
+        self._profile_show_pattern()
+
+    def _profile_selected(self, _event=None) -> None:
+        from koa_audit import profiles
+        ids = self.profile_tree.selection()
+        if not ids:
+            return
+        self.profile_current_id = ids[0]
+        data = profiles.get_assessment(ROOT, self.profile_repo.get(), self.profile_current_id)
+        self.profile_status.set(data["status"])
+        self.profile_note.set(data["note"])
+        self._profile_show_pattern()
+
+    def _profile_show_pattern(self) -> None:
+        from koa_audit import profiles
+        if self.profile_current_id:
+            try:
+                content=profiles.get_pattern_text(ROOT,self.profile_current_id)
+            except (OSError,ValueError,UnicodeError) as error:
+                content=str(error)
+        else:
+            content="Sélectionne une pratique à gauche pour lire sa fiche source complète."
+        self.pattern_preview.configure(state="normal")
+        self.pattern_preview.delete("1.0",END)
+        self.pattern_preview.insert("1.0",content)
+        self.pattern_preview.configure(state="disabled")
+
+    def _profile_save(self) -> None:
+        from koa_audit import profiles
+        if not self.profile_current_id:
+            messagebox.showinfo("Pratique", "Sélectionne une pratique dans la liste.")
+            return
+        try:
+            dest = profiles.set_assessment(ROOT, self.profile_repo.get(),self.profile_current_id,
+                                           self.profile_status.get(),self.profile_note.get())
+        except (OSError,ValueError,TypeError) as error:
+            messagebox.showerror("Enregistrement impossible", str(error))
+            return
+        self.profile_tree.set(self.profile_current_id, "state", self.profile_status.get())
+        progress = profiles.progress(ROOT, self.profile_repo.get())
+        self.profile_overview.set(
+            f"{self.profile_repo.get()}  |  Pratiques : {progress['reviewed']}/{progress['total']} examinées  |  "
+            f"Appliqué : {progress['Appliqué']}  |  À améliorer : {progress['À améliorer']}  |  "
+            f"Non applicable : {progress['Pas applicable']}")
+        self.status.set(f"Évaluation enregistrée localement : {self.profile_current_id} (aucun Git push)")
+
+    def _profile_show_document(self) -> None:
+        from koa_audit import profiles
+        try:
+            text = profiles.get_profile(ROOT, self.profile_repo.get(), self.profile_kind.get())
+            if text is None:
+                text = "Aucun profil fourni pour ce dépôt.\n\nUtilise « Importer .md » lorsque le rapport standardisé sera prêt.\nAucun résultat n'est inventé."
+        except (OSError, ValueError) as error:
+            text = str(error)
+        self.profile_preview.configure(state="normal")
+        self.profile_preview.delete("1.0", END)
+        self.profile_preview.insert("1.0", text)
+        self.profile_preview.configure(state="disabled")
+
+    def _profile_import(self) -> None:
+        from koa_audit import profiles
+        src = filedialog.askopenfilename(title="Importer un profil Markdown",
+                                         filetypes=[("Markdown", "*.md"), ("Tous", "*.*")])
+        if not src:
+            return
+        dest = profiles.profile_directory(ROOT,self.profile_repo.get()) / self.profile_kind.get()
+        if dest.exists() and not messagebox.askyesno("Remplacer le profil ?",
+                    f"Le profil existe déjà pour ce dépôt.\n\nRemplacer {dest.name} ?"):
+            return
+        try:
+            profiles.install_profile(ROOT,self.profile_repo.get(),self.profile_kind.get(),Path(src))
+            self._profile_show_document()
+            self.status.set("Profil importé localement dans le dossier profiles/.")
+        except (OSError, ValueError, UnicodeError) as error:
+            messagebox.showerror("Import impossible",str(error))
+
+    def _profile_open_folder(self) -> None:
+        from koa_audit import profiles
+        folder=profiles.profile_directory(ROOT,self.profile_repo.get())
+        folder.mkdir(parents=True,exist_ok=True)
+        self._open_file(folder)
 
     def _browse_local_root(self) -> None:
         folder = filedialog.askdirectory(title="Choisir la racine des dépôts locaux", initialdir=self.local_root.get())
@@ -393,15 +616,38 @@ class AuditLauncher:
         for source in sources: args += ["--audit-json", str(source)]
         self._start(args, "Tableau de bord")
 
+    def _sync_dashboard(self) -> None:
+        if not messagebox.askyesno("Publier le bilan kOA",
+                                  "Envoyer uniquement les statistiques agrégées sur le dépôt d'audit GitHub ?\n\n"
+                                  "Aucun audit ne sera relancé. Aucun fichier .env ni code source ne sera envoyé."):
+            return
+        sources = []
+        for variable in (self.dashboard_local, self.dashboard_github):
+            name = variable.get().strip()
+            if name and Path(name).expanduser().is_file():
+                sources.extend(["--audit-json", str(Path(name).expanduser())])
+        self._start(["-m", "koa_audit", "dashboard-sync", *sources], "Publication du tableau de bord")
+
     def _preview_dashboard(self) -> None:
         try:
+            dashboard_dir = ROOT / "docs"
+            if not (dashboard_dir / "index.html").is_file():
+                raise FileNotFoundError(
+                    "Le tableau de bord n'est pas dans le dossier docs/. "
+                    "Décompressez le ZIP complet avant de lancer l'application."
+                )
             if self._preview_server is None:
-                handler=functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(ROOT / "docs"))
-                self._preview_server=http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
-                server=self._preview_server
-                threading.Thread(target=server.serve_forever, daemon=True).start()
+                handler = functools.partial(_NoConsolePreviewHandler,
+                                            directory=str(dashboard_dir))
+                server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+                server.daemon_threads = True
+                threading.Thread(target=server.serve_forever, daemon=True,
+                                 name="koa-dashboard-preview").start()
+                self._preview_server = server
+            # Loopback only: nothing is sent to GitHub or to a remote server.
             webbrowser.open(f"http://127.0.0.1:{self._preview_server.server_port}/")
-        except OSError as error:
+        except (OSError, RuntimeError) as error:
+            diagnostic_log(error)
             messagebox.showerror("Aperçu indisponible", str(error))
 
     def _build_legacy(self, tab: ttk.Frame) -> None:
@@ -543,7 +789,8 @@ class AuditLauncher:
         self.progress.start(12)
         self._log("\n" + "─" * 54)
         self._log(f"▶ {label}")
-        self._log("Lecture seule — exécution locale de koa_audit.")
+        self._log("Publication d'agrégats vers le seul dépôt d'audit." if label == "Publication du tableau de bord"
+                  else "Lecture seule — exécution locale de koa_audit.")
         thread = threading.Thread(target=self._worker, args=(args,), daemon=True)
         thread.start()
 
@@ -633,7 +880,9 @@ class AuditLauncher:
             if self._action == "Audit GitHub OBSERVE":
                 self.dashboard_github.set(str(Path(self.remote_out_dir.get()) / "audit.json"))
             if self._action == "Tableau de bord":
-                self._log("Fichiers docs prêts à publier avec Git; aucun push effectué.")
+                self._log("Préparation locale terminée; utiliser Publier sur GitHub pour la mise en ligne.")
+            if self._action == "Publication du tableau de bord":
+                self._log("Voir le site GitHub Pages après activation (une seule fois).")
         else:
             self.status.set(f"Échec : {self._action} (code {exit_code})")
             self._log(f"✗ Échec (code {exit_code}).")

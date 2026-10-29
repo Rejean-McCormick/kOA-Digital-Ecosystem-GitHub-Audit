@@ -1,0 +1,611 @@
+{
+  "format": "koa_profiles.catalog.v1",
+  "provenance": {
+    "architecture": "senior-architecture-patterns(4).zip",
+    "security": "senior-security-patterns(3).zip"
+  },
+  "patterns": [
+    {
+      "id": "ARCH-01",
+      "family": "architecture",
+      "category": "Stability And Resilience",
+      "title": "Circuit Breaker",
+      "source": "senior-architecture-patterns/01-stability-and-resilience/01-circuit-breaker.md"
+    },
+    {
+      "id": "ARCH-02",
+      "family": "architecture",
+      "category": "Stability And Resilience",
+      "title": "Bulkhead Pattern",
+      "source": "senior-architecture-patterns/01-stability-and-resilience/02-bulkhead-pattern.md"
+    },
+    {
+      "id": "ARCH-03",
+      "family": "architecture",
+      "category": "Stability And Resilience",
+      "title": "Exponential Backoff with Jitter",
+      "source": "senior-architecture-patterns/01-stability-and-resilience/03-exponential-backoff-jitter.md"
+    },
+    {
+      "id": "ARCH-04",
+      "family": "architecture",
+      "category": "Stability And Resilience",
+      "title": "Graceful Degradation",
+      "source": "senior-architecture-patterns/01-stability-and-resilience/04-graceful-degradation.md"
+    },
+    {
+      "id": "ARCH-05",
+      "family": "architecture",
+      "category": "Stability And Resilience",
+      "title": "Rate Limiting (Throttling)",
+      "source": "senior-architecture-patterns/01-stability-and-resilience/05-rate-limiting-throttling.md"
+    },
+    {
+      "id": "ARCH-06",
+      "family": "architecture",
+      "category": "Stability And Resilience",
+      "title": "Timeout Budgets",
+      "source": "senior-architecture-patterns/01-stability-and-resilience/06-timeout-budgets.md"
+    },
+    {
+      "id": "ARCH-07",
+      "family": "architecture",
+      "category": "Structural And Decoupling",
+      "title": "Strangler Fig Pattern",
+      "source": "senior-architecture-patterns/02-structural-and-decoupling/07-strangler-fig.md"
+    },
+    {
+      "id": "ARCH-08",
+      "family": "architecture",
+      "category": "Structural And Decoupling",
+      "title": "Anti-Corruption Layer (ACL)",
+      "source": "senior-architecture-patterns/02-structural-and-decoupling/08-anti-corruption-layer.md"
+    },
+    {
+      "id": "ARCH-09",
+      "family": "architecture",
+      "category": "Structural And Decoupling",
+      "title": "Sidecar Pattern",
+      "source": "senior-architecture-patterns/02-structural-and-decoupling/09-sidecar-pattern.md"
+    },
+    {
+      "id": "ARCH-10",
+      "family": "architecture",
+      "category": "Structural And Decoupling",
+      "title": "Hexagonal Architecture (Ports & Adapters)",
+      "source": "senior-architecture-patterns/02-structural-and-decoupling/10-hexagonal-architecture.md"
+    },
+    {
+      "id": "ARCH-11",
+      "family": "architecture",
+      "category": "Structural And Decoupling",
+      "title": "Backend for Frontend (BFF)",
+      "source": "senior-architecture-patterns/02-structural-and-decoupling/11-backend-for-frontend-bff.md"
+    },
+    {
+      "id": "ARCH-12",
+      "family": "architecture",
+      "category": "Data Management Consistency",
+      "title": "CQRS (Command Query Responsibility Segregation)",
+      "source": "senior-architecture-patterns/03-data-management-consistency/12-cqrs.md"
+    },
+    {
+      "id": "ARCH-13",
+      "family": "architecture",
+      "category": "Data Management Consistency",
+      "title": "Event Sourcing",
+      "source": "senior-architecture-patterns/03-data-management-consistency/13-event-sourcing.md"
+    },
+    {
+      "id": "ARCH-14",
+      "family": "architecture",
+      "category": "Data Management Consistency",
+      "title": "Saga Pattern",
+      "source": "senior-architecture-patterns/03-data-management-consistency/14-saga-pattern.md"
+    },
+    {
+      "id": "ARCH-15",
+      "family": "architecture",
+      "category": "Data Management Consistency",
+      "title": "Idempotency",
+      "source": "senior-architecture-patterns/03-data-management-consistency/15-idempotency.md"
+    },
+    {
+      "id": "ARCH-16",
+      "family": "architecture",
+      "category": "Data Management Consistency",
+      "title": "Transactional Outbox Pattern",
+      "source": "senior-architecture-patterns/03-data-management-consistency/16-transactional-outbox.md"
+    },
+    {
+      "id": "ARCH-17",
+      "family": "architecture",
+      "category": "Scalability And Performance",
+      "title": "Sharding (Database Partitioning)",
+      "source": "senior-architecture-patterns/04-scalability-and-performance/17-sharding-partitioning.md"
+    },
+    {
+      "id": "ARCH-18",
+      "family": "architecture",
+      "category": "Scalability And Performance",
+      "title": "Cache-Aside (Lazy Loading)",
+      "source": "senior-architecture-patterns/04-scalability-and-performance/18-cache-aside-lazy-loading.md"
+    },
+    {
+      "id": "ARCH-19",
+      "family": "architecture",
+      "category": "Scalability And Performance",
+      "title": "Static Content Offloading (CDN)",
+      "source": "senior-architecture-patterns/04-scalability-and-performance/19-static-content-offloading-cdn.md"
+    },
+    {
+      "id": "ARCH-20",
+      "family": "architecture",
+      "category": "Messaging And Communication",
+      "title": "Dead Letter Queue (DLQ)",
+      "source": "senior-architecture-patterns/05-messaging-and-communication/20-dead-letter-queue-dlq.md"
+    },
+    {
+      "id": "ARCH-21",
+      "family": "architecture",
+      "category": "Messaging And Communication",
+      "title": "Pub/Sub (Publish-Subscribe)",
+      "source": "senior-architecture-patterns/05-messaging-and-communication/21-pub-sub.md"
+    },
+    {
+      "id": "ARCH-22",
+      "family": "architecture",
+      "category": "Messaging And Communication",
+      "title": "Claim Check Pattern",
+      "source": "senior-architecture-patterns/05-messaging-and-communication/22-claim-check-pattern.md"
+    },
+    {
+      "id": "ARCH-23",
+      "family": "architecture",
+      "category": "Operational And Deployment",
+      "title": "Blue-Green Deployment",
+      "source": "senior-architecture-patterns/06-operational-and-deployment/23-blue-green-deployment.md"
+    },
+    {
+      "id": "ARCH-24",
+      "family": "architecture",
+      "category": "Operational And Deployment",
+      "title": "Canary Release",
+      "source": "senior-architecture-patterns/06-operational-and-deployment/24-canary-release.md"
+    },
+    {
+      "id": "ARCH-25",
+      "family": "architecture",
+      "category": "Operational And Deployment",
+      "title": "Immutable Infrastructure",
+      "source": "senior-architecture-patterns/06-operational-and-deployment/25-immutable-infrastructure.md"
+    },
+    {
+      "id": "ARCH-26",
+      "family": "architecture",
+      "category": "Observability And Maintenance",
+      "title": "Distributed Tracing",
+      "source": "senior-architecture-patterns/07-observability-and-maintenance/26-distributed-tracing.md"
+    },
+    {
+      "id": "ARCH-27",
+      "family": "architecture",
+      "category": "Observability And Maintenance",
+      "title": "Health Check API (Liveness & Readiness)",
+      "source": "senior-architecture-patterns/07-observability-and-maintenance/27-health-check-api.md"
+    },
+    {
+      "id": "ARCH-28",
+      "family": "architecture",
+      "category": "Observability And Maintenance",
+      "title": "Log Aggregation (Structured Logging)",
+      "source": "senior-architecture-patterns/07-observability-and-maintenance/28-log-aggregation.md"
+    },
+    {
+      "id": "ARCH-29",
+      "family": "architecture",
+      "category": "Observability And Maintenance",
+      "title": "Metrics & Alerting (The 4 Golden Signals)",
+      "source": "senior-architecture-patterns/07-observability-and-maintenance/29-metrics-and-alerting.md"
+    },
+    {
+      "id": "ARCH-30",
+      "family": "architecture",
+      "category": "Emerging And Specialized",
+      "title": "Cell-Based Architecture (The Bulkhead Scaling Pattern)",
+      "source": "senior-architecture-patterns/08-emerging-and-specialized/30-cell-based-architecture.md"
+    },
+    {
+      "id": "ARCH-31",
+      "family": "architecture",
+      "category": "Emerging And Specialized",
+      "title": "Modular Monolith",
+      "source": "senior-architecture-patterns/08-emerging-and-specialized/31-modular-monolith.md"
+    },
+    {
+      "id": "ARCH-32",
+      "family": "architecture",
+      "category": "Emerging And Specialized",
+      "title": "Sidecarless Service Mesh (eBPF & Ambient)",
+      "source": "senior-architecture-patterns/08-emerging-and-specialized/32-sidecarless-service-mesh-ebpf.md"
+    },
+    {
+      "id": "ARCH-33",
+      "family": "architecture",
+      "category": "Emerging And Specialized",
+      "title": "Data Mesh",
+      "source": "senior-architecture-patterns/08-emerging-and-specialized/33-data-mesh.md"
+    },
+    {
+      "id": "SEC-01",
+      "family": "security",
+      "category": "Identity And Trust",
+      "title": "Separate Identity Planes",
+      "source": "senior-security-patterns/01-identity-and-trust/01-identity-planes-not-one-identity.md"
+    },
+    {
+      "id": "SEC-02",
+      "family": "security",
+      "category": "Identity And Trust",
+      "title": "Workload Identity by Trust Domain",
+      "source": "senior-security-patterns/01-identity-and-trust/02-workload-identity-trust-domains.md"
+    },
+    {
+      "id": "SEC-03",
+      "family": "security",
+      "category": "Identity And Trust",
+      "title": "Sender-Constrained Credentials",
+      "source": "senior-security-patterns/01-identity-and-trust/03-sender-constrained-tokens.md"
+    },
+    {
+      "id": "SEC-04",
+      "family": "security",
+      "category": "Identity And Trust",
+      "title": "Explicit Delegation and Actor Chains",
+      "source": "senior-security-patterns/01-identity-and-trust/04-delegation-actor-chain.md"
+    },
+    {
+      "id": "SEC-05",
+      "family": "security",
+      "category": "Identity And Trust",
+      "title": "Step-Up and Transaction Authorization",
+      "source": "senior-security-patterns/01-identity-and-trust/05-step-up-transaction-authorization.md"
+    },
+    {
+      "id": "SEC-06",
+      "family": "security",
+      "category": "Authorization And Privilege",
+      "title": "Receiver-Side Authority Is Final",
+      "source": "senior-security-patterns/02-authorization-and-privilege/06-receiver-side-authority.md"
+    },
+    {
+      "id": "SEC-07",
+      "family": "security",
+      "category": "Authorization And Privilege",
+      "title": "Policy Decision / Enforcement Separation",
+      "source": "senior-security-patterns/02-authorization-and-privilege/07-pdp-pep-separation.md"
+    },
+    {
+      "id": "SEC-08",
+      "family": "security",
+      "category": "Authorization And Privilege",
+      "title": "Capability-Shaped Privileged Execution",
+      "source": "senior-security-patterns/02-authorization-and-privilege/08-capability-shaped-privilege.md"
+    },
+    {
+      "id": "SEC-09",
+      "family": "security",
+      "category": "Authorization And Privilege",
+      "title": "Confused Deputy Defense",
+      "source": "senior-security-patterns/02-authorization-and-privilege/09-confused-deputy-defense.md"
+    },
+    {
+      "id": "SEC-10",
+      "family": "security",
+      "category": "Authorization And Privilege",
+      "title": "Authorization at Object, Property, and Function",
+      "source": "senior-security-patterns/02-authorization-and-privilege/10-authorization-at-every-object-property-function.md"
+    },
+    {
+      "id": "SEC-11",
+      "family": "security",
+      "category": "Authorization And Privilege",
+      "title": "Quorum and Separation of Duties",
+      "source": "senior-security-patterns/02-authorization-and-privilege/11-quorum-and-separation-of-duties.md"
+    },
+    {
+      "id": "SEC-12",
+      "family": "security",
+      "category": "Authorization And Privilege",
+      "title": "Policy as a Versioned Security Artifact",
+      "source": "senior-security-patterns/02-authorization-and-privilege/12-policy-as-versioned-artifact.md"
+    },
+    {
+      "id": "SEC-13",
+      "family": "security",
+      "category": "Protocol And Boundaries",
+      "title": "Canonical Semantic Fingerprints",
+      "source": "senior-security-patterns/03-protocol-and-boundaries/13-semantic-fingerprint-canonicalization.md"
+    },
+    {
+      "id": "SEC-14",
+      "family": "security",
+      "category": "Protocol And Boundaries",
+      "title": "Idempotency Is Not Replay Protection",
+      "source": "senior-security-patterns/03-protocol-and-boundaries/14-idempotency-is-not-replay-protection.md"
+    },
+    {
+      "id": "SEC-15",
+      "family": "security",
+      "category": "Protocol And Boundaries",
+      "title": "Transport Does Not Transfer Authority",
+      "source": "senior-security-patterns/03-protocol-and-boundaries/15-transport-does-not-transfer-authority.md"
+    },
+    {
+      "id": "SEC-16",
+      "family": "security",
+      "category": "Protocol And Boundaries",
+      "title": "Schema Validity Is Not Semantic Safety",
+      "source": "senior-security-patterns/03-protocol-and-boundaries/16-schema-valid-is-not-authorized.md"
+    },
+    {
+      "id": "SEC-17",
+      "family": "security",
+      "category": "Protocol And Boundaries",
+      "title": "Egress Is a Privilege, Not Plumbing",
+      "source": "senior-security-patterns/03-protocol-and-boundaries/17-egress-is-a-privilege.md"
+    },
+    {
+      "id": "SEC-18",
+      "family": "security",
+      "category": "Protocol And Boundaries",
+      "title": "Tenant Isolation Is End-to-End",
+      "source": "senior-security-patterns/03-protocol-and-boundaries/18-tenant-isolation-is-end-to-end.md"
+    },
+    {
+      "id": "SEC-19",
+      "family": "security",
+      "category": "Protocol And Boundaries",
+      "title": "Unknown Outcome Is a First-Class State",
+      "source": "senior-security-patterns/03-protocol-and-boundaries/19-unknown-outcome-reconciliation.md"
+    },
+    {
+      "id": "SEC-20",
+      "family": "security",
+      "category": "Cryptography And Secrets",
+      "title": "Key Hierarchy with Purpose Separation",
+      "source": "senior-security-patterns/04-cryptography-and-secrets/20-key-hierarchy-and-purpose.md"
+    },
+    {
+      "id": "SEC-21",
+      "family": "security",
+      "category": "Cryptography And Secrets",
+      "title": "Short-Lived Credentials and Secret Zero",
+      "source": "senior-security-patterns/04-cryptography-and-secrets/21-short-lived-credentials-secret-zero.md"
+    },
+    {
+      "id": "SEC-22",
+      "family": "security",
+      "category": "Cryptography And Secrets",
+      "title": "Rotation and Revocation Are Protocols",
+      "source": "senior-security-patterns/04-cryptography-and-secrets/22-rotation-and-revocation-are-protocols.md"
+    },
+    {
+      "id": "SEC-23",
+      "family": "security",
+      "category": "Cryptography And Secrets",
+      "title": "Cryptographic Domain Separation and Agility",
+      "source": "senior-security-patterns/04-cryptography-and-secrets/23-cryptographic-domain-separation.md"
+    },
+    {
+      "id": "SEC-24",
+      "family": "security",
+      "category": "Cryptography And Secrets",
+      "title": "Envelope Encryption and Key Scope",
+      "source": "senior-security-patterns/04-cryptography-and-secrets/24-envelope-encryption-and-key-scope.md"
+    },
+    {
+      "id": "SEC-25",
+      "family": "security",
+      "category": "Cryptography And Secrets",
+      "title": "Cryptographic Use Is Auditable",
+      "source": "senior-security-patterns/04-cryptography-and-secrets/25-signing-events-are-security-events.md"
+    },
+    {
+      "id": "SEC-26",
+      "family": "security",
+      "category": "Software Supply Chain",
+      "title": "Source Change Path Is Part of the TCB",
+      "source": "senior-security-patterns/05-software-supply-chain/26-source-change-path-is-part-of-tcb.md"
+    },
+    {
+      "id": "SEC-27",
+      "family": "security",
+      "category": "Software Supply Chain",
+      "title": "Provenance, Not Just SBOM",
+      "source": "senior-security-patterns/05-software-supply-chain/27-slsa-provenance-not-just-sbom.md"
+    },
+    {
+      "id": "SEC-28",
+      "family": "security",
+      "category": "Software Supply Chain",
+      "title": "Keyless Signing and Transparency",
+      "source": "senior-security-patterns/05-software-supply-chain/28-keyless-signing-and-transparency.md"
+    },
+    {
+      "id": "SEC-29",
+      "family": "security",
+      "category": "Software Supply Chain",
+      "title": "Admission by Digest and Attestation",
+      "source": "senior-security-patterns/05-software-supply-chain/29-admission-by-digest-and-attestation.md"
+    },
+    {
+      "id": "SEC-30",
+      "family": "security",
+      "category": "Software Supply Chain",
+      "title": "Dependency Closure and Hermeticity",
+      "source": "senior-security-patterns/05-software-supply-chain/30-dependency-closure-and-hermeticity.md"
+    },
+    {
+      "id": "SEC-31",
+      "family": "security",
+      "category": "Software Supply Chain",
+      "title": "CI Isolation and Ephemeral Authority",
+      "source": "senior-security-patterns/05-software-supply-chain/31-ci-isolation-and-ephemeral-authority.md"
+    },
+    {
+      "id": "SEC-32",
+      "family": "security",
+      "category": "Software Supply Chain",
+      "title": "Security Delta Release Gates",
+      "source": "senior-security-patterns/05-software-supply-chain/32-security-delta-release-gates.md"
+    },
+    {
+      "id": "SEC-33",
+      "family": "security",
+      "category": "Software Supply Chain",
+      "title": "Release Set as a Security Object",
+      "source": "senior-security-patterns/05-software-supply-chain/33-release-set-as-security-object.md"
+    },
+    {
+      "id": "SEC-34",
+      "family": "security",
+      "category": "Runtime And Platform",
+      "title": "No Ambient Kubernetes Authority",
+      "source": "senior-security-patterns/06-runtime-and-platform/34-no-ambient-kubernetes-authority.md"
+    },
+    {
+      "id": "SEC-35",
+      "family": "security",
+      "category": "Runtime And Platform",
+      "title": "Restricted Runtime Profile as Admission Policy",
+      "source": "senior-security-patterns/06-runtime-and-platform/35-restricted-runtime-profile.md"
+    },
+    {
+      "id": "SEC-36",
+      "family": "security",
+      "category": "Runtime And Platform",
+      "title": "Network Policy Is Not Identity",
+      "source": "senior-security-patterns/06-runtime-and-platform/36-network-policy-is-not-network-identity.md"
+    },
+    {
+      "id": "SEC-37",
+      "family": "security",
+      "category": "Runtime And Platform",
+      "title": "Security Plane Resource Isolation",
+      "source": "senior-security-patterns/06-runtime-and-platform/37-security-plane-resource-isolation.md"
+    },
+    {
+      "id": "SEC-38",
+      "family": "security",
+      "category": "Runtime And Platform",
+      "title": "Runtime Drift Is a Security Signal",
+      "source": "senior-security-patterns/06-runtime-and-platform/38-runtime-drift-and-integrity.md"
+    },
+    {
+      "id": "SEC-39",
+      "family": "security",
+      "category": "Runtime And Platform",
+      "title": "Sandbox the Dangerous Boundary, Not Everything",
+      "source": "senior-security-patterns/06-runtime-and-platform/39-privilege-boundary-sandboxing.md"
+    },
+    {
+      "id": "SEC-40",
+      "family": "security",
+      "category": "Evidence And Resilience",
+      "title": "Logs Are Not Authoritative Evidence",
+      "source": "senior-security-patterns/07-evidence-and-resilience/40-logs-are-not-authoritative-evidence.md"
+    },
+    {
+      "id": "SEC-41",
+      "family": "security",
+      "category": "Evidence And Resilience",
+      "title": "Tamper Evidence Needs an Independent Anchor",
+      "source": "senior-security-patterns/07-evidence-and-resilience/41-tamper-evidence-needs-independent-anchor.md"
+    },
+    {
+      "id": "SEC-42",
+      "family": "security",
+      "category": "Evidence And Resilience",
+      "title": "Fail Closed by Transition, Not by Slogan",
+      "source": "senior-security-patterns/07-evidence-and-resilience/42-selective-fail-closed.md"
+    },
+    {
+      "id": "SEC-43",
+      "family": "security",
+      "category": "Evidence And Resilience",
+      "title": "Compromise-Ready Recovery",
+      "source": "senior-security-patterns/07-evidence-and-resilience/43-compromise-ready-recovery.md"
+    },
+    {
+      "id": "SEC-44",
+      "family": "security",
+      "category": "Evidence And Resilience",
+      "title": "Security Chaos and Adversarial Rehearsal",
+      "source": "senior-security-patterns/07-evidence-and-resilience/44-security-chaos-and-adversarial-rehearsal.md"
+    },
+    {
+      "id": "SEC-45",
+      "family": "security",
+      "category": "Evidence And Resilience",
+      "title": "Measure Invariants, Not Vulnerability Counts",
+      "source": "senior-security-patterns/07-evidence-and-resilience/45-security-invariants-over-vulnerability-counts.md"
+    },
+    {
+      "id": "SEC-46",
+      "family": "security",
+      "category": "Agentic Ai Security",
+      "title": "The Model Is an Untrusted Planner",
+      "source": "senior-security-patterns/08-agentic-ai-security/46-model-is-an-untrusted-planner.md"
+    },
+    {
+      "id": "SEC-47",
+      "family": "security",
+      "category": "Agentic Ai Security",
+      "title": "Least Agency and Tool Capability Firebreak",
+      "source": "senior-security-patterns/08-agentic-ai-security/47-least-agency-tool-capabilities.md"
+    },
+    {
+      "id": "SEC-48",
+      "family": "security",
+      "category": "Agentic Ai Security",
+      "title": "Prompt/Context Taint and Provenance",
+      "source": "senior-security-patterns/08-agentic-ai-security/48-prompt-and-context-taint.md"
+    },
+    {
+      "id": "SEC-49",
+      "family": "security",
+      "category": "Agentic Ai Security",
+      "title": "Agent Identity Is Not Human Identity",
+      "source": "senior-security-patterns/08-agentic-ai-security/49-agent-identity-and-delegation.md"
+    },
+    {
+      "id": "SEC-50",
+      "family": "security",
+      "category": "Agentic Ai Security",
+      "title": "Agent Memory Is Security State",
+      "source": "senior-security-patterns/08-agentic-ai-security/50-memory-is-security-state.md"
+    },
+    {
+      "id": "SEC-51",
+      "family": "security",
+      "category": "Agentic Ai Security",
+      "title": "Human Approval Is a Security Protocol",
+      "source": "senior-security-patterns/08-agentic-ai-security/51-human-approval-is-a-security-protocol.md"
+    },
+    {
+      "id": "SEC-52",
+      "family": "security",
+      "category": "Agentic Ai Security",
+      "title": "Agentic Supply Chain and Tool Trust",
+      "source": "senior-security-patterns/08-agentic-ai-security/52-agentic-supply-chain-and-tools.md"
+    },
+    {
+      "id": "SEC-53",
+      "family": "security",
+      "category": "Agentic Ai Security",
+      "title": "Agentic Budgets and Circuit Breakers",
+      "source": "senior-security-patterns/08-agentic-ai-security/53-agentic-budgets-and-circuit-breakers.md"
+    }
+  ]
+}

@@ -1,5 +1,8 @@
-# Installation locale
+# Tableau de bord GitHub Pages
 
-Python 3.11+, Tkinter et, facultativement, Git disponible dans le PATH pour lire HEAD/origin. Décompresser le ZIP, lancer `kOA_GitHub_Audit_Launcher.pyw`, choisir la racine des copies locales des dépôts Git. Aucune GitHub App ni jeton requis.
+1. Dans l'application : onglet **Tableau de bord**, bouton **Publier sur GitHub (1 clic)**.
+2. Si nécessaire, sur le dépôt d'audit GitHub : **Settings > Pages > Build and deployment > Source : GitHub Actions** (une seule fois).
+3. Le workflow `.github/workflows/dashboard-pages.yml` déploie automatiquement le site à chaque modification de `docs/` sur `main`.
+4. Pour actualiser les données, utiliser le bouton de publication; aucun audit global n'est relancé.
 
-Le scan s'exécute uniquement sur la machine locale. GitHub Actions CI du dépôt central exécute seulement les **tests unitaires de l'outil** ; cela ne donne pas accès à vos fichiers locaux. Un ancien workflow périodique GitHub API nécessitant des credentials a été retiré de la version locale.
+Sans rapport récent, le bouton utilise l'historique agrégé intégré. Les données publiées sont des compteurs anonymisés, et non des fichiers de diagnostic. Git doit être déjà authentifié sur le PC; aucun jeton ne doit être entré dans l'interface.

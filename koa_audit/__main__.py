@@ -16,6 +16,7 @@ from .report import summarize, write_reports
 from .local_scan import run_local_audit, write_local_reports, discover_repositories
 from .triage import build_triage, write_triage_zip
 from .dashboard import publish_reports
+from .dashboard_sync import publish_to_github
 
 DEFAULT_INVENTORY = Path(__file__).resolve().parent.parent / "data" / "initial_inventory.json"
 SOURCE_REPO = "Rejean-McCormick/kOA-Digital-Ecosystem"
@@ -60,6 +61,8 @@ def make_parser() -> argparse.ArgumentParser:
     p.add_argument("--audit-json", type=Path, action="append", required=True,
                    help="Source local or remote report, repeat for multiple campaigns")
     p.add_argument("--out", type=Path, default=Path("docs"), help="Site directory (default docs)")
+    p = sub.add_parser("dashboard-sync", help="One-click publish of safe aggregates to the audit GitHub repo; Git credentials via Git for Windows")
+    p.add_argument("--audit-json", type=Path, action="append", help="Optional report; discovers recent existing reports if omitted")
     p = sub.add_parser("import-legacy", help="Import a historical summary JSON as metadata-only evidence")
     p.add_argument("--tool", choices=sorted(SCHEMAS), required=True)
     p.add_argument("--repo", required=True, help="Explicit owner/repository binding")
@@ -70,6 +73,11 @@ def make_parser() -> argparse.ArgumentParser:
 
 
 def execute(args: argparse.Namespace) -> int:
+    if args.command == "dashboard-sync":
+        result = publish_to_github(Path(__file__).resolve().parent.parent, args.audit_json,
+                                   progress=lambda line: print(line, flush=True))
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
     if args.command == "dashboard-publish":
         result = publish_reports(args.audit_json, args.out)
         print(json.dumps(result, indent=2, ensure_ascii=False))
