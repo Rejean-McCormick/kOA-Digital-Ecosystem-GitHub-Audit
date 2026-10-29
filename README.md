@@ -189,3 +189,41 @@ reports/              # Local generated reports (ignored by Git)
 This audit repository has **no authority to change source projects, approve releases, or certify security**. The `kOA-Digital-Ecosystem` repository retains inventory/governance authority; specialized diagnostics retain their own qualification meaning. The application does not replace CodeQL, advisory-database analysis, secret scanning, or production tests. See [SECURITY.md](SECURITY.md).
 
 **No open-source license has been selected.**
+
+
+## Local Kristal kOA Ecosystem source (v0.9.1)
+
+The Windows dashboard now reads the **canonical Kristal catalogs directly** from your
+local repository, without copying them into the public GitHub Pages site.
+
+Default directory (editable in the **Écosystème** tab):
+
+```text
+C:\mycode\Kristal\locals\Kristal-kOA-Ecosystem
+```
+
+Use **Vérifier Kristal** to check the source, then click **Ouvrir le centre de
+pilotage**. In the browser, choose **Kristal canonique · 49 dépôts** and select
+an application. The **Kristal (local)** detail tab shows the repository's
+canonical description, explicitly linked components, and their sourced/claimed
+relations. **Actualiser** reloads these catalogs; no repository-wide audit is run.
+
+The local reader uses only:
+
+- `knowledge-base/sources/repositories.json`
+- `knowledge-base/sources/components.json`
+- `knowledge-base/sources/relations.json`
+
+These are editorial canonical inputs in Kristal; generated `views/`, the portable
+state, `.kristal/v8`, `.kristal/v9` and local paths are **not** used as new evidence.
+Repository matching is exact by GitHub `owner/repo`, so 49 official repositories
+can be reconciled while component links remain explicitly limited to the ones
+actually present in the graph. A semantic relation is **not** a proven runtime
+integration, passed test, or certification.
+
+`KOA_KRISTAL_SOURCE` may override the default for a session. A selected source
+folder is remembered outside the application under your local application-data
+directory. The HTTP preview binds exclusively to `127.0.0.1`; its `/api/kristal/atlas`
+endpoint returns an allowlisted local projection. Neither that endpoint nor the
+Kristal catalogs are part of the published GitHub Pages artifact. If the folder
+is missing, the bundled kOA map and Engineering Profiles still work.

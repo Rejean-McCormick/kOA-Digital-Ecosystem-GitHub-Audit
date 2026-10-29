@@ -22,7 +22,7 @@
         <div><div class="eyebrow">OBSERVATOIRE DES APPLICATIONS <span>·</span> VUE D’ENSEMBLE</div><h1>Une carte claire de<br><em>ton écosystème.</em></h1>
           <p>Retrouve tes applications, consulte leurs profils d’ingénierie et suis les qualifications avec des preuves. Aucune pénalité pour la taille, les noms de fichiers ou les copies locales.</p>
         </div>
-        <div class="date-card"><div class="date-caption">SOURCE ARCHITECTURALE</div><strong>kOA Digital Ecosystem</strong><p>Responsabilités et contrats documentés dans le référentiel du 29 octobre 2026.</p><a href="#cartographie">Explorer la carte ↓</a></div>
+        <div class="date-card"><div class="date-caption">SOURCE ARCHITECTURALE</div><strong id="kristal-source-title">Kristal / kOA Ecosystem</strong><p id="kristal-source-note">Connexion au référentiel local en cours. Le site GitHub Pages utilise la carte publique intégrée.</p><a href="#cartographie">Explorer la carte ↓</a></div>
       </section>
       <section class="kpis" aria-label="Indicateurs factuels">
         <article class="kpi"><div class="kpi-label">Dépôts de référence</div><strong id="kpi-total">49</strong><div class="kpi-foot">Inventaire officiel kOA</div></article>
@@ -37,13 +37,15 @@
       </section>
       <section class="section map-section" id="cartographie">
         <div class="heading"><div><div class="eyebrow">CARTE DES RESPONSABILITÉS</div><h2>Comment tes systèmes se parlent.</h2><p>Relations conceptuelles tirées du référentiel kOA, non des tests d'intégration exécutés.</p></div><div class="map-legend"><span><i class="legend-line"></i> Documenté</span><span><i class="legend-line dashed"></i> Proposé</span></div></div>
-        <div class="map-view-toggle" role="group" aria-label="Vue de la carte"><button type="button" id="view-contracts" class="map-view-button active" aria-pressed="true">Connexions documentées · 12 systèmes</button><button type="button" id="view-all" class="map-view-button" aria-pressed="false">Constellation complète · 49 dépôts</button></div>
+        <div class="source-banner" id="kristal-banner" role="status">Référentiel Kristal : vérification locale en cours…</div>
+        <div class="map-view-toggle" role="group" aria-label="Vue de la carte"><button type="button" id="view-contracts" class="map-view-button active" aria-pressed="true">Carte des responsabilités · 12 systèmes</button><button type="button" id="view-all" class="map-view-button" aria-pressed="false">Constellation · 49 dépôts</button><button type="button" id="view-kristal" class="map-view-button" aria-pressed="false">Kristal canonique · 49 dépôts</button></div>
         <div class="map-scroller" id="map-scroller"><div id="ecosystem-map" class="ecosystem-map" role="group" aria-label="Carte interactive des systèmes kOA"><svg id="map-lines" viewBox="0 0 1150 640" aria-hidden="true" preserveAspectRatio="none"></svg><div id="map-nodes" class="map-nodes"></div></div></div>
         <div class="constellation" id="constellation" hidden aria-label="Constellation des 49 dépôts"></div>
-        <div class="map-help">Sélectionne un système pour ouvrir sa fiche et, lorsqu'il existe, son <strong>Engineering Profile</strong>. La carte montre les responsabilités; elle n'affirme pas une intégration en production.</div>
+        <div class="kristal-constellation" id="kristal-constellation" hidden aria-label="Dépôts rapprochés avec le registre canonique Kristal"></div>
+        <div class="map-help">Le mode « Kristal canonique » lit les fichiers <code>knowledge-base/sources/</code> sur ton PC, uniquement via l’aperçu local. Sélectionne un système pour ouvrir sa fiche et, lorsqu'il existe, son <strong>Engineering Profile</strong>. La carte montre les responsabilités; elle n'affirme pas une intégration en production.</div>
       </section>
       <section class="explorer section" id="apps">
-        <div class="heading"><div><div class="eyebrow">PARCOURS PAR APPLICATION</div><h2>Les 49 dépôts, un seul point d'entrée.</h2><p>Choisis une application. Son profil et ses jalons sont directement dans sa fiche.</p></div><div class="results-label" id="result-count">49 applications</div></div>
+        <div class="heading"><div><div class="eyebrow">PARCOURS PAR APPLICATION</div><h2>Les 49 dépôts, un seul point d'entrée.</h2><p>Choisis une application. Son profil, ses jalons et ses correspondances Kristal sont directement dans sa fiche.</p></div><div class="results-label" id="result-count">49 applications</div></div>
         <div class="explorer-grid">
           <div class="directory"><div class="search-wrap"><label for="search">Rechercher une application</label><input id="search" type="search" placeholder="Ex. Konnaxion, Orgo, Kristal…" autocomplete="off"></div><div class="filters" id="group-filters" role="group" aria-label="Filtrer les applications"></div><div class="repo-list" id="repo-list" aria-label="Liste des applications"></div></div>
           <aside class="detail" id="detail" aria-live="polite"><div class="detail-placeholder">Sélectionne une application sur la carte ou dans la liste pour afficher son dossier.</div></aside>

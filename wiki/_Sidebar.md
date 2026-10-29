@@ -14,3 +14,5 @@
 - [Troubleshooting](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Troubleshooting)
 - [FAQ](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Frequently-Asked-Questions)
 - [Wiki Publishing](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Wiki-Publishing)
+
+- [Kristal local repository source](Kristal-Local-Repository-Source)

@@ -13,3 +13,20 @@
 .constellation-item:hover,.constellation-item.selected{border-color:#75c8b2;background:#245748}
 .constellation-item .star{color:#90e3c9;padding-left:6px}
 @media(max-width:780px){.constellation{grid-template-columns:1fr}.map-view-button{font-size:11px}}
+
+/* Kristal canonical source is displayed only by local, read-only preview API. */
+.source-banner{padding:12px 16px;border:1px solid #3d7569;background:#173c32;border-radius:11px;color:#c6f2e7;font-size:12px;margin-bottom:13px}
+.source-banner.missing{background:#282a22;border-color:#665e44;color:#e1d4b2}
+.kristal-constellation{border:1px solid #31574f;border-radius:14px;background:linear-gradient(135deg,#112b27,#10231f);padding:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.kristal-group{padding:15px;background:#0b201c;border:1px solid #36594f;border-radius:12px}
+.kristal-group h3{margin:0 0 12px;font-size:14px;color:#d6f2e9;display:flex;justify-content:space-between;gap:8px}
+.kristal-group h3 small{font-size:11px;color:#b1d3ca;font-weight:400}
+.kristal-group-items{display:flex;flex-wrap:wrap;gap:8px}
+.kristal-repo{border:1px solid #457065;background:#184137;border-radius:9px;color:#d7f5ed;padding:9px 10px;font-size:12px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.kristal-repo small{font-size:10px;color:#9bcbbf}
+.kristal-repo:hover,.kristal-repo.selected{background:#286555;border-color:#9bdccc}
+.kristal-card{margin-top:11px;padding:12px;border:1px solid #396557;border-radius:10px;background:#112c25}
+.kristal-card h4{font-size:13px;margin:0 0 5px;color:#c7eee3}
+.kristal-card p{font-size:12px;margin:0;color:#b5d3ca}
+.kristal-status-note{font-size:11px;color:#9fc3b8;display:block;margin-top:7px}
+@media(max-width:780px){.kristal-constellation{grid-template-columns:1fr}}

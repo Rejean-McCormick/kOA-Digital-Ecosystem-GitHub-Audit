@@ -8,7 +8,7 @@
     kristal:[82,37],linux:[82,65],spaces:[82,88],ik:[12,70],
     architect:[37,88],orchestrator:[59,88],sentient:[59,13],skope:[12,37]
   };
-  let atlas=null, localAudit=null, qualification=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview';
+  let atlas=null, localAudit=null, qualification=null, kristal=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview', mapMode='contracts', mapTouched=false;
   function el(tag,cls,content){const x=document.createElement(tag);if(cls)x.className=cls;if(content!==undefined)x.textContent=String(content);return x;}
   function link(href,text,klass){const a=el('a',klass,text);a.href=href;return a;}
   function repoByName(name){return atlas.repositories.find(r=>r.repo===name);}
@@ -88,10 +88,96 @@
       section.append(chips);holder.append(section);
     }
   }
+  function kristalByRepo(name){return kristal?.repositories?.find(r=>r.repo===name)||null;}
+  function humanRole(value){
+    const names={
+      unqualified_inventory:'Responsabilité à préciser',
+      mapped:'Cartographié',
+      mapped_support:'Support documenté',
+      primary:'Application principale',
+      primary_reference_implementation:'Implémentation de référence',
+      canonical_system_map:'Carte canonique des systèmes',
+      diagnostic_suite:'Diagnostics',
+      companion:'Projet associé',
+    };
+    return names[value]||String(value||'Non précisé').replaceAll('_',' ');
+  }
+  function humanPredicate(value){
+    const names={part_of:'fait partie de',connects_to:'se relie à',uses_contract:'utilise un contrat',
+      conforms_to:'se conforme à',participates_in:'participe à',realizes_or_supports:'réalise ou soutient'};
+    return names[value]||String(value||'relation').replaceAll('_',' ');
+  }
+  function drawKristal(){
+    const holder=$('kristal-constellation');holder.replaceChildren();
+    if(!kristal||kristal.state!=='ready'){
+      holder.append(el('p','empty','Le référentiel Kristal local est indisponible. Choisis ou vérifie son dossier dans l’application Windows. La carte intégrée et les Engineering Profiles restent disponibles.'));
+      return;
+    }
+    const groups=new Map();
+    for(const item of kristal.repositories){
+      const key=item.found ? (item.membership||'not_classified') : 'not_mapped';
+      if(!groups.has(key))groups.set(key,[]);
+      groups.get(key).push(item);
+    }
+    const labels={
+      mapped:'Cartographiés',mapped_support:'Support documenté',mapped_research:'Recherche cartographiée',
+      unqualified_inventory:'À situer dans le graphe',
+      documentation_companion:'Documentation associée',
+      not_mapped:'Non rapprochés',
+      supporting_ecosystem_not_koa_member:'Écosystème de soutien distinct',
+      not_classified:'Classement non spécifié',
+    };
+    for(const [id,items] of groups){
+      const card=el('section','kristal-group');
+      const title=el('h3','',labels[id]||id.replaceAll('_',' '));
+      title.append(el('small','',`${items.length} dépôt${items.length>1?'s':''}`));card.append(title);
+      const itemsBox=el('div','kristal-group-items');
+      for(const item of items){
+        const r=repoByName(item.repo);if(!r)continue;
+        const button=el('button','kristal-repo'+(item.repo===activeRepo?' selected':''));button.type='button';button.dataset.repo=item.repo;
+        button.append(el('strong','',r.name));
+        if(item.components?.length)button.append(el('small','',item.components.length+' composant(s) relié(s)'));
+        else button.append(el('small','',humanRole(item.role)||'Registre canonique'));
+        button.addEventListener('click',()=>{detailTab='kristal';selectRepo(item.repo,true,true);});itemsBox.append(button);
+      }
+      card.append(itemsBox);holder.append(card);
+    }
+  }
+  function kristalInfo(section, repoName){
+    const item=kristalByRepo(repoName);
+    if(!kristal||kristal.state!=='ready'){
+      section.append(el('p','profile-copy','Le catalogue Kristal n’est accessible qu’en aperçu local avec le dossier source configuré. Aucun statut n’est inféré en son absence.'));
+      return;
+    }
+    if(!item?.found){
+      section.append(el('p','profile-copy','Ce dépôt n’a pas de correspondance exacte dans le catalogue Kristal lu. Il reste dans les 49 dépôts officiels.'));
+      return;
+    }
+    section.append(el('p','profile-copy',item.description||'Aucune description canonique fournie.'));
+    const grid=el('div','detail-grid');
+    grid.append(metricCell('Rôle du catalogue',humanRole(item.role)),metricCell('Cartographie',humanRole(item.membership)),metricCell('Composants explicitement associés',count(item.components?.length||0)));
+    section.append(grid);
+    for(const comp of item.components||[]){
+      const card=el('div','kristal-card');card.append(el('h4','',comp.label),el('p','',comp.description||comp.kind||'Composant référencé'));
+      card.append(el('small','kristal-status-note','Assertion : '+(comp.evidence==='claimed'?'déclarée, à distinguer d’une preuve':comp.evidence==='sourced'?'sourcée':'non classée')));
+      section.append(card);
+    }
+    if(item.relations?.length){
+      section.append(el('h4','',`Relations sémantiques associées (${item.relations.length})`));
+      for(const rel of item.relations){
+        const card=el('div','kristal-card');card.append(el('p','',`${rel.subject} → ${humanPredicate(rel.predicate)} → ${rel.object}`));
+        card.append(el('small','kristal-status-note',rel.evidence==='claimed'?'Déclarée (non certifiée)':'Sourcée (pas une intégration testée)'));
+        section.append(card);
+      }
+    }
+    section.append(el('p','profile-copy','Source : catalogues canoniques Kristal locaux. Un dépôt et une composante sont des entités distinctes. Les relations ne prouvent ni des CI réussies ni un déploiement.'));
+  }
   function switchMap(mode){
-    const connections=mode==='contracts';
-    $('map-scroller').hidden=!connections;$('constellation').hidden=connections;
-    for(const [id,selected] of [['view-contracts',connections],['view-all',!connections]]){
+    mapMode=mode;
+    $('map-scroller').hidden=mode!=='contracts';
+    $('constellation').hidden=mode!=='all';
+    $('kristal-constellation').hidden=mode!=='kristal';
+    for(const [id,selected] of [['view-contracts',mode==='contracts'],['view-all',mode==='all'],['view-kristal',mode==='kristal']]){
       const btn=$(id);btn.classList.toggle('active',selected);btn.setAttribute('aria-pressed',String(selected));
     }
   }
@@ -120,7 +206,7 @@
   function metricCell(title,value){const d=el('div','small-stat');d.append(el('strong','',value),el('span','',title));return d;}
   function detailTabs(){
     const tabs=el('div','detail-tabs');
-    for(const [id,label] of [['overview','Aperçu'],['report','Ingénierie'],['stages','Qualification']]){
+    for(const [id,label] of [['overview','Aperçu'],['report','Ingénierie'],['stages','Qualification'],['kristal','Kristal (local)']]){
       const b=el('button',''+(detailTab===id?'active':''),label);b.type='button';b.addEventListener('click',()=>{detailTab=id;renderDetail();});tabs.append(b);
     }
     return tabs;
@@ -144,6 +230,7 @@
       const grid=el('div','detail-grid');
       grid.append(metricCell('Profil mesuré',m?'Disponible':'Non fourni'),metricCell('Fichiers actifs',m?count(m.counts.active_files):'—'),metricCell('Lignes source de production',m?count(m.counts.production_nonblank_lines):'—'));
       section.append(grid);
+      if(kristalByRepo(r.repo)?.found){const entry=kristalByRepo(r.repo);section.append(el('p','profile-copy','Kristal : '+(entry.description||humanRole(entry.role))+'. Les relations se trouvent dans l’onglet Kristal (local).'));}
       section.append(el('p','profile-copy',m?'Ouvre le rapport pour consulter les langues, les contrôles, le périmètre, les dates et la provenance. Mesure ≠ certificat.':'Ce dépôt reste dans l’inventaire officiel : son absence de profil ne constitue pas une non-conformité.'));
     }else if(detailTab==='report'){
       if(!m){section.append(el('p','profile-copy','Aucune mesure d’ingénierie structurée n’a été fournie pour ce dépôt.'));
@@ -155,6 +242,8 @@
         section.append(el('p','profile-copy','Les lignes non vides peuvent inclure des commentaires. Les tests ont été détectés, mais non exécutés.'));
         section.append(link(qualification?'/local/engineering/'+encodeURIComponent(r.slug):r.report,qualification?'Lire le rapport original local ↗':'Consulter le rapport public et la provenance ↗','primary-link'));
       }
+    }else if(detailTab==='kristal'){
+      kristalInfo(section,r.repo);
     }else{
       for(const [id,label] of stages){const row=el('div','stage-detail-row');row.append(el('span','',label),statusBadge(statusFor(r.repo,id)));section.append(row);}
       section.append(el('p','profile-copy',qualification?'États manuels lus dans le registre local. Pour modifier une évaluation, ouvre « Certification & profils » dans l’application Windows.':'Aucun verdict manuel n’est publié sur GitHub Pages. Ouvre l’aperçu depuis l’application Windows pour voir tes évaluations locales.'));
@@ -162,9 +251,9 @@
     holder.append(section);
     document.querySelectorAll('.map-node,.constellation-item').forEach(x=>x.classList.toggle('selected',x.dataset.repo===activeRepo));
   }
-  function selectRepo(repo,fromMap=false){
+  function selectRepo(repo,fromMap=false,keepTab=false){
     if(!repoByName(repo))return;
-    activeRepo=repo;detailTab='overview';directory();renderDetail();
+    activeRepo=repo;if(!keepTab)detailTab='overview';directory();renderDetail();drawKristal();
     if(fromMap){$('apps').scrollIntoView({behavior:'smooth',block:'start'});}
     const url=new URL(location.href);url.searchParams.set('app',repo.split('/').pop());
     history.replaceState(null,'',url.pathname+url.search+'#apps');
@@ -176,13 +265,25 @@
   async function refresh(){
     $('load-status').textContent='Chargement…';
     try{
-      const [newAtlas, audit, local]=await Promise.all([
+      const [newAtlas, audit, local, source]=await Promise.all([
         getJSON('data/ecosystem.json?at='+Date.now()),
         getJSON('data/dashboard.json?at='+Date.now(),true),
         getJSON('data/local-qualification.json?at='+Date.now(),true),
+        getJSON('/api/kristal/atlas?at='+Date.now(),true),
       ]);
       if(newAtlas.format!=='koa_ecosystem.atlas.v1'||!Array.isArray(newAtlas.repositories)||newAtlas.repositories.length!==49){throw new Error('Inventaire invalide');}
       atlas=newAtlas;localAudit=audit;qualification=local?.format==='koa_qualification.public_status.v1'?local:null;
+      kristal=source?.format==='koa_audit.kristal_local.v1'&&source.state==='ready'?source:null;
+      $('kristal-banner').classList.toggle('missing',!kristal);
+      if(kristal){
+        $('kristal-banner').textContent=`Kristal local connecté · ${kristal.matched}/${kristal.inventory} dépôts rapprochés · ${kristal.mapped_components} composants explicitement liés · ${kristal.catalog_relations} assertions dans la source`;
+        $('kristal-source-title').textContent='Kristal kOA Ecosystem · local';
+        $('kristal-source-note').textContent='Lecture en direct des catalogues canoniques. Aucun changement ni publication automatique.';
+      }else{
+        $('kristal-banner').textContent=String.raw`Kristal local indisponible · la carte intégrée reste accessible. Configure C:\mycode\Kristal\locals\Kristal-kOA-Ecosystem dans l’application Windows.`;
+        $('kristal-source-title').textContent='Carte publique kOA';
+        $('kristal-source-note').textContent='Pour consulter Kristal en direct, ouvre le centre depuis le launcher Windows.';
+      }
       const measured=atlas.repositories.filter(r=>r.report).length;
       $('kpi-total').textContent=count(atlas.total);
       $('kpi-profiles').textContent=`${count(measured)} / ${count(atlas.total)}`;
@@ -192,7 +293,8 @@
       const latest=scans[scans.length-1];
       $('kpi-audited').textContent=latest?`${count(latest.inventory_scanned)} / ${count(atlas.total)}`:'Non publié';
       $('bar-audited').style.width=latest?Math.min(100,100*latest.inventory_scanned/atlas.total)+'%':'0%';
-      createStageBars();drawMap();drawConstellation();filters();directory();
+      if(kristal&&!mapTouched)mapMode='kristal';
+      createStageBars();drawMap();drawConstellation();drawKristal();switchMap(mapMode);filters();directory();
       if(!activeRepo){const requested=new URLSearchParams(location.search).get('app');const r=atlas.repositories.find(x=>x.slug===requested);
         activeRepo=r?.repo||atlas.repositories.find(x=>x.slug==='Konnaxion')?.repo||atlas.repositories[0]?.repo;}
       renderDetail();$('load-status').textContent='Données disponibles';
@@ -200,7 +302,8 @@
   }
   $('search').addEventListener('input',e=>{searchText=e.target.value.trim().toLocaleLowerCase();directory();});
   $('refresh').addEventListener('click',refresh);
-  $('view-contracts').addEventListener('click',()=>switchMap('contracts'));
-  $('view-all').addEventListener('click',()=>switchMap('all'));
+  $('view-contracts').addEventListener('click',()=>{mapTouched=true;switchMap('contracts');});
+  $('view-all').addEventListener('click',()=>{mapTouched=true;switchMap('all');});
+  $('view-kristal').addEventListener('click',()=>{mapTouched=true;switchMap('kristal');});
   refresh();
 })();

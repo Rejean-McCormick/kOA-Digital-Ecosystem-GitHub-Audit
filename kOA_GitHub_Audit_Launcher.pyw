@@ -54,7 +54,7 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
         No free-form evidence, file paths or notes are exported through JSON.
         """
         route = urlsplit(self.path).path
-        if route not in ("/data/local-qualification.json",) and not route.startswith("/local/engineering/"):
+        if route not in ("/data/local-qualification.json", "/api/kristal/atlas") and not route.startswith("/local/engineering/"):
             return super().do_GET()
         if (self.client_address[0] not in ("127.0.0.1", "::1")
                 or self.headers.get("Sec-Fetch-Site", "same-origin") == "cross-site"
@@ -77,6 +77,20 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
                     }
                 payload = json.dumps({"format": "koa_qualification.public_status.v1", "repositories": result},
                                      ensure_ascii=False).encode("utf-8")
+                kind = "application/json; charset=utf-8"
+            elif route == "/api/kristal/atlas":
+                from koa_audit import kristal_source
+                root = getattr(self.server, "kristal_source", kristal_source.get_source_root())
+                try:
+                    source = kristal_source.build_local_kristal_view(root, profiles.inventory(ROOT))
+                except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+                    source = {
+                        "format": kristal_source.FORMAT, "state": "missing", "matched": 0,
+                        "repositories": [],
+                        "notice": "Source Kristal locale indisponible ou non lisible. "
+                                  "Vérifier le dossier dans l'application Windows.",
+                    }
+                payload = json.dumps(source, ensure_ascii=False).encode("utf-8")
                 kind = "application/json; charset=utf-8"
             else:
                 slug = unquote(route[len("/local/engineering/"):])
@@ -243,6 +257,9 @@ class AuditLauncher:
         self.local_root = StringVar(value=r"C:\mycode" if Path(r"C:\mycode").exists() else str(Path.home()))
         self.local_depth = StringVar(value="4")
         self.local_limit = StringVar(value="0")
+        from koa_audit.kristal_source import get_source_root
+        self.kristal_root = StringVar(value=str(get_source_root()))
+        self.kristal_status = StringVar(value="Source Kristal : lecture locale, sans modification")
         self.dashboard_local = StringVar(value=str(ROOT / "reports" / "local" / "audit.json"))
         self.dashboard_github = StringVar(value="")
         self.triage_input = StringVar(value=str(ROOT / "reports" / "local" / "audit.json"))
@@ -423,17 +440,23 @@ class AuditLauncher:
         frame = ttk.LabelFrame(tab, text="Carte de l'écosystème, rapports d'ingénierie et progression des qualifications", padding=15)
         frame.grid(row=0, column=0, sticky="ew")
         frame.columnconfigure(1, weight=1)
-        self._input_row(frame, 0, "Rapport local (JSON)", self.dashboard_local,
+        self._input_row(frame, 0, "Référentiel Kristal (local)", self.kristal_root,
+                        browse=self._browse_kristal_root, width=57)
+        ttk.Label(frame, textvariable=self.kristal_status, style="Muted.TLabel").grid(
+            row=1, column=0, columnspan=3, sticky="w", pady=(0, 5))
+        self._input_row(frame, 2, "Rapport local (JSON)", self.dashboard_local,
                         browse=lambda: self._choose_json(self.dashboard_local), width=57)
-        self._input_row(frame, 1, "Rapport GitHub (optionnel)", self.dashboard_github,
+        self._input_row(frame, 3, "Rapport GitHub (optionnel)", self.dashboard_github,
                         browse=lambda: self._choose_json(self.dashboard_github), width=57)
         btns=ttk.Frame(frame)
-        btns.grid(row=2, column=0, columnspan=3, sticky="w", pady=(14, 5))
+        btns.grid(row=4, column=0, columnspan=3, sticky="w", pady=(14, 5))
         self._action_button(btns, "Ouvrir le centre de pilotage (carte + profils)", self._preview_dashboard, primary=True).pack(side="left", padx=(0, 9))
+        ttk.Button(btns, text="Vérifier Kristal", command=self._check_kristal_root).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Actualiser les rapports", command=self._run_dashboard).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Publier sur GitHub", command=self._sync_dashboard).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Ouvrir le dossier docs", command=lambda: self._open_file(ROOT / "docs")).pack(side="left")
-        note=("« Publier sur GitHub » envoie les bilans autorisés, la carte publique et "
+        note=("La source Kristal est lue à chaque actualisation du navigateur local, sans changer les fichiers du référentiel. "
+              "Elle ne part PAS sur GitHub Pages. « Publier sur GitHub » envoie les bilans autorisés, la carte publique et "
               "les profils d'ingénierie expurgés (avec noms publics des dépôts). "
               "Aucun jeton à saisir, aucun nouvel audit, aucun code source ou secret publié. "
               "Git pour Windows utilise votre connexion GitHub existante. Le bouton local d'aperçu ne publie rien.")
@@ -838,6 +861,30 @@ class AuditLauncher:
                 sources.extend(["--audit-json", str(Path(name).expanduser())])
         self._start(["-m", "koa_audit", "dashboard-sync", *sources], "Publication du tableau de bord")
 
+    def _browse_kristal_root(self) -> None:
+        selected = filedialog.askdirectory(title="Choisir Kristal-kOA-Ecosystem",
+                                           initialdir=self.kristal_root.get() if Path(self.kristal_root.get()).is_dir() else str(Path.home()))
+        if selected:
+            self.kristal_root.set(selected)
+            self._check_kristal_root()
+
+    def _check_kristal_root(self) -> bool:
+        from koa_audit import kristal_source, profiles
+        folder = Path(self.kristal_root.get().strip()).expanduser()
+        try:
+            view = kristal_source.build_local_kristal_view(folder, profiles.inventory(ROOT))
+            kristal_source.save_source_root(folder)
+            if self._preview_server is not None:
+                self._preview_server.kristal_source = folder
+            self.kristal_status.set(f"Kristal chargé : {view['matched']}/49 dépôts reconnus · {view['mapped_components']} composants liés · lecture seule")
+            return True
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            self.kristal_status.set("Source Kristal indisponible : vérifie le dossier sélectionné")
+            messagebox.showwarning("Référentiel Kristal", "Les catalogues canoniques ne sont pas accessibles.\n\n"
+                                   "Choisis le dossier contenant knowledge-base/sources/.\n"
+                                   "Tu peux tout de même consulter la carte intégrée.")
+            return False
+
     def _preview_dashboard(self) -> None:
         try:
             dashboard_dir = ROOT / "docs"
@@ -858,6 +905,8 @@ class AuditLauncher:
                 threading.Thread(target=server.serve_forever, daemon=True,
                                  name="koa-dashboard-preview").start()
                 self._preview_server = server
+            # Source is read by a loopback API only; never written into docs/.
+            self._preview_server.kristal_source = Path(self.kristal_root.get().strip()).expanduser()
             # Loopback only: nothing is sent to GitHub or to a remote server.
             webbrowser.open(f"http://127.0.0.1:{self._preview_server.server_port}/")
         except (OSError, RuntimeError) as error:
