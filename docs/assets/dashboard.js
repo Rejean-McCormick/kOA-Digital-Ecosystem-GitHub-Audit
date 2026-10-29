@@ -4,13 +4,13 @@
   let snapshots = [];
   let mode = 'LOCAL_OBSERVE';
   const labels = {
-    WORKFLOW_UNPINNED_ACTION:'Actions GitHub non figées par SHA',
-    LARGE_FILE_NOT_INSPECTED:'Fichiers volumineux non inspectés',
-    SENSITIVE_FILENAME:'Noms de fichiers sensibles',
+    WORKFLOW_UNPINNED_ACTION:'Références Actions par tags (piste de durcissement)',
+    LARGE_FILE_NOT_INSPECTED:'Gros fichiers hors inspection (limite du scan)',
+    SENSITIVE_FILENAME:'Noms de configuration à vérifier (pas un incident)',
     PYTHON_SHELL_TRUE:'Utilisations de shell=True',
     PYTHON_PICKLE_LOAD:'Utilisations de pickle.load',
     PRIVATE_KEY_MATERIAL:'Motif de clé privée potentielle',
-    PYTHON_SSL_VERIFY_DISABLED:'Ancienne règle TLS (à requalifier)',
+    PYTHON_SSL_VERIFY_DISABLED:'Ancienne règle TLS (faux positifs connus possibles)',
     PYTHON_TLS_BYPASS:'Contournement TLS potentiel'
   };
 
@@ -77,22 +77,22 @@
     const findingsTotal=Object.values(d.findings||{}).reduce((a,b)=>a+b,0);
     metric(1,'Dépôts de référence',number(d.declared), '');
     metric(2,'Présents et audités',`${number(d.inventory_scanned)} / ${number(d.declared)}`,'Couverture réelle de l’inventaire');
-    metric(3,'Dépôts à examiner',number(statuses.REVIEW||0),'Motifs nécessitant une revue');
-    metric(4,'Repos bien outillés',number(structuring.tooled||0),'Workflows + dépendances + automatisation');
+    metric(3,'Profils ingénierie disponibles',`${number(d.engineering_profiles||0)} / ${number(d.declared)}`,'Mesures issues de snapshots');
+    metric(4,'Dépôts avec workflows',number(controls.workflows||0),'Configuration détectée, pas test exécuté');
 
     text('coverage-title','État des inspections');
     ring(d.declared?Math.round(100*d.inventory_scanned/d.declared):0,'inventaire audité');
     const side=$('coverage-list');side.replaceChildren();
-    row(side,'Inspection partielle',statuses.PARTIAL||0); row(side,'À examiner',statuses.REVIEW||0); row(side,'Aucun motif détecté',statuses.INSPECTED_NO_PATTERN_MATCH||0); row(side,'Doublons ambigus',d.ambiguous||0);
-    text('coverage-note','La couverture mesure la présence et l’inspection locale des dépôts de l’inventaire.');
+    row(side,'Inspection limitée',statuses.PARTIAL||0); row(side,'Pistes à interpréter',statuses.REVIEW||0); row(side,'Observations informatives',statuses.OBSERVED_INFORMATIONAL||0); row(side,'Aucun motif détecté',statuses.INSPECTED_NO_PATTERN_MATCH||0); row(side,'Copies locales multiples',d.ambiguous||0);
+    text('coverage-note','Les copies locales et les limites d’inspection ne réduisent pas la qualité d’un dépôt.');
 
     statRows('completion-list',[
       ['Repos de l’inventaire présents localement', `${number(d.inventory_scanned)} / ${number(d.declared)}`],
-      ['Fondation / peu outillés', number(structuring.initial||0)],
-      ['Structurés', number(structuring.structured||0)],
-      ['Bien outillés', number(structuring.tooled||0)],
+      ['Profils d’ingénierie disponibles', number(d.engineering_profiles||0)],
+      ['Dépôts avec workflows détectés', number(controls.workflows||0)],
+      ['Dépôts avec manifests de dépendances', number(controls.dependency_manifests||0)],
     ]);
-    text('completion-note','Heuristique calculée à partir des workflows, manifests de dépendances, Dependabot et CodeQL visibles.');
+    text('completion-note','Ces nombres décrivent les preuves disponibles, pas un taux de complétion ni un certificat.');
 
     statRows('size-list',[
       ['Fichiers trouvés dans les dépôts audités', number(size.files_enumerated||0)],
@@ -108,24 +108,24 @@
     ]);
 
     statRows('quality-list',[
-      ['Repos sans signal heuristique', number(quality.clean||0)],
-      ['Repos avec 1–2 signalements', number(quality.light||0)],
-      ['Repos avec 3–5 signalements', number(quality.moderate||0)],
-      ['Repos avec 6+ signalements', number(quality.heavy||0)],
+      ['Workflows détectés', number(controls.workflows||0)],
+      ['Manifestes de dépendances', number(controls.dependency_manifests||0)],
+      ['Dependabot configuré', number(controls.dependabot||0)],
+      ['CodeQL configuré localement', number(controls.codeql||0)],
     ]);
     miniBars('quality-buckets',[
-      {label:'Workflows / CI présents', value:(controls.workflows||0)},
-      {label:'Manifests de dépendances visibles', value:(controls.dependency_manifests||0)},
-      {label:'Dependabot configuré', value:(controls.dependabot||0)},
-      {label:'CodeQL configuré', value:(controls.codeql||0)},
+      {label:'Workflows', value:(controls.workflows||0)},
+      {label:'Dépendances', value:(controls.dependency_manifests||0)},
+      {label:'Dependabot', value:(controls.dependabot||0)},
+      {label:'CodeQL', value:(controls.codeql||0)},
     ]);
 
-    text('signals-title','Catégories de signaux détectées');
-    text('signal-note','Les catégories suivantes indiquent la charge de revue, pas des vulnérabilités confirmées.');
+    text('signals-title','Observations techniques à interpréter');
+    text('signal-note','Les noms, doublons, tailles et motifs de scan ne sont jamais des conclusions négatives par eux-mêmes. Les faux positifs historiques restent des pistes non qualifiées.');
     bars(Object.entries(d.findings||{}).sort((a,b)=>b[1]-a[1]).map(([name,count])=>({name:labels[name]||'Catégorie contrôlée',count})));
-    text('caveat',`Cette vue locale synthétise ${number(findingsTotal)} observations heuristiques sur ${number(d.scanned)} dépôts audités. Aucun scan CVE ni exécution CI n’est inclus.`);
-    text('mode-description','LOCAL_OBSERVE · Dépôts locaux · complétion, taille et qualité agrégées');
-    trend(selected(),s=>Object.values(s.findings||{}).reduce((a,b)=>a+b,0),'Observations heuristiques');
+    text('caveat',`Ce rapport contient ${number(findingsTotal)} motifs heuristiques historiques, non des failles confirmées. Une certification exige des preuves et une validation par portée.`);
+    text('mode-description','LOCAL_OBSERVE · Mesures d’ingénierie factuelles · aucune notation automatique');
+    trend(selected(),s=>s.inventory_scanned||0,'Dépôts audités (inventaire)');
   }
 
   function renderRemote(d){
@@ -136,7 +136,7 @@
     metric(1,'Dépôts de référence',number(d.declared), '');
     metric(2,'Métadonnées GitHub visibles',`${number(d.observed)} / ${number(d.declared)}`,'Selon la disponibilité de l’API');
     metric(3,'CI récentes en échec',number((d.ci||{}).failure||0),'Échantillon observé');
-    metric(4,'Repos avec workflows visibles',number(flows.workflows_visible||0),'Parmi les dépôts observés');
+    metric(4,'Workflows observables',number(flows.workflows_visible||0),'Configurations présentes dans les réponses');
 
     text('coverage-title','Accès à GitHub');
     ring(d.declared?Math.round(100*d.observed/d.declared):0,'métadonnées observées');
@@ -185,8 +185,8 @@
       {name:'Secret scanning · '+((alerts.secret_scanning||{}).complete?'complet':'partiel / inconnu'), count:(alerts.secret_scanning||{}).observed_minimum||0},
     ]);
     text('caveat','La vue GitHub dépend de la disponibilité de l’API. Les zéros et « inconnu » reflètent souvent un manque de visibilité, pas une absence de problèmes.');
-    text('mode-description','OBSERVE · GitHub / CI · visibilité et automatisation observées');
-    trend(selected(),s=>(s.ci||{}).failure||0,'Dernières CI en échec');
+    text('mode-description','OBSERVE · Visibilité GitHub et éléments de qualification, non certificatifs');
+    trend(selected(),s=>s.observed||0,'Métadonnées accessibles');
   }
 
   function clearInsightPanels(){

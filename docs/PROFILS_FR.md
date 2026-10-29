@@ -17,3 +17,12 @@ L'état d'une pratique n'est pas une certification; ne considérer **Appliqué**
 Les évaluations sont stockées dans `%LOCALAPPDATA%\kOA-GitHub-Audit\profiles\assessments.json` et ne sont jamais envoyées par le bouton du dashboard GitHub Pages. Les fichiers des rapports sont dans `profiles/repositories/<nom>`. Ne pas inclure de secrets dans les notes.
 
 **Provenance :** les 33 patterns d'architecture et les 53 de sécurité proviennent des archives fournies par l'utilisateur. Le profil Konnaxion fourni date du 16 septembre 2026; son rattachement au dépôt est présumé. Pour Orgo et kOA-Linux-Koali, les premiers rapports sont provisoires et n'affirment pas posséder des mesures de complexité ni des tests exécutés.
+
+
+## Qualification conservatrice (v0.8.1)
+
+L'onglet **Certification & profils** permet maintenant de qualifier cinq jalons séparés : spécifié, implémenté, testé/qualifié, intégré, éprouvé en production. Chaque état « Étayé par preuve » nécessite une portée et une référence de preuve. Aucune évaluation n'est déduite automatiquement d'un nom de fichier, du nombre de lignes de code ou d'un signalement de scan. « Pas applicable » n'est pas un échec.
+
+Les décisions restent sur cet ordinateur dans `%LOCALAPPDATA%\kOA-GitHub-Audit\profiles\qualification.json`. Voir `docs/CERTIFICATION_AND_IMPROVEMENT.md`.
+
+L'onglet **Registre des 49** affiche le suivi global des pratiques manuelles et des cinq jalons, avec ouverture de chaque fiche par double-clic. La colonne « Axes suivis » est alimentée uniquement par les évaluations manuelles « À améliorer », jamais par un simple nom de fichier ou un scan.

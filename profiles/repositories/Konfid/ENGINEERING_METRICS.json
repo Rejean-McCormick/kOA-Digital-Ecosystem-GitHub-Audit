@@ -1,0 +1,119 @@
+{
+  "controls_configured": [
+    "Automated tests",
+    "CI configuration",
+    "Containerization"
+  ],
+  "counts": {
+    "active_docs": 17,
+    "active_files": 99,
+    "excluded_files": 6,
+    "migration_files": 4,
+    "observed_files": 105,
+    "production_nonblank_lines": 5069,
+    "production_source_files": 37,
+    "pruned_directories": 0,
+    "schema_files": 2,
+    "source_files": 47,
+    "test_nonblank_lines": 969,
+    "test_source_files": 10
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "Python": 6028,
+    "Shell": 10
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/Konfid",
+  "routes_probable": 47,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "konfid_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:19:52.416756",
+    "indexed_files": 104,
+    "member": "konfid_Code_snapshot.zip",
+    "sha256": "34e129063c065ab9eda3909cd15cc39bdde519ecae411db3ebb975b548088cff",
+    "zip_entries": 105
+  },
+  "static_test_declarations": 52,
+  "top_level_areas": [
+    {
+      "files": 31,
+      "name": "src",
+      "source_files": 31
+    },
+    {
+      "files": 9,
+      "name": "tests",
+      "source_files": 9
+    },
+    {
+      "files": 4,
+      "name": "migrations",
+      "source_files": 3
+    },
+    {
+      "files": 7,
+      "name": "tools",
+      "source_files": 3
+    },
+    {
+      "files": 1,
+      "name": "scripts",
+      "source_files": 1
+    },
+    {
+      "files": 20,
+      "name": "(root)",
+      "source_files": 0
+    },
+    {
+      "files": 10,
+      "name": "deploy",
+      "source_files": 0
+    },
+    {
+      "files": 9,
+      "name": "docs",
+      "source_files": 0
+    },
+    {
+      "files": 4,
+      "name": "examples",
+      "source_files": 0
+    },
+    {
+      "files": 3,
+      "name": ".github",
+      "source_files": 0
+    },
+    {
+      "files": 1,
+      "name": "constraints",
+      "source_files": 0
+    }
+  ]
+}

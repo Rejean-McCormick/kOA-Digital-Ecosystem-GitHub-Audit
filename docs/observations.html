@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Registre kOA de qualification par preuve et suivi d’ingénierie, sans notation automatique.">
+  <title>kOA / Certification & progrès</title>
+  <link rel="stylesheet" href="assets/observations.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="rail" aria-label="Navigation principale">
+      <a class="logo" href="#accueil" aria-label="kOA — Accueil"><img src="assets/logo.svg" alt="kOA"></a>
+      <div class="rail-line"></div>
+      <a href="#accueil" class="rail-icon active" aria-label="Vue d'ensemble" title="Vue d'ensemble">◫</a>
+      <a href="#insights" class="rail-icon" aria-label="Complétion" title="Complétion">◎</a>
+      <a href="#tendances" class="rail-icon" aria-label="Tendances" title="Tendances">⌁</a>
+      <a href="#signaux" class="rail-icon" aria-label="Signaux" title="Signaux">≡</a>
+      <div class="rail-bottom"><span class="rail-lock" title="Données anonymisées">◇</span></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar" id="accueil">
+        <div class="breadcrumbs"><img class="topbar-logo" src="assets/logo.svg" alt=""> kOA DIGITAL ECOSYSTEM <span>/</span> QUALIFICATION & PROGRÈS</div>
+        <div class="head-actions"><span class="live-point"></span><span id="connection">En attente des données</span><button type="button" id="refresh" aria-label="Actualiser le tableau de bord">↻ Actualiser</button></div>
+      </header>
+      <main>
+        <section class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow">REGISTRE D’INGÉNIERIE <span class="eyebrow-rule"></span> PREUVES & AMÉLIORATION</div>
+            <h1>Qualification & progrès <em>kOA.</em></h1>
+            <p>Un bilan des preuves disponibles et des progrès d’ingénierie. Les tailles, noms de fichiers et pistes de scan ne constituent jamais des jugements de qualité.</p>
+            <div class="mode-toggle" role="group" aria-label="Source d'observation">
+              <button type="button" class="is-active" id="mode-local" aria-pressed="true">◉ Audit local</button>
+              <button type="button" id="mode-github" aria-pressed="false">◈ GitHub / CI</button>
+            </div>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
+            <div class="core"><img src="assets/logo.svg" alt=""></div><div class="satellite sat-1"></div><div class="satellite sat-2"></div><div class="satellite sat-3"></div><div class="satellite sat-4"></div>
+          </div>
+        </section>
+        <div class="meta-strip"><span id="mode-description">Scan statique local · aucune connexion requise lors de l'analyse</span><span id="updated">Dernière publication : —</span></div>
+        <section class="metrics" aria-label="Indicateurs principaux">
+          <article class="metric"><span class="metric-label" id="metric-label-1">Périmètre kOA</span><strong class="metric-value" id="metric-1">—</strong><div class="metric-bottom">Inventaire de référence <span class="square purple"></span></div></article>
+          <article class="metric"><span class="metric-label" id="metric-label-2">Couverture locale</span><strong class="metric-value" id="metric-2">—</strong><div class="metric-bottom" id="metric-extra-2">Présence et audit <span class="square teal"></span></div></article>
+          <article class="metric"><span class="metric-label" id="metric-label-3">Profils d’ingénierie disponibles</span><strong class="metric-value" id="metric-3">—</strong><div class="metric-bottom" id="metric-extra-3">Couverture des profils <span class="square orange"></span></div></article>
+          <article class="metric"><span class="metric-label" id="metric-label-4">Workflows observés</span><strong class="metric-value" id="metric-4">—</strong><div class="metric-bottom" id="metric-extra-4">Présence de configuration <span class="square blue"></span></div></article>
+        </section>
+
+        <section class="insights-grid" id="insights" aria-label="Preuves disponibles, taille et contrôles">
+          <article class="panel insight-panel">
+            <div class="panel-heading"><div><div class="micro">COUVERTURE DES PREUVES</div><h2>Documents & configurations</h2></div><span class="small-pill">Constats</span></div>
+            <div id="completion-list" class="stat-list"></div>
+            <p class="subtle-note" id="completion-note">Les sources disponibles se documentent; elles ne certifient pas leur contenu automatiquement.</p>
+          </article>
+          <article class="panel insight-panel">
+            <div class="panel-heading"><div><div class="micro">TAILLE</div><h2>Surface d'ingénierie</h2></div><span class="small-pill">Agrégée</span></div>
+            <div id="size-list" class="stat-list"></div>
+            <div id="size-buckets" class="mini-bars"></div>
+          </article>
+          <article class="panel insight-panel">
+            <div class="panel-heading"><div><div class="micro">OUTILLAGE</div><h2>Contrôles configurés</h2></div><span class="small-pill">Présence ≠ efficacité</span></div>
+            <div id="quality-list" class="stat-list"></div>
+            <div id="quality-buckets" class="mini-bars"></div>
+          </article>
+        </section>
+
+        <section class="panel qualification-method" aria-label="Niveaux de preuve de qualification">
+          <div class="panel-heading"><div><div class="micro">CERTIFICATION MANUELLE</div><h2>Cinq jalons distincts, cinq preuves distinctes</h2></div><span class="small-pill">Aucune attribution automatique</span></div>
+          <div class="qualification-stages">
+            <div><strong>01</strong><span>Spécifié / architecturé</span></div>
+            <div><strong>02</strong><span>Implémenté</span></div>
+            <div><strong>03</strong><span>Testé / qualifié</span></div>
+            <div><strong>04</strong><span>Intégré</span></div>
+            <div><strong>05</strong><span>Éprouvé en production</span></div>
+          </div>
+          <p class="subtle-note">Les jalons sont enregistrés par dépôt dans l'application locale, avec portée et référence de preuve. Un test local ne prouve pas une production; un Engineering Profile n'est pas un certificat. Aucun résultat manuel n’est publié automatiquement ici.</p>
+        </section>
+        <section class="split" id="tendances">
+          <article class="panel trend-panel"><div class="panel-heading"><div><div class="micro">HISTORIQUE</div><h2>Évolution des campagnes</h2></div><span class="small-pill" id="history-count">— campagnes</span></div><div id="trend-visual" class="trend-visual" role="img" aria-label="Tendance des campagnes"></div><div class="trend-legend"><span><i class="legend-dot"></i><span id="trend-legend-title">Signalements</span></span><span>Chaque point = un rapport publié</span></div></article>
+          <article class="panel coverage-panel"><div class="panel-heading"><div><div class="micro">COUVERTURE</div><h2 id="coverage-title">Statut des inspections</h2></div></div><div class="ring-layout"><div class="ring" id="ring"><div class="ring-inner"><strong id="ring-value">—</strong><small id="ring-caption">audités</small></div></div><div class="coverage-side" id="coverage-list"></div></div><p class="subtle-note" id="coverage-note">Les états partiels ne sont pas des résultats réussis.</p></article>
+        </section>
+        <details class="panel signals-panel" id="signaux"><summary class="signal-summary"><span class="micro">DIAGNOSTIC SECONDAIRE</span> · Voir les observations techniques non qualifiées</summary><div class="panel-heading"><div><div class="micro">DÉTECTION AUTOMATIQUE</div><h2 id="signals-title">Motifs de scan, non certifiés</h2></div><span class="small-pill">Métadonnées uniquement</span></div><div id="signal-list" class="signals"></div><p class="subtle-note" id="signal-note">Les détections sont des pistes de vérification; elles ne constituent pas des vulnérabilités confirmées.</p></details>
+        <section class="disclosure"><div class="disclosure-icon">i</div><div><strong>Le niveau de certification dépend de preuves validées, jamais de la taille ou du nom d’un fichier.</strong><p>Les données visibles correspondent au dernier rapport <em>publié</em>, pas nécessairement à l’état actuel des dépôts. Le registre de qualification est manuel et reste privé sur ce PC. Les scans locaux, les observations GitHub et les résultats historiques ne sont pas fusionnés. Aucun secret, chemin Windows ou code source n’est publié.</p><p id="caveat" class="caveat">—</p></div></section>
+      </main>
+      <footer>kOA Digital Ecosystem <span>•</span> Registre de preuves, statique et interactif <span>•</span> Dashboard enrichi marque kOA <span>•</span> <span id="footer-version">Format v1</span></footer>
+    </div>
+  </div>
+  <script src="assets/observations.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+{
+  "controls_configured": [
+    "Architecture decisions",
+    "CI configuration",
+    "Machine-readable schemas"
+  ],
+  "counts": {
+    "active_docs": 68,
+    "active_files": 280,
+    "excluded_files": 3,
+    "migration_files": 0,
+    "observed_files": 283,
+    "production_nonblank_lines": 5065,
+    "production_source_files": 95,
+    "pruned_directories": 0,
+    "schema_files": 19,
+    "source_files": 121,
+    "test_nonblank_lines": 1099,
+    "test_source_files": 26
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "Python": 6164
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/SemantiK-Architect",
+  "routes_probable": 0,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "SemantiK_Architect_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:20:10.590570",
+    "indexed_files": 282,
+    "member": "SemantiK_Architect_Code_snapshot.zip",
+    "sha256": "b785d96bdab921534bf4875209aed5380e03602cf6eefaba58a284fbe66d9961",
+    "zip_entries": 283
+  },
+  "static_test_declarations": 68,
+  "top_level_areas": [
+    {
+      "files": 91,
+      "name": "src",
+      "source_files": 91
+    },
+    {
+      "files": 26,
+      "name": "tests",
+      "source_files": 26
+    },
+    {
+      "files": 4,
+      "name": "tools",
+      "source_files": 4
+    },
+    {
+      "files": 57,
+      "name": "docs",
+      "source_files": 0
+    },
+    {
+      "files": 38,
+      "name": "profiles",
+      "source_files": 0
+    },
+    {
+      "files": 30,
+      "name": "runtime",
+      "source_files": 0
+    },
+    {
+      "files": 16,
+      "name": "schemas",
+      "source_files": 0
+    },
+    {
+      "files": 8,
+      "name": "(root)",
+      "source_files": 0
+    },
+    {
+      "files": 8,
+      "name": "examples",
+      "source_files": 0
+    },
+    {
+      "files": 2,
+      "name": ".github",
+      "source_files": 0
+    }
+  ]
+}

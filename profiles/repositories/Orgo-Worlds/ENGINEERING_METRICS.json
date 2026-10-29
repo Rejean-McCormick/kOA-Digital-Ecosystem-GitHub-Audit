@@ -1,0 +1,115 @@
+{
+  "controls_configured": [
+    "CI configuration",
+    "Static typing"
+  ],
+  "counts": {
+    "active_docs": 54,
+    "active_files": 195,
+    "excluded_files": 5,
+    "migration_files": 0,
+    "observed_files": 200,
+    "production_nonblank_lines": 2934,
+    "production_source_files": 36,
+    "pruned_directories": 0,
+    "schema_files": 0,
+    "source_files": 48,
+    "test_nonblank_lines": 393,
+    "test_source_files": 12
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "JavaScript": 1043,
+    "PowerShell": 54,
+    "Python": 693,
+    "TypeScript": 1537
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/Orgo-Worlds",
+  "routes_probable": 10,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "Orgo_Worlds_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:19:42.146911",
+    "indexed_files": 199,
+    "member": "Orgo_Worlds_Code_snapshot.zip",
+    "sha256": "14e463c9761535656e131fd8c8c4b4e17b90ab5a976e17161080f1c9e0a79b10",
+    "zip_entries": 200
+  },
+  "static_test_declarations": 4,
+  "top_level_areas": [
+    {
+      "files": 31,
+      "name": "tools",
+      "source_files": 19
+    },
+    {
+      "files": 12,
+      "name": "apps",
+      "source_files": 10
+    },
+    {
+      "files": 14,
+      "name": "scripts",
+      "source_files": 12
+    },
+    {
+      "files": 39,
+      "name": "(root)",
+      "source_files": 2
+    },
+    {
+      "files": 16,
+      "name": "packages",
+      "source_files": 5
+    },
+    {
+      "files": 44,
+      "name": "world-packs",
+      "source_files": 0
+    },
+    {
+      "files": 27,
+      "name": "docs",
+      "source_files": 0
+    },
+    {
+      "files": 9,
+      "name": "fakeplant",
+      "source_files": 0
+    },
+    {
+      "files": 2,
+      "name": "runtime",
+      "source_files": 0
+    },
+    {
+      "files": 1,
+      "name": ".github",
+      "source_files": 0
+    }
+  ]
+}

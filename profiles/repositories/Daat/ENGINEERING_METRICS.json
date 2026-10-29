@@ -1,0 +1,114 @@
+{
+  "controls_configured": [
+    "Architecture decisions",
+    "Automated tests",
+    "CI configuration"
+  ],
+  "counts": {
+    "active_docs": 72,
+    "active_files": 134,
+    "excluded_files": 3,
+    "migration_files": 0,
+    "observed_files": 137,
+    "production_nonblank_lines": 885,
+    "production_source_files": 18,
+    "pruned_directories": 0,
+    "schema_files": 16,
+    "source_files": 25,
+    "test_nonblank_lines": 539,
+    "test_source_files": 7
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "Python": 1415,
+    "Shell": 9
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/Daat",
+  "routes_probable": 0,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "Daat_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:19:42.522007",
+    "indexed_files": 136,
+    "member": "Daat_Code_snapshot.zip",
+    "sha256": "cf066769f22d478a59da3e1c16ccf90d1179a74afff5476fbc1fe3044648693d",
+    "zip_entries": 137
+  },
+  "static_test_declarations": 82,
+  "top_level_areas": [
+    {
+      "files": 24,
+      "name": "src",
+      "source_files": 14
+    },
+    {
+      "files": 7,
+      "name": "tests",
+      "source_files": 7
+    },
+    {
+      "files": 2,
+      "name": "tools",
+      "source_files": 2
+    },
+    {
+      "files": 3,
+      "name": "examples",
+      "source_files": 1
+    },
+    {
+      "files": 13,
+      "name": "(root)",
+      "source_files": 1
+    },
+    {
+      "files": 34,
+      "name": "wiki",
+      "source_files": 0
+    },
+    {
+      "files": 30,
+      "name": "docs",
+      "source_files": 0
+    },
+    {
+      "files": 10,
+      "name": "contracts",
+      "source_files": 0
+    },
+    {
+      "files": 10,
+      "name": "mappings",
+      "source_files": 0
+    },
+    {
+      "files": 1,
+      "name": ".github",
+      "source_files": 0
+    }
+  ]
+}

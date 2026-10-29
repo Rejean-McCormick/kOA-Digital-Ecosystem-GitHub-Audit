@@ -41,12 +41,32 @@ class ProfilesTest(unittest.TestCase):
 
     def test_profiles_and_provenance(self):
         konnaxion=profiles.get_profile(ROOT,'Rejean-McCormick/Konnaxion','ENGINEERING_PROFILE.md')
-        self.assertIn('102,561',konnaxion)
+        self.assertIn('109,361',konnaxion)
         self.assertIn('Lizard',konnaxion)
         for repo in ('Orgo','kOA-Linux-Koali'):
             s=profiles.get_profile(ROOT,'Rejean-McCormick/'+repo,'ENGINEERING_PROFILE.md')
-            self.assertIn('non mesuré',s.lower())
+            self.assertIn('active engineering surface',s)
+            self.assertIn('snapshot',s.lower())
         self.assertIsNone(profiles.get_profile(ROOT,'Rejean-McCormick/Akor','ENGINEERING_PROFILE.md'))
+
+    def test_engineering_profiles_for_all_13_ep_snapshots(self):
+        from pathlib import Path
+        canonical=profiles.inventory(ROOT)
+        self.assertEqual(len(canonical),49)
+        selectable=profiles.profile_repositories(ROOT)
+        self.assertEqual(len(selectable),50)
+        extra='Rejean-McCormick/Konnaxion-Universe-Worlds-Manager'
+        self.assertIn(extra,selectable)
+        self.assertNotIn(extra,canonical)
+        self.assertEqual(len(list((ROOT/'profiles/repositories').glob('*/ENGINEERING_METRICS.json'))),13)
+        for metric_path in (ROOT/'profiles/repositories').glob('*/ENGINEERING_METRICS.json'):
+            raw=json.loads(metric_path.read_text(encoding='utf-8'))
+            self.assertEqual(raw['format'],'koa_profiles.engineering_metrics.v1')
+            self.assertGreater(raw['counts']['active_files'],0)
+            self.assertFalse(raw['method']['code_executed'])
+            self.assertFalse(raw['method']['tests_executed'])
+            self.assertTrue(profiles.get_profile(ROOT,raw['repository'],'ENGINEERING_PROFILE.md'))
+        self.assertEqual(profiles.progress(ROOT,extra)['total'],86)
 
     def test_import_profile_and_reject_invalid_repo(self):
         with tempfile.TemporaryDirectory() as tmp:

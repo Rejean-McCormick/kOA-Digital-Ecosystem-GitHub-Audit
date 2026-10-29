@@ -174,8 +174,8 @@ def scan_repository(folder: Path, *, inventory_name: str | None = None, max_file
         if name.startswith(".env") and name not in (".env.example", ".env.sample", ".env.template"):
             counts["SENSITIVE_FILENAME"] += 1
             if len(findings) < 100:
-                findings.append({"id": "SENSITIVE_FILENAME", "severity": "review", "path": rel,
-                                 "line": None, "message": "Review possible environment secrets; do not commit credentials"})
+                findings.append({"id": "SENSITIVE_FILENAME", "severity": "info", "path": rel,
+                                 "line": None, "message": "Environment-style filename observed; name alone is not an exposure"})
         if p.suffix.lower() not in SOURCE_EXT and not is_workflow and name not in ("Dockerfile", ".env"):
             continue
         try:
@@ -227,7 +227,7 @@ def scan_repository(folder: Path, *, inventory_name: str | None = None, max_file
                 for match in list(pattern.finditer(content))[:20]:
                     counts[code] += 1
                     if len(findings) < 100:
-                        findings.append({"id": code, "severity": "review", "path": rel,
+                        findings.append({"id": code, "severity": "info" if code == "WORKFLOW_UNPINNED_ACTION" else "review", "path": rel,
                                          "line": content.count("\n", 0, match.start()) + 1, "message": message})
     workflows.sort()
     has_codeql = any("codeql" in wf.lower() for wf in workflows)
@@ -254,7 +254,8 @@ def scan_repository(folder: Path, *, inventory_name: str | None = None, max_file
         "dependency_files": sorted(manifests), "findings": findings, "finding_counts": dict(counts),
         "vulnerability_database_check": "NOT_PERFORMED_OFFLINE", "secrets_scan_kind": "HEURISTIC_PATTERN_ONLY",
         "status": "PARTIAL" if truncated or counts["LARGE_FILE_NOT_INSPECTED"] or counts["READ_ERROR"]
-                  else ("REVIEW" if findings else "INSPECTED_NO_PATTERN_MATCH"),
+                  else ("REVIEW" if any(f.get("severity") in ("review", "high_review") for f in findings)
+                        else ("OBSERVED_INFORMATIONAL" if findings else "INSPECTED_NO_PATTERN_MATCH")),
     }
 
 

@@ -1,81 +1,58 @@
 <!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <meta name="description" content="Tableau de bord global des audits kOA, données agrégées et non certificatives.">
-  <title>kOA / Observatoire de l'écosystème</title>
-  <link rel="stylesheet" href="assets/dashboard.css">
-</head>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="kOA Digital Ecosystem — atlas des applications, qualification par preuve et Engineering Profiles.">
+<title>kOA · Centre de pilotage</title><link rel="stylesheet" href="assets/atlas.css"></head>
 <body>
-  <div class="app-shell">
-    <aside class="rail" aria-label="Navigation principale">
-      <a class="logo" href="#accueil" aria-label="kOA — Accueil"><img src="assets/logo.svg" alt="kOA"></a>
-      <div class="rail-line"></div>
-      <a href="#accueil" class="rail-icon active" aria-label="Vue d'ensemble" title="Vue d'ensemble">◫</a>
-      <a href="#insights" class="rail-icon" aria-label="Complétion" title="Complétion">◎</a>
-      <a href="#tendances" class="rail-icon" aria-label="Tendances" title="Tendances">⌁</a>
-      <a href="#signaux" class="rail-icon" aria-label="Signaux" title="Signaux">≡</a>
-      <div class="rail-bottom"><span class="rail-lock" title="Données anonymisées">◇</span></div>
-    </aside>
-    <div class="workspace">
-      <header class="topbar" id="accueil">
-        <div class="breadcrumbs"><img class="topbar-logo" src="assets/logo.svg" alt=""> kOA DIGITAL ECOSYSTEM <span>/</span> OBSERVATOIRE</div>
-        <div class="head-actions"><span class="live-point"></span><span id="connection">En attente des données</span><button type="button" id="refresh" aria-label="Actualiser le tableau de bord">↻ Actualiser</button></div>
-      </header>
-      <main>
-        <section class="hero">
-          <div class="hero-copy">
-            <div class="eyebrow">CENTRE DE CONTRÔLE <span class="eyebrow-rule"></span> VERSION PUBLIQUE</div>
-            <h1>Vue d'ensemble <em>kOA.</em></h1>
-            <p>Une lecture centralisée de l'état de ton écosystème logiciel. Maintenant avec des indicateurs plus parlants sur la complétion, la taille et la qualité des dépôts.</p>
-            <div class="mode-toggle" role="group" aria-label="Source d'observation">
-              <button type="button" class="is-active" id="mode-local" aria-pressed="true">◉ Audit local</button>
-              <button type="button" id="mode-github" aria-pressed="false">◈ GitHub / CI</button>
-            </div>
-          </div>
-          <div class="hero-art" aria-hidden="true">
-            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
-            <div class="core"><img src="assets/logo.svg" alt=""></div><div class="satellite sat-1"></div><div class="satellite sat-2"></div><div class="satellite sat-3"></div><div class="satellite sat-4"></div>
-          </div>
-        </section>
-        <div class="meta-strip"><span id="mode-description">Scan statique local · aucune connexion requise lors de l'analyse</span><span id="updated">Dernière publication : —</span></div>
-        <section class="metrics" aria-label="Indicateurs principaux">
-          <article class="metric"><span class="metric-label" id="metric-label-1">Périmètre kOA</span><strong class="metric-value" id="metric-1">—</strong><div class="metric-bottom">Inventaire de référence <span class="square purple"></span></div></article>
-          <article class="metric"><span class="metric-label" id="metric-label-2">Couverture locale</span><strong class="metric-value" id="metric-2">—</strong><div class="metric-bottom" id="metric-extra-2">Présence et audit <span class="square teal"></span></div></article>
-          <article class="metric"><span class="metric-label" id="metric-label-3">Repos à examiner</span><strong class="metric-value" id="metric-3">—</strong><div class="metric-bottom" id="metric-extra-3">Priorité de revue <span class="square orange"></span></div></article>
-          <article class="metric"><span class="metric-label" id="metric-label-4">Repos bien outillés</span><strong class="metric-value" id="metric-4">—</strong><div class="metric-bottom" id="metric-extra-4">Heuristique de structuration <span class="square blue"></span></div></article>
-        </section>
-
-        <section class="insights-grid" id="insights" aria-label="Complétion, taille et qualité">
-          <article class="panel insight-panel">
-            <div class="panel-heading"><div><div class="micro">COMPLÉTION</div><h2>Niveau de structuration</h2></div><span class="small-pill">Heuristique</span></div>
-            <div id="completion-list" class="stat-list"></div>
-            <p class="subtle-note" id="completion-note">Une vue de progression basée sur les contrôles visibles, pas une certification de maturité.</p>
-          </article>
-          <article class="panel insight-panel">
-            <div class="panel-heading"><div><div class="micro">TAILLE</div><h2>Surface d'ingénierie</h2></div><span class="small-pill">Agrégée</span></div>
-            <div id="size-list" class="stat-list"></div>
-            <div id="size-buckets" class="mini-bars"></div>
-          </article>
-          <article class="panel insight-panel">
-            <div class="panel-heading"><div><div class="micro">QUALITÉ</div><h2>Signal de qualité / contrôle</h2></div><span class="small-pill">Sans code source</span></div>
-            <div id="quality-list" class="stat-list"></div>
-            <div id="quality-buckets" class="mini-bars"></div>
-          </article>
-        </section>
-
-        <section class="split" id="tendances">
-          <article class="panel trend-panel"><div class="panel-heading"><div><div class="micro">HISTORIQUE</div><h2>Évolution des campagnes</h2></div><span class="small-pill" id="history-count">— campagnes</span></div><div id="trend-visual" class="trend-visual" role="img" aria-label="Tendance des campagnes"></div><div class="trend-legend"><span><i class="legend-dot"></i><span id="trend-legend-title">Signalements</span></span><span>Chaque point = un rapport publié</span></div></article>
-          <article class="panel coverage-panel"><div class="panel-heading"><div><div class="micro">COUVERTURE</div><h2 id="coverage-title">Statut des inspections</h2></div></div><div class="ring-layout"><div class="ring" id="ring"><div class="ring-inner"><strong id="ring-value">—</strong><small id="ring-caption">audités</small></div></div><div class="coverage-side" id="coverage-list"></div></div><p class="subtle-note" id="coverage-note">Les états partiels ne sont pas des résultats réussis.</p></article>
-        </section>
-        <section class="panel signals-panel" id="signaux"><div class="panel-heading"><div><div class="micro">PRIORITÉS DE REVUE</div><h2 id="signals-title">Signalements par catégorie</h2></div><span class="small-pill">Métadonnées uniquement</span></div><div id="signal-list" class="signals"></div><p class="subtle-note" id="signal-note">Les détections sont des pistes de vérification; elles ne constituent pas des vulnérabilités confirmées.</p></section>
-        <section class="disclosure"><div class="disclosure-icon">i</div><div><strong>Une observation, pas une certification.</strong><p>Les données visibles correspondent au dernier rapport <em>publié</em>, pas nécessairement à l'état actuel des dépôts. Les scans locaux, les observations GitHub et les résultats historiques ne sont pas fusionnés. Aucun secret, chemin Windows, source brute ou détail de vulnérabilité n'est publié par cet outil.</p><p id="caveat" class="caveat">—</p></div></section>
-      </main>
-      <footer>kOA Digital Ecosystem <span>•</span> Observatoire statique et interactif <span>•</span> Dashboard enrichi marque kOA <span>•</span> <span id="footer-version">Format v1</span></footer>
-    </div>
+<div class="layout">
+  <nav class="rail" aria-label="Navigation principale">
+    <a class="brand" href="#accueil" aria-label="kOA · Accueil"><img alt="kOA" src="assets/logo.svg"></a>
+    <a href="#accueil" title="Vue d'ensemble" aria-label="Vue d'ensemble">◫</a>
+    <a href="#cartographie" title="Carte de l'écosystème" aria-label="Carte de l'écosystème">⌘</a>
+    <a href="#apps" title="Dépôts" aria-label="Dépôts">▦</a>
+    <a href="#qualification" title="Qualification" aria-label="Qualification">◉</a>
+    <div class="rail-foot">kOA</div>
+  </nav>
+  <div class="content">
+    <header class="topbar" id="accueil">
+      <div class="brandline"><img alt="" src="assets/logo.svg"><div><strong>kOA Digital Ecosystem</strong><small>Centre de pilotage · Atlas & qualification</small></div></div>
+      <div class="topactions"><span class="indicator"></span><span id="load-status">Chargement de l’inventaire</span><button class="small-button" id="refresh" type="button">↻ Actualiser</button></div>
+    </header>
+    <main>
+      <section class="intro">
+        <div><div class="eyebrow">OBSERVATOIRE DES APPLICATIONS <span>·</span> VUE D’ENSEMBLE</div><h1>Une carte claire de<br><em>ton écosystème.</em></h1>
+          <p>Retrouve tes applications, consulte leurs profils d’ingénierie et suis les qualifications avec des preuves. Aucune pénalité pour la taille, les noms de fichiers ou les copies locales.</p>
+        </div>
+        <div class="date-card"><div class="date-caption">SOURCE ARCHITECTURALE</div><strong>kOA Digital Ecosystem</strong><p>Responsabilités et contrats documentés dans le référentiel du 29 octobre 2026.</p><a href="#cartographie">Explorer la carte ↓</a></div>
+      </section>
+      <section class="kpis" aria-label="Indicateurs factuels">
+        <article class="kpi"><div class="kpi-label">Dépôts de référence</div><strong id="kpi-total">49</strong><div class="kpi-foot">Inventaire officiel kOA</div></article>
+        <article class="kpi"><div class="kpi-label">Engineering Profiles</div><strong id="kpi-profiles">—</strong><div class="kpi-progress"><span id="bar-profiles"></span></div><div class="kpi-foot" id="kpi-profiles-note">Mesures disponibles / 49</div></article>
+        <article class="kpi"><div class="kpi-label">Dépôts audités localement</div><strong id="kpi-audited">—</strong><div class="kpi-progress"><span id="bar-audited"></span></div><div class="kpi-foot">Couverture de l'audit, pas qualité</div></article>
+        <article class="kpi accent"><div class="kpi-label">Qualification documentée</div><strong id="kpi-qualification">—</strong><div class="kpi-foot" id="kpi-qualification-note">Évaluations manuelles · non publiées</div></article>
+      </section>
+      <section class="qual-summary section" id="qualification">
+        <div class="heading"><div><div class="eyebrow">PROGRESSION PAR PREUVES</div><h2>Cinq jalons, cinq lectures distinctes.</h2></div><div class="hint" id="qual-mode">La qualification ne se déduit jamais d'un scan.</div></div>
+        <div id="stage-chart" class="stage-chart"></div>
+        <div class="footline"><span class="dot teal"></span> Étayé par preuve <span class="dot amber"></span> À documenter <span class="dot gray"></span> Non évalué / non applicable <span class="foot-explain">Une étape non évaluée n'est pas un échec.</span></div>
+      </section>
+      <section class="section map-section" id="cartographie">
+        <div class="heading"><div><div class="eyebrow">CARTE DES RESPONSABILITÉS</div><h2>Comment tes systèmes se parlent.</h2><p>Relations conceptuelles tirées du référentiel kOA, non des tests d'intégration exécutés.</p></div><div class="map-legend"><span><i class="legend-line"></i> Documenté</span><span><i class="legend-line dashed"></i> Proposé</span></div></div>
+        <div class="map-view-toggle" role="group" aria-label="Vue de la carte"><button type="button" id="view-contracts" class="map-view-button active" aria-pressed="true">Connexions documentées · 12 systèmes</button><button type="button" id="view-all" class="map-view-button" aria-pressed="false">Constellation complète · 49 dépôts</button></div>
+        <div class="map-scroller" id="map-scroller"><div id="ecosystem-map" class="ecosystem-map" role="group" aria-label="Carte interactive des systèmes kOA"><svg id="map-lines" viewBox="0 0 1150 640" aria-hidden="true" preserveAspectRatio="none"></svg><div id="map-nodes" class="map-nodes"></div></div></div>
+        <div class="constellation" id="constellation" hidden aria-label="Constellation des 49 dépôts"></div>
+        <div class="map-help">Sélectionne un système pour ouvrir sa fiche et, lorsqu'il existe, son <strong>Engineering Profile</strong>. La carte montre les responsabilités; elle n'affirme pas une intégration en production.</div>
+      </section>
+      <section class="explorer section" id="apps">
+        <div class="heading"><div><div class="eyebrow">PARCOURS PAR APPLICATION</div><h2>Les 49 dépôts, un seul point d'entrée.</h2><p>Choisis une application. Son profil et ses jalons sont directement dans sa fiche.</p></div><div class="results-label" id="result-count">49 applications</div></div>
+        <div class="explorer-grid">
+          <div class="directory"><div class="search-wrap"><label for="search">Rechercher une application</label><input id="search" type="search" placeholder="Ex. Konnaxion, Orgo, Kristal…" autocomplete="off"></div><div class="filters" id="group-filters" role="group" aria-label="Filtrer les applications"></div><div class="repo-list" id="repo-list" aria-label="Liste des applications"></div></div>
+          <aside class="detail" id="detail" aria-live="polite"><div class="detail-placeholder">Sélectionne une application sur la carte ou dans la liste pour afficher son dossier.</div></aside>
+        </div>
+      </section>
+      <section class="method-section"><div class="method-icon">i</div><div><strong>Ce tableau de bord suit les preuves, pas les impressions.</strong><p>« Profil disponible » mesure une documentation d'ingénierie. « Audit réalisé » mesure la couverture des observations. « Étayé par preuve » exige un jugement manuel avec sa portée, conservé localement. Les rapports sont fondés sur des snapshots et ne démontrent pas à eux seuls la qualité, la sécurité ou la complétion fonctionnelle.</p><p>Les diagnostics automatiques restent consultables séparément : <a href="observations.html">ouvrir les observations techniques (vue secondaire)</a>.</p></div></section>
+    </main>
+    <footer><span>kOA Digital Ecosystem · Centre de pilotage</span><span>49 dépôts · 5 jalons indépendants · rapports d'ingénierie vérifiables</span></footer>
   </div>
-  <script src="assets/dashboard.js" defer></script>
-</body>
-</html>
+</div>
+<script defer src="assets/atlas.js"></script>
+</body></html>

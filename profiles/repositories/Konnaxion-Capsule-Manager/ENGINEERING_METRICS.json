@@ -1,0 +1,131 @@
+{
+  "controls_configured": [
+    "Automated tests",
+    "CI configuration",
+    "Linting",
+    "Static typing"
+  ],
+  "counts": {
+    "active_docs": 45,
+    "active_files": 366,
+    "excluded_files": 2,
+    "migration_files": 0,
+    "observed_files": 368,
+    "production_nonblank_lines": 83736,
+    "production_source_files": 192,
+    "pruned_directories": 0,
+    "schema_files": 2,
+    "source_files": 270,
+    "test_nonblank_lines": 15642,
+    "test_source_files": 78
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "JavaScript": 536,
+    "PowerShell": 1500,
+    "Python": 97342
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/Konnaxion-Capsule-Manager",
+  "routes_probable": 127,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "Konnaxion_Capsule_Manager_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:20:07.844345",
+    "indexed_files": 367,
+    "member": "Konnaxion_Capsule_Manager_Code_snapshot.zip",
+    "sha256": "b8b5d705c81f672bc8754a46ae14cc99fb79469ad037484c8e8bb0b13057bc24",
+    "zip_entries": 368
+  },
+  "static_test_declarations": 801,
+  "top_level_areas": [
+    {
+      "files": 80,
+      "name": "kx_manager",
+      "source_files": 80
+    },
+    {
+      "files": 46,
+      "name": "kx_agent",
+      "source_files": 46
+    },
+    {
+      "files": 73,
+      "name": "tests",
+      "source_files": 73
+    },
+    {
+      "files": 50,
+      "name": "tools",
+      "source_files": 46
+    },
+    {
+      "files": 10,
+      "name": "kx_builder",
+      "source_files": 10
+    },
+    {
+      "files": 7,
+      "name": "kx_shared",
+      "source_files": 7
+    },
+    {
+      "files": 7,
+      "name": "kx_cli",
+      "source_files": 7
+    },
+    {
+      "files": 52,
+      "name": "(root)",
+      "source_files": 1
+    },
+    {
+      "files": 26,
+      "name": "docs",
+      "source_files": 0
+    },
+    {
+      "files": 6,
+      "name": "profiles",
+      "source_files": 0
+    },
+    {
+      "files": 3,
+      "name": ".github",
+      "source_files": 0
+    },
+    {
+      "files": 3,
+      "name": "policies",
+      "source_files": 0
+    },
+    {
+      "files": 3,
+      "name": "templates",
+      "source_files": 0
+    }
+  ]
+}

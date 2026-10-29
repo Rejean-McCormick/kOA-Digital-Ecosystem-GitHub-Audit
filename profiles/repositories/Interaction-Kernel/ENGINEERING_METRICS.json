@@ -1,0 +1,118 @@
+{
+  "controls_configured": [
+    "Architecture decisions",
+    "CI configuration",
+    "Machine-readable schemas",
+    "Static typing"
+  ],
+  "counts": {
+    "active_docs": 43,
+    "active_files": 165,
+    "excluded_files": 2,
+    "migration_files": 0,
+    "observed_files": 167,
+    "production_nonblank_lines": 1206,
+    "production_source_files": 30,
+    "pruned_directories": 0,
+    "schema_files": 25,
+    "source_files": 47,
+    "test_nonblank_lines": 550,
+    "test_source_files": 17
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "JavaScript": 108,
+    "PowerShell": 42,
+    "Python": 1432,
+    "Shell": 34,
+    "TypeScript": 140
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/Interaction-Kernel",
+  "routes_probable": 0,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "interaction_kernel_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:19:43.041256",
+    "indexed_files": 166,
+    "member": "interaction_kernel_Code_snapshot.zip",
+    "sha256": "807afae17c440b16961f3bbdb8266f8b32050528df784b73f731154864eea7da",
+    "zip_entries": 167
+  },
+  "static_test_declarations": 25,
+  "top_level_areas": [
+    {
+      "files": 27,
+      "name": "runtime",
+      "source_files": 23
+    },
+    {
+      "files": 15,
+      "name": "tools",
+      "source_files": 9
+    },
+    {
+      "files": 11,
+      "name": "adapters",
+      "source_files": 6
+    },
+    {
+      "files": 9,
+      "name": "scripts",
+      "source_files": 9
+    },
+    {
+      "files": 38,
+      "name": "contracts",
+      "source_files": 0
+    },
+    {
+      "files": 25,
+      "name": "docs",
+      "source_files": 0
+    },
+    {
+      "files": 18,
+      "name": "locks",
+      "source_files": 0
+    },
+    {
+      "files": 14,
+      "name": "(root)",
+      "source_files": 0
+    },
+    {
+      "files": 6,
+      "name": "tck",
+      "source_files": 0
+    },
+    {
+      "files": 2,
+      "name": ".github",
+      "source_files": 0
+    }
+  ]
+}

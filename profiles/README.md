@@ -10,11 +10,24 @@ This directory is read by the **Profiles & compliance** tab of the desktop appli
 - `repositories/<repo>/SECURITY_PROFILE.md`: standardized security-profile notes and qualification criteria.
 - `templates/`: templates for future profiles.
 
-## Initial profiles
+## Snapshot engineering profiles (2026-10-29)
 
-- **Konnaxion:** provided RepoSurveyor engineering profile dated September 16, 2026. Its attribution to this specific repository is **provisional**; consult `PROVENANCE.md`.
-- **Orgo** and **kOA-Linux-Koali:** preliminary profiles based on existing local-audit observations. Precise engineering size, code-line and complexity measurements were **not** supplied for these two projects and are not fabricated.
-- The initial security profiles are **unassessed templates**, not security certifications.
+The folder `EP.zip` provided 13 independently captured code snapshots. All 13 have been measured using the RepoSurveyor v1.0 profile/survey engine from the user's supplied tool. A consistent additional scope filter excludes `.koali-update-backups/` and embedded snapshot indexes.
+
+- **12 of 13** mapped to the existing 49-repository governance inventory.
+- **1 supplemental project** (`Konnaxion-Universe-Worlds-Manager`) is explicitly selectable in the profile tab without changing the authoritative inventory.
+- All 13 profile folders contain `ENGINEERING_PROFILE.md`, `ENGINEERING_METRICS.json` and `PROVENANCE.md`.
+- The original Konnaxion profile dated September 16, 2026 is retained as `ENGINEERING_PROFILE_2026-09-16_HISTORICAL.md`; it is not mixed into current metrics.
+- Existing security profiles for Konnaxion, Orgo and Koali Linux are unchanged and remain unassessed; their checklist states are never inferred from engineering data.
+- `ENGINEERING_PROFILE_INDEX.md` gives the full 13-repository table; `ENGINEERING_PROFILE_INDEX.csv` supports spreadsheets or analysis.
+
+### Interpretation limits
+
+- All measurements reflect **snapshot content**, not live repository state or Git history.
+- Fallback line counts are **physical, nonblank source lines** and may include comments. They are not accurate SLOC.
+- Lizard, `scc`, and Ctags were unavailable, so precise cyclomatic complexity is **not measured** for these snapshots.
+- No tests, CI, CodeQL, CVEs, or deployment checks were executed.
+- No automatic quality, maturity, compliance, security or release-readiness grade is produced.
 
 ## Manual assessment statuses
 

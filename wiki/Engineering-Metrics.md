@@ -23,9 +23,13 @@ The supplied RepoSurveyor profile is designed for **engineering surface characte
 
 An active engineering surface excludes common noise such as archives, snapshots, caches, dependency directories, and private local configuration. An absent optional analyzer does not justify a guessed value.
 
-### Sample attribution warning
+### Actual measurement source (v0.8.0)
 
-The bundled Konnaxion profile is **provisionally attributed** to that repository and measured on a September 2026 snapshot. Orgo and kOA-Linux-Koali currently have preliminary documentation rather than complete RepoSurveyor complexity profiles.
+The 13 bundled engineering profiles are derived directly from the supplied **October 29, 2026 snapshot batch (`EP.zip`)**, using the RepoSurveyor 1.0 engine with documented backup/index exclusions. Twelve repositories are included in the official inventory; one supplemental profile is listed separately.
+
+Each profile includes source snapshot SHA-256, static test declarations, structural footprint, active languages and configured controls. This does **not** verify current Git state or successful test runs. Optional Lizard, `scc` and Ctags analyzers were unavailable, so their statistics are omitted rather than estimated.
+
+The previous Konnaxion measurements from September remain separate as historical evidence and are not treated as a comparable controlled trend.
 
 ## Quality is not a single number
 

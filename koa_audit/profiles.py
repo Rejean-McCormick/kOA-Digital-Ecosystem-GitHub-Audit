@@ -24,6 +24,38 @@ def inventory(project: Path) -> list[str]:
     return sorted({str(x["github_repo"]) for x in raw if isinstance(x, dict) and x.get("github_repo")}, key=str.casefold)
 
 
+def supplemental_repositories(project: Path) -> list[str]:
+    """Explicitly documented profiles outside the 49-repository inventory.
+
+    Supplemental profiles are not included in the audit's authoritative scope.
+    """
+    source = project / "profiles" / "supplemental_inventory.json"
+    if not source.is_file():
+        return []
+    raw = json.loads(source.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict) or raw.get("format") != "koa_profiles.supplemental.v1":
+        raise ValueError("Inventaire complémentaire invalide")
+    repos = raw.get("repositories")
+    if not isinstance(repos, list) or len(repos) > 100:
+        raise ValueError("Liste complémentaire invalide")
+    canonical = []
+    for name in repos:
+        if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", name):
+            raise ValueError("Nom de profil complémentaire invalide")
+        canonical.append(name)
+    if len({x.casefold() for x in canonical}) != len(canonical):
+        raise ValueError("Profil complémentaire dupliqué")
+    return sorted(canonical, key=str.casefold)
+
+
+def profile_repositories(project: Path) -> list[str]:
+    """Selectable profiles: the official 49 plus explicitly documented extras."""
+    approved = inventory(project)
+    current = {x.casefold() for x in approved}
+    extras = [x for x in supplemental_repositories(project) if x.casefold() not in current]
+    return approved + extras
+
+
 def catalog(project: Path) -> list[dict]:
     p = project / "profiles/catalog.json"
     raw = json.loads(p.read_text(encoding="utf-8"))
@@ -44,9 +76,9 @@ def catalog(project: Path) -> list[dict]:
 
 
 def repo_key(name: str, project: Path) -> str:
-    lookup = {x.casefold(): x for x in inventory(project)}
+    lookup = {x.casefold(): x for x in profile_repositories(project)}
     if name.casefold() not in lookup:
-        raise ValueError("Dépôt absent de l'inventaire")
+        raise ValueError("Dépôt absent du registre de profils")
     return lookup[name.casefold()]
 
 
@@ -133,6 +165,10 @@ def set_assessment(project: Path, repo: str, pattern_id: str, status: str, note:
         raise ValueError("Statut inconnu")
     if len(note) > 2000:
         raise ValueError("Note trop longue (2000 caractères max)")
+    # Prevent unsubstantiated negative and positive compliance claims.
+    # A filename, duplicate folder, static scan match or size is not a decision.
+    if status != "Non évalué" and len(note.strip()) < 8:
+        raise ValueError("Indique une justification ou une référence de preuve (8 caractères minimum)")
     path = path or state_path()
     state = load_state(path)
     state["assessments"].setdefault(canonical, {})[pattern_id] = {

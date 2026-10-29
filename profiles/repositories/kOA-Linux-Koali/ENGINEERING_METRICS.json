@@ -1,0 +1,146 @@
+{
+  "controls_configured": [
+    "Automated tests",
+    "CI configuration",
+    "Containerization",
+    "Linting",
+    "Machine-readable schemas",
+    "Pre-commit hooks",
+    "Static typing"
+  ],
+  "counts": {
+    "active_docs": 573,
+    "active_files": 1649,
+    "excluded_files": 1,
+    "migration_files": 17,
+    "observed_files": 1650,
+    "production_nonblank_lines": 111068,
+    "production_source_files": 524,
+    "pruned_directories": 0,
+    "schema_files": 86,
+    "source_files": 743,
+    "test_nonblank_lines": 33147,
+    "test_source_files": 219
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "PowerShell": 130,
+    "Python": 131295,
+    "Rust": 12165,
+    "SQL": 547,
+    "Shell": 78
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/kOA-Linux-Koali",
+  "routes_probable": 0,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "koa-linux_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:19:49.178190",
+    "indexed_files": 1649,
+    "member": "koa-linux_Code_snapshot.zip",
+    "sha256": "2bc4ea44e9d2a0313b4d5abe999e9c2bf7650fa177f2001ba3d3699be99b737a",
+    "zip_entries": 1650
+  },
+  "static_test_declarations": 1299,
+  "top_level_areas": [
+    {
+      "files": 365,
+      "name": "components",
+      "source_files": 326
+    },
+    {
+      "files": 248,
+      "name": "integrations",
+      "source_files": 127
+    },
+    {
+      "files": 105,
+      "name": "host",
+      "source_files": 36
+    },
+    {
+      "files": 41,
+      "name": "operations",
+      "source_files": 39
+    },
+    {
+      "files": 40,
+      "name": "assembly",
+      "source_files": 38
+    },
+    {
+      "files": 28,
+      "name": "interfaces",
+      "source_files": 12
+    },
+    {
+      "files": 89,
+      "name": "tests",
+      "source_files": 83
+    },
+    {
+      "files": 520,
+      "name": "docs",
+      "source_files": 28
+    },
+    {
+      "files": 34,
+      "name": "tools",
+      "source_files": 33
+    },
+    {
+      "files": 20,
+      "name": "ci",
+      "source_files": 12
+    },
+    {
+      "files": 21,
+      "name": "release",
+      "source_files": 5
+    },
+    {
+      "files": 17,
+      "name": "dev",
+      "source_files": 3
+    },
+    {
+      "files": 3,
+      "name": ".tandem_tour8",
+      "source_files": 1
+    },
+    {
+      "files": 38,
+      "name": "packaging",
+      "source_files": 0
+    },
+    {
+      "files": 32,
+      "name": "profiles",
+      "source_files": 0
+    }
+  ]
+}

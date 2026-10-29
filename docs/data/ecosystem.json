@@ -1,0 +1,1218 @@
+{
+  "format": "koa_ecosystem.atlas.v1",
+  "groups": [
+    {
+      "id": "civic",
+      "label": "Civic & workflows"
+    },
+    {
+      "id": "knowledge",
+      "label": "Knowledge & referents"
+    },
+    {
+      "id": "platform",
+      "label": "Platform & presentation"
+    },
+    {
+      "id": "protocol",
+      "label": "Cross-system protocols"
+    },
+    {
+      "id": "language",
+      "label": "Language & release"
+    },
+    {
+      "id": "other",
+      "label": "Other repositories (unmapped here)"
+    }
+  ],
+  "links": [
+    {
+      "from": "konnaxion",
+      "label": "Decision profile / governed handoff",
+      "status": "documented",
+      "to": "orgo"
+    },
+    {
+      "from": "orgo",
+      "label": "Immutable exports, as needed",
+      "status": "documented",
+      "to": "daat"
+    },
+    {
+      "from": "encyklopedia",
+      "label": "Evidence / candidate handoff",
+      "status": "documented",
+      "to": "daat"
+    },
+    {
+      "from": "daat",
+      "label": "Kristal-native contract",
+      "status": "documented",
+      "to": "kristal"
+    },
+    {
+      "from": "kristal",
+      "label": "Runtime Pack / platform admission",
+      "status": "documented",
+      "to": "linux"
+    },
+    {
+      "from": "architect",
+      "label": "Owner-preserving release sequencing",
+      "status": "documented",
+      "to": "orchestrator"
+    },
+    {
+      "from": "skope",
+      "label": "Candidate handoff; not qualified",
+      "status": "proposed",
+      "to": "encyklopedia"
+    }
+  ],
+  "qualifications": "Manual only; local claims not included in this public file",
+  "repositories": [
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Akor",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Akor",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Akor"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Arketype",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Arketype",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Arketype"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "Architecture decisions",
+          "Automated tests",
+          "CI configuration"
+        ],
+        "counts": {
+          "active_docs": 72,
+          "active_files": 134,
+          "migration_files": 0,
+          "production_nonblank_lines": 885,
+          "production_source_files": 18,
+          "schema_files": 16,
+          "source_files": 25,
+          "test_nonblank_lines": 539,
+          "test_source_files": 7
+        },
+        "languages": [
+          {
+            "language": "Python",
+            "lines": 1415
+          },
+          {
+            "language": "Shell",
+            "lines": 9
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 0,
+        "snapshot_index_date": "2026-10-29T09:19:42.522007",
+        "snapshot_sha256": "cf066769f22d478a59da3e1c16ccf90d1179a74afff5476fbc1fe3044648693d",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 82,
+        "tests_executed": false
+      },
+      "group": "knowledge",
+      "has_local_profile": true,
+      "name": "Daat",
+      "node_id": "daat",
+      "repo": "Rejean-McCormick/Daat",
+      "report": "engineering/Daat.html",
+      "role": "Mapping / ACL",
+      "slug": "Daat"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Ekole",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Ekole",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Ekole"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Ekole-Pastorale",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Ekole-Pastorale",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Ekole-Pastorale"
+    },
+    {
+      "engineering": null,
+      "group": "knowledge",
+      "has_local_profile": false,
+      "name": "EncyKlopedia",
+      "node_id": "encyklopedia",
+      "repo": "Rejean-McCormick/EncyKlopedia",
+      "report": null,
+      "role": "Source acquisition",
+      "slug": "EncyKlopedia"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "HomePage-initkoa.org",
+      "node_id": null,
+      "repo": "Rejean-McCormick/HomePage-initkoa.org",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "HomePage-initkoa.org"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "initkoa-docs",
+      "node_id": null,
+      "repo": "Rejean-McCormick/initkoa-docs",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "initkoa-docs"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "Architecture decisions",
+          "CI configuration",
+          "Static typing"
+        ],
+        "counts": {
+          "active_docs": 43,
+          "active_files": 165,
+          "migration_files": 0,
+          "production_nonblank_lines": 1206,
+          "production_source_files": 30,
+          "schema_files": 25,
+          "source_files": 47,
+          "test_nonblank_lines": 550,
+          "test_source_files": 17
+        },
+        "languages": [
+          {
+            "language": "Python",
+            "lines": 1432
+          },
+          {
+            "language": "TypeScript",
+            "lines": 140
+          },
+          {
+            "language": "JavaScript",
+            "lines": 108
+          },
+          {
+            "language": "PowerShell",
+            "lines": 42
+          },
+          {
+            "language": "Shell",
+            "lines": 34
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 0,
+        "snapshot_index_date": "2026-10-29T09:19:43.041256",
+        "snapshot_sha256": "807afae17c440b16961f3bbdb8266f8b32050528df784b73f731154864eea7da",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 25,
+        "tests_executed": false
+      },
+      "group": "protocol",
+      "has_local_profile": true,
+      "name": "Interaction-Kernel",
+      "node_id": "ik",
+      "repo": "Rejean-McCormick/Interaction-Kernel",
+      "report": "engineering/Interaction-Kernel.html",
+      "role": "Versioned envelopes",
+      "slug": "Interaction-Kernel"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "kOA-Digital-Ecosystem",
+      "node_id": null,
+      "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "kOA-Digital-Ecosystem"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "Automated tests",
+          "CI configuration",
+          "Containerization",
+          "Linting",
+          "Pre-commit hooks",
+          "Static typing"
+        ],
+        "counts": {
+          "active_docs": 573,
+          "active_files": 1649,
+          "migration_files": 17,
+          "production_nonblank_lines": 111068,
+          "production_source_files": 524,
+          "schema_files": 86,
+          "source_files": 743,
+          "test_nonblank_lines": 33147,
+          "test_source_files": 219
+        },
+        "languages": [
+          {
+            "language": "Python",
+            "lines": 131295
+          },
+          {
+            "language": "Rust",
+            "lines": 12165
+          },
+          {
+            "language": "SQL",
+            "lines": 547
+          },
+          {
+            "language": "PowerShell",
+            "lines": 130
+          },
+          {
+            "language": "Shell",
+            "lines": 78
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 0,
+        "snapshot_index_date": "2026-10-29T09:19:49.178190",
+        "snapshot_sha256": "2bc4ea44e9d2a0313b4d5abe999e9c2bf7650fa177f2001ba3d3699be99b737a",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 1299,
+        "tests_executed": false
+      },
+      "group": "platform",
+      "has_local_profile": true,
+      "name": "kOA-Linux-Koali",
+      "node_id": "linux",
+      "repo": "Rejean-McCormick/kOA-Linux-Koali",
+      "report": "engineering/kOA-Linux-Koali.html",
+      "role": "Platform admission",
+      "slug": "kOA-Linux-Koali"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Koali-Control-Panel",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Koali-Control-Panel",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Koali-Control-Panel"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Koali-Scenario-Mosaic",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Koali-Scenario-Mosaic",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Koali-Scenario-Mosaic"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "Architecture decisions",
+          "CI configuration",
+          "Linting",
+          "Static typing"
+        ],
+        "counts": {
+          "active_docs": 189,
+          "active_files": 363,
+          "migration_files": 0,
+          "production_nonblank_lines": 7980,
+          "production_source_files": 112,
+          "schema_files": 16,
+          "source_files": 134,
+          "test_nonblank_lines": 1478,
+          "test_source_files": 22
+        },
+        "languages": [
+          {
+            "language": "TypeScript",
+            "lines": 4495
+          },
+          {
+            "language": "JavaScript",
+            "lines": 3508
+          },
+          {
+            "language": "Python",
+            "lines": 609
+          },
+          {
+            "language": "CSS",
+            "lines": 510
+          },
+          {
+            "language": "PowerShell",
+            "lines": 336
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 0,
+        "snapshot_index_date": "2026-10-29T09:19:51.967421",
+        "snapshot_sha256": "b710f090f320c70f4b0aa7df6c41ce253af4e2d6c7313f5be763fa83ecda76ef",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 42,
+        "tests_executed": false
+      },
+      "group": "platform",
+      "has_local_profile": true,
+      "name": "Koali-Spaces",
+      "node_id": "spaces",
+      "repo": "Rejean-McCormick/Koali-Spaces",
+      "report": "engineering/Koali-Spaces.html",
+      "role": "Presentation / shell",
+      "slug": "Koali-Spaces"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Kompiler",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Kompiler",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Kompiler"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Kompose",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Kompose",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Kompose"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Konductor",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Konductor",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Konductor"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "Automated tests",
+          "CI configuration",
+          "Containerization"
+        ],
+        "counts": {
+          "active_docs": 17,
+          "active_files": 99,
+          "migration_files": 4,
+          "production_nonblank_lines": 5069,
+          "production_source_files": 37,
+          "schema_files": 2,
+          "source_files": 47,
+          "test_nonblank_lines": 969,
+          "test_source_files": 10
+        },
+        "languages": [
+          {
+            "language": "Python",
+            "lines": 6028
+          },
+          {
+            "language": "Shell",
+            "lines": 10
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 47,
+        "snapshot_index_date": "2026-10-29T09:19:52.416756",
+        "snapshot_sha256": "34e129063c065ab9eda3909cd15cc39bdde519ecae411db3ebb975b548088cff",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 52,
+        "tests_executed": false
+      },
+      "group": "other",
+      "has_local_profile": true,
+      "name": "Konfid",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Konfid",
+      "report": "engineering/Konfid.html",
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Konfid"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "Automated tests",
+          "Browser/E2E testing",
+          "CI configuration",
+          "Containerization",
+          "Linting",
+          "Pre-commit hooks",
+          "Static typing"
+        ],
+        "counts": {
+          "active_docs": 196,
+          "active_files": 1166,
+          "migration_files": 57,
+          "production_nonblank_lines": 109361,
+          "production_source_files": 796,
+          "schema_files": 7,
+          "source_files": 859,
+          "test_nonblank_lines": 7886,
+          "test_source_files": 63
+        },
+        "languages": [
+          {
+            "language": "TypeScript",
+            "lines": 82660
+          },
+          {
+            "language": "Python",
+            "lines": 30107
+          },
+          {
+            "language": "JavaScript",
+            "lines": 1971
+          },
+          {
+            "language": "PowerShell",
+            "lines": 1172
+          },
+          {
+            "language": "CSS",
+            "lines": 657
+          },
+          {
+            "language": "HTML",
+            "lines": 544
+          },
+          {
+            "language": "Shell",
+            "lines": 73
+          },
+          {
+            "language": "SQL",
+            "lines": 63
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 55,
+        "snapshot_index_date": "2026-10-29T09:20:04.489512",
+        "snapshot_sha256": "0e016950aa7e468d5e6c88a02518cc5c9e0c99c9f5fe75391dd9cd45b3707319",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 276,
+        "tests_executed": false
+      },
+      "group": "civic",
+      "has_local_profile": true,
+      "name": "Konnaxion",
+      "node_id": "konnaxion",
+      "repo": "Rejean-McCormick/Konnaxion",
+      "report": "engineering/Konnaxion.html",
+      "role": "Civic decisions",
+      "slug": "Konnaxion"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "Automated tests",
+          "CI configuration",
+          "Linting",
+          "Static typing"
+        ],
+        "counts": {
+          "active_docs": 45,
+          "active_files": 366,
+          "migration_files": 0,
+          "production_nonblank_lines": 83736,
+          "production_source_files": 192,
+          "schema_files": 2,
+          "source_files": 270,
+          "test_nonblank_lines": 15642,
+          "test_source_files": 78
+        },
+        "languages": [
+          {
+            "language": "Python",
+            "lines": 97342
+          },
+          {
+            "language": "PowerShell",
+            "lines": 1500
+          },
+          {
+            "language": "JavaScript",
+            "lines": 536
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 127,
+        "snapshot_index_date": "2026-10-29T09:20:07.844345",
+        "snapshot_sha256": "b8b5d705c81f672bc8754a46ae14cc99fb79469ad037484c8e8bb0b13057bc24",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 801,
+        "tests_executed": false
+      },
+      "group": "other",
+      "has_local_profile": true,
+      "name": "Konnaxion-Capsule-Manager",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Konnaxion-Capsule-Manager",
+      "report": "engineering/Konnaxion-Capsule-Manager.html",
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Konnaxion-Capsule-Manager"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "CI configuration"
+        ],
+        "counts": {
+          "active_docs": 155,
+          "active_files": 507,
+          "migration_files": 5,
+          "production_nonblank_lines": 8582,
+          "production_source_files": 67,
+          "schema_files": 1,
+          "source_files": 82,
+          "test_nonblank_lines": 1150,
+          "test_source_files": 15
+        },
+        "languages": [
+          {
+            "language": "Python",
+            "lines": 9569
+          },
+          {
+            "language": "PowerShell",
+            "lines": 163
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 38,
+        "snapshot_index_date": "2026-10-29T09:20:06.767048",
+        "snapshot_sha256": "b9c26095cd514823ca852690a6ca8b63c666eabe868b6e3430d798b503329b6f",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 69,
+        "tests_executed": false
+      },
+      "group": "other",
+      "has_local_profile": true,
+      "name": "Konnaxion-Worlds",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Konnaxion-Worlds",
+      "report": "engineering/Konnaxion-Worlds.html",
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Konnaxion-Worlds"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "KonnaxionDiag",
+      "node_id": null,
+      "repo": "Rejean-McCormick/KonnaxionDiag",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "KonnaxionDiag"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Konstellation",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Konstellation",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Konstellation"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Konstellation-Light",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Konstellation-Light",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Konstellation-Light"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Konstellation-Publisher",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Konstellation-Publisher",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Konstellation-Publisher"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Kontainer",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Kontainer",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Kontainer"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Kontexte",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Kontexte",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Kontexte"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Kristal-Authoring-Kit",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Kristal-Authoring-Kit",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Kristal-Authoring-Kit"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "CI configuration"
+        ],
+        "counts": {
+          "active_docs": 293,
+          "active_files": 619,
+          "migration_files": 3,
+          "production_nonblank_lines": 8288,
+          "production_source_files": 58,
+          "schema_files": 73,
+          "source_files": 72,
+          "test_nonblank_lines": 1415,
+          "test_source_files": 14
+        },
+        "languages": [
+          {
+            "language": "Python",
+            "lines": 6217
+          },
+          {
+            "language": "JavaScript",
+            "lines": 3099
+          },
+          {
+            "language": "HTML",
+            "lines": 387
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 0,
+        "snapshot_index_date": "2026-10-29T09:20:09.355540",
+        "snapshot_sha256": "33ab2e2f39dd933bc179c643ac7579c3be703ddca108a76a20e0119b13cd0ec5",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 93,
+        "tests_executed": false
+      },
+      "group": "knowledge",
+      "has_local_profile": true,
+      "name": "Kristal-Framework",
+      "node_id": "kristal",
+      "repo": "Rejean-McCormick/Kristal-Framework",
+      "report": "engineering/Kristal-Framework.html",
+      "role": "Epistemic authority",
+      "slug": "Kristal-Framework"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Kristal-Integration-Pack",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Kristal-Integration-Pack",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Kristal-Integration-Pack"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Kristal-Manager",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Kristal-Manager",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Kristal-Manager"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "kristal-public",
+      "node_id": null,
+      "repo": "Rejean-McCormick/kristal-public",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "kristal-public"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "KristalDiag",
+      "node_id": null,
+      "repo": "Rejean-McCormick/KristalDiag",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "KristalDiag"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "LevelUpDiag-kOA-Linux",
+      "node_id": null,
+      "repo": "Rejean-McCormick/LevelUpDiag-kOA-Linux",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "LevelUpDiag-kOA-Linux"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "LevelUpDiag-Orgo",
+      "node_id": null,
+      "repo": "Rejean-McCormick/LevelUpDiag-Orgo",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "LevelUpDiag-Orgo"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "LevelUpDiag_SemantiK-Architect",
+      "node_id": null,
+      "repo": "Rejean-McCormick/LevelUpDiag_SemantiK-Architect",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "LevelUpDiag_SemantiK-Architect"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Mediatheque",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Mediatheque",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Mediatheque"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Mediatheque-blank",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Mediatheque-blank",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Mediatheque-blank"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "MediKristal",
+      "node_id": null,
+      "repo": "Rejean-McCormick/MediKristal",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "MediKristal"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "MediKristal-LevelUpDiag-",
+      "node_id": null,
+      "repo": "Rejean-McCormick/MediKristal-LevelUpDiag-",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "MediKristal-LevelUpDiag-"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "CI configuration",
+          "Containerization",
+          "Static typing"
+        ],
+        "counts": {
+          "active_docs": 92,
+          "active_files": 363,
+          "migration_files": 2,
+          "production_nonblank_lines": 21233,
+          "production_source_files": 138,
+          "schema_files": 3,
+          "source_files": 162,
+          "test_nonblank_lines": 2623,
+          "test_source_files": 24
+        },
+        "languages": [
+          {
+            "language": "TypeScript",
+            "lines": 15418
+          },
+          {
+            "language": "JavaScript",
+            "lines": 3056
+          },
+          {
+            "language": "SQL",
+            "lines": 1741
+          },
+          {
+            "language": "Python",
+            "lines": 1424
+          },
+          {
+            "language": "CSS",
+            "lines": 1217
+          },
+          {
+            "language": "PowerShell",
+            "lines": 981
+          },
+          {
+            "language": "Shell",
+            "lines": 19
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 120,
+        "snapshot_index_date": "2026-10-29T09:19:41.417697",
+        "snapshot_sha256": "e48be0980da709a7a04e196d8a49e3e9202a2b3836f2406b8bb078c7fe572ca2",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 69,
+        "tests_executed": false
+      },
+      "group": "civic",
+      "has_local_profile": true,
+      "name": "Orgo",
+      "node_id": "orgo",
+      "repo": "Rejean-McCormick/Orgo",
+      "report": "engineering/Orgo.html",
+      "role": "Governed work",
+      "slug": "Orgo"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "CI configuration",
+          "Static typing"
+        ],
+        "counts": {
+          "active_docs": 54,
+          "active_files": 195,
+          "migration_files": 0,
+          "production_nonblank_lines": 2934,
+          "production_source_files": 36,
+          "schema_files": 0,
+          "source_files": 48,
+          "test_nonblank_lines": 393,
+          "test_source_files": 12
+        },
+        "languages": [
+          {
+            "language": "TypeScript",
+            "lines": 1537
+          },
+          {
+            "language": "JavaScript",
+            "lines": 1043
+          },
+          {
+            "language": "Python",
+            "lines": 693
+          },
+          {
+            "language": "PowerShell",
+            "lines": 54
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 10,
+        "snapshot_index_date": "2026-10-29T09:19:42.146911",
+        "snapshot_sha256": "14e463c9761535656e131fd8c8c4b4e17b90ab5a976e17161080f1c9e0a79b10",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 4,
+        "tests_executed": false
+      },
+      "group": "other",
+      "has_local_profile": true,
+      "name": "Orgo-Worlds",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Orgo-Worlds",
+      "report": "engineering/Orgo-Worlds.html",
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Orgo-Worlds"
+    },
+    {
+      "engineering": {
+        "complexity_measured": false,
+        "controls": [
+          "Architecture decisions",
+          "CI configuration"
+        ],
+        "counts": {
+          "active_docs": 68,
+          "active_files": 280,
+          "migration_files": 0,
+          "production_nonblank_lines": 5065,
+          "production_source_files": 95,
+          "schema_files": 19,
+          "source_files": 121,
+          "test_nonblank_lines": 1099,
+          "test_source_files": 26
+        },
+        "languages": [
+          {
+            "language": "Python",
+            "lines": 6164
+          }
+        ],
+        "method": "RepoSurveyor 1.0 — fichiers actifs, hors caches et copies exclues",
+        "routes_probable": 0,
+        "snapshot_index_date": "2026-10-29T09:20:10.590570",
+        "snapshot_sha256": "b785d96bdab921534bf4875209aed5380e03602cf6eefaba58a284fbe66d9961",
+        "source_model": "snapshot de code fourni",
+        "static_test_declarations": 68,
+        "tests_executed": false
+      },
+      "group": "language",
+      "has_local_profile": true,
+      "name": "SemantiK-Architect",
+      "node_id": "architect",
+      "repo": "Rejean-McCormick/SemantiK-Architect",
+      "report": "engineering/SemantiK-Architect.html",
+      "role": "Language realization",
+      "slug": "SemantiK-Architect"
+    },
+    {
+      "engineering": null,
+      "group": "language",
+      "has_local_profile": false,
+      "name": "SemantiK_Runtime_Orchestrator",
+      "node_id": "orchestrator",
+      "repo": "Rejean-McCormick/SemantiK_Runtime_Orchestrator",
+      "report": null,
+      "role": "RuntimeSet sequencing",
+      "slug": "SemantiK_Runtime_Orchestrator"
+    },
+    {
+      "engineering": null,
+      "group": "knowledge",
+      "has_local_profile": false,
+      "name": "SenTient",
+      "node_id": "sentient",
+      "repo": "Rejean-McCormick/SenTient",
+      "report": null,
+      "role": "Candidate resolution",
+      "slug": "SenTient"
+    },
+    {
+      "engineering": null,
+      "group": "knowledge",
+      "has_local_profile": false,
+      "name": "Skope",
+      "node_id": "skope",
+      "repo": "Rejean-McCormick/Skope",
+      "report": null,
+      "role": "Local scope / recipe",
+      "slug": "Skope"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "Spek",
+      "node_id": null,
+      "repo": "Rejean-McCormick/Spek",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "Spek"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "UCKK-Assets",
+      "node_id": null,
+      "repo": "Rejean-McCormick/UCKK-Assets",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "UCKK-Assets"
+    },
+    {
+      "engineering": null,
+      "group": "other",
+      "has_local_profile": false,
+      "name": "UCKK-Ops-Console",
+      "node_id": null,
+      "repo": "Rejean-McCormick/UCKK-Ops-Console",
+      "report": null,
+      "role": "Dépôt de l’inventaire · responsabilité non cartographiée ici",
+      "slug": "UCKK-Ops-Console"
+    }
+  ],
+  "source": "kOA Digital Ecosystem — docs/1-Overview/index.md, Components.md, Integration.md; snapshot 2026-10-29",
+  "systems": [
+    {
+      "group": "civic",
+      "id": "konnaxion",
+      "label": "Konnaxion",
+      "repo": "Rejean-McCormick/Konnaxion",
+      "role": "Civic decisions"
+    },
+    {
+      "group": "civic",
+      "id": "orgo",
+      "label": "Orgo",
+      "repo": "Rejean-McCormick/Orgo",
+      "role": "Governed work"
+    },
+    {
+      "group": "knowledge",
+      "id": "encyklopedia",
+      "label": "EncyKlopedia",
+      "repo": "Rejean-McCormick/EncyKlopedia",
+      "role": "Source acquisition"
+    },
+    {
+      "group": "knowledge",
+      "id": "daat",
+      "label": "Da’at",
+      "repo": "Rejean-McCormick/Daat",
+      "role": "Mapping / ACL"
+    },
+    {
+      "group": "knowledge",
+      "id": "kristal",
+      "label": "Kristal",
+      "repo": "Rejean-McCormick/Kristal-Framework",
+      "role": "Epistemic authority"
+    },
+    {
+      "group": "platform",
+      "id": "linux",
+      "label": "kOA-Linux",
+      "repo": "Rejean-McCormick/kOA-Linux-Koali",
+      "role": "Platform admission"
+    },
+    {
+      "group": "platform",
+      "id": "spaces",
+      "label": "Koali Spaces",
+      "repo": "Rejean-McCormick/Koali-Spaces",
+      "role": "Presentation / shell"
+    },
+    {
+      "group": "protocol",
+      "id": "ik",
+      "label": "Interaction Kernel",
+      "repo": "Rejean-McCormick/Interaction-Kernel",
+      "role": "Versioned envelopes"
+    },
+    {
+      "group": "language",
+      "id": "architect",
+      "label": "SemantiK Architect",
+      "repo": "Rejean-McCormick/SemantiK-Architect",
+      "role": "Language realization"
+    },
+    {
+      "group": "language",
+      "id": "orchestrator",
+      "label": "Runtime Orchestrator",
+      "repo": "Rejean-McCormick/SemantiK_Runtime_Orchestrator",
+      "role": "RuntimeSet sequencing"
+    },
+    {
+      "group": "knowledge",
+      "id": "sentient",
+      "label": "SenTient",
+      "repo": "Rejean-McCormick/SenTient",
+      "role": "Candidate resolution"
+    },
+    {
+      "group": "knowledge",
+      "id": "skope",
+      "label": "Skope",
+      "repo": "Rejean-McCormick/Skope",
+      "role": "Local scope / recipe"
+    }
+  ],
+  "total": 49
+}

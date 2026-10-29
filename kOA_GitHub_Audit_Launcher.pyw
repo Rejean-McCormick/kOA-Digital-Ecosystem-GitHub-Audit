@@ -14,6 +14,10 @@ import threading
 import traceback
 import functools
 import http.server
+import html
+import json
+import re
+from urllib.parse import urlsplit, unquote
 import webbrowser
 from datetime import datetime, timezone
 from pathlib import Path
@@ -42,6 +46,72 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, format: str, *args: object) -> None:
         # Preview is loopback-only. Never write HTTP logs to a missing stderr.
         pass
+
+    def do_GET(self) -> None:
+        """Serve local qualification states and full reports only on loopback.
+
+        These URLs do NOT exist in GitHub Pages and are never written into docs/.
+        No free-form evidence, file paths or notes are exported through JSON.
+        """
+        route = urlsplit(self.path).path
+        if route not in ("/data/local-qualification.json",) and not route.startswith("/local/engineering/"):
+            return super().do_GET()
+        if (self.client_address[0] not in ("127.0.0.1", "::1")
+                or self.headers.get("Sec-Fetch-Site", "same-origin") == "cross-site"
+                or self.headers.get("Origin") not in (None, "", f"http://127.0.0.1:{self.server.server_port}")):
+            self.send_error(403)
+            return
+        try:
+            from koa_audit import profiles, qualification
+            if route == "/data/local-qualification.json":
+                claims = qualification.load_state().get("claims", {})
+                allowed = set(qualification.STATES)
+                result = {}
+                for repo in profiles.inventory(ROOT):
+                    entries = claims.get(repo, {})
+                    result[repo] = {
+                        stage: (entries.get(stage, {}).get("status")
+                                if isinstance(entries.get(stage), dict)
+                                and entries[stage].get("status") in allowed else "Non évalué")
+                        for stage in qualification.STAGE_IDS
+                    }
+                payload = json.dumps({"format": "koa_qualification.public_status.v1", "repositories": result},
+                                     ensure_ascii=False).encode("utf-8")
+                kind = "application/json; charset=utf-8"
+            else:
+                slug = unquote(route[len("/local/engineering/"):])
+                if not re.fullmatch(r"[A-Za-z0-9_.-]{1,120}", slug):
+                    self.send_error(404); return
+                repo = next((r for r in profiles.inventory(ROOT)
+                            if r.split("/", 1)[-1].casefold() == slug.casefold()), None)
+                if repo is None:
+                    self.send_error(404); return
+                profile = profiles.get_profile(ROOT, repo, "ENGINEERING_PROFILE.md")
+                if profile is None:
+                    self.send_error(404); return
+                payload = ("<!doctype html><html lang='fr'><head><meta charset='utf-8'>"
+                           "<meta name='viewport' content='width=device-width,initial-scale=1'>"
+                           "<title>Engineering Profile · " + html.escape(slug) + "</title>"
+                           "<link rel='stylesheet' href='/assets/profile-report.css'></head>"
+                           "<body><header><a href='/index.html?app=" + slug + "#apps'>← Revenir à la carte</a>"
+                           "<span>kOA · PROFIL ORIGINAL LOCAL</span></header><main>"
+                           "<h1>Engineering Profile — " + html.escape(slug) + "</h1>"
+                           "<p class='lead'>Profil Markdown original, consultable localement. "
+                           "Ce document et son contenu ne sont pas publiés sur GitHub Pages.</p>"
+                           "<pre style='white-space:pre-wrap;overflow-wrap:anywhere;background:white;"
+                           "padding:24px;border-radius:12px;border:1px solid #d3e6e1'>"
+                           + html.escape(profile) + "</pre></main></body></html>").encode("utf-8")
+                kind = "text/html; charset=utf-8"
+            self.send_response(200)
+            self.send_header("Content-Type", kind)
+            self.send_header("Content-Length", str(len(payload)))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.end_headers()
+            self.wfile.write(payload)
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            diagnostic_log(error)
+            self.send_error(500, "Registre local indisponible")
 
 
 def diagnostic_log(error: BaseException) -> Path | None:
@@ -186,6 +256,11 @@ class AuditLauncher:
         self.profile_audit_context = StringVar(value="")
         self.profile_catalog_items = {}
         self.profile_current_id = None
+        self.qual_stage = StringVar(value="Spécifié / architecturé")
+        self.qual_status = StringVar(value="Non évalué")
+        self.qual_evidence = StringVar(value="")
+        self.qual_scope = StringVar(value="")
+        self.qual_overview = StringVar(value="")
         self.require_auth = BooleanVar(value=False)
         self.discover = BooleanVar(value=False)
         self.use_legacy = BooleanVar(value=(ROOT / ".legacy").is_dir())
@@ -227,8 +302,8 @@ class AuditLauncher:
         outer.pack(fill="both", expand=True)
         header = ttk.Frame(outer)
         header.pack(fill="x", pady=(0, 10))
-        ttk.Label(header, text="kOA  /  GitHub Audit", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(header, text="LOCAL_OBSERVE — scanner local · Vérification ZIP · Dashboard GitHub Pages · sans jeton personnel",
+        ttk.Label(header, text="kOA  /  Centre de pilotage", style="Title.TLabel").pack(anchor="w")
+        ttk.Label(header, text="Carte des 49 dépôts · Engineering Profiles cliquables · qualification par preuve · audit local optionnel",
                   style="Muted.TLabel").pack(anchor="w", pady=(3, 0))
 
         self.tabs = ttk.Notebook(outer)
@@ -238,21 +313,26 @@ class AuditLauncher:
         dashboard_tab = ttk.Frame(self.tabs, padding=14)
         reports_tab = ttk.Frame(self.tabs, padding=14)
         profiles_tab = ttk.Frame(self.tabs, padding=14)
+        board_tab = ttk.Frame(self.tabs, padding=14)
         legacy_tab = ttk.Frame(self.tabs, padding=14)
         audit_tab = ttk.Frame(self.tabs, padding=14)
+        # Dominant journey first: Ecosystem -> application -> profile / evidence.
+        # Advanced audit tools are retained but no longer occupy the initial view.
+        self.tabs.add(dashboard_tab, text="  Écosystème  ")
+        self.tabs.add(board_tab, text="  Registre des 49  ")
+        self.tabs.add(profiles_tab, text="  Certification & profils  ")
+        self.tabs.add(reports_tab, text="  Rapports  ")
         self.tabs.add(local_tab, text="  Audit local  ")
         self.tabs.add(triage_tab, text="  Vérification + ZIP  ")
-        self.tabs.add(dashboard_tab, text="  Tableau de bord  ")
-        self.tabs.add(reports_tab, text="  Rapports  ")
-        self.tabs.add(profiles_tab, text="  Profils & conformité  ")
-        self.tabs.add(legacy_tab, text="  Import historique  ")
         self.tabs.add(audit_tab, text="  GitHub (optionnel)  ")
+        self.tabs.add(legacy_tab, text="  Historique  ")
         self._build_audit(audit_tab)
         self._build_local(local_tab)
         self._build_triage(triage_tab)
         self._build_dashboard(dashboard_tab)
         self._build_reports(reports_tab)
         self._build_profiles(profiles_tab)
+        self._build_certification_board(board_tab)
         self._build_legacy(legacy_tab)
 
         line = ttk.Separator(outer)
@@ -340,7 +420,7 @@ class AuditLauncher:
 
     def _build_dashboard(self, tab: ttk.Frame) -> None:
         tab.columnconfigure(0, weight=1)
-        frame = ttk.LabelFrame(tab, text="Bilan global pour GitHub Pages (données agrégées uniquement)", padding=15)
+        frame = ttk.LabelFrame(tab, text="Carte de l'écosystème, rapports d'ingénierie et progression des qualifications", padding=15)
         frame.grid(row=0, column=0, sticky="ew")
         frame.columnconfigure(1, weight=1)
         self._input_row(frame, 0, "Rapport local (JSON)", self.dashboard_local,
@@ -349,22 +429,97 @@ class AuditLauncher:
                         browse=lambda: self._choose_json(self.dashboard_github), width=57)
         btns=ttk.Frame(frame)
         btns.grid(row=2, column=0, columnspan=3, sticky="w", pady=(14, 5))
-        self._action_button(btns, "Mettre à jour le tableau de bord", self._run_dashboard, primary=True).pack(side="left", padx=(0, 9))
-        self._action_button(btns, "Publier sur GitHub (1 clic)", self._sync_dashboard, primary=True).pack(side="left", padx=(0, 9))
-        ttk.Button(btns, text="Aperçu dans le navigateur", command=self._preview_dashboard).pack(side="left", padx=(0, 9))
+        self._action_button(btns, "Ouvrir le centre de pilotage (carte + profils)", self._preview_dashboard, primary=True).pack(side="left", padx=(0, 9))
+        ttk.Button(btns, text="Actualiser les rapports", command=self._run_dashboard).pack(side="left", padx=(0, 9))
+        ttk.Button(btns, text="Publier sur GitHub", command=self._sync_dashboard).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Ouvrir le dossier docs", command=lambda: self._open_file(ROOT / "docs")).pack(side="left")
-        note=("« Publier sur GitHub » envoie uniquement le bilan agrégé dans le dépôt d'audit. "
+        note=("« Publier sur GitHub » envoie les bilans autorisés, la carte publique et "
+              "les profils d'ingénierie expurgés (avec noms publics des dépôts). "
               "Aucun jeton à saisir, aucun nouvel audit, aucun code source ou secret publié. "
               "Git pour Windows utilise votre connexion GitHub existante. Le bouton local d'aperçu ne publie rien.")
         ttk.Label(tab, text=note, wraplength=910, justify="left", style="Muted.TLabel").grid(row=1, column=0, sticky="w", pady=14)
+        ttk.Label(tab, text="Parcours recommandé : ouvrir la carte → choisir un dépôt → cliquer « Engineering Profile » → suivre ses jalons. "
+                  "L’aperçu local affiche les preuves évaluées sur ce PC; la version publique n'exporte jamais ce registre.",
+                  wraplength=910, justify="left").grid(row=3, column=0, sticky="w", pady=9)
         ttk.Label(tab, text="Une seule configuration GitHub peut être nécessaire : Settings > Pages > Source : GitHub Actions. "
                   "Ensuite, le site se déploie automatiquement après chaque publication. Ne pas utiliser le bouton d'audit distant.",
                   wraplength=910, justify="left").grid(row=2, column=0, sticky="w", pady=8)
 
+    def _build_certification_board(self, tab: ttk.Frame) -> None:
+        from koa_audit import qualification
+        ttk.Label(tab, text="Registre de qualification des 49 dépôts", style="Title.TLabel").pack(anchor="w")
+        ttk.Label(tab, text="Spécifié ≠ implémenté ≠ qualifié ≠ intégré ≠ production. "
+                  "Aucune case n'est cochée automatiquement, et un statut non évalué n'est pas un échec.",
+                  style="Muted.TLabel", wraplength=900).pack(fill="x", pady=(4, 11))
+        toolbar = ttk.Frame(tab)
+        toolbar.pack(fill="x", pady=(0, 8))
+        self.board_overview = StringVar(value="")
+        ttk.Label(toolbar, textvariable=self.board_overview, style="Muted.TLabel").pack(side="left", fill="x", expand=True)
+        ttk.Button(toolbar, text="Rafraîchir", command=self._refresh_certification_board).pack(side="right")
+        ttk.Button(toolbar, text="Ouvrir la fiche sélectionnée", command=self._board_open_selected).pack(side="right", padx=(0, 10))
+        frame = ttk.Frame(tab)
+        frame.pack(fill="both", expand=True)
+        cols = ("repo", "profile", "specified", "implemented", "qualified", "integrated", "production", "patterns", "improvements")
+        self.board_tree = ttk.Treeview(frame, columns=cols, show="headings", selectmode="browse")
+        headings = {"repo":"Dépôt", "profile":"Profil", "specified":"Spécifié", "implemented":"Implémenté",
+                    "qualified":"Qualifié", "integrated":"Intégré", "production":"Production", "patterns":"Pratiques revues", "improvements":"Axes suivis"}
+        for k in cols:
+            self.board_tree.heading(k, text=headings[k])
+            self.board_tree.column(k, width=255 if k == "repo" else 108 if k not in ("profile", "patterns") else 90,
+                                   minwidth=70, stretch=(k == "repo"))
+        self.board_tree.pack(side="left", fill="both", expand=True)
+        scroll = ttk.Scrollbar(frame, orient="vertical", command=self.board_tree.yview)
+        scroll.pack(side="right", fill="y")
+        self.board_tree.configure(yscrollcommand=scroll.set)
+        self.board_tree.bind("<Double-1>", lambda _e: self._board_open_selected())
+        ttk.Label(tab, text="Une qualification n'est déclarée que si une preuve et sa portée ont été enregistrées. "
+                  "Les 86 pratiques ne sont pas des obligations universelles : Pas applicable est neutre.",
+                  style="Muted.TLabel", wraplength=950).pack(anchor="w", pady=(9, 0))
+        self._refresh_certification_board()
+
+    def _refresh_certification_board(self) -> None:
+        from koa_audit import qualification
+        entries = qualification.ecosystem_board(ROOT)
+        self.board_tree.delete(*self.board_tree.get_children())
+        evidenced = 0
+        profiles_count = 0
+        reviewed = 0
+        for entry in entries:
+            stages = entry["stages"]
+            has_evidence = any(s == "Étayé par preuve" for s in stages.values())
+            if has_evidence:
+                evidenced += 1
+            if entry["engineering_profile"]:
+                profiles_count += 1
+            counts = entry["practice_counts"]
+            cnt_reviewed = sum(v for k, v in counts.items() if k != "Non évalué")
+            reviewed += cnt_reviewed
+            label = entry["repository"].split("/", 1)[-1]
+            self.board_tree.insert("", "end", iid=entry["repository"], values=(
+                label, "Mesuré" if entry["engineering_profile"] else "Non fourni",
+                *(stages[k] for k in qualification.STAGE_IDS), f"{cnt_reviewed}/86",
+                counts["À améliorer"] if cnt_reviewed else "—",
+            ))
+        self.board_overview.set(
+            f"{len(entries)} dépôts · {profiles_count} profils mesurés · "
+            f"{evidenced} dépôts avec ≥1 jalon étayé · {reviewed} pratiques évaluées manuellement")
+
+    def _board_open_selected(self) -> None:
+        selected = self.board_tree.selection()
+        if not selected:
+            messagebox.showinfo("Registre", "Choisis un dépôt dans le tableau.")
+            return
+        self.profile_repo.set(selected[0])
+        self._profiles_refresh()
+        for index in range(self.tabs.index("end")):
+            if "Certification & profils" in self.tabs.tab(index, "text"):
+                self.tabs.select(index)
+                break
+
     def _build_profiles(self, tab: ttk.Frame) -> None:
         """Read standardized files and let the user review architecture/security patterns."""
         from koa_audit import profiles
-        inventory = profiles.inventory(ROOT)
+        inventory = profiles.profile_repositories(ROOT)
         top = ttk.Frame(tab)
         top.pack(fill="x", pady=(0, 9))
         ttk.Label(top, text="Dépôt", style="TLabel").pack(side="left", padx=(0, 8))
@@ -378,6 +533,33 @@ class AuditLauncher:
         family_box.pack(side="left", padx=(0, 10))
         family_box.bind("<<ComboboxSelected>>", lambda _e: self._profiles_refresh())
         ttk.Button(top, text="Rafraîchir", command=self._profiles_refresh).pack(side="left")
+
+        # Independent, evidence-scoped ecosystem qualification milestones.
+        # An engineering profile, scan observation or filename can never mark a claim.
+        from koa_audit import qualification
+        qual = ttk.LabelFrame(tab, text="Qualification par preuve — aucune certification automatique",
+                              style="Card.TLabelframe", padding=(9, 5))
+        qual.pack(fill="x", pady=(0, 8))
+        qr = ttk.Frame(qual)
+        qr.pack(fill="x")
+        ttk.Label(qr, text="Jalon").pack(side="left", padx=(0, 6))
+        self.qual_stage_box = ttk.Combobox(qr, textvariable=self.qual_stage,
+            state="readonly", width=29, values=[x[1] for x in qualification.STAGES])
+        self.qual_stage_box.pack(side="left", padx=(0, 12))
+        self.qual_stage_box.bind("<<ComboboxSelected>>", lambda _e: self._qual_refresh())
+        ttk.Label(qr, text="État").pack(side="left", padx=(0, 6))
+        ttk.Combobox(qr, textvariable=self.qual_status, state="readonly", width=19,
+                     values=qualification.STATES).pack(side="left", padx=(0, 12))
+        ttk.Button(qr, text="Enregistrer le jalon", command=self._qual_save).pack(side="left")
+        qe = ttk.Frame(qual)
+        qe.pack(fill="x", pady=(5, 0))
+        ttk.Label(qe, text="Portée").pack(side="left", padx=(0, 5))
+        ttk.Entry(qe, textvariable=self.qual_scope, width=31).pack(side="left", fill="x", expand=True, padx=(0, 10))
+        ttk.Label(qe, text="Preuve / référence").pack(side="left", padx=(0, 5))
+        ttk.Entry(qe, textvariable=self.qual_evidence, width=43).pack(side="left", fill="x", expand=True)
+        ttk.Label(qual, textvariable=self.qual_overview, style="Muted.TLabel").pack(fill="x", pady=(3, 0))
+        ttk.Label(qual, text="Une preuve peut qualifier une portée donnée (ex. test local) sans prouver une intégration ni une production.",
+                  style="Muted.TLabel").pack(fill="x")
 
         ttk.Label(tab, textvariable=self.profile_overview, style="Muted.TLabel").pack(fill="x", pady=(0, 7))
         ttk.Label(tab, textvariable=self.profile_audit_context, style="Muted.TLabel").pack(fill="x", pady=(0, 8))
@@ -443,10 +625,37 @@ class AuditLauncher:
                   style="Muted.TLabel", wraplength=410).pack(anchor="w", pady=(6, 0))
         self._profiles_refresh()
 
+    def _qual_refresh(self) -> None:
+        from koa_audit import qualification
+        stage = next(k for k, title in qualification.STAGES if title == self.qual_stage.get())
+        data = qualification.get_claim(ROOT, self.profile_repo.get(), stage)
+        self.qual_status.set(data["status"])
+        self.qual_scope.set(data["scope"])
+        self.qual_evidence.set(data["evidence"])
+        counts = qualification.progress(ROOT, self.profile_repo.get())
+        self.qual_overview.set(
+            f"Jalons examinés : {counts['assessed']}/{counts['total']}  ·  "
+            f"Jalons étayés par preuve : {counts['evidenced']}  ·  "
+            "Aucun score global ni verdict automatique")
+
+    def _qual_save(self) -> None:
+        from koa_audit import qualification
+        stage = next(k for k, title in qualification.STAGES if title == self.qual_stage.get())
+        try:
+            qualification.set_claim(ROOT, self.profile_repo.get(), stage,
+                self.qual_status.get(), self.qual_evidence.get(), self.qual_scope.get())
+        except (OSError, ValueError, TypeError) as error:
+            messagebox.showerror("Qualification", str(error))
+            return
+        self._qual_refresh()
+        self._refresh_certification_board()
+        self.status.set("Jalon enregistré sur ce PC, sans modification Git ni publication")
+
     def _profiles_refresh(self) -> None:
         from koa_audit import profiles
         repo = self.profile_repo.get()
         progress = profiles.progress(ROOT, repo)
+        self._qual_refresh()
         self.profile_overview.set(
             f"{repo}  |  Pratiques : {progress['reviewed']}/{progress['total']} examinées  |  "
             f"Appliqué : {progress['Appliqué']}  |  À améliorer : {progress['À améliorer']}  |  "
@@ -456,9 +665,9 @@ class AuditLauncher:
             ctx = profiles.audit_context(ROOT, repo, report)
             if ctx:
                 self.profile_audit_context.set(
-                    f"Dernier audit JSON choisi : {ctx['status']} · "
+                    f"Données techniques (non qualificatives) : "
                     f"{ctx['files_inspected']}/{ctx['files_enumerated']} fichiers inspectés · "
-                    f"{ctx['findings']} observations · commit {ctx['head']}")
+                    f"{ctx['findings']} motifs de scan à requalifier · commit {ctx['head']}")
             else:
                 self.profile_audit_context.set("Aucun rapport d'audit local associé à ce dépôt (sélectionner audit.json dans Tableau de bord).")
         except (ValueError, OSError, TypeError):
@@ -520,6 +729,7 @@ class AuditLauncher:
             f"{self.profile_repo.get()}  |  Pratiques : {progress['reviewed']}/{progress['total']} examinées  |  "
             f"Appliqué : {progress['Appliqué']}  |  À améliorer : {progress['À améliorer']}  |  "
             f"Non applicable : {progress['Pas applicable']}")
+        self._refresh_certification_board()
         self.status.set(f"Évaluation enregistrée localement : {self.profile_current_id} (aucun Git push)")
 
     def _profile_show_document(self) -> None:
@@ -631,6 +841,10 @@ class AuditLauncher:
     def _preview_dashboard(self) -> None:
         try:
             dashboard_dir = ROOT / "docs"
+            # Rebuild only allowlisted public profile pages from existing snapshots;
+            # never rescan a repository and never publish local qualification state.
+            from koa_audit.ecosystem import build_public_atlas
+            build_public_atlas(ROOT, dashboard_dir)
             if not (dashboard_dir / "index.html").is_file():
                 raise FileNotFoundError(
                     "Le tableau de bord n'est pas dans le dossier docs/. "

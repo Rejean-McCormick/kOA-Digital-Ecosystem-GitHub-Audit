@@ -25,7 +25,7 @@ RULES = (
     "PYTHON_SSL_VERIFY_DISABLED", "PYTHON_PICKLE_LOAD", "PYTHON_TLS_BYPASS",
 )
 RULE_SET = frozenset(RULES)
-STATUS_KEYS = ("PARTIAL", "REVIEW", "INSPECTED_NO_PATTERN_MATCH", "UNKNOWN")
+STATUS_KEYS = ("PARTIAL", "REVIEW", "INSPECTED_NO_PATTERN_MATCH", "OBSERVED_INFORMATIONAL", "UNKNOWN")
 LOCAL_INSIGHT_KEYS = (
     "controls", "size", "quality", "structuring", "flows",
 )
@@ -158,6 +158,15 @@ def _safe_ratio_data(report: dict) -> dict:
         observed = {str(item.get("repository", "")).casefold()
                     for item in repos if isinstance(item, dict)}
         inventory_scanned = len(observed & inventory)
+        # A profile is evidence coverage, not a certificate or a maturity grade.
+        # Count only recognized registry entries with a measured profile; no names
+        # or raw profile content are published.
+        profile_root = INVENTORY_PATH.parent.parent / "profiles" / "repositories"
+        measured_folders = {
+            folder.name.casefold() for folder in profile_root.iterdir()
+            if folder.is_dir() and (folder / "ENGINEERING_METRICS.json").is_file()
+        } if profile_root.is_dir() else set()
+        engineering_profiles = sum(key.split("/", 1)[-1] in measured_folders for key in inventory)
         findings = report.get("findings_by_type") or {}
         if not isinstance(findings, dict):
             raise ValueError("Résultats invalides")
@@ -168,6 +177,7 @@ def _safe_ratio_data(report: dict) -> dict:
             "declared": _number(report.get("declared_repositories")),
             "scanned": _number(report.get("repositories_scanned")),
             "inventory_scanned": inventory_scanned,
+            "engineering_profiles": engineering_profiles,
             "discovered": _number(report.get("local_repositories_discovered")),
             "missing": _number(len(report.get("inventory_repositories_missing_locally") or [])),
             "ambiguous": _number(len(report.get("ambiguous_duplicates") or [])),
@@ -279,7 +289,7 @@ def _sanitize_previous(snap: dict) -> dict:
         cleaned = {
             "mode": mode, "at": at,
             **{key: _number(snap.get(key)) for key in
-               ("declared", "scanned", "inventory_scanned", "discovered", "missing", "ambiguous", "historical_records", "other_rule_categories")},
+               ("declared", "scanned", "inventory_scanned", "engineering_profiles", "discovered", "missing", "ambiguous", "historical_records", "other_rule_categories")},
             "findings": {key: _number(findings[key]) for key in RULES if key in findings},
             "statuses": {key: _number(statuses.get(key)) for key in STATUS_KEYS},
             "coverage_truncated": bool(snap.get("coverage_truncated")),

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -100,7 +101,14 @@ def publish_to_github(
     local_published = project / "docs" / "data" / "dashboard.json"
     if not local_published.is_file() and not chosen:
         raise ValueError("Aucun bilan à publier. Fournir un rapport ou générer un tableau de bord local.")
-    progress("Publication du bilan agrégé uniquement (pas de nouvel audit, aucun .env).")
+    progress("Publication du bilan et de la carte publique (pas de nouvel audit, aucun .env).")
+    # The public atlas contains ONLY whitelisted measurements, verified public
+    # inventory names and HTML generated from those counts. Local claims stay local.
+    atlas_available = (project / "data/initial_inventory.json").is_file() and \
+        (project / "profiles/repositories").is_dir() and (project / "docs/assets/atlas.js").is_file()
+    if atlas_available:
+        from .ecosystem import build_public_atlas
+        build_public_atlas(project)
     with tempfile.TemporaryDirectory(prefix="koa-dashboard-") as temporary:
         folder = Path(temporary) / "audit_repo"
         # We do not use a person's source-repository checkout, ever.
@@ -119,11 +127,36 @@ def publish_to_github(
         _merge_history(destination, local_published)
         if chosen:
             publish_reports(chosen, folder / "docs")
-        status = _run_git(git, "status", "--porcelain", "--", "docs/data/dashboard.json", ".github/workflows/dashboard-pages.yml", cwd=folder)
+        # Keep a strict publishing allowlist. Never copy reports, profiles/*.md,
+        # local qualification state, project configuration or repository code.
+        published = ["docs/data/dashboard.json", ".github/workflows/dashboard-pages.yml"]
+        if atlas_available:
+            fixed = ["docs/index.html", "docs/observations.html", "docs/data/ecosystem.json",
+                     "docs/assets/atlas.js", "docs/assets/atlas.css", "docs/assets/profile-report.css",
+                     "docs/assets/observations.js", "docs/assets/observations.css", "docs/assets/logo.svg"]
+            for rel in fixed:
+                src=project / rel
+                if not src.is_file() or src.is_symlink():
+                    raise RuntimeError("Ressource publique manquante : " + rel)
+                dest=folder / rel
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(src,dest)
+                published.append(rel)
+            from .ecosystem import atlas
+            allowed = [r['slug'] for r in atlas(project)['repositories'] if r['report']]
+            for slug in allowed:
+                rel=f"docs/engineering/{slug}.html"
+                source=project / rel
+                if not source.is_file() or source.is_symlink():
+                    raise RuntimeError("Profil public manquant : " + rel)
+                dest=folder/rel;dest.parent.mkdir(parents=True,exist_ok=True)
+                shutil.copyfile(source,dest)
+                published.append(rel)
+        status = _run_git(git, "status", "--porcelain", "--", *published, cwd=folder)
         if not status:
             progress("Le tableau de bord GitHub est déjà à jour.")
             return {"status": "already_current", "reports_used": len(chosen), "repository": AUDIT_REPO}
-        _run_git(git, "add", "--", "docs/data/dashboard.json", ".github/workflows/dashboard-pages.yml", cwd=folder)
+        _run_git(git, "add", "--", *published, cwd=folder)
         # Stable app identity if user has not configured git globally.
         _run_git(git, "-c", "user.name=kOA Audit Dashboard", "-c",
                  "user.email=koa-audit@users.noreply.github.com", "commit", "--quiet",
@@ -131,5 +164,5 @@ def publish_to_github(
         # Normal fast-forward-only push. If someone updates main concurrently,
         # report a conflict and stop rather than overwrite another commit.
         _run_git(git, "push", "--quiet", "origin", "HEAD:refs/heads/main", cwd=folder)
-        progress("Bilan publié dans le dépôt d'audit. GitHub Pages déploiera le site si activé.")
+        progress("Carte, rapports autorisés et bilan publiés. GitHub Pages déploiera le site si activé.")
         return {"status": "published", "reports_used": len(chosen), "repository": AUDIT_REPO}

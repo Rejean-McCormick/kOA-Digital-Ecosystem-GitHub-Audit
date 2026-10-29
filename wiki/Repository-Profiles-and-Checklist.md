@@ -1,6 +1,6 @@
 # Repository Profiles and Checklist
 
-The **Profils & conformité** tab adds human review alongside automated audit findings. It covers each of the **49 reference repositories** and uses **86 source practices**:
+The **Certification & profils** tab adds human review alongside automated audit findings. It covers each of the **49 reference repositories**, plus one explicitly registered supplemental profile, and uses **86 source practices**:
 
 - **33 architecture patterns** from the supplied senior architecture collection.
 - **53 security patterns** from the supplied senior security collection.
@@ -18,7 +18,7 @@ Standard templates are included in `profiles/templates/`.
 
 ## Working with a repository
 
-1. Open **Profils & conformité** and select a repository from the inventory.
+1. Open **Certification & profils** and select a repository from the inventory.
 2. Choose **Architecture** or **Sécurité** as the practice family.
 3. Click a practice to read its original description in the detail pane.
 4. Assign a status and, when available, an evidence reference or short justification.
@@ -37,13 +37,18 @@ Standard templates are included in `profiles/templates/`.
 
 **Never auto-promote a practice to Applied based on a scan, a config file, or the mere presence of a profile.** The checklist is an explicit, manual assessment.
 
-## Initial repository profiles
+## Engineering snapshot profiles (October 29, 2026)
 
-- **Konnaxion**: a supplied RepoSurveyor profile dated **September 16, 2026**. Its exact attribution to the repository has not been independently verified; `PROVENANCE.md` records this limitation.
-- **Orgo**: preliminary profile from known audit information; full code-line and complexity measurements not yet supplied.
-- **kOA-Linux-Koali**: preliminary profile from known audit information; full code-line and complexity measurements not yet supplied.
+The user supplied 13 full code snapshots inside `EP.zip`. Using RepoSurveyor v1.0 consistently on each extracted snapshot, the application now includes **13 measured `ENGINEERING_PROFILE.md` reports**. Each also has an `ENGINEERING_METRICS.json` file and `PROVENANCE.md` with archive SHA-256 and capture time.
 
-Missing measurements and nonreviewed security practices remain **unassessed**. The detailed profile collection is expected to grow as repository snapshots are provided.
+- **12** reports belong to the official inventory of 49 projects.
+- `Konnaxion-Universe-Worlds-Manager` is a **supplemental** selectable profile, *not* a newly governed repository. This is intentionally separate from the inventory.
+- Konnaxion's earlier September 2026 profile is kept as a clearly labeled historical artifact. It must not be mixed with the October snapshot's measurements.
+- Security practice assessments remain **Not assessed** until explicitly reviewed.
+
+See the repository's profile directory and the main project's `profiles/ENGINEERING_PROFILE_INDEX.md` for the full measurement table.
+
+The snapshot survey did not run project tests, CI, CodeQL or a security evaluation. Lizard, Ctags and `scc` were not available; thus precise complexity metrics for these snapshots are unavailable.
 
 ## Persistence and privacy
 
@@ -56,3 +61,7 @@ This is separate from the extracted app and survives reinstalling the ZIP. Back 
 ## How this connects to the audit
 
 If you select an existing `audit.json` in the dashboard tab, the profiles view can display that repository's last observed status, file counts, and findings. It does **not** rerun the scan or infer pattern compliance. See [Offline Auditing](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Offline-Auditing) for status interpretation.
+
+## Qualification stages are independent of the 86 practices
+
+The five maturity stages (specified, implemented, qualified, integrated, production-proven) are not inferred from the practice checklist or diagnostic observations. Use the upper **Qualification by evidence** panel to record an explicit scope and a provenance reference. See [Certification & Continuous Improvement](Certification-and-Continuous-Improvement.md).

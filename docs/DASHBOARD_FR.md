@@ -64,3 +64,43 @@ Le serveur d'aperçu a été corrigé. Fermer l'ancienne application, décompres
 la v0.6.1 et relancer le launcher. Puis cliquer « Aperçu dans le navigateur ».
 Le site d'aperçu est accessible uniquement tant que l'application reste ouverte.
 Aucun nouveau scan ou `push` n'est nécessaire.
+
+## Nouvelle interface : Atlas de l'écosystème (v0.9.0)
+
+Le navigateur ouvre désormais `docs/index.html`, **Centre de pilotage kOA**. Le
+premier parcours est **carte → application → fiche → Engineering Profile →
+qualification par preuve**. Cette réorganisation suit le guide d'organisation
+`senior-interface-ux-patterns-v2`, notamment UX-01 (intentions), UX-05 (objet
+métier), UX-08 (aperçu utile), UX-11 (préserver le contexte) et UX-15 à UX-18
+(refonte sans perte de capacités).
+
+- **Carte des contrats :** 12 propriétaires/systèmes représentés, 7 relations
+  prises dans les cartes d'autorité et d'intégration du référentiel kOA
+  (snapshot du 29 octobre 2026). Le lien Skope → EncyKlopedia est **proposé**,
+  jamais déclaré qualifié. Un lien « documenté » n'est pas une CI d'intégration
+  passée ni une mise en production.
+- **Constellation complète :** 49 dépôts sélectionnables, groupés par rôles
+  documentés ou « autres dépôts ». Les dépôts non cartographiés ne sont pas
+  présumés mal conçus ou incomplets.
+- **Fiche d'application :** mesures d'ingénierie, accès au rapport cliquable,
+  cinq jalons indépendants et lien vers le dépôt public. Les pages publiques
+  `docs/engineering/*.html` sont produites à partir des mesures allowlistées;
+  aucun Markdown original de profil ni chemin local n'est publié.
+- **Aperçu local :** le bouton de l'application Windows donne aussi accès au
+  **profil Markdown original** et aux états manuels via des routes HTTP
+  exclusivement liées à `127.0.0.1`. Aucune preuve, portée ni justification
+  privée n'est renvoyée dans les données de statut. GitHub Pages ne sert pas
+  ces routes privées.
+- **Qualification :** les barres rendent visibles le nombre de jalons
+  explicitement étayés, à documenter, ou non applicables. Une qualification
+  non évaluée n'est pas un échec. Le site public indique « Non publié » pour
+  les preuves manuelles; aucun score de complétion n'est inféré.
+- **Observations secondaires :** l'ancienne synthèse de diagnostics demeure
+  dans `docs/observations.html` pour préserver l'accès historique.
+
+Le bouton « Publier sur GitHub » ne pousse que les pages publiques produites
+et les données agrégées dans le **seul dépôt d'audit**, après confirmation.
+Il ne touche pas aux dépôts source et ne force pas la branche distante. Les
+noms des **dépôts publics de l'inventaire officiel** sont maintenant présents
+sur le site, à la demande de la cartographie; aucune donnée privée locale ne
+l'est.

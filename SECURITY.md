@@ -11,3 +11,8 @@ The optional dashboard writes ONLY allowlisted aggregate counts to `docs/data/da
 GitHub Pages generally serves **public** sites. Inspect the aggregate JSON before enabling publishing. The application does not automatically git commit or push a dashboard, and will never send the full local audit report to GitHub.
 
 La publication v0.6 ne copie aucun rapport brut ou fichier source, uniquement docs/data/dashboard.json (liste d’attributs autorisés) et le workflow GitHub Pages. Vérifier les permissions de GitHub Pages : site potentiellement public.
+
+
+## Evidence-based qualification (v0.8.1)
+
+Manual stage claims and pattern checklist notes are local state, and are never copied to the public dashboard. A file name, duplicate checkout, repository size, a non-pinned Action tag or an unexecuted test cannot establish a vulnerability or downgrade certification. Use targeted evidence review to establish and close genuine findings; keep source-owner authority. The five maturity stages require independent scoped evidence.

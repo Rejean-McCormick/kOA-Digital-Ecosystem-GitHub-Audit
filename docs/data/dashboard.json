@@ -4,6 +4,68 @@
   "snapshots": [
     {
       "ambiguous": 2,
+      "at": "2026-10-28T18:56:09Z",
+      "controls": {
+        "codeql": 1,
+        "dependabot": 10,
+        "dependency_manifests": 36,
+        "workflows": 36
+      },
+      "coverage_truncated": false,
+      "declared": 49,
+      "discovered": 142,
+      "engineering_profiles": 12,
+      "findings": {
+        "LARGE_FILE_NOT_INSPECTED": 62,
+        "PRIVATE_KEY_MATERIAL": 1,
+        "PYTHON_PICKLE_LOAD": 4,
+        "PYTHON_SHELL_TRUE": 5,
+        "PYTHON_SSL_VERIFY_DISABLED": 6,
+        "SENSITIVE_FILENAME": 10,
+        "WORKFLOW_UNPINNED_ACTION": 98
+      },
+      "flows": {
+        "inspected_bytes_mb": 80
+      },
+      "historical_records": 0,
+      "inventory_scanned": 47,
+      "missing": 0,
+      "mode": "LOCAL_OBSERVE",
+      "other_rule_categories": 0,
+      "quality": {
+        "clean": 16,
+        "heavy": 12,
+        "light": 10,
+        "moderate": 9
+      },
+      "scanned": 47,
+      "size": {
+        "bytes_inspected": 79707619,
+        "files_enumerated": 16301,
+        "files_inspected": 9232,
+        "median_repo_files": 206,
+        "size_buckets": {
+          "large": 15,
+          "medium": 16,
+          "micro": 13,
+          "xlarge": 3
+        }
+      },
+      "statuses": {
+        "INSPECTED_NO_PATTERN_MATCH": 16,
+        "OBSERVED_INFORMATIONAL": 0,
+        "PARTIAL": 12,
+        "REVIEW": 19,
+        "UNKNOWN": 0
+      },
+      "structuring": {
+        "initial": 18,
+        "structured": 19,
+        "tooled": 10
+      }
+    },
+    {
+      "ambiguous": 2,
       "at": "2026-10-28T20:42:13Z",
       "controls": {
         "codeql": 1,
@@ -14,6 +76,7 @@
       "coverage_truncated": false,
       "declared": 49,
       "discovered": 142,
+      "engineering_profiles": 12,
       "findings": {
         "LARGE_FILE_NOT_INSPECTED": 64,
         "PRIVATE_KEY_MATERIAL": 1,
@@ -52,6 +115,7 @@
       },
       "statuses": {
         "INSPECTED_NO_PATTERN_MATCH": 16,
+        "OBSERVED_INFORMATIONAL": 0,
         "PARTIAL": 12,
         "REVIEW": 19,
         "UNKNOWN": 0

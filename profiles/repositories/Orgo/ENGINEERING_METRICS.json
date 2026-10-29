@@ -1,0 +1,114 @@
+{
+  "controls_configured": [
+    "CI configuration",
+    "Containerization",
+    "Static typing"
+  ],
+  "counts": {
+    "active_docs": 92,
+    "active_files": 363,
+    "excluded_files": 4,
+    "migration_files": 2,
+    "observed_files": 367,
+    "production_nonblank_lines": 21233,
+    "production_source_files": 138,
+    "pruned_directories": 0,
+    "schema_files": 3,
+    "source_files": 162,
+    "test_nonblank_lines": 2623,
+    "test_source_files": 24
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "CSS": 1217,
+    "JavaScript": 3056,
+    "PowerShell": 981,
+    "Python": 1424,
+    "SQL": 1741,
+    "Shell": 19,
+    "TypeScript": 15418
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/Orgo",
+  "routes_probable": 120,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "Orgo_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:19:41.417697",
+    "indexed_files": 366,
+    "member": "Orgo_Code_snapshot.zip",
+    "sha256": "e48be0980da709a7a04e196d8a49e3e9202a2b3836f2406b8bb078c7fe572ca2",
+    "zip_entries": 367
+  },
+  "static_test_declarations": 69,
+  "top_level_areas": [
+    {
+      "files": 107,
+      "name": "apps",
+      "source_files": 93
+    },
+    {
+      "files": 79,
+      "name": "tools",
+      "source_files": 51
+    },
+    {
+      "files": 77,
+      "name": "(root)",
+      "source_files": 6
+    },
+    {
+      "files": 11,
+      "name": "validation",
+      "source_files": 4
+    },
+    {
+      "files": 8,
+      "name": "scripts",
+      "source_files": 8
+    },
+    {
+      "files": 55,
+      "name": "docs",
+      "source_files": 0
+    },
+    {
+      "files": 19,
+      "name": "charters",
+      "source_files": 0
+    },
+    {
+      "files": 4,
+      "name": ".github",
+      "source_files": 0
+    },
+    {
+      "files": 3,
+      "name": "examples",
+      "source_files": 0
+    }
+  ]
+}

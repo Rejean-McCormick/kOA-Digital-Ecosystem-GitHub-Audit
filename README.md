@@ -3,10 +3,36 @@
 
   # kOA Digital Ecosystem — GitHub Audit
 
-  **Offline repository auditing, engineering profiles, manual compliance tracking, and a public-safe dashboard.**
+  **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.7.1 · Documentation release**
+  **Version 0.9.0 · Interactive ecosystem atlas, clickable Engineering Profiles, evidence qualification**
 </div>
+
+## Ecosystem command center — v0.9.0
+
+The main dashboard is now an interactive **application atlas**, inspired by
+`kOA-Digital-Ecosystem` authority and contract maps. It supports two
+map views: documented system flows and an interactive **49-repository
+constellation**. Selecting an application shows its measured Engineering Profile
+(if available), public repository, and five independent qualification stages.
+
+**Engineering Profiles are clickable and readable.** On GitHub Pages each of
+the 12 measured in-scope repositories has a public-safe engineering report
+(`docs/engineering/<repo>.html`), including footprint, languages, configured
+controls, provenance, and limitations. In the **local preview** the link
+opens the original full Markdown profile, read directly from the application.
+A 13th supplemental profile is preserved locally, outside the official 49.
+
+Five progress bars track **manual evidence** for specified, implemented,
+qualified, integrated, and production separately. The local preview reads
+status-only assessments without exporting proof text or scope. The public
+site shows qualification as **unpublished** rather than inventing completion.
+
+In the Windows launcher, start with the **Écosystème** tab and click
+**Ouvrir le centre de pilotage (carte + profils)**. No rescan is required.
+All original audit and certification functions remain in secondary tabs.
+See [`docs/ATLAS_SOURCE_AND_METHOD.md`](docs/ATLAS_SOURCE_AND_METHOD.md).
+
 
 > **Default operation is local, read-only, and token-free.** The application inspects existing local Git working trees without cloning, fetching, executing project code, changing source repositories, or requiring a GitHub API token.
 
@@ -19,29 +45,30 @@ The audit repository provides a single place to **observe and review** the kOA D
 | **Local audit** | Inventory of Git working trees, workflow/configuration indicators, bounded static checks, JSON/CSV/Markdown reports | Does not execute CI, CodeQL, tests, or CVE lookups |
 | **Evidence triage** | Targeted rechecks of existing findings and a sanitized evidence ZIP | No raw source or secrets copied into the ZIP |
 | **Engineering & security profiles** | Local Markdown profiles by repository, imported through the launcher | Engineering scale is **not** a quality or release-readiness score |
-| **Manual compliance checklist** | 33 architecture practices + 53 security practices with four review states | States are user assessments, not automatic certifications |
-| **Dashboard** | Visual aggregate metrics, campaign history, inspection/CI visibility, engineering indicators | Public dashboard uses approved aggregate counts only |
+| **Manual practice checklist** | 33 architecture + 53 security practices with four explicit review states | Similar names, counts, missing controls, duplicates never score projects negatively |
+| **Qualification milestones** | Specified, implemented, qualified, integrated and production-proven — each with declared scope and evidence | No automatic grade or production claim; assessments stay on this PC |
+| **Ecosystem atlas** | Interactive 12-owner conceptual contract map, 49-repository constellation, per-application detail and clickable Engineering Profiles | Public-safe reports; manual qualification is local only |
 | **Historical diagnostics** | Metadata imports from existing kOA diagnostic tool families | Historical outcomes remain separate from current observations |
 
 The application uses the kOA brand color **`#1e6864`** and the supplied logo in the dashboard.
 
 ## Quick start — Windows
 
-**Requirements:** Windows, Python **3.11+** with Tkinter, and locally available Git repositories. Git for Windows is useful for local Git metadata and is required when using the optional GitHub publication feature.
+**Requirements:** Windows and Python **3.11+** with Tkinter. Git for Windows is only required for optional GitHub publication or certain Git metadata operations.
 
-1. Download and **extract the complete ZIP** into a normal folder. Do not run the launcher from inside the archive.
+1. Download and **extract the complete ZIP** into a normal folder. Do not run the launcher inside the ZIP.
 2. Double-click **`kOA_GitHub_Audit_Launcher.pyw`**.
-3. Open **Audit local**, select a root folder such as `C:\mycode`, and choose **Discover local repositories**, then **Scan locally** (the interface buttons are currently labeled in French).
-4. Use **Reports** to view `SUMMARY.md`, `audit.csv`, and `audit.json`.
-5. Use **Verification + ZIP** if a finding needs targeted confirmation. You do **not** need to repeat a full audit for a known finding.
-6. Open **Profiles & compliance** to view or import engineering/security profiles and review each repository's checklist.
-7. Open **Dashboard** to preview aggregated data. Publishing to GitHub is an **explicit, separate** action.
+3. The initial **Écosystème** tab contains the main action **Ouvrir le centre de pilotage (carte + profils)**.
+4. Switch between the **documented conceptual contract map (12 owners)** and **the full 49-repository constellation**. Select an application to see its detail.
+5. Click **Voir l’Engineering Profile** to read the original local Markdown report (if available). The public Pages version offers a safer, condensed report.
+6. Review evidence-based stages and patterns in **Certification & profils**, or browse the private **Registre des 49**. The dashboard refresh button reflects these local status changes.
+7. Use **Audit local**, **Vérification + ZIP**, and **Rapports** only when you need a new inspection or targeted analysis. No rescan is necessary to open existing profiles.
 
-If the launcher does not open, run **`DIAGNOSTIC_LAUNCHER.cmd`** for visible troubleshooting output. Since v0.6.1, the local preview server handles `pythonw.exe` without a console.
+If the launcher does not open, run **`DIAGNOSTIC_LAUNCHER.cmd`** for troubleshooting. Since v0.6.1, the local preview server handles Windows `pythonw.exe` without console output.
 
 ## Engineering and security profiles
 
-The **Profiles & compliance** tab covers the 49 repositories and reads:
+The **Certification & profils** tab covers the 49 repositories in the bundled inventory, plus one explicitly registered supplemental profile, and reads:
 
 ```text
 profiles/
@@ -54,6 +81,10 @@ profiles/
 └── templates/                            # Templates for future profiles
 ```
 
+**New in v0.8.0:** `EP.zip` provided **13 repository code snapshots** (captured 2026-10-29). Every snapshot now has an engineering profile derived from the RepoSurveyor 1.0 survey engine, an `ENGINEERING_METRICS.json`, and a `PROVENANCE.md`. **12** repositories belong to the 49-repository inventory. The additional `Konnaxion-Universe-Worlds-Manager` is selectable but explicitly **supplemental**; this does not enlarge the governed inventory. Start with [the index of measured profiles](profiles/ENGINEERING_PROFILE_INDEX.md).
+
+The profiles measure the extracted snapshot content, **not live Git state**. Optional `scc`, Lizard and Ctags metrics were unavailable here, so cyclomatic complexity is marked unknown. Static test declarations are not executed tests and configured controls are not proven successful. The pre-existing September 2026 Konnaxion profile remains archived as historical evidence; it must not be compared as though it measured the same snapshot.
+
 The bundled catalog includes **33 architecture patterns** and **53 security patterns**. Each entry can be marked:
 
 - **Not assessed** (`Non évalué`) — default; no conclusion has been made.
@@ -61,32 +92,34 @@ The bundled catalog includes **33 architecture patterns** and **53 security patt
 - **Needs improvement** (`À améliorer`) — improvement is warranted.
 - **Applied** (`Appliqué`) — the reviewer has evidence supporting implementation.
 
-Add an explanatory note or evidence reference where useful, without including passwords, tokens, or private material. Manual assessments are stored **outside the extracted application** at `%LOCALAPPDATA%\kOA-GitHub-Audit\profiles\assessments.json` so replacing the app ZIP does not overwrite them. They are **not published by the dashboard button**.
+Add an explanatory note or evidence reference where useful, without including passwords, tokens, or private material. Three explicit practice decisions (`Pas applicable`, `À améliorer`, `Appliqué`) require a short rationale or evidence reference; the default is never counted against a project. Manual assessments are stored **outside the extracted application** at `%LOCALAPPDATA%\kOA-GitHub-Audit\profiles\assessments.json` so replacing the app ZIP does not overwrite them. They are **not published by the dashboard button**.
 
-Three initial profile folders are included:
-
-| Repository | Status of engineering profile |
-| --- | --- |
-| **Konnaxion** | Supplied RepoSurveyor profile (September 16, 2026); repository attribution is **provisional** and explicitly noted in `PROVENANCE.md` |
-| **Orgo** | Preliminary profile using available local-audit observations; RepoSurveyor code/complexity measures not yet provided |
-| **kOA-Linux-Koali** | Preliminary profile using available local-audit observations; RepoSurveyor code/complexity measures not yet provided |
+There are **13 measured Engineering Profiles** (12 in the official inventory, plus one supplemental project) from the user-supplied October 29 snapshots, including Konnaxion, Orgo and kOA-Linux-Koali. See [the measured profile index](profiles/ENGINEERING_PROFILE_INDEX.md); the September 2026 Konnaxion profile is preserved separately as historical material.
 
 No missing profile or unreviewed practice is silently classified as compliant. An `ENGINEERING_PROFILE.md` describes **engineering size/surface**; it does not establish feature completion, code quality, security certification, or release readiness.
 
 For adding profiles, select the repository and profile type, then **Importer .md** in the tab. A profile is installed under **this audit application only**; audited source repositories stay unchanged.
 
-## Dashboard and GitHub Pages
+## Certification and continuous improvement
 
-`docs/index.html` is a static dashboard with local-audit and GitHub/CI views kept separate. It displays **aggregate** metrics such as inventory coverage, inspection findings, files inspected, engineering-control indicators, and campaign trends. The displayed figures describe **published snapshots**, not a live filesystem feed.
+The application's **Certification & profils** tab is governed by the user-provided ecosystem maturity map, which keeps five stages separate: **specified / architected**, **implemented**, **tested / qualified**, **integrated**, and **production-proven**. No engineering metric or static finding automatically marks a stage achieved or failed. Each claim requires explicit human review, a scope and evidence; a qualified local test never turns into a production certification.
 
-- **Preview locally:** Dashboard → **Aperçu dans le navigateur**.
-- **Build aggregated data without rerunning an audit:** Dashboard → **Mettre à jour le tableau de bord**, or use the `dashboard-publish` CLI command.
-- **Publish (optional):** Dashboard → **Publier sur GitHub (1 clic)**. It uses the PC's existing Git credentials and normally pushes only the allowlisted aggregate dashboard data and Pages deployment workflow to the **audit repository**, never to the 49 source repositories. GitHub permissions may prevent the push.
-- **First-time Pages configuration:** In the audit repository, choose **Settings → Pages → Source: GitHub Actions** if required. `.github/workflows/dashboard-pages.yml` deploys `docs/` after the relevant push.
+The private **Registre des 49** tab summarizes all 49 inventory repositories without calculating a global score: five independently attested stages, engineering-profile availability, reviewed practice count and manually identified improvement areas. Double-click a row to open its detailed record. **Not assessed** and **Not applicable** never become failures.
 
-The browser checks for updated published data approximately every **three minutes**; it cannot access `C:\mycode` remotely. **GitHub Pages and GitHub Wiki are different services.** The wiki source pages live in the `wiki/` folder and need their own optional publishing step.
+Local qualification records are stored separately at `%LOCALAPPDATA%\kOA-GitHub-Audit\profiles\qualification.json`. They remain on the user's PC, are not included in the public dashboard, and do not modify source repositories. Read [Certification and Continuous Improvement](docs/CERTIFICATION_AND_IMPROVEMENT.md) for the source-derived model and treatment of false positives.
 
-**Privacy:** the dashboard does not publish raw `audit.json`/CSV, repository names, Windows paths, source code, secrets, or per-repository findings. Inspect `docs/data/dashboard.json` before making it public. Detailed Markdown profiles and checklist assessments are **not** automatically published to Pages.
+## Interactive dashboard and GitHub Pages
+
+The primary `docs/index.html` is an **interactive application directory and atlas**, not a grade or vulnerability scoreboard. It provides the source-grounded system map and 49-repository constellation, allows applications to be selected, and opens directly readable Engineering Profiles.
+
+- **Local preview:** in **Écosystème**, click **Ouvrir le centre de pilotage (carte + profils)**. A loopback-only server provides the full local profile Markdown and current **status-only** qualification registry. The free-form evidence references, notes and scope are **never** exposed through its JSON endpoint.
+- **Public GitHub Pages:** `docs/engineering/<repo>.html` contains only allowlisted summary measurements, without private file paths or original Markdown. The site now includes **the names of the 49 public repositories** and documented conceptual roles, because the requested map must identify the applications. Users should review this explicit new public scope before publishing.
+- **Completion graphics:** five bars show separately specified, implemented, qualified, integrated and production-proven statuses. Each state requires user review. On public Pages qualification is displayed as **not published**, never as zero-quality or failed completion.
+- **Coverage:** the current bundled data shows **12/49 measured engineering profiles** and the last supplied local audit covered **47/49 repositories**. These count different kinds of evidence. Neither indicator is a test pass rate or product completion percentage.
+- **Archived diagnostics:** the previous scan summary is retained as `docs/observations.html`, secondary to the application journey. Legacy false positives, filename matches, similar repositories and unknown API states are not automatic failures.
+- **Publish:** **Publier sur GitHub** asks for approval and uses the configured Git credentials. It pushes an allowlist of generated atlas files and profile pages plus aggregate audit JSON to the dedicated **audit repository only** (never source checkouts, never force-push, no raw reports). GitHub permissions may block publishing. If needed enable GitHub Pages under **Settings → Pages → Source: GitHub Actions**.
+
+The browser reloads the publication data when requested; no remote page can inspect your `C:\mycode` folder. The GitHub Wiki is a separate service. See [atlas sources and public/private boundaries](docs/ATLAS_SOURCE_AND_METHOD.md) and [dashboard instructions](docs/DASHBOARD_FR.md).
 
 ## Command line
 
@@ -117,7 +150,8 @@ Selected options: repeat `--root` for multiple folders; use `--limit` for a pilo
 ## Understanding results
 
 - **`INSPECTED_NO_PATTERN_MATCH`** means no configured static pattern matched the inspected content — **not** that a repository is secure.
-- **`REVIEW`** means a heuristic finding should be checked in context.
+- **`REVIEW`** means a heuristic finding should be checked in context; not a negative certification status.
+- **`OBSERVED_INFORMATIONAL`** means informational observations only (for example, an `.env`-style filename or a workflow action referenced by a tag). This is **not an incident**.
 - **`PARTIAL`** means the inspection had limitations, such as files above its scanning budget.
 - Missing CodeQL/CI/security-alert data is **unknown**, not zero and not passed.
 - The **manual compliance checklist** is independent of these automated observation statuses.
@@ -142,6 +176,7 @@ reports/              # Local generated reports (ignored by Git)
 
 - **[Wiki home](wiki/Home.md)** — English user and maintainer guides (source files, usable without publishing).
 - **[Wiki quick start](wiki/Quick-Start.md)** — Windows setup and main workflows.
+- **[Certification framework](wiki/Certification-and-Continuous-Improvement.md)** — evidence-scoped milestones and conservative scan interpretation.
 - **[Profiles and checklist](wiki/Repository-Profiles-and-Checklist.md)** — importing reports and recording assessments.
 - **[Dashboard and publishing](wiki/Dashboard-and-Publishing.md)** — preview, publication, and privacy.
 - **[Troubleshooting](wiki/Troubleshooting.md)** — Windows launcher, preview and Git publishing problems.

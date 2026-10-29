@@ -1,0 +1,74 @@
+{
+  "controls_configured": [],
+  "counts": {
+    "active_docs": 10,
+    "active_files": 24,
+    "excluded_files": 3,
+    "migration_files": 0,
+    "observed_files": 27,
+    "production_nonblank_lines": 517,
+    "production_source_files": 4,
+    "pruned_directories": 0,
+    "schema_files": 0,
+    "source_files": 8,
+    "test_nonblank_lines": 216,
+    "test_source_files": 4
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "supplemental_not_in_49",
+  "language_nonblank_lines": {
+    "Python": 733
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/Konnaxion-Universe-Worlds-Manager",
+  "routes_probable": 0,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "Konnaxion-Universe-Worlds-Manager_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:20:07.159498",
+    "indexed_files": 26,
+    "member": "Konnaxion-Universe-Worlds-Manager_Code_snapshot.zip",
+    "sha256": "88c8e60c64fa522fef06fc1a5e82343ff290ab138a04e3b49064a5d4fd79954d",
+    "zip_entries": 27
+  },
+  "static_test_declarations": 30,
+  "top_level_areas": [
+    {
+      "files": 10,
+      "name": "tools",
+      "source_files": 8
+    },
+    {
+      "files": 11,
+      "name": "(root)",
+      "source_files": 0
+    },
+    {
+      "files": 3,
+      "name": "docs",
+      "source_files": 0
+    }
+  ]
+}

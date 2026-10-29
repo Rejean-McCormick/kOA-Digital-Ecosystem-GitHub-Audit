@@ -23,7 +23,7 @@
           "repository": {"type": "string"},
           "location": {"type": "string"},
           "access": {"const": "local_observed"},
-          "status": {"enum": ["PARTIAL", "REVIEW", "INSPECTED_NO_PATTERN_MATCH"]},
+          "status": {"enum": ["PARTIAL", "REVIEW", "INSPECTED_NO_PATTERN_MATCH", "OBSERVED_INFORMATIONAL"]},
           "workflows": {"type": "array", "items": {"type": "string"}},
           "vulnerability_database_check": {"const": "NOT_PERFORMED_OFFLINE"},
           "finding_counts": {"type": "object"},

@@ -1,0 +1,144 @@
+{
+  "controls_configured": [
+    "Architecture decisions",
+    "CI configuration",
+    "Linting",
+    "Machine-readable schemas",
+    "Static typing"
+  ],
+  "counts": {
+    "active_docs": 189,
+    "active_files": 363,
+    "excluded_files": 69,
+    "migration_files": 0,
+    "observed_files": 432,
+    "production_nonblank_lines": 7980,
+    "production_source_files": 112,
+    "pruned_directories": 0,
+    "schema_files": 16,
+    "source_files": 134,
+    "test_nonblank_lines": 1478,
+    "test_source_files": 22
+  },
+  "format": "koa_profiles.engineering_metrics.v1",
+  "inventory_status": "included",
+  "language_nonblank_lines": {
+    "CSS": 510,
+    "JavaScript": 3508,
+    "PowerShell": 336,
+    "Python": 609,
+    "TypeScript": 4495
+  },
+  "measurement_notes": [
+    "Nonblank physical source lines are not pure SLOC and may include comments.",
+    "No CI/test execution or coverage guarantee is implied by files or declared tests.",
+    "A software-engineering scale profile is not a quality/maturity score."
+  ],
+  "method": {
+    "additional_exclusions": [
+      ".koali-update-backups/**",
+      "SMARTDUMP_INDEX.txt",
+      "snapshot_index.txt"
+    ],
+    "code_executed": false,
+    "complexity_measured": false,
+    "engine": "RepoSurveyor survey/profile 1.0",
+    "git_history_checked": false,
+    "optional_tools": {
+      "ctags": false,
+      "lizard": false,
+      "scc": false
+    },
+    "source_model": "extracted code snapshot",
+    "tests_executed": false
+  },
+  "repository": "Rejean-McCormick/Koali-Spaces",
+  "routes_probable": 0,
+  "snapshot": {
+    "container": "EP.zip",
+    "index": "koali-spaces_Index_Code_snapshot.txt",
+    "index_generated_at_local": "2026-10-29T09:19:51.967421",
+    "indexed_files": 431,
+    "member": "koali-spaces_Code_snapshot.zip",
+    "sha256": "b710f090f320c70f4b0aa7df6c41ce253af4e2d6c7313f5be763fa83ecda76ef",
+    "zip_entries": 432
+  },
+  "static_test_declarations": 42,
+  "top_level_areas": [
+    {
+      "files": 71,
+      "name": "src",
+      "source_files": 71
+    },
+    {
+      "files": 17,
+      "name": "server",
+      "source_files": 17
+    },
+    {
+      "files": 10,
+      "name": "tests-runtime",
+      "source_files": 10
+    },
+    {
+      "files": 13,
+      "name": "scripts",
+      "source_files": 13
+    },
+    {
+      "files": 11,
+      "name": "tests",
+      "source_files": 11
+    },
+    {
+      "files": 3,
+      "name": "launcher",
+      "source_files": 2
+    },
+    {
+      "files": 4,
+      "name": ".tandem_tour8",
+      "source_files": 3
+    },
+    {
+      "files": 184,
+      "name": "docs",
+      "source_files": 2
+    },
+    {
+      "files": 1,
+      "name": "tools",
+      "source_files": 1
+    },
+    {
+      "files": 26,
+      "name": "(root)",
+      "source_files": 4
+    },
+    {
+      "files": 13,
+      "name": "contracts",
+      "source_files": 0
+    },
+    {
+      "files": 4,
+      "name": "interface",
+      "source_files": 0
+    },
+    {
+      "files": 3,
+      "name": "public",
+      "source_files": 0
+    },
+    {
+      "files": 2,
+      "name": "config",
+      "source_files": 0
+    },
+    {
+      "files": 1,
+      "name": ".github",
+      "source_files": 0
+    }
+  ]
+}

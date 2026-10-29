@@ -1,32 +1,39 @@
 # Engineering Profile
 
-> Generated deterministically by RepoSurveyor from the current local project files. 
+> **Repository:** `Rejean-McCormick/Konnaxion`  
+> **Snapshot captured:** `2026-10-29T09:20:04.489512` (index-local timestamp; timezone not specified)  
+> **Snapshot SHA-256:** `0e016950aa7e468d5e6c88a02518cc5c9e0c99c9f5fe75391dd9cd45b3707319`  
+> **Source:** `EP.zip` → `Konnaxion_Code_snapshot.zip`  
+> **Analysis scope:** RepoSurveyor active-file rules + exclusion of `.koali-update-backups/**` and embedded snapshot indexes.  
+> **Limitation:** no project code, CI or tests were executed. `scc`, Lizard and Ctags were unavailable.  
+
+> Generated deterministically using the RepoSurveyor 1.0 survey/profile engine from the supplied code snapshot. This is **not a live checkout**. 
 > This is a scale/engineering-surface characterization, not a quality score or release-readiness claim.
 
 ## Engineering Footprint
 
-- **1,024** files in the active engineering surface
-- **788** active source files
-- **742** production source files
-- **46** test source files
-- **133** active documentation files
-- **102,561** production nonblank physical source lines
-- **6,972** test nonblank physical source lines
-- **53** migration-related files
+- **1,166** files in the active engineering surface
+- **859** active source files
+- **796** production source files
+- **63** test source files
+- **196** active documentation files
+- **109,361** production nonblank physical source lines
+- **7,886** test nonblank physical source lines
+- **57** migration-related files
 - **7** schema-related files
-- **38** probable HTTP route declarations *(medium-confidence framework scan)*
-- **207** statically detected test declarations *(not executed-test count)*
+- **55** probable HTTP route declarations *(medium-confidence framework scan)*
+- **276** statically detected test declarations *(not executed-test count)*
 
 ## Language Footprint
 
 | Language | Nonblank physical source lines |
 |---|---:|
-| TypeScript | 80,997 |
-| Python | 25,486 |
-| HTML | 954 |
-| PowerShell | 751 |
-| JavaScript | 709 |
-| CSS | 500 |
+| TypeScript | 82,660 |
+| Python | 30,107 |
+| JavaScript | 1,971 |
+| PowerShell | 1,172 |
+| CSS | 657 |
+| HTML | 544 |
 | Shell | 73 |
 | SQL | 63 |
 
@@ -36,34 +43,32 @@ Method: RepoSurveyor extension classification + nonblank physical line count. Co
 
 | Area | Files | Source files | Docs | Nonblank source lines |
 |---|---:|---:|---:|---:|
-| `frontend` | 525 | 500 | 7 | 83,145 |
-| `backend` | 340 | 284 | 16 | 25,629 |
-| `scripts` | 2 | 2 | 0 | 592 |
-| `(root)` | 19 | 1 | 3 | 88 |
-| `tools` | 1 | 1 | 0 | 79 |
-| `docs` | 107 | 0 | 107 | 0 |
-| `PlantUML` | 19 | 0 | 0 | 0 |
-| `cinematic` | 8 | 0 | 0 | 0 |
-| `Structurizr` | 3 | 0 | 0 | 0 |
+| `frontend` | 540 | 521 | 5 | 85,824 |
+| `backend` | 375 | 319 | 17 | 29,272 |
+| `scripts` | 5 | 5 | 0 | 752 |
+| `(root)` | 50 | 6 | 15 | 464 |
+| `tools` | 5 | 4 | 0 | 380 |
+| `cinematic` | 8 | 2 | 0 | 346 |
+| `koali` | 2 | 2 | 0 | 209 |
+| `docs` | 158 | 0 | 158 | 0 |
+| `PlantUML` | 18 | 0 | 0 | 0 |
+| `.github` | 4 | 0 | 1 | 0 |
+| `Structurizr` | 1 | 0 | 0 | 0 |
 
 ## Complexity
 
-- Functions analyzed by Lizard: **4,982**
-- Median cyclomatic complexity (CCN): **1**
-- 95th percentile CCN: **19**
-- Maximum CCN: **283**
-- Functions with CCN > 15: **306**
-- Method: Lizard XML function measure / CCN column
+Per-function complexity metrics unavailable; no complexity claim is published.
 
 ## Verification Surface
 
-- Static test declarations: **207** — static language-aware declaration scan; not collected/executed/passed tests
+- Static test declarations: **276** — static language-aware declaration scan; not collected/executed/passed tests
 - No supported existing coverage report detected.
 
 ## Detected Engineering Controls
 
 - **Automated tests** — configured/detected via `backend/pyproject.toml`
 - **Browser/E2E testing** — configured/detected via `frontend/playwright-smokeREADME.txt`, `frontend/playwright.config.ts`, `frontend/playwright.ct.config.ts` (+3 more)
+- **CI configuration** — configured/detected via `.github/workflows/ci.yml`, `.github/workflows/full-qualification.yml`
 - **Containerization** — configured/detected via `backend/compose/local/django/Dockerfile`, `backend/compose/local/docs/Dockerfile`, `backend/compose/production/django/Dockerfile` (+4 more)
 - **Linting** — configured/detected via `backend/pyproject.toml`, `frontend/eslint.config.mjs`
 - **Pre-commit hooks** — configured/detected via `backend/.pre-commit-config.yaml`
@@ -71,23 +76,24 @@ Method: RepoSurveyor extension classification + nonblank physical line count. Co
 
 ## Analysis Scope
 
-- Active surface: **1,024** files
-- Excluded `archive-copy`: **724** files
-- Excluded `diagnostic-evidence`: **513** files
-- Excluded `generated-file`: **1** files
-- Excluded `local-ignore`: **53** files
-- Excluded `private-local`: **16** files
-- Excluded `snapshot-noise`: **352** files
-- Excluded `source-dump`: **2** files
-- Pruned dependency/cache/generated directories: **74**
+- Active surface: **1,166** files
+- Excluded `archive-copy`: **5** files
+- Excluded `diagnostic-evidence`: **1** files
+- Excluded `private-local`: **4** files
 
 ## Measurement Notes
 
-- Generated: `2026-09-16T14:45:58.190845+00:00`
+- Generated: `2026-10-29T13:55:32.224365+00:00`
 - RepoSurveyor survey schema: `1.0`
-- Source model: current local filesystem; Git state/history is intentionally irrelevant.
+- Source model: extracted snapshot of local files supplied in `EP.zip`; neither live repository state nor Git history was checked.
 - Archive copies, diagnostics, dependency caches, generated output, lockfiles and private local configuration are excluded from the active engineering surface.
 - Tool/configuration presence is evidence of configured engineering infrastructure, not evidence that its latest run passed.
 - Static test declarations are not the same as collected, executed or passing tests.
 - Existing coverage reports are not treated as freshly measured coverage.
 - RepoSurveyor never converts these measurements into a synthetic quality, maturity or architecture score.
+
+## Historical Profile Reference (Not Current)
+
+- A user-supplied RepoSurveyor profile was captured on **2026-09-16** and is preserved as `ENGINEERING_PROFILE_2026-09-16_HISTORICAL.md`.
+- That previous run reported Lizard complexity metrics. They are **not reproduced or projected forward** to this 2026-10-29 snapshot.
+- Differences in file scope, snapshot content and tool availability mean the two totals are not a controlled trend.

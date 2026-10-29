@@ -79,7 +79,9 @@ def execute(args: argparse.Namespace) -> int:
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
     if args.command == "dashboard-publish":
+        from .ecosystem import build_public_atlas
         result = publish_reports(args.audit_json, args.out)
+        result["atlas"] = build_public_atlas(Path(__file__).resolve().parent.parent, args.out)
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
     if args.command == "local-triage":

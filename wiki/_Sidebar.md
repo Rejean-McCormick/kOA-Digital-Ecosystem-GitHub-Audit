@@ -4,6 +4,7 @@
 - [Quick Start](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Quick-Start)
 - [Offline Auditing](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Offline-Auditing)
 - [Triage and Evidence](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Triage-and-Evidence)
+- [Certification & Continuous Improvement](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Certification-and-Continuous-Improvement)
 - [Repository Profiles & Checklist](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Repository-Profiles-and-Checklist)
 - [Engineering Metrics](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Engineering-Metrics)
 - [Dashboard & Publishing](https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/wiki/Dashboard-and-Publishing)
