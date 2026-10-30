@@ -66,3 +66,17 @@ Pour disposer de plus de validations vérifiables, utiliser l'onglet **Campagnes
 ## v0.16.0 · Refonte selon le guide d’architecture d’interfaces IA v2
 
 Les trois espaces du navigateur sont **Validations**, **Applications** et **Campagnes**. Le parcours dominant reste au même endroit : application → catégorie → source → portée. Les autres informations ne sont pas empilées sur la page d’accueil. Les 86 critères d’architecture et de sécurité se déplient seulement à la demande. Dans Windows, les outils rares passent sous « Outils avancés » sans perdre leurs fonctionnalités. Voir `docs/UX_REFACTOR_GUIDE_V2.md` pour la correspondance des anciens onglets et les scénarios de validation.
+
+
+## v0.17.0 · Fonctionnalités et fiche technique par système
+
+À l'ouverture du dashboard local, sélectionne une application dans **Validations** :
+
+1. **Fonctionnalités** : actions concrètes et composants, avec l’état « code observé » ou « scénario spécifié ».
+2. **Technologies** : Python, FastAPI, Django, API, PostgreSQL, authentification, etc., selon les fichiers réellement observés.
+3. **Tests** : journaux JUnit cliquables des tests ciblés exécutés sur copies de snapshots (3/3 KonnaxionDiag, 42/42 Security Gate Capsule Manager).
+4. **Sécurité** : ces résultats restent distincts des 53 critères du référentiel. Aucun des 53 n’est déclaré automatiquement validé.
+
+Choisis le filtre « **Avec fiche technique issue d’un snapshot** » pour voir les trois dossiers détaillés. Les 46 autres n’ont pas encore de spécification fonctionnelle extraite, ce qui n’est pas une non-conformité.
+
+La carte, les Engineering Profiles et les campagnes continuent de fonctionner. Les anciens ZIP de campagne ne changent pas; une nouvelle campagne conserve aussi les fiches et rapports JUnit source.

@@ -500,6 +500,35 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
         source_review = {"member": "private/historical_review_2026-10-30.zip",
                          "sha256": _hash(raw), "kind": "historical_owner_review_not_certification",
                          "scope": "49 repositories / 245 evidence cases, historical sources"}
+    # Archive the exact historical spec review and its narrowly-scoped test
+    # execution logs, independently of future application and Git revisions.
+    # This is dated prior-source evidence, never attributed to the campaign HEAD.
+    functional_review = None
+    from . import specsheets, spec_tests
+    if specsheets.load(project).get('state') == 'verified_index':
+        index = (project / 'private_evidence' / specsheets.BUNDLE).read_bytes()
+        member = 'private/snapshot_specs/functional-review-2026-10-30.json'
+        documents[member] = index
+        functional_review = {'member': member, 'sha256': _hash(index),
+                             'source_date': '2026-10-30', 'linked_to_current_commit': False,
+                             'targeted_unit_tests': 0, 'test_logs': []}
+        runs = spec_tests.load(project)
+        if runs:
+            manifest_bytes = (project / 'private_evidence' / spec_tests.MANIFEST).read_bytes()
+            test_member = 'private/snapshot_specs/targeted-test-runs-2026-10-30.json'
+            documents[test_member] = manifest_bytes
+            functional_review['test_manifest'] = {'member': test_member, 'sha256': _hash(manifest_bytes)}
+            for r in runs.values():
+                name = r['junit_link'].split('/')[-1]
+                # Only two reviewed reports are supported; do not glob the filesystem.
+                filename = 'KonnaxionDiag.junit.xml' if name == 'KonnaxionDiag' else (
+                    'Capsule-Manager.junit.xml' if name == 'Konnaxion-Capsule-Manager' else None)
+                if filename:
+                    raw = (project / 'private_evidence' / 'test_reports' / filename).read_bytes()
+                    dest = 'private/snapshot_specs/' + filename
+                    documents[dest] = raw
+                    functional_review['test_logs'].append({'member': dest, 'sha256': _hash(raw)})
+                    functional_review['targeted_unit_tests'] += r['passed']
     if progress:
         progress(len(inventory) + 1, total_steps, "Calcul du manifeste et des empreintes")
     stamp = datetime.now(timezone.utc)
@@ -509,6 +538,7 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
                 "repository_count": len(inventory), "source_audit": audit_provenance,
                 "kristal": kristal_snapshot,
                 "historical_review": source_review,
+                "functional_review": functional_review,
                 "repository_profiles_snapshot": repos,
                 "notice": "Capture historique privee; aucune qualification automatique, aucun scan ni test execute.",
                 "availability_note": "Lien GitHub lie au SHA, non verifie en ligne; peut devenir indisponible si le commit disparait.",
@@ -600,7 +630,8 @@ def _validate_zip_contents(archive: zipfile.ZipFile, cid: str) -> None:
         if member == "manifest.json":
             continue
         if (not member.startswith(("profiles/", "proofs/"))
-                and member not in ("campaign.json", "private/historical_review_2026-10-30.zip")):
+                and member not in ("campaign.json", "private/historical_review_2026-10-30.zip")
+                and not member.startswith("private/snapshot_specs/")):
             raise ValueError("Membre interdit")
         content = archive.read(member)
         if len(content) > MAX_ATTACHMENT or _hash(content) != checksums[member]:

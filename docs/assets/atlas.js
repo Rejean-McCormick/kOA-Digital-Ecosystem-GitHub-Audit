@@ -9,7 +9,7 @@
     architect:[37,88],orchestrator:[59,88],sentient:[59,13],skope:[12,37]
   };
   let atlas=null, localAudit=null, qualification=null, kristal=null, privateCampaigns=null, privateReview=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview', mapMode='contracts', mapTouched=false;
-  let validationBoard=null, validationRepo=null, validationCategory='Tests', validationSearch='', validationFilter='all';
+  let validationBoard=null, validationRepo=null, validationCategory='Fonctionnalités', validationSearch='', validationFilter='all';
   // One workspace per user intent (UX-01/05/15/16). Keep older anchors working.
   let workspace='validations', mapExpanded=false;
   function workspaceForHash(hash){
@@ -38,6 +38,62 @@
   function activateRoute(){setWorkspace(workspaceForHash(location.hash),location.hash);}
   function validationRepoData(name){return validationBoard?.repositories?.find(x=>x.repo===name);}
   function validationMetric(value, caption){const d=el('div','validation-metric');d.append(el('strong','',value),el('small','',caption));return d;}
+  function sourceProvenance(sources, tests){
+    const holder=el('details','spec-evidence');
+    const files=[...(sources||[]).map(x=>({...x,kind:'Code / contrat'})),...(tests||[]).map(x=>({...x,kind:'Test défini, non exécuté'}))];
+    if(!files.length)return holder;
+    holder.append(el('summary','','Sources et empreintes · '+files.length+' fichier(s)'));
+    for(const item of files){
+      const entry=el('div','spec-source');
+      entry.append(el('span','',item.kind+' · '+item.path),el('code','',`SHA-256 ${item.sha256}`));
+      holder.append(entry);
+    }
+    return holder;
+  }
+  function renderSpecsheetDetail(detail,current,technical){
+    const spec=current.specsheet||{};
+    const heading=technical?'Technologies et composants':'Fonctionnalités de l’application';
+    detail.append(el('h4','',heading));
+    if(spec.state!=='snapshot_reviewed'){
+      detail.append(el('p','validation-explain',spec.notice||'Pas de snapshot fonctionnel examiné pour ce dépôt. Ses fonctions ne sont pas considérées absentes.'));
+      const report=atlas?.repositories?.find(x=>x.repo===current.repo)?.report;
+      if(report)detail.append(link(report,'↗ Engineering Profile disponible (mesures, pas fonctionnalités validées)',''));
+      return;
+    }
+    detail.append(el('p','spec-overview',spec.overview));
+    const meta=el('p','spec-meta','Source : '+spec.snapshot+' · SHA-256 '+spec.snapshot_sha256.slice(0,20)+'… · commit non attesté. Aucune exécution de test démontrée par ce ZIP.');
+    detail.append(meta);
+    const items=technical?spec.technical:spec.features;
+    const groups=[...new Set(items.map(x=>x.group))];
+    const summary=el('div','spec-summary');
+    summary.append(el('strong','',String(items.length)),el('span','',technical?'technologies repérées':'fonctions observées ou spécifiées'),el('strong','',String(current.targeted_test_run?.passed||0)),el('span','','tests unitaires ciblés PASS sur ce ZIP · pas validation de toutes les fonctions'));
+    detail.append(summary);
+    for(const group of groups){
+      const box=el('details','spec-group');box.open=true;
+      box.append(el('summary','',`${group} · ${items.filter(x=>x.group===group).length} élément(s)`));
+      for(const item of items.filter(x=>x.group===group)){
+        const row=el('article','spec-feature');
+        const head=el('div','spec-feature-head');head.append(el('strong','',item.title));
+        const state=item.execution_verified?'✓ Test réussi et vérifié':item.status==='specification_only'?'Spécifié · fonctionnement non validé':'Implémentation repérée · validation à établir';
+        head.append(el('span',item.execution_verified?'spec-state spec-success':'spec-state',state));row.append(head);
+        row.append(el('p','',item.description));
+        if(item.technologies?.length){const tags=el('div','spec-tech-tags');
+          item.technologies.forEach(t=>tags.append(el('span','',t)));row.append(tags);}
+        if(item.test_definitions?.length){
+          const run=current.targeted_test_run;
+          const matched=run?.test_files?.filter(t=>item.test_definitions.some(d=>d.path===t.path && d.sha256===t.sha256))||[];
+          if(matched.length){
+            const check=el('div','spec-unit-success');check.append(el('span','','✓ '+run.passed+' tests unitaires ciblés PASS pour '+matched.map(x=>x.path).join(', ')));
+            check.append(link(run.junit_link,'↗ Rapport JUnit daté (snapshot uniquement)',''));
+            row.append(check);
+          }else row.append(el('p','spec-tests',`${item.test_definitions.length} fichier(s) de tests présent(s) · exécution non attestée`));
+        }
+        row.append(sourceProvenance(item.sources,item.test_definitions));box.append(row);
+      }
+      detail.append(box);
+    }
+    detail.append(el('p','validation-explain','La présence d’une implémentation, d’un framework, d’un fichier pytest ou d’un scénario ne donne pas un crochet vert. Les tests doivent avoir un journal de succès et une provenance compatibles avec la version.'));
+  }
   function renderValidationBoard(){
     const holder=$('validation-metrics'), listing=$('validation-list'), detail=$('validation-detail');
     holder.replaceChildren();listing.replaceChildren();detail.replaceChildren();
@@ -50,19 +106,19 @@
     }
     $('validation-source').textContent='Registre privé local · sources contrôlées';
     const entries=validationBoard.repositories;
-    const numPass=entries.filter(r=>r.source_verified_test).length;
     const evaluated=entries.reduce((n,r)=>n+r.assessed_practices,0);
     holder.append(validationMetric(String(entries.length),'Applications dans le périmètre'),
-      validationMetric(String(validationBoard.source_checked_documentary_jalons),'Jalons documentaires étayés, portée limitée'),
-      validationMetric(String(numPass),'Applications concernées par une preuve E2E locale (un parcours partagé)'),
-      validationMetric(String(validationBoard.historical_ci_success_on_observed_head||0),'CI historiques en succès au SHA observé · tests couverts non détaillés'));
-    if(evaluated)holder.append(validationMetric(String(evaluated),'Évaluations de pratiques, non certifiées'));
+      validationMetric(String(validationBoard.functional_specsheets_reviewed||0),'Fiches fonctionnelles vérifiées par source'),
+      validationMetric(String(validationBoard.targeted_unit_tests_passed||0),'Tests unitaires ciblés PASS · snapshots datés'),
+      validationMetric(String(validationBoard.source_checked_documentary_jalons),'Jalons documentaires étayés · périmètre limité'));
+    if(evaluated)holder.append(validationMetric(String(evaluated),'Pratiques examinées, non certifiées'));
     const query=validationSearch.trim().toLocaleLowerCase();
     // Evidence-first orientation, NOT quality ranking: grouped by availability of
     // actually verified documentation, then alphabetical for predictable browsing.
     const filtered=entries.filter(r=>(!query||r.slug.toLocaleLowerCase().includes(query))&&
       (validationFilter==='all'||(validationFilter==='verified'&&r.verified_stages>0)||
-       (validationFilter==='reviewed'&&r.assessed_practices>0)))
+       (validationFilter==='reviewed'&&r.assessed_practices>0)||
+       (validationFilter==='specs'&&r.specsheet?.state==='snapshot_reviewed')))
       .sort((a,b)=>Number(b.verified_stages||0)-Number(a.verified_stages||0)||
         a.slug.localeCompare(b.slug,'fr'));
     if(!validationRepo||!filtered.some(r=>r.repo===validationRepo))validationRepo=filtered[0]?.repo||null;
@@ -70,24 +126,32 @@
     for(const r of filtered){
       const b=el('button','validation-repo'+(r.repo===validationRepo?' selected':''));b.type='button';
       const name=el('span');name.append(el('strong','',r.slug));
-      name.append(el('small','',r.verified_stages?`${r.verified_stages} jalon(s) documenté(s) · périmètre limité`:`Aucune pièce qualifiante vérifiée dans le registre`));
+      name.append(el('small','',r.verified_stages?`${r.verified_stages} jalon(s) documenté(s) · périmètre limité`:
+        r.specsheet?.state==='snapshot_reviewed'?`${r.specsheet.features.length} fonctions décrites · tests : ${r.targeted_test_run?.passed||0} PASS ciblés`:'Aucune pièce qualifiante vérifiée dans le registre'));
       b.append(name,el('span',r.verified_stages?'proof-tick':'proof-unknown',r.verified_stages?'✓ '+r.verified_stages:'—'));
-      b.addEventListener('click',()=>{validationRepo=r.repo;validationCategory='Tests';renderValidationBoard();});listing.append(b);
+      b.addEventListener('click',()=>{validationRepo=r.repo;validationCategory='Fonctionnalités';renderValidationBoard();});listing.append(b);
     }
     const current=validationRepoData(validationRepo);
     if(!current){detail.append(el('p','validation-no-data','Aucune fiche sélectionnée.'));return;}
     detail.append(el('small','detail-eyebrow','VALIDATION DÉTAILLÉE · APPLICATION'),el('h3','',current.slug));
-    detail.append(el('p','','Les coches vertes confirment une conclusion documentaire dont la pièce originale et l’empreinte ont été vérifiées. Les statuts des pratiques sont des évaluations locales, pas des résultats de tests.'));
+    detail.append(el('p','','Fiche technique et fonctions détectées dans les snapshots : une implémentation visible n’est pas un test réussi. Les coches vertes restent réservées aux preuves vérifiées et datées.'));
     const categories=el('div','validation-categories');
     const componentInfo=kristalByRepo(current.repo);
-    for(const category of [...current.categories, {label:'Composants',verified_count:0,practice_count:0,evaluated_practices:0}]){
+    for(const category of [{label:'Fonctionnalités',verified_count:0,practice_count:0,evaluated_practices:0}, {label:'Technologies',verified_count:0,practice_count:0,evaluated_practices:0}, ...current.categories, {label:'Composants',verified_count:0,practice_count:0,evaluated_practices:0}]){
       const b=el('button','validation-category'+(category.label===validationCategory?' selected':''));b.type='button';
       b.append(el('strong','',category.label),el('span','',category.label==='Composants'?
-        (componentInfo?.components?.length ? `${componentInfo.components.length} lien(s) explicite(s)` : componentInfo?.candidates?.length ? `${componentInfo.candidates.length} suggestion(s)` : 'Rattachement non documenté') : category.verified_count?`✓ ${category.verified_count} preuve(s) datée(s)`:
-        category.practice_count?`${category.evaluated_practices}/${category.practice_count} pratiques évaluées`:'Aucune pièce vérifiée'));
+        (componentInfo?.components?.length ? `${componentInfo.components.length} lien(s) explicite(s)` : componentInfo?.candidates?.length ? `${componentInfo.candidates.length} suggestion(s)` : 'Rattachement non documenté') : category.label==='Tests'&&current.targeted_test_run?`${current.targeted_test_run.passed} tests unitaires ciblés PASS` :
+        category.label==='Sécurité'&&current.targeted_test_run?.test_files?.some(x=>x.path.includes('test_security_gate.py'))?`${current.targeted_test_run.passed} tests gate PASS · 53 critères non certifiés` :
+        category.label==='Fonctionnalités'?
+        (current.specsheet?.state==='snapshot_reviewed'? `${current.specsheet.features.length} fonctions identifiées · validation globale non attestée`:'Snapshot à examiner') : category.label==='Technologies'?
+        (current.specsheet?.state==='snapshot_reviewed'? `${current.specsheet.technical.length} composants observés`:'Source à examiner') : category.verified_count?`✓ ${category.verified_count} preuve(s) datée(s)`:
+        category.practice_count?`${category.practice_count} critères du référentiel · ${category.evaluated_practices} évalués manuellement`:'Aucune pièce vérifiée'));
       b.addEventListener('click',()=>{validationCategory=category.label;renderValidationBoard();});categories.append(b);
     }
     detail.append(categories);
+    if(validationCategory==='Fonctionnalités'||validationCategory==='Technologies'){
+      renderSpecsheetDetail(detail,current,validationCategory==='Technologies');return;
+    }
     const selected=current.categories.find(c=>c.label===validationCategory)||current.categories[0];
     if(validationCategory==='Composants'){
       detail.append(el('h4','','Composants du catalogue Kristal'));
@@ -114,6 +178,16 @@
       if(stage.source_verified){left.append(link(stage.source_link,'↗ Consulter la pièce originale et son empreinte',''));
         left.append(el('small','','SHA-256 '+stage.source_sha256.slice(0,16)+'… · version du clone non attestée'));}
       row.append(left,el('span','control-status'+(stage.source_verified?' checked':''),stage.display));detail.append(row);
+    }
+    if((selected.label==='Tests'||selected.label==='Sécurité')&&current.targeted_test_run){
+      const run=current.targeted_test_run;
+      if(selected.label==='Tests'||run.test_files.some(x=>x.path.includes('test_security_gate.py'))){
+        const row=el('div','validation-control'),left=el('div');
+        left.append(el('strong','','✓ '+run.passed+'/'+run.passed+' tests unitaires ciblés réussis sur un snapshot ZIP'));
+        left.append(el('small','',run.scope+' SHA du ZIP '+run.snapshot_sha256.slice(0,16)+'… · commit Git non attesté'));
+        left.append(link(run.junit_link,'↗ Voir le rapport JUnit original validé par SHA-256',''));
+        row.append(left,el('span','control-status checked','PASS vérifié · suite ciblée seulement'));detail.append(row);
+      }
     }
     if(selected.label==='Tests'){
       const ci=current.historical_ci;

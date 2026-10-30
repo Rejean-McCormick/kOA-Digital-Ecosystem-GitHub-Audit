@@ -101,3 +101,32 @@
 @media(max-width:740px){.rail{height:auto;width:100%;position:sticky;flex-direction:row;align-items:center;padding:8px;gap:5px}.rail .brand{display:none}.rail-foot{display:none}.rail a.workspace-nav{justify-content:center;gap:5px;font-size:11px;padding:9px 6px}.rail a.workspace-nav span{font-size:14px}.layout{display:block}.content{width:100%}.validation-first{min-height:0}}
 
 .validation-order{font-size:11px;color:#b2d1c5;margin:0 0 10px}
+
+/* v0.17 · Functional specsheet, technology first / conservative execution evidence */
+.validation-categories{grid-template-columns:repeat(3,minmax(0,1fr))}
+.validation-category:first-child,.validation-category:nth-child(2){background:#235448;border-color:#538b76}
+.spec-overview{font-size:13px!important;color:#def5e9!important;line-height:1.6}
+.spec-meta{font-size:10px!important;color:#a9c8be!important;overflow-wrap:anywhere}
+.spec-summary{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:7px 11px;align-items:center;border:1px solid #3b7361;border-radius:10px;padding:12px;margin:12px 0;background:#1d463a}
+.spec-summary strong{font-size:22px;color:#d6f8e9}.spec-summary span{font-size:11px;color:#bfd8cb}
+.spec-group{border:1px solid #3a6d5c;border-radius:11px;margin:10px 0;background:#16362c;padding:10px}
+.spec-group>summary{font-size:12px;font-weight:700;cursor:pointer;color:#d6f6e8;padding:5px}
+.spec-feature{padding:11px 8px;border-top:1px solid #305447;margin-top:6px}
+.spec-feature-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.spec-feature-head strong{color:#e8fff5;font-size:13px}.spec-feature p{font-size:11px;color:#c1d9cc;margin:6px 0}
+.spec-state{font-size:10px;border:1px solid #657b6d;border-radius:999px;padding:5px 9px;color:#d4d9c7;max-width:100%}
+.spec-state.spec-success{color:#94efb8;border-color:#389c70}
+.spec-tech-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.spec-tech-tags span{padding:3px 8px;border-radius:5px;font-size:10px;color:#cef0e2;background:#2a5c50}
+.spec-tests{color:#e0d0a4!important}.spec-evidence{margin-top:8px;color:#abcfc0}.spec-evidence summary{font-size:10px;cursor:pointer;text-decoration:underline}
+.spec-source{padding:7px 3px;border-bottom:1px solid #315345;display:flex;flex-direction:column;gap:4px;font-size:10px;overflow-wrap:anywhere}
+.spec-source code{color:#97c5b3;font-size:9px;overflow-wrap:anywhere}
+@media(max-width:720px){.spec-summary{grid-template-columns:auto 1fr}.validation-categories{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.spec-unit-success{margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:9px;border-left:3px solid #67b99b;background:#244d3a;font-size:10px;color:#aff0cd}
+.spec-unit-success a{color:#dcffe9;text-decoration:underline}
+
+/* Keep the functional spec in view instead of pushing it below metric decoration. */
+.validation-first{padding:19px!important;margin-top:12px!important;min-height:0!important}
+.validation-first .heading{margin-bottom:8px}.validation-first .heading p{margin-top:4px;margin-bottom:2px}
+.validation-metrics{margin:12px 0!important}.validation-metric{min-height:64px!important;padding:10px 13px!important}.validation-metric strong{font-size:23px!important}
+.validation-toolbar{margin:10px 0 6px!important}.validation-order{margin-bottom:6px!important}

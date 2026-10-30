@@ -5,8 +5,16 @@
 
   **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.16.0 · Task-first navigation informed by the supplied UX Architecture Guide v2**
+  **Version 0.17.0 · Functional specifications, developer technology layers, and targeted test evidence**
 </div>
+
+## Functional specification sheets — v0.17.0
+
+The local landing page now opens on **Fonctionnalités** for each selected application: audience-facing tasks and components, with developer-facing **Technologies** grouped into frameworks, APIs/contracts, data, identity/access, security and tests. Every supported claim links to relative source paths and exact SHA-256 digests in the frozen snapshot review. We deliberately distinguish **code observed**, **scenario only**, **test definitions**, and **tests actually passed**. No existing security, production or full-feature maturity status is inferred.
+
+Three user-supplied snapshots are reviewed: KonnaxionDiag, Konnaxion-Capsule-Manager and Konnaxion-Worlds (16 functional observations and 17 technology entries). Targeted unit tests were run on isolated copies of two ZIPs: **3/3 PASS for KonnaxionDiag** and **42/42 PASS for Capsule Manager Security Gate contracts**. Their sanitized JUnit reports are clickable only via the local dashboard. The 53 security pattern criteria stay separate and are **not** marked 42/53 passed. No repository HEAD is asserted to match these ZIPs. The other 46 repos retain their existing Engineering Profiles, Kristal map, and qualification data, without invented functional specs. New private campaigns keep frozen copies of this historical review and its test logs.
+
+See [Functional specification sheets, test provenance and limitations](docs/FUNCTIONAL_SPECSHEETS_V017.md).
 
 ## Task-first navigation — v0.16.0
 

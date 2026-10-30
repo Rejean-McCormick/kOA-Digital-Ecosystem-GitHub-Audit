@@ -56,7 +56,7 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
         """
         route = urlsplit(self.path).path
         if (route not in ("/data/local-qualification.json", "/api/kristal/atlas", "/api/campaigns/summary", "/api/review/summary", "/api/validation/board")
-                and not route.startswith(("/local/engineering/", "/local/campaigns", "/local/review"))):
+                and not route.startswith(("/local/engineering/", "/local/campaigns", "/local/review", "/local/spec-tests/"))):
             return super().do_GET()
         if (self.client_address[0] not in ("127.0.0.1", "::1")
                 or self.headers.get("Sec-Fetch-Site", "same-origin") == "cross-site"
@@ -84,6 +84,15 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
                 from koa_audit import validation_board
                 payload = json.dumps(validation_board.build(ROOT), ensure_ascii=False).encode("utf-8")
                 kind = "application/json; charset=utf-8"
+            elif route.startswith("/local/spec-tests/"):
+                from koa_audit import spec_tests
+                slug = unquote(route[len("/local/spec-tests/"):])
+                if not re.fullmatch(r"[A-Za-z0-9_.-]{1,120}", slug):
+                    self.send_error(404); return
+                payload = spec_tests.report_for_slug(ROOT, slug)
+                if payload is None:
+                    self.send_error(404); return
+                kind = "application/xml; charset=utf-8"
             elif route == "/api/review/summary":
                 from koa_audit import evidence_review
                 result = evidence_review.report_counts(ROOT)
