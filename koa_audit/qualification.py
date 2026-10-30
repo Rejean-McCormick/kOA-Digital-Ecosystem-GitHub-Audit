@@ -1,7 +1,8 @@
-"""Manual, evidence-scoped maturity and qualification registry for kOA.
+"""Evidence-scoped maturity and qualification registry for kOA.
 
-There is no algorithmic certification, no live audit, no automatic inference from
-file names, code size, CI presence, static patterns, or engineering profiles.
+There is no live audit and no inference from filenames, code size, CI presence,
+static patterns, or engineering profiles. The separately reviewed 2026-10-30
+documentary adjudication can be imported once at the owner's explicit request.
 Each claim is scoped to one repository and one qualification stage.
 """
 from __future__ import annotations

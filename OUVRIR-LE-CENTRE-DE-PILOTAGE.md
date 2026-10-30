@@ -36,3 +36,15 @@ Dans **Campagnes datées**, sélectionne ton ancien `audit.json` ou le dossier d
 5. Ouvre le dashboard **Écosystème** : la section privée des campagnes affiche les profils, les rapports et les cinq jalons à cette date. Clique **Fiche figée · dernière campagne** depuis une application, ou **Comparer les deux dernières campagnes**.
 
 Cette fonction utilise exclusivement l’aperçu **local**. Elle n’envoie pas les pièces sur GitHub; un rapport importé ne prouve pas à lui seul sa concordance avec le commit Git.
+
+## Revue des 245 dossiers (v0.13.0)
+
+Dans l'onglet **Revue des 245**, sélectionne un des 49 dépôts, puis un des cinq jalons. Double-clique une source disponible pour lire le document original dans le navigateur local. Clique sur **Préparer une qualification à examiner** pour remplir le formulaire **Certification & profils** sans attribuer de verdict automatiquement. Après lecture et validation de la portée, enregistre manuellement ton statut et crée une nouvelle campagne datée. Les campagnes anciennes restent inchangées. La bibliothèque historique se trouve dans `private_evidence/` et n'est jamais publiée sur GitHub.
+
+## Qualification documentaire v0.14.0
+
+Au premier démarrage, l'application inscrit la revue fondée sur les sources du 30 octobre 2026 : **10 jalons étayés pour des périmètres restreints** et **235 à documenter**, à condition qu'aucune décision ne soit déjà enregistrée pour ces jalons. Les anciennes décisions sont conservées.
+
+Dans **Preuves 245**, choisis une application et son jalon pour consulter la décision, la portée, les limites et le **document primaire original**. Les 10 cas étayés ne constituent ni 10 tests indépendants, ni une preuve de production, ni une attestation du SHA Git des clones.
+
+Une campagne déjà créée ne sera jamais modifiée. Après ouverture de cette version, crée une **nouvelle campagne datée** pour conserver le nouvel état.

@@ -484,6 +484,22 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
         if source_shas and all(source_shas) and pinned:
             rec["version_alignment"]["attached_proofs_to_git"] = ("collector_observed_same_head_not_source_attestation"
                 if all(x==pinned for x in source_shas) else "collector_observed_different_head")
+    # Preserve the owner-supplied historical review alongside any manual claim
+    # that refers to it. This is a private, bounded attachment, not a validation.
+    source_review = None
+    from . import evidence_review
+    if any(evidence_review.SOURCE_MARKER in str(v.get("evidence", ""))
+           for claim in claims.values() if isinstance(claim, dict)
+           for v in claim.values() if isinstance(v, dict)):
+        review_file = evidence_review.archive_path(project)
+        if not review_file.is_file() or review_file.is_symlink():
+            raise ValueError("Revue historique référencée mais archive privée absente : campagne non créée")
+        evidence_review.load_review(project)  # Check source index before freezing.
+        raw = review_file.read_bytes()
+        documents["private/historical_review_2026-10-30.zip"] = raw
+        source_review = {"member": "private/historical_review_2026-10-30.zip",
+                         "sha256": _hash(raw), "kind": "historical_owner_review_not_certification",
+                         "scope": "49 repositories / 245 evidence cases, historical sources"}
     if progress:
         progress(len(inventory) + 1, total_steps, "Calcul du manifeste et des empreintes")
     stamp = datetime.now(timezone.utc)
@@ -492,6 +508,7 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
                 "frozen_at": stamp.isoformat(timespec="microseconds").replace("+00:00", "Z"),
                 "repository_count": len(inventory), "source_audit": audit_provenance,
                 "kristal": kristal_snapshot,
+                "historical_review": source_review,
                 "repository_profiles_snapshot": repos,
                 "notice": "Capture historique privee; aucune qualification automatique, aucun scan ni test execute.",
                 "availability_note": "Lien GitHub lie au SHA, non verifie en ligne; peut devenir indisponible si le commit disparait.",
@@ -582,7 +599,8 @@ def _validate_zip_contents(archive: zipfile.ZipFile, cid: str) -> None:
     for member in members:
         if member == "manifest.json":
             continue
-        if not member.startswith(("profiles/", "proofs/")) and member != "campaign.json":
+        if (not member.startswith(("profiles/", "proofs/"))
+                and member not in ("campaign.json", "private/historical_review_2026-10-30.zip")):
             raise ValueError("Membre interdit")
         content = archive.read(member)
         if len(content) > MAX_ATTACHMENT or _hash(content) != checksums[member]:
@@ -609,6 +627,20 @@ def _validated_archive(cid: str, store: Path | None = None) -> zipfile.ZipFile:
     except Exception:
         archive.close()
         raise
+
+
+def read_archived_review(cid: str, store: Path | None = None) -> bytes:
+    """Download the exact historical review ZIP frozen with an explicit claim."""
+    with _validated_archive(cid, store) as z:
+        data = json.loads(z.read("campaign.json"))
+        ref = data.get("historical_review") or {}
+        member = "private/historical_review_2026-10-30.zip"
+        if ref.get("member") != member or member not in z.namelist():
+            raise ValueError("Cette campagne ne contient aucune revue historique")
+        raw = z.read(member)
+        if _hash(raw) != ref.get("sha256"):
+            raise ValueError("Empreinte de la revue historique invalide")
+        return raw
 
 
 def read_proof(cid: str, slug: str, index: int, store: Path | None = None) -> tuple[dict, bytes]:
@@ -987,7 +1019,14 @@ def render_local_page(route: str, store: Path | None = None) -> str:
                 +"<div class='panel'><h2>Kristal à la date de campagne</h2>"+kdesc+"</div>"
                 +"<div class='panel'><h2>Pièces de preuve jointes</h2>"+
                 ("<ul>"+"".join(proof_rows)+"</ul>" if proof_rows else "<p>Aucun rapport complémentaire joint.</p>")+"</div>")
+        if data.get("historical_review"):
+            body += ("<div class='panel'><h2>Revue historique figée</h2><p>"
+                     "Les sources originales de la revue des 245 dossiers ont été archivées "
+                     "avec cette campagne. Ce lot n'atteste pas le même SHA Git pour chaque preuve. "
+                     "<a href='/local/campaigns/"+cid+"/review/download'>Télécharger la revue figée</a></p></div>")
         return page("Fiche historique · "+slug, body)
+    if len(parts) == 5 and parts[3:] == ["review", "download"]:
+        raise ValueError("La revue historique est téléchargeable via le serveur local")
     if len(parts) == 6 and parts[3] == "proof":
         slug = parts[4]
         if slug not in records or not parts[5].isdigit():
@@ -1085,6 +1124,11 @@ def render_local_page(route: str, store: Path | None = None) -> str:
                 " · SHA différent : "+str(relations.get("collector_git_head_differs_from_reference",0))+
                 " · Non relié / inconnu : "+str(relations.get("unverified_report_not_bound_to_commit",0))+".</p></div>")
     summary += "<div class='panel'><h2>Qualification documentée · 5 jalons indépendants</h2>"+"".join(visual)+"</div>"
+    if data.get("historical_review"):
+        summary += ("<div class='panel'><h2>Revue historique originale conservée</h2>"
+                    "<p>245 dossiers de revue privés, archives de documents originaux et empreintes. "
+                    "Leur présence ne signifie pas que 245 jalons sont étayés. "
+                    "<a href='/local/campaigns/"+cid+"/review/download'>Télécharger la revue historique figée</a></p></div>")
     note = ("<div class='panel'><strong>Important</strong><p>Les liens de téléchargement ciblent un SHA, "
             "pas main. Leur disponibilité distante n’a pas été testée. "
             "Les anciens profils issus de snapshots peuvent provenir d’une autre version que le commit indiqué. "

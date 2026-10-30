@@ -8,7 +8,7 @@
     kristal:[82,37],linux:[82,65],spaces:[82,88],ik:[12,70],
     architect:[37,88],orchestrator:[59,88],sentient:[59,13],skope:[12,37]
   };
-  let atlas=null, localAudit=null, qualification=null, kristal=null, privateCampaigns=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview', mapMode='contracts', mapTouched=false;
+  let atlas=null, localAudit=null, qualification=null, kristal=null, privateCampaigns=null, privateReview=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview', mapMode='contracts', mapTouched=false;
   function el(tag,cls,content){const x=document.createElement(tag);if(cls)x.className=cls;if(content!==undefined)x.textContent=String(content);return x;}
   function link(href,text,klass){const a=el('a',klass,text);a.href=href;return a;}
   function repoByName(name){return atlas.repositories.find(r=>r.repo===name);}
@@ -32,7 +32,8 @@
       let assessed=0,evidenced=0;
       for(const r of data){for(const [key] of stages){let status=statusFor(r.repo,key);if(status!=='Non évalué')assessed++;if(status==='Étayé par preuve')evidenced++;}}
       $('kpi-qualification').textContent=`${count(assessed)} / ${count(total*5)}`;
-      $('kpi-qualification-note').textContent=`Jalons examinés · ${count(evidenced)} étayés par preuve (état local)`;
+      $('kpi-qualification-note').textContent=`Jalons examinés · ${count(evidenced)} étayés par preuve` +
+        (privateReview?` · ${count(privateReview.cases)} dossiers historiques consultables`:'');
       $('qual-mode').textContent='Données de qualification locales, conservées sur ton PC';
     }else{
       $('kpi-qualification').textContent='Non publié';
@@ -249,6 +250,7 @@
     else if(r.has_local_profile){actions.append(el('span','disabled-link','Profil original local seulement'));}
     else actions.append(el('span','disabled-link','Engineering Profile non fourni'));
     // The repository name has been validated against the bundled inventory.
+    if(privateReview)actions.append(link('/local/review/app/'+encodeURIComponent(r.slug),'↗ Voir les 5 dossiers de preuves','secondary-link'));
     actions.append(link('https://github.com/'+encodeURI(r.repo),'Ouvrir le dépôt GitHub','secondary-link'));
     if(privateCampaigns?.available && privateCampaigns.latest.repositories?.[r.repo]){
       const cid=privateCampaigns.latest.id;
@@ -297,16 +299,19 @@
   async function refresh(){
     $('load-status').textContent='Chargement…';
     try{
-      const [newAtlas, audit, local, source, campaignSummary]=await Promise.all([
+      const [newAtlas, audit, local, source, campaignSummary, reviewSummary]=await Promise.all([
         getJSON('data/ecosystem.json?at='+Date.now()),
         getJSON('data/dashboard.json?at='+Date.now(),true),
         getJSON('data/local-qualification.json?at='+Date.now(),true),
         getJSON('/api/kristal/atlas?at='+Date.now(),true),
         getJSON('/api/campaigns/summary?at='+Date.now(),true),
+        getJSON('/api/review/summary?at='+Date.now(),true),
       ]);
       if(newAtlas.format!=='koa_ecosystem.atlas.v1'||!Array.isArray(newAtlas.repositories)||newAtlas.repositories.length!==49){throw new Error('Inventaire invalide');}
       atlas=newAtlas;localAudit=audit;qualification=local?.format==='koa_qualification.public_status.v1'?local:null;
       privateCampaigns = campaignSummary?.format==='koa_certification.latest_summary.v1'?campaignSummary:null;
+      privateReview = reviewSummary?.format==='koa.evidence_review.summary.v1'?reviewSummary:null;
+      const reviewLink=$('review-private-link'); if(reviewLink)reviewLink.hidden=!privateReview;
       $('historique-campagnes').hidden = !qualification;
       const latestPanel = $('latest-campaign');latestPanel.replaceChildren();
       if(qualification){

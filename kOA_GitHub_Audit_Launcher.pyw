@@ -55,8 +55,8 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
         No free-form evidence, file paths or notes are exported through JSON.
         """
         route = urlsplit(self.path).path
-        if (route not in ("/data/local-qualification.json", "/api/kristal/atlas", "/api/campaigns/summary")
-                and not route.startswith(("/local/engineering/", "/local/campaigns"))):
+        if (route not in ("/data/local-qualification.json", "/api/kristal/atlas", "/api/campaigns/summary", "/api/review/summary")
+                and not route.startswith(("/local/engineering/", "/local/campaigns", "/local/review"))):
             return super().do_GET()
         if (self.client_address[0] not in ("127.0.0.1", "::1")
                 or self.headers.get("Sec-Fetch-Site", "same-origin") == "cross-site"
@@ -80,6 +80,16 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
                 payload = json.dumps({"format": "koa_qualification.public_status.v1", "repositories": result},
                                      ensure_ascii=False).encode("utf-8")
                 kind = "application/json; charset=utf-8"
+            elif route == "/api/review/summary":
+                from koa_audit import evidence_review
+                result = evidence_review.report_counts(ROOT)
+                result["format"] = "koa.evidence_review.summary.v1"
+                payload = json.dumps(result, ensure_ascii=False).encode("utf-8")
+                kind = "application/json; charset=utf-8"
+            elif route.startswith("/local/review"):
+                from koa_audit import evidence_review
+                payload = evidence_review.render_page(ROOT, route).encode("utf-8")
+                kind = "text/html; charset=utf-8"
             elif route == "/api/kristal/atlas":
                 from koa_audit import kristal_source
                 root = getattr(self.server, "kristal_source", kristal_source.get_source_root())
@@ -101,7 +111,12 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
             elif route.startswith("/local/campaigns"):
                 from koa_audit import campaigns
                 segments=route.strip("/").split("/")
-                if (len(segments)==6 and segments[:2]==["local","campaigns"]
+                if (len(segments)==5 and segments[:2]==["local","campaigns"]
+                        and segments[3:]==["review","download"]):
+                    payload = campaigns.read_archived_review(segments[2])
+                    kind = "application/octet-stream"
+                    extra_disposition = 'attachment; filename="KOA-REVUE-HISTORIQUE-2026-10-30.zip"'
+                elif (len(segments)==6 and segments[:2]==["local","campaigns"]
                         and segments[3]=="download" and segments[5].isdigit()):
                     info, payload=campaigns.read_proof(segments[2],unquote(segments[4]),int(segments[5]))
                     kind="application/octet-stream"
@@ -317,6 +332,10 @@ class AuditLauncher:
         self.campaign_run_tools = BooleanVar(value=False)
         self.campaign_collection_cancel = threading.Event()
         self.campaign_progress_label = StringVar(value="Prêt · aucune opération en cours")
+        self.review_repo = StringVar(value="Rejean-McCormick/Konnaxion")
+        self.review_search = StringVar(value="")
+        self.review_summary = StringVar(value="Revue documentaire datée : conclusions vérifiées et limites visibles")
+        self.review_data = None
         self.profile_repo = StringVar(value="Rejean-McCormick/Konnaxion")
         self.profile_kind = StringVar(value="ENGINEERING_PROFILE.md")
         self.profile_family = StringVar(value="Tous")
@@ -343,8 +362,20 @@ class AuditLauncher:
         self.status = StringVar(value="Prêt — aucun audit exécuté dans cette session")
         self.token_status = StringVar()
 
+        # Owner has requested a direct, source-checked documentary reconciliation.
+        # Import only missing cases, preserve every existing local decision.
+        try:
+            from koa_audit import evidence_adjudication
+            self._adjudication_import = evidence_adjudication.import_documentary_review(ROOT)
+        except (OSError, ValueError, TypeError, KeyError, zipfile.BadZipFile) as error:
+            self._adjudication_import = {'error': str(error)}
         self._styles()
         self._build_ui()
+        if self._adjudication_import.get('error'):
+            self.status.set('Revue documentaire non intégrée : '+self._adjudication_import['error'])
+        elif self._adjudication_import.get('added'):
+            self.status.set(f"Revue des preuves : {self._adjudication_import['added']} jalons documentés ; "
+                            "décisions antérieures conservées. Créer une nouvelle campagne pour les figer.")
         self._update_token_label()
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
         self.root.after(150, self._poll)
@@ -388,18 +419,20 @@ class AuditLauncher:
         profiles_tab = ttk.Frame(self.tabs, padding=14)
         board_tab = ttk.Frame(self.tabs, padding=14)
         campaigns_tab = ttk.Frame(self.tabs, padding=14)
+        review_tab = ttk.Frame(self.tabs, padding=14)
         legacy_tab = ttk.Frame(self.tabs, padding=14)
         audit_tab = ttk.Frame(self.tabs, padding=14)
         # Dominant journey first: Ecosystem -> application -> profile / evidence.
         # Advanced audit tools are retained but no longer occupy the initial view.
         self.tabs.add(dashboard_tab, text="  Écosystème  ")
-        self.tabs.add(board_tab, text="  Registre des 49  ")
-        self.tabs.add(campaigns_tab, text="  Campagnes datées  ")
-        self.tabs.add(profiles_tab, text="  Certification & profils  ")
+        self.tabs.add(board_tab, text="  49 dépôts  ")
+        self.tabs.add(review_tab, text="  Preuves 245  ")
+        self.tabs.add(campaigns_tab, text="  Campagnes  ")
+        self.tabs.add(profiles_tab, text="  Certification  ")
         self.tabs.add(reports_tab, text="  Rapports  ")
         self.tabs.add(local_tab, text="  Audit local  ")
-        self.tabs.add(triage_tab, text="  Vérification + ZIP  ")
-        self.tabs.add(audit_tab, text="  GitHub (optionnel)  ")
+        self.tabs.add(triage_tab, text="  Vérification  ")
+        self.tabs.add(audit_tab, text="  GitHub  ")
         self.tabs.add(legacy_tab, text="  Historique  ")
         self._build_audit(audit_tab)
         self._build_local(local_tab)
@@ -408,6 +441,7 @@ class AuditLauncher:
         self._build_reports(reports_tab)
         self._build_profiles(profiles_tab)
         self._build_certification_board(board_tab)
+        self._build_evidence_review(review_tab)
         self._build_campaigns(campaigns_tab)
         self._build_legacy(legacy_tab)
 
@@ -515,6 +549,8 @@ class AuditLauncher:
         ttk.Button(btns, text="Actualiser les rapports", command=self._run_dashboard).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Publier sur GitHub", command=self._sync_dashboard).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Ouvrir le dossier docs", command=lambda: self._open_file(ROOT / "docs")).pack(side="left")
+        ttk.Button(frame, text="Consulter les 245 dossiers de preuves historiques →",
+                   command=self._review_open_browser).grid(row=5, column=0, columnspan=3, sticky="w", pady=(5, 2))
         note=("La source Kristal est lue à chaque actualisation du navigateur local, sans changer les fichiers du référentiel. "
               "Les associations proposées restent distinctes des liens explicites ; elles ne sont ni des intégrations vérifiées ni des certifications. Elle ne part PAS sur GitHub Pages. « Publier sur GitHub » envoie les bilans autorisés, la carte publique et "
               "les profils d'ingénierie expurgés (avec noms publics des dépôts). "
@@ -906,9 +942,208 @@ class AuditLauncher:
         self.profile_repo.set(selected[0])
         self._profiles_refresh()
         for index in range(self.tabs.index("end")):
-            if "Certification & profils" in self.tabs.tab(index, "text"):
+            if "Certification" in self.tabs.tab(index, "text"):
                 self.tabs.select(index)
                 break
+
+    def _build_evidence_review(self, tab: ttk.Frame) -> None:
+        """Review 245 sourced historical cases; NEVER turn suggestions into claims."""
+        from koa_audit import evidence_review
+        ttk.Label(tab, text="Revue des preuves historiques · 245 dossiers", style="Title.TLabel").pack(anchor="w")
+        ttk.Label(tab, text="49 dépôts × 5 jalons. Les sources historiques sont consultables; aucune qualification n'est validée automatiquement.",
+                  style="Muted.TLabel", wraplength=980).pack(anchor="w", pady=(2, 6))
+        ttk.Label(tab, textvariable=self.review_summary, style="Muted.TLabel", wraplength=960).pack(fill="x", pady=(0, 6))
+        toolbar=ttk.Frame(tab)
+        toolbar.pack(fill="x", pady=(0, 8))
+        ttk.Label(toolbar, text="Recherche").pack(side="left", padx=(0, 7))
+        inp=ttk.Entry(toolbar, textvariable=self.review_search, width=27)
+        inp.pack(side="left", padx=(0, 11))
+        inp.bind('<KeyRelease>', lambda _e: self._review_filter())
+        ttk.Button(toolbar, text="Ouvrir la revue dans le navigateur", command=self._review_open_browser).pack(side="left", padx=(0, 8))
+        ttk.Button(toolbar, text="Relire les données", command=self._review_reload).pack(side="left")
+        main=ttk.Panedwindow(tab, orient="horizontal")
+        main.pack(fill="both", expand=True)
+        left=ttk.Frame(main)
+        right=ttk.Frame(main)
+        main.add(left, weight=1)
+        main.add(right, weight=3)
+        ttk.Label(left, text="Applications").pack(anchor="w")
+        self.review_repos=ttk.Treeview(left, columns=("name", "sources"), show="headings", selectmode="browse", height=14)
+        self.review_repos.heading('name', text='Dépôt')
+        self.review_repos.heading('sources', text='Jalons cités')
+        self.review_repos.column('name', width=185)
+        self.review_repos.column('sources', width=125, anchor='center')
+        self.review_repos.pack(fill="both", expand=True)
+        self.review_repos.bind('<<TreeviewSelect>>', lambda _e: self._review_repo_select())
+        ttk.Label(right, text="Cinq jalons indépendants · sélectionner pour voir les preuves").pack(anchor="w")
+        self.review_stages=ttk.Treeview(right, columns=('stage','level','sources'),show='headings',height=5,selectmode='browse')
+        for col,title,width in [('stage','Jalon',150),('level','Type de constat historique',360),('sources','Références',75)]:
+            self.review_stages.heading(col,text=('Conclusion' if col=='level' else title))
+            self.review_stages.column(col,width=width,minwidth=55,stretch=(col=='level'))
+        self.review_stages.pack(fill='x',pady=(5,8))
+        self.review_stages.bind('<<TreeviewSelect>>',lambda _e:self._review_stage_select())
+        buttons=ttk.Frame(right)
+        buttons.pack(fill='x',pady=(3,8))
+        ttk.Button(buttons,text="Voir ce jalon et ses sources",command=self._review_open_stage).pack(side='left',padx=(0,8))
+        ttk.Button(buttons,text="Ouvrir la source sélectionnée",command=self._review_open_source).pack(side='left',padx=(0,8))
+        ttk.Button(buttons,text="Voir / ajuster la qualification",style='Primary.TButton',
+                   command=self._review_prepare).pack(side='left')
+        self.review_details=ScrolledText(right,height=6,wrap='word',font=('Segoe UI',10),background='white',foreground=NAVY)
+        self.review_details.pack(fill='both',expand=True)
+        self.review_details.configure(state='disabled')
+        ttk.Label(right, text="Documents historiques (double-cliquer pour consulter la source originale)",
+                  style='Muted.TLabel').pack(anchor='w',pady=(8,3))
+        self.review_sources=ttk.Treeview(right,columns=('source','availability'),show='headings',height=3,selectmode='browse')
+        self.review_sources.heading('source',text='Référence / document')
+        self.review_sources.heading('availability',text='Consultation')
+        self.review_sources.column('source',width=540)
+        self.review_sources.column('availability',width=130,stretch=False)
+        self.review_sources.pack(fill='x')
+        self.review_sources.bind('<Double-1>',lambda _e:self._review_open_source())
+        self._review_reload()
+
+    def _review_reload(self) -> None:
+        from koa_audit import evidence_review
+        try:
+            self.review_data=evidence_review.load_review(ROOT)
+            evidence_review.preserve_review_locally(ROOT)
+            from koa_audit import evidence_adjudication
+            counts=evidence_review.report_counts(ROOT)
+            qualification_summary=evidence_adjudication.current_summary(ROOT)
+            self.review_summary.set(f"{counts['repositories']} dépôts · {counts['cases']} dossiers · "
+                f"Revue inscrite sur ce PC : {qualification_summary['evidenced']}/245 jalons étayés (portée spécifique), "
+                f"{qualification_summary['to_document']} à documenter. Pièces privées, aucune production attestée.")
+            self._review_filter()
+        except (OSError, ValueError, zipfile.BadZipFile, KeyError) as error:
+            self.review_data=None
+            self.review_summary.set("Archive de revue privée indisponible ou invalide : "+str(error))
+
+    def _review_filter(self) -> None:
+        if not self.review_data:
+            return
+        search=self.review_search.get().casefold().strip()
+        selected=self.review_repo.get()
+        self.review_repos.delete(*self.review_repos.get_children())
+        for item in self.review_data['repositories']:
+            if search not in item['repository'].casefold():
+                continue
+            name=item['repository']
+            self.review_repos.insert('', 'end', iid=name,values=(name.split('/')[-1],
+                str(sum(bool(s.get('sources')) for s in item['stages']))+'/5'))
+        if selected in self.review_repos.get_children():
+            self.review_repos.selection_set(selected)
+        elif self.review_repos.get_children():
+            self.review_repos.selection_set(self.review_repos.get_children()[0])
+        self._review_repo_select()
+
+    def _review_repo_select(self) -> None:
+        from koa_audit import qualification
+        if not self.review_data:
+            return
+        selected=self.review_repos.selection()
+        if not selected:
+            return
+        self.review_repo.set(selected[0])
+        record=next(x for x in self.review_data['repositories'] if x['repository']==selected[0])
+        self.review_stages.delete(*self.review_stages.get_children())
+        for s in record['stages']:
+            self.review_stages.insert('', 'end', iid=s['stage'],values=(s['title'],
+                qualification.get_claim(ROOT,record['repository'],s['stage'])['status'],
+                len(s['sources'])))
+        self.review_stages.selection_set('specified')
+        self._review_stage_select()
+
+    def _review_stage_select(self) -> None:
+        if not self.review_data or not self.review_stages.selection():
+            return
+        from koa_audit import evidence_review, qualification
+        stage=self.review_stages.selection()[0]
+        record=next(x for x in self.review_data['repositories'] if x['repository']==self.review_repo.get())
+        s=next(x for x in record['stages'] if x['stage']==stage)
+        claim=qualification.get_claim(ROOT,self.review_repo.get(),stage)
+        detail=(f"Type de constat : {s['evidence_level']}\n"
+                f"Conclusion enregistrée (revue documentaire ou décision locale) : {claim['status']}\n\n"
+                f"Observation : {s['summary']}\n\n"
+                f"Portée : {s['scope']}\n\n"
+                f"Limites : {s['limitations']}\n\n"
+                f"Prochaine étape : {s['next_action']}\n\n"
+                "Une présence de code ou de CI n'est pas un résultat de qualification automatique.")
+        self.review_details.configure(state='normal')
+        self.review_details.delete('1.0', END)
+        self.review_details.insert('1.0',detail)
+        self.review_details.configure(state='disabled')
+        self.review_sources.delete(*self.review_sources.get_children())
+        from koa_audit import evidence_adjudication
+        adjudication=evidence_adjudication.decision(ROOT,self.review_repo.get(),stage)
+        primary=(adjudication.get('source') or {}).get('member')
+        primary_seen=False
+        for i,source in enumerate(s['sources']):
+            ref=evidence_review.source_reference(ROOT,self.review_repo.get(),stage,i)
+            if source == primary:
+                primary_seen=True
+            availability=('Pièce vérifiée SHA' if source==primary else
+                          ('Consultable' if ref['available'] else 'Réf. extérieure'))
+            self.review_sources.insert('','end',iid=str(i),values=(source,availability))
+        if primary and not primary_seen:
+            self.review_sources.insert('','end',iid='expert',values=(primary,'Pièce vérifiée SHA'))
+
+    def _review_url(self, url: str) -> None:
+        try:
+            server=self._ensure_preview_server()
+            webbrowser.open(f"http://127.0.0.1:{server.server_port}{url}")
+        except (OSError, ValueError, zipfile.BadZipFile) as error:
+            messagebox.showerror('Revue historique',str(error))
+
+    def _review_open_browser(self) -> None:
+        self._review_url('/local/review')
+
+    def _review_open_stage(self) -> None:
+        if self.review_stages.selection():
+            self._review_url('/local/review/app/'+quote(self.review_repo.get().split('/')[-1])+'/'+self.review_stages.selection()[0])
+
+    def _review_open_source(self) -> None:
+        if not self.review_sources.selection() or not self.review_stages.selection():
+            return
+        from koa_audit import evidence_review
+        stage=self.review_stages.selection()[0]
+        if self.review_sources.selection()[0]=='expert':
+            self._review_url('/local/review/app/'+quote(self.review_repo.get().split('/')[-1])+'/'+stage+'/expert')
+            return
+        index=int(self.review_sources.selection()[0])
+        ref=evidence_review.source_reference(ROOT,self.review_repo.get(),stage,index)
+        if not ref['available']:
+            messagebox.showinfo('Source historique non jointe',
+                "Cette référence est citée dans le diagnostic mais le document n'était pas inclus dans l'archive. "
+                "Aucune pièce n'a été inventée.")
+            return
+        self._review_url('/local/review/app/'+quote(self.review_repo.get().split('/')[-1])+'/'+stage+'/source/'+str(index))
+
+    def _review_prepare(self) -> None:
+        """Open the already-reviewed conclusion without resetting its status."""
+        if not self.review_stages.selection():
+            return
+        from koa_audit import evidence_review, qualification
+        stage=self.review_stages.selection()[0]
+        try:
+            suggestion=evidence_review.suggested_qualification(ROOT,self.review_repo.get(),stage)
+        except (OSError, ValueError, zipfile.BadZipFile) as error:
+            messagebox.showerror('Revue documentaire',str(error)); return
+        self.profile_repo.set(suggestion['repository'])
+        self.qual_stage.set(next(title for key,title in qualification.STAGES if key==stage))
+        self._profiles_refresh()
+        current=qualification.get_claim(ROOT,self.review_repo.get(),stage)
+        if current['status']=='Non évalué':
+            self.qual_scope.set(suggestion['scope'])
+            self.qual_evidence.set(suggestion['evidence'])
+        else:
+            self.qual_scope.set(current['scope'])
+            self.qual_evidence.set(current['evidence'])
+            self.qual_status.set(current['status'])
+        for index in range(self.tabs.index('end')):
+            if 'Certification' in self.tabs.tab(index,'text'):
+                self.tabs.select(index)
+                break
+        self.status.set('Qualification documentaire affichée. Modifier seulement si une nouvelle preuve le justifie.')
 
     def _build_profiles(self, tab: ttk.Frame) -> None:
         """Read standardized files and let the user review architecture/security patterns."""
@@ -1035,6 +1270,12 @@ class AuditLauncher:
     def _qual_save(self) -> None:
         from koa_audit import qualification
         stage = next(k for k, title in qualification.STAGES if title == self.qual_stage.get())
+        if self.qual_status.get() == 'Étayé par preuve':
+            if not messagebox.askyesno('Valider explicitement la preuve',
+                'As-tu consulté la pièce originale, confirmé sa portée ET vérifié que la version et le périmètre '
+                'justifient ce jalon ?\n\nCette décision est manuelle et sera figée dans la PROCHAINE campagne. '
+                'Les rapports anciens et les CI ne prouvent pas la production.'):
+                return
         try:
             qualification.set_claim(ROOT, self.profile_repo.get(), stage,
                 self.qual_status.get(), self.qual_evidence.get(), self.qual_scope.get())
@@ -1043,6 +1284,8 @@ class AuditLauncher:
             return
         self._qual_refresh()
         self._refresh_certification_board()
+        if self.review_data:
+            self._review_repo_select()
         self.status.set("Jalon enregistré sur ce PC, sans modification Git ni publication")
 
     def _profiles_refresh(self) -> None:

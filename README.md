@@ -5,8 +5,16 @@
 
   **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.12.0 · Opt-in report discovery, immutable evidence snapshots, Git provenance and local progress dashboards**
+  **Version 0.14.0 · Scoped evidence adjudication, 245 documentary cases, immutable campaigns**
 </div>
+
+## Owner-requested documentary adjudication — v0.14.0
+
+The owner explicitly requested that the app **record actual, source-reviewed conclusions** rather than ask the owner to evaluate all 245 slots by hand. On first launch, a strictly source-checked, 2026-10-30 review merges **10 source-supported, scope-restricted conclusions** and **235 cases `À documenter`** into the private local qualification registry. Existing entries always win; any existing registry is backed up before a one-time atomic merge. It is idempotent. All supporting original documents can be opened in the private review viewer. No live GitHub HEAD, source scan, test execution, or universal certification is inferred.
+
+Eight of the supported cases are four narrow stages **for each of Konnaxion and Orgo**, derived from the **same** historical local E2E on 2026-09-21 for only `governance.decision.execute/1.0.0` and `accountability.impact.publish/1.0.0`. Two additional **specified-only** cases concern the frozen historical EncyKlopedia v6 and Da’at v6 boundaries. No production case is supported, and none of the original documents establish owner clone SHAs. These are historical documented capabilities, not whole-application maturity grades.
+
+Old immutable campaign ZIPs remain unchanged and may still display `0/245`. **Create a new dated campaign** to freeze the review; existing owner decisions are never overwritten. Details and verification method: [Dated documentary adjudication](docs/EXPERT_DOCUMENTARY_ADJUDICATION_2026-10-30.md).
 
 ## Private evidence automation and dated progress — v0.12.0
 
@@ -269,3 +277,7 @@ directory. The HTTP preview binds exclusively to `127.0.0.1`; its `/api/kristal/
 endpoint returns an allowlisted local projection. Neither that endpoint nor the
 Kristal catalogs are part of the published GitHub Pages artifact. If the folder
 is missing, the bundled kOA map and Engineering Profiles still work.
+
+## Private historical evidence review (v0.13.0)
+
+The Windows launcher adds **Revue des 245**, a private, source-linked review of five qualification stages for each of the 49 official repositories. The owner-provided historical evidence is bundled under `private_evidence/` (Git-ignored, never published to GitHub Pages). The review exposes original documents, SHA-256 provenance, explicit limitations, and a **prepare-only** qualification workflow. **No review suggestion automatically becomes an evidenced claim.** A manually accepted reference is captured, with the original private review archive, in the *next* dated campaign. See [`docs/HISTORICAL_EVIDENCE_REVIEW.md`](docs/HISTORICAL_EVIDENCE_REVIEW.md).
