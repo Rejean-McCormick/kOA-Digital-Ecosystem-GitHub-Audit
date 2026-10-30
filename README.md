@@ -5,10 +5,33 @@
 
   **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.9.0 · Interactive ecosystem atlas, clickable Engineering Profiles, evidence qualification**
+  **Version 0.11.0 · Verified evidence campaigns, optional local static collection, clickable proof files, dated comparisons**
 </div>
 
-## Ecosystem command center — v0.9.0
+## Reliable evidence campaigns and collection — v0.11.0
+
+The **Campagnes datées** tab is now both a private archive and a controlled evidence-collection workstation. It remains fully independent from GitHub repository history and public GitHub Pages. The app does not publish campaign files or private review decisions.
+
+- **Measure one local Git clone** with **Mesurer ce clone**, or reuse paths from an *existing* `audit.json` with **Mesurer clones de l’audit**. The collector refuses to attribute results to a repository without a matching, credential-free GitHub `origin`. There is no new ecosystem-wide audit or network call.
+- **Default Git-only measurement** observes HEAD, tracked worktree changes, tracked file quantities and sizes, language-extension counts, standard documentation markers and GitHub workflow counts. It stores **aggregates only**, never source filenames, source code or local paths. No application code or tests are executed.
+- **Optional, explicit static tools** (`scc`, Lizard and Universal Ctags) measure code size, function complexity and symbol categories if installed. Missing/unsupported tools are recorded as *unknown/unavailable*, never as failures. Each invocation has a timeout, captures bounded output and returns only aggregated results. Cancel a batch between repositories.
+- Collected reports are created under `%LOCALAPPDATA%\kOA-GitHub-Audit\evidence_runs\` and automatically staged as **explicit attachments** for the *next* campaign. They are not silently uploaded or retroactively attached to past campaigns. Review the reports before sharing any campaign ZIP.
+- **Preflight size, count and per-file limits** ensure a new campaign meets the same constraints as its reader. The ZIP is completely validated before finalization, then published without overwriting an existing campaign. A separate SHA-256 sidecar provides corruption detection (not a cryptographic signature).
+- **Click evidence attachments** directly on each dated app page; Markdown, JSON, XML, HTML, SARIF and text are shown as escaped text; PDF and any original files can be downloaded as attachments. No evidence HTML is executed. 
+- **Compare the previous and latest campaigns** in the local dashboard, with stage-by-stage manual-evidence bars, added/withdrawn evidence counts, reviewed-practice changes and documented Git revision changes. Unassessed does not mean failed.
+- The app separates the old audit SHA, the locally verified current SHA and any collector-reported SHA. **Engineering Profiles from ZIP snapshots remain independent**, even where the Git commits agree; there is no automatic certification or proof-to-source identity assertion.
+
+See [Private compliance campaigns: safety, collection, version provenance and comparison](docs/PRIVATE_COMPLIANCE_CAMPAIGNS.md) for details.
+
+## Dated compliance campaigns — v0.10.0
+
+A new **Campagnes datées** tab creates immutable-by-convention, integrity-checked local ZIP snapshots containing the current manual qualification decisions, eligible frozen Engineering/Security Profiles, existing audit counters, a frozen Kristal relationship projection and recorded Git revisions. Existing audit reports can be imported **without rescanning**. Attach JUnit, coverage, SARIF or supporting evidence explicitly when needed; files remain private.
+
+From the local dashboard, click **Campagnes de conformité** to view the historical timeline, open a frozen Engineering Profile and follow full-SHA links to an earlier commit or to download that revision as a ZIP from GitHub. These SHA links are **not verified online**, and may fail if the commit becomes unreachable; the campaign itself never downloads, changes or uploads repository code. No certification is inferred from static observations, code size or CI configuration.
+
+Private archives are saved in `%LOCALAPPDATA%\kOA-GitHub-Audit\campaigns\`, independently of the extracted app ZIP. They are **not included in GitHub Pages publishing**. Detailed workflow and limitations: [Private compliance campaigns](docs/PRIVATE_COMPLIANCE_CAMPAIGNS.md).
+
+## Ecosystem command center — v0.9.2
 
 The main dashboard is now an interactive **application atlas**, inspired by
 `kOA-Digital-Ecosystem` authority and contract maps. It supports two
@@ -48,6 +71,7 @@ The audit repository provides a single place to **observe and review** the kOA D
 | **Manual practice checklist** | 33 architecture + 53 security practices with four explicit review states | Similar names, counts, missing controls, duplicates never score projects negatively |
 | **Qualification milestones** | Specified, implemented, qualified, integrated and production-proven — each with declared scope and evidence | No automatic grade or production claim; assessments stay on this PC |
 | **Ecosystem atlas** | Interactive 12-owner conceptual contract map, 49-repository constellation, per-application detail and clickable Engineering Profiles | Public-safe reports; manual qualification is local only |
+| **Dated compliance campaigns** | Freeze private evidence and reviewed decisions, validate SHA-256, open past profiles and pinned commit ZIP links | Not a test run, live certification or long-term GitHub retention guarantee |
 | **Historical diagnostics** | Metadata imports from existing kOA diagnostic tool families | Historical outcomes remain separate from current observations |
 
 The application uses the kOA brand color **`#1e6864`** and the supplied logo in the dashboard.
@@ -208,11 +232,15 @@ an application. The **Kristal (local)** detail tab shows the repository's
 canonical description, explicitly linked components, and their sourced/claimed
 relations. **Actualiser** reloads these catalogs; no repository-wide audit is run.
 
-The local reader uses only:
+The local reader uses three primary catalogs:
 
 - `knowledge-base/sources/repositories.json`
 - `knowledge-base/sources/components.json`
 - `knowledge-base/sources/relations.json`
+
+It also reads the optional `contracts.json`, `capabilities.json` and `source-registry/source-registry.json` for aggregate context. This never implies that contracts have been exercised or validated.
+
+**New in v0.9.2:** The **Kristal canonique** view distinguishes (1) explicit repository/component references, (2) candidate associations supported by an exact normalized component name/ID or a rare shared GitHub source reference, and (3) repositories with no candidate. A candidate component can be opened in the application's local detail pane, where its semantic relations are labeled *unvalidated*. No candidate is promoted to a canonical link, a confirmed integration or a certification. No action is required to run a new scan. See [Kristal enrichment](docs/KRISTAL_ENRICHMENT.md).
 
 These are editorial canonical inputs in Kristal; generated `views/`, the portable
 state, `.kristal/v8`, `.kristal/v9` and local paths are **not** used as new evidence.

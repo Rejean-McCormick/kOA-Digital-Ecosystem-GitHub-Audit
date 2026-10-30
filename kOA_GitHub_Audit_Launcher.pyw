@@ -17,7 +17,8 @@ import http.server
 import html
 import json
 import re
-from urllib.parse import urlsplit, unquote
+import zipfile
+from urllib.parse import urlsplit, unquote, quote
 import webbrowser
 from datetime import datetime, timezone
 from pathlib import Path
@@ -54,7 +55,8 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
         No free-form evidence, file paths or notes are exported through JSON.
         """
         route = urlsplit(self.path).path
-        if route not in ("/data/local-qualification.json", "/api/kristal/atlas") and not route.startswith("/local/engineering/"):
+        if (route not in ("/data/local-qualification.json", "/api/kristal/atlas")
+                and not route.startswith(("/local/engineering/", "/local/campaigns"))):
             return super().do_GET()
         if (self.client_address[0] not in ("127.0.0.1", "::1")
                 or self.headers.get("Sec-Fetch-Site", "same-origin") == "cross-site"
@@ -92,6 +94,19 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
                     }
                 payload = json.dumps(source, ensure_ascii=False).encode("utf-8")
                 kind = "application/json; charset=utf-8"
+            elif route.startswith("/local/campaigns"):
+                from koa_audit import campaigns
+                segments=route.strip("/").split("/")
+                if (len(segments)==6 and segments[:2]==["local","campaigns"]
+                        and segments[3]=="download" and segments[5].isdigit()):
+                    info, payload=campaigns.read_proof(segments[2],unquote(segments[4]),int(segments[5]))
+                    kind="application/octet-stream"
+                    name=Path(info.get("name", "preuve")).name[:140]
+                    safe=re.sub(r"[^A-Za-z0-9._-]", "_", name) or "preuve"
+                    extra_disposition=f'attachment; filename="{safe}"; filename*=UTF-8\'\'{quote(name)}'
+                else:
+                    payload = campaigns.render_local_page(route).encode("utf-8")
+                    kind = "text/html; charset=utf-8"
             else:
                 slug = unquote(route[len("/local/engineering/"):])
                 if not re.fullmatch(r"[A-Za-z0-9_.-]{1,120}", slug):
@@ -121,6 +136,9 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Length", str(len(payload)))
             self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'")
+            if 'extra_disposition' in locals():
+                self.send_header("Content-Disposition", extra_disposition)
             self.end_headers()
             self.wfile.write(payload)
         except (OSError, ValueError, TypeError, KeyError) as error:
@@ -234,6 +252,26 @@ def local_token_present() -> bool:
     return bool(os.environ.get("KOA_AUDIT_TOKEN") or os.environ.get("GH_TOKEN"))
 
 
+def _suggest_previous_local_audit() -> str:
+    """Suggest an existing report only; never launch a new audit or network call."""
+    preferred = ROOT / "reports" / "local" / "audit.json"
+    if preferred.is_file():
+        return str(preferred)
+    downloads = Path.home() / "Downloads"
+    try:
+        from koa_audit.dashboard_sync import latest_reports
+        for file in latest_reports(ROOT, downloads):
+            # Only existing local-observation reports are usable for Git SHA
+            # from the local scan; remote OBSERVE remains importable explicitly.
+            if file.stat().st_size <= 30_000_000:
+                obj=json.loads(file.read_text(encoding="utf-8-sig"))
+                if obj.get("format") == "koa_audit.local_observation.v1":
+                    return str(file)
+    except (OSError, ValueError, TypeError):
+        pass
+    return ""
+
+
 class AuditLauncher:
     def __init__(self, root: Tk) -> None:
         self.root = root
@@ -264,6 +302,15 @@ class AuditLauncher:
         self.dashboard_github = StringVar(value="")
         self.triage_input = StringVar(value=str(ROOT / "reports" / "local" / "audit.json"))
         self._preview_server = None
+        self.campaign_title = StringVar(value="Bilan de qualification kOA")
+        self.campaign_audit = StringVar(value=_suggest_previous_local_audit())
+        self.campaign_repo = StringVar(value="Rejean-McCormick/Konnaxion")
+        self.campaign_detail = StringVar(value="Aucune campagne encore sélectionnée")
+        self.campaign_busy = False
+        self.campaign_attached = {}
+        self.campaign_source = StringVar(value="")
+        self.campaign_run_tools = BooleanVar(value=False)
+        self.campaign_collection_cancel = threading.Event()
         self.profile_repo = StringVar(value="Rejean-McCormick/Konnaxion")
         self.profile_kind = StringVar(value="ENGINEERING_PROFILE.md")
         self.profile_family = StringVar(value="Tous")
@@ -331,12 +378,14 @@ class AuditLauncher:
         reports_tab = ttk.Frame(self.tabs, padding=14)
         profiles_tab = ttk.Frame(self.tabs, padding=14)
         board_tab = ttk.Frame(self.tabs, padding=14)
+        campaigns_tab = ttk.Frame(self.tabs, padding=14)
         legacy_tab = ttk.Frame(self.tabs, padding=14)
         audit_tab = ttk.Frame(self.tabs, padding=14)
         # Dominant journey first: Ecosystem -> application -> profile / evidence.
         # Advanced audit tools are retained but no longer occupy the initial view.
         self.tabs.add(dashboard_tab, text="  Écosystème  ")
         self.tabs.add(board_tab, text="  Registre des 49  ")
+        self.tabs.add(campaigns_tab, text="  Campagnes datées  ")
         self.tabs.add(profiles_tab, text="  Certification & profils  ")
         self.tabs.add(reports_tab, text="  Rapports  ")
         self.tabs.add(local_tab, text="  Audit local  ")
@@ -350,6 +399,7 @@ class AuditLauncher:
         self._build_reports(reports_tab)
         self._build_profiles(profiles_tab)
         self._build_certification_board(board_tab)
+        self._build_campaigns(campaigns_tab)
         self._build_legacy(legacy_tab)
 
         line = ttk.Separator(outer)
@@ -456,7 +506,7 @@ class AuditLauncher:
         ttk.Button(btns, text="Publier sur GitHub", command=self._sync_dashboard).pack(side="left", padx=(0, 9))
         ttk.Button(btns, text="Ouvrir le dossier docs", command=lambda: self._open_file(ROOT / "docs")).pack(side="left")
         note=("La source Kristal est lue à chaque actualisation du navigateur local, sans changer les fichiers du référentiel. "
-              "Elle ne part PAS sur GitHub Pages. « Publier sur GitHub » envoie les bilans autorisés, la carte publique et "
+              "Les associations proposées restent distinctes des liens explicites ; elles ne sont ni des intégrations vérifiées ni des certifications. Elle ne part PAS sur GitHub Pages. « Publier sur GitHub » envoie les bilans autorisés, la carte publique et "
               "les profils d'ingénierie expurgés (avec noms publics des dépôts). "
               "Aucun jeton à saisir, aucun nouvel audit, aucun code source ou secret publié. "
               "Git pour Windows utilise votre connexion GitHub existante. Le bouton local d'aperçu ne publie rien.")
@@ -467,6 +517,238 @@ class AuditLauncher:
         ttk.Label(tab, text="Une seule configuration GitHub peut être nécessaire : Settings > Pages > Source : GitHub Actions. "
                   "Ensuite, le site se déploie automatiquement après chaque publication. Ne pas utiliser le bouton d'audit distant.",
                   wraplength=910, justify="left").grid(row=2, column=0, sticky="w", pady=8)
+
+    def _build_campaigns(self, tab: ttk.Frame) -> None:
+        from koa_audit import profiles, campaigns
+        tab.columnconfigure(0, weight=1)
+        tab.rowconfigure(2, weight=1)
+        group = ttk.LabelFrame(tab, text="Créer une capture datée de conformité — preuves gelées sur ton PC", padding=14)
+        group.grid(row=0, column=0, sticky="ew")
+        group.columnconfigure(1, weight=1)
+        self._input_row(group, 0, "Nom de la campagne", self.campaign_title, width=52)
+        self._input_row(group, 1, "audit.json existant (facultatif)", self.campaign_audit,
+                        browse=lambda: self._choose_json(self.campaign_audit), width=52)
+        ttk.Label(group, text="Dépôt (preuve complémentaire facultative)").grid(row=2, column=0, sticky="w", pady=5)
+        ttk.Combobox(group, textvariable=self.campaign_repo, values=profiles.inventory(ROOT),
+                     state="readonly", width=45).grid(row=2, column=1, sticky="w", pady=5)
+        self._input_row(group, 3, "Clone local à mesurer (facultatif)", self.campaign_source,
+                        browse=self._campaign_choose_clone, width=52)
+        ttk.Checkbutton(group, text="Utiliser scc, Lizard et Universal Ctags si installés (analyse statique en lecture seule)",
+                        variable=self.campaign_run_tools).grid(row=4, column=1, sticky="w", pady=4)
+        controls = ttk.Frame(group)
+        controls.grid(row=5, column=0, columnspan=3, sticky="w", pady=(10, 3))
+        ttk.Button(controls, text="Joindre une preuve…", command=self._campaign_attach).pack(side="left", padx=(0, 8))
+        ttk.Button(controls, text="Mesurer ce clone", command=self._campaign_measure_one).pack(side="left", padx=(0, 8))
+        ttk.Button(controls, text="Mesurer clones de l'audit", command=self._campaign_measure_all).pack(side="left", padx=(0, 8))
+        ttk.Button(controls, text="Annuler après le dépôt en cours", command=self._campaign_cancel_measure).pack(side="left", padx=(0, 8))
+        controls2 = ttk.Frame(group)
+        controls2.grid(row=6, column=0, columnspan=3, sticky="w", pady=(3, 10))
+        ttk.Button(controls2, text="Voir rapports mesurés", command=self._campaign_open_collections).pack(side="left", padx=(0, 8))
+        self.campaign_create_button = ttk.Button(controls2, text="Créer une campagne figée",
+                                                 command=self._campaign_create, style="Primary.TButton")
+        self.campaign_create_button.pack(side="left", padx=(0, 8))
+        ttk.Button(controls2, text="Ouvrir le dossier des campagnes",
+                   command=self._campaign_folder).pack(side="left")
+        ttk.Label(tab, text="Les collectes utilisent Git en lecture seule et éventuellement scc/Lizard/Universal Ctags si tu les autorises. "
+                  "Elles créent un résumé privé, sans code source ni chemins de fichiers, que tu peux joindre à la campagne. "
+                  "Aucun test, aucun script du dépôt et aucune action GitHub n'est exécuté. "
+                  "Les liens Git et les preuves indépendantes ne constituent pas une certification.",
+                  style="Muted.TLabel", wraplength=990, justify="left").grid(row=1, column=0, sticky="ew", pady=10)
+        listing = ttk.LabelFrame(tab, text="Historique des campagnes (clic = détails · double-clic = navigateur)", padding=9)
+        listing.grid(row=2, column=0, sticky="nsew")
+        listing.columnconfigure(0, weight=1)
+        listing.rowconfigure(0, weight=1)
+        self.campaign_tree = ttk.Treeview(listing, columns=("name", "date", "count", "integrity"),
+                                          show="headings", height=8, selectmode="browse")
+        for key, caption, width in (("name", "Campagne", 370), ("date", "Date UTC", 190),
+                                    ("count", "Dépôts", 85), ("integrity", "Intégrité", 130)):
+            self.campaign_tree.heading(key, text=caption)
+            self.campaign_tree.column(key, width=width, stretch=key == "name")
+        self.campaign_tree.grid(row=0, column=0, sticky="nsew")
+        scroll = ttk.Scrollbar(listing, orient="vertical", command=self.campaign_tree.yview)
+        scroll.grid(row=0, column=1, sticky="ns")
+        self.campaign_tree.configure(yscrollcommand=scroll.set)
+        self.campaign_tree.bind("<<TreeviewSelect>>", lambda _e: self._campaign_select())
+        self.campaign_tree.bind("<Double-1>", lambda _e: self._campaign_open())
+        bottom = ttk.Frame(tab)
+        bottom.grid(row=3, column=0, sticky="ew", pady=(7, 0))
+        ttk.Label(bottom, textvariable=self.campaign_detail, style="Muted.TLabel").pack(side="left", fill="x", expand=True)
+        ttk.Button(bottom, text="Vérifier SHA-256", command=self._campaign_verify).pack(side="right", padx=4)
+        ttk.Button(bottom, text="Voir la campagne", command=self._campaign_open).pack(side="right", padx=4)
+        ttk.Button(bottom, text="Rafraîchir", command=self._campaign_refresh).pack(side="right", padx=4)
+        self._campaign_refresh()
+
+    def _campaign_folder(self) -> None:
+        from koa_audit import campaigns
+        folder=campaigns.root_path()
+        folder.mkdir(parents=True, exist_ok=True)
+        self._open_file(folder)
+
+    def _campaign_open_collections(self) -> None:
+        from koa_audit import campaigns
+        folder=campaigns.root_path().parent/"evidence_runs"
+        folder.mkdir(parents=True, exist_ok=True)
+        self._open_file(folder)
+
+    def _campaign_cancel_measure(self) -> None:
+        if self.campaign_busy:
+            self.campaign_collection_cancel.set()
+            self.campaign_detail.set("Annulation demandée : arrêt après la mesure en cours (outil limité en temps).")
+
+    def _campaign_choose_clone(self) -> None:
+        chosen=filedialog.askdirectory(title="Sélectionner la copie locale exacte du dépôt",initialdir=self.local_root.get())
+        if chosen:
+            self.campaign_source.set(chosen)
+
+    def _campaign_measure_one(self) -> None:
+        folder=Path(self.campaign_source.get().strip())
+        if not folder.is_dir():
+            messagebox.showinfo("Choisir le clone", "Sélectionne d'abord un dossier Git local à mesurer.")
+            return
+        self._campaign_collect([(self.campaign_repo.get(),folder)])
+
+    def _campaign_measure_all(self) -> None:
+        from koa_audit import campaigns, profiles
+        path=Path(self.campaign_audit.get().strip())
+        if not path.is_file():
+            messagebox.showinfo("Rapport local requis", "Choisis un audit.json existant contenant les emplacements des copies locales.")
+            return
+        try:
+            paths=campaigns._source_lookup(campaigns._read_json(path))
+        except (OSError,ValueError,TypeError) as error:
+            messagebox.showerror("Rapport illisible",str(error)); return
+        inventory=profiles.inventory(ROOT)
+        selected=[(repo,paths[repo.casefold()]) for repo in inventory
+                  if repo.casefold() in paths and paths[repo.casefold()].is_dir()]
+        if not selected:
+            messagebox.showinfo("Aucune copie accessible","Le rapport ne fournit aucun chemin Git local actuellement accessible.")
+            return
+        self._campaign_collect(selected)
+
+    def _campaign_collect(self, selected: list[tuple[str,Path]]) -> None:
+        if self.campaign_busy or self._running:
+            messagebox.showinfo("Collecte occupée","Une autre opération est en cours."); return
+        optional=self.campaign_run_tools.get()
+        if not messagebox.askyesno("Mesure d'ingénierie locale",
+                f"Mesurer {len(selected)} copie(s) avec Git"+(" + scc/Lizard/Universal Ctags (si installés)" if optional else "")+" ?\n\n"
+                "Lecture seule : aucun test, aucun code du projet exécuté, aucun réseau. "
+                "Les rapports privés seront joints à la prochaine campagne.\n"
+                "Toute origine GitHub ne correspondant pas à l'inventaire sera ignorée."):
+            return
+        self.campaign_busy=True
+        self.campaign_collection_cancel.clear()
+        self.campaign_create_button.configure(state="disabled")
+        self.campaign_detail.set(f"Mesure en cours : {len(selected)} copie(s)…")
+        def work():
+            import uuid
+            from koa_audit import evidence_collector, campaigns
+            saved=[]; skipped=[]
+            folder=campaigns.root_path().parent/"evidence_runs"
+            for i,(repo,source) in enumerate(selected,1):
+                if self.campaign_collection_cancel.is_set():
+                    break
+                try:
+                    report=evidence_collector.collect(source,repo,static_tools=optional)
+                    name=repo.split("/",1)[-1]
+                    target=folder/(datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')+"-"+name+"-"+uuid.uuid4().hex[:8]+".json")
+                    saved.append((repo,evidence_collector.write_report(report,target)))
+                except (OSError, ValueError, TypeError, KeyError) as error:
+                    skipped.append(f"{repo} : {str(error)[:60]}")
+                self._events.put(("campaign-measuring",f"{i}/{len(selected)} dépôts examinés · {len(saved)} rapport(s) généré(s)"))
+            self._events.put(("campaign-measured",saved,skipped))
+        threading.Thread(target=work,daemon=True,name="koa-static-collector").start()
+
+    def _campaign_attach(self) -> None:
+        path = filedialog.askopenfilename(title="Choisir une preuve à figer dans la prochaine campagne",
+                    filetypes=[("Rapport / preuve", "*.json *.xml *.sarif *.md *.txt *.pdf *.html"), ("Tous", "*.*")])
+        if not path:
+            return
+        repo=self.campaign_repo.get()
+        if not messagebox.askyesno("Inclure une preuve privée ?",
+                "Ce fichier sera COPIÉ dans le ZIP privé de la prochaine campagne. Il peut contenir des informations sensibles.\n\n"
+                f"Dépôt : {repo}\nFichier : {Path(path).name}\n\nConfirmer son inclusion ?"):
+            return
+        self.campaign_attached.setdefault(repo, []).append(Path(path))
+        total=sum(map(len,self.campaign_attached.values()))
+        self.campaign_detail.set(f"{total} preuve(s) ajoutée(s) pour la prochaine campagne (non publiées).")
+
+    def _campaign_create(self) -> None:
+        if self.campaign_busy or self._running:
+            messagebox.showinfo("Opération en cours", "Termine d'abord l'opération actuelle.")
+            return
+        title=self.campaign_title.get().strip()
+        raw=self.campaign_audit.get().strip()
+        report=Path(raw).expanduser() if raw and Path(raw).expanduser().is_file() else None
+        if raw and report is None:
+            if not messagebox.askyesno("Rapport absent", "Le fichier audit.json indiqué est introuvable.\n\nCréer une campagne sans audit historique ?"):
+                return
+        attachment_count=sum(len(v) for v in self.campaign_attached.values())
+        if not messagebox.askyesno("Geler une campagne",
+                f"Créer une capture privée datée pour les 49 dépôts ?\n\n"
+                f"Rapport historique : {'oui' if report else 'non'}\n"
+                f"Pièces jointes explicites : {attachment_count}\n\n"
+                "Les certifications ne seront pas calculées automatiquement.\n"
+                "Aucun dépôt Git ni GitHub ne sera modifié."):
+            return
+        self.campaign_busy = True
+        self.campaign_create_button.configure(state="disabled")
+        self.campaign_detail.set("Création de la campagne (lecture seule)…")
+        extras={k:list(v) for k,v in self.campaign_attached.items()}
+        def work():
+            try:
+                from koa_audit import campaigns
+                dest=campaigns.create_campaign(ROOT,title,report,extra_proofs=extras,
+                    kristal_folder=Path(self.kristal_root.get().strip()).expanduser())
+                self._events.put(("campaign-created",str(dest)))
+            except Exception as error:
+                self._events.put(("campaign-failed",f"{type(error).__name__}: {str(error)[:250]}"))
+        threading.Thread(target=work,daemon=True,name="koa-campaign-capture").start()
+
+    def _campaign_refresh(self) -> None:
+        from koa_audit import campaigns
+        old=self._campaign_selected()
+        self.campaign_tree.delete(*self.campaign_tree.get_children())
+        for entry in campaigns.list_campaigns():
+            self.campaign_tree.insert("", "end", iid=entry['id'], values=(entry['title'], entry['frozen_at'],
+                                                  entry['repositories'],entry['integrity']))
+        if old and self.campaign_tree.exists(old):
+            self.campaign_tree.selection_set(old)
+        self.campaign_detail.set(f"{len(self.campaign_tree.get_children())} campagne(s) locales")
+
+    def _campaign_selected(self) -> str | None:
+        selection=self.campaign_tree.selection()
+        return selection[0] if selection else None
+
+    def _campaign_select(self) -> None:
+        key=self._campaign_selected()
+        if not key:
+            return
+        self.campaign_detail.set("Campagne "+key+" · double-clic pour voir les preuves et versions GitHub")
+
+    def _campaign_verify(self) -> None:
+        from koa_audit import campaigns
+        cid=self._campaign_selected()
+        if cid is None:
+            messagebox.showinfo("Campagne", "Sélectionne d'abord une campagne dans la liste.")
+            return
+        try:
+            data=campaigns.read_campaign(cid)
+            messagebox.showinfo("Intégrité vérifiée",f"Empreinte ZIP et preuves vérifiées.\n\n{data['title']}\n{data['frozen_at']}")
+        except (OSError, ValueError, zipfile.BadZipFile) as error:
+            messagebox.showerror("Intégrité de la campagne",str(error))
+
+    def _campaign_open(self) -> None:
+        cid=self._campaign_selected()
+        if cid is None:
+            messagebox.showinfo("Campagnes", "Sélectionne d'abord une campagne.")
+            return
+        try:
+            from koa_audit import campaigns
+            campaigns.read_campaign(cid)
+            server=self._ensure_preview_server()
+            webbrowser.open(f"http://127.0.0.1:{server.server_port}/local/campaigns/{cid}")
+        except (OSError, ValueError, zipfile.BadZipFile) as error:
+            messagebox.showerror("Campagne indisponible",str(error))
 
     def _build_certification_board(self, tab: ttk.Frame) -> None:
         from koa_audit import qualification
@@ -876,7 +1158,7 @@ class AuditLauncher:
             kristal_source.save_source_root(folder)
             if self._preview_server is not None:
                 self._preview_server.kristal_source = folder
-            self.kristal_status.set(f"Kristal chargé : {view['matched']}/49 dépôts reconnus · {view['mapped_components']} composants liés · lecture seule")
+            self.kristal_status.set(f"Kristal chargé : {view['matched']}/49 dépôts · {view['explicit_repositories']} liens explicites · {view['candidate_repositories']} propositions · {view['unlinked_repositories']} sans suggestion")
             return True
         except (OSError, ValueError, TypeError, KeyError) as error:
             self.kristal_status.set("Source Kristal indisponible : vérifie le dossier sélectionné")
@@ -885,30 +1167,27 @@ class AuditLauncher:
                                    "Tu peux tout de même consulter la carte intégrée.")
             return False
 
+    def _ensure_preview_server(self) -> http.server.ThreadingHTTPServer:
+        dashboard_dir = ROOT / "docs"
+        if not (dashboard_dir / "index.html").is_file():
+            raise FileNotFoundError("Tableau de bord absent : décompresser le ZIP complet.")
+        if self._preview_server is None:
+            handler = functools.partial(_NoConsolePreviewHandler, directory=str(dashboard_dir))
+            server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+            server.daemon_threads = True
+            threading.Thread(target=server.serve_forever, daemon=True,
+                             name="koa-dashboard-preview").start()
+            self._preview_server = server
+        self._preview_server.kristal_source = Path(self.kristal_root.get().strip()).expanduser()
+        return self._preview_server
+
     def _preview_dashboard(self) -> None:
         try:
-            dashboard_dir = ROOT / "docs"
-            # Rebuild only allowlisted public profile pages from existing snapshots;
-            # never rescan a repository and never publish local qualification state.
+            # Rebuild only allowlisted public data, not local campaign evidence.
             from koa_audit.ecosystem import build_public_atlas
-            build_public_atlas(ROOT, dashboard_dir)
-            if not (dashboard_dir / "index.html").is_file():
-                raise FileNotFoundError(
-                    "Le tableau de bord n'est pas dans le dossier docs/. "
-                    "Décompressez le ZIP complet avant de lancer l'application."
-                )
-            if self._preview_server is None:
-                handler = functools.partial(_NoConsolePreviewHandler,
-                                            directory=str(dashboard_dir))
-                server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
-                server.daemon_threads = True
-                threading.Thread(target=server.serve_forever, daemon=True,
-                                 name="koa-dashboard-preview").start()
-                self._preview_server = server
-            # Source is read by a loopback API only; never written into docs/.
-            self._preview_server.kristal_source = Path(self.kristal_root.get().strip()).expanduser()
-            # Loopback only: nothing is sent to GitHub or to a remote server.
-            webbrowser.open(f"http://127.0.0.1:{self._preview_server.server_port}/")
+            build_public_atlas(ROOT, ROOT / "docs")
+            server = self._ensure_preview_server()
+            webbrowser.open(f"http://127.0.0.1:{server.server_port}/")
         except (OSError, RuntimeError) as error:
             diagnostic_log(error)
             messagebox.showerror("Aperçu indisponible", str(error))
@@ -1115,6 +1394,37 @@ class AuditLauncher:
                 elif event[0] == "error":
                     self._log(event[1])
                     self._finish(2)
+                elif event[0] == "campaign-measuring":
+                    self.campaign_detail.set(event[1])
+                elif event[0] == "campaign-measured":
+                    self.campaign_busy=False
+                    self.campaign_create_button.configure(state="normal")
+                    saved, skipped=event[1],event[2]
+                    cancelled=self.campaign_collection_cancel.is_set()
+                    self.campaign_collection_cancel.clear()
+                    skipped_attach=0
+                    for repo,path in saved:
+                        if len(self.campaign_attached.get(repo, [])) < 15:
+                            self.campaign_attached.setdefault(repo,[]).append(path)
+                        else:
+                            skipped_attach+=1
+                    self.campaign_detail.set(f"{len(saved)-skipped_attach} rapport(s) joints · {len(skipped)} dépôt(s) ignoré(s) · {skipped_attach} au-delà de la limite de 15 preuves")
+                    messagebox.showinfo("Mesure interrompue" if cancelled else "Mesure terminée",
+                        f"{len(saved)} rapport(s) privés générés; {len(saved)-skipped_attach} joints à la prochaine campagne.\n"
+                        f"{len(skipped)} dépôt(s) ignoré(s) (chemin ou origine Git non confirmés).\n\n"
+                        "Les rapports ne qualifient aucun jalon et restent consultables avant archivage.")
+                elif event[0] in ("campaign-created", "campaign-failed"):
+                    self.campaign_busy=False
+                    self.campaign_create_button.configure(state="normal")
+                    if event[0] == "campaign-created":
+                        self.campaign_attached.clear()
+                        self._campaign_refresh()
+                        self.campaign_detail.set("Campagne figée : " + Path(event[1]).name)
+                        self.status.set("Campagne enregistrée sans modifier GitHub")
+                        messagebox.showinfo("Campagne créée", "Capture enregistrée et empreinte SHA-256 générée.\n\n"+event[1])
+                    else:
+                        self.campaign_detail.set("Erreur : " + event[1])
+                        messagebox.showerror("Création impossible",event[1])
         except queue.Empty:
             pass
         self.root.after(150, self._poll)

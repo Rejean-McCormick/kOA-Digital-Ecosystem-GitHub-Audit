@@ -50,8 +50,10 @@ class DashboardPreviewTest(unittest.TestCase):
         import inspect
         method = self.module["AuditLauncher"]._preview_dashboard
         source = inspect.getsource(method)
-        self.assertIn("_NoConsolePreviewHandler", source)
-        self.assertIn("127.0.0.1", source)
+        helper = inspect.getsource(self.module["AuditLauncher"]._ensure_preview_server)
+        self.assertIn("_ensure_preview_server", source)
+        self.assertIn("_NoConsolePreviewHandler", helper)
+        self.assertIn("127.0.0.1", helper)
 
 
 if __name__ == "__main__":

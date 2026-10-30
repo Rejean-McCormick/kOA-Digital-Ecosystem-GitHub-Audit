@@ -136,8 +136,9 @@
         const r=repoByName(item.repo);if(!r)continue;
         const button=el('button','kristal-repo'+(item.repo===activeRepo?' selected':''));button.type='button';button.dataset.repo=item.repo;
         button.append(el('strong','',r.name));
-        if(item.components?.length)button.append(el('small','',item.components.length+' composant(s) relié(s)'));
-        else button.append(el('small','',humanRole(item.role)||'Registre canonique'));
+        if(item.components?.length)button.append(el('small','',item.components.length+' association(s) explicite(s)'));
+        else if(item.candidates?.length)button.append(el('small','suggestion-label',item.candidates.length+' proposition(s) à confirmer'));
+        else button.append(el('small','',humanRole(item.role)||'Aucune association proposée'));
         button.addEventListener('click',()=>{detailTab='kristal';selectRepo(item.repo,true,true);});itemsBox.append(button);
       }
       card.append(itemsBox);holder.append(card);
@@ -155,12 +156,38 @@
     }
     section.append(el('p','profile-copy',item.description||'Aucune description canonique fournie.'));
     const grid=el('div','detail-grid');
-    grid.append(metricCell('Rôle du catalogue',humanRole(item.role)),metricCell('Cartographie',humanRole(item.membership)),metricCell('Composants explicitement associés',count(item.components?.length||0)));
+    grid.append(metricCell('Rôle du catalogue',humanRole(item.role)),metricCell('Cartographie',humanRole(item.membership)),metricCell('Associations explicites',count(item.components?.length||0)),metricCell('Associations proposées',count(item.candidates?.length||0)));
     section.append(grid);
+    if(item.components?.length){section.append(el('h4','',`Composants liés explicitement (${item.components.length})`));}
     for(const comp of item.components||[]){
       const card=el('div','kristal-card');card.append(el('h4','',comp.label),el('p','',comp.description||comp.kind||'Composant référencé'));
-      card.append(el('small','kristal-status-note','Assertion : '+(comp.evidence==='claimed'?'déclarée, à distinguer d’une preuve':comp.evidence==='sourced'?'sourcée':'non classée')));
+      card.append(el('small','kristal-status-note','Lien par repository_ref · assertion '+(comp.evidence==='claimed'?'déclarée':comp.evidence==='sourced'?'sourcée':'non classée')+' · pas une intégration certifiée'));
       section.append(card);
+    }
+    if(item.candidates?.length){
+      section.append(el('h4','',`Associations proposées à confirmer (${item.candidates.length})`));
+      for(const candidate of item.candidates){
+        const card=el('div','kristal-card candidate-card');
+        card.append(el('h4','',candidate.label||candidate.id));
+        card.append(el('p','','Identifiant du composant : '+candidate.id));
+        const reason=candidate.reason==='EXACT_NAME_OR_CANONICAL_ID'?'Nom ou identifiant canonique concordant':'Source GitHub spécifique commune';
+        card.append(el('small','kristal-status-note','Suggestion non validée · '+reason+' · '+count(candidate.source_count||0)+' référence(s) de catalogue'));
+        section.append(card);
+      }
+      if(item.candidate_relations?.length){
+        const details=el('details','candidate-relations');
+        const summary=el('summary','','Voir '+count(item.candidate_relations.length)+' relations sémantiques liées aux candidats (non validées)');
+        details.append(summary);
+        for(const rel of item.candidate_relations){
+          const line=el('div','kristal-card candidate-card');
+          line.append(el('p','',`${rel.subject} → ${humanPredicate(rel.predicate)} → ${rel.object}`));
+          line.append(el('small','kristal-status-note','Relation de catalogue '+(rel.evidence==='sourced'?'sourcée':'déclarée')+' · attribution du composant au dépôt non validée'));
+          details.append(line);
+        }
+        section.append(details);
+      }
+    }else if(!item.components?.length){
+      section.append(el('p','profile-copy','Aucune association proposée. Cela ne dit rien de la qualité ou de la maturité du dépôt.'));
     }
     if(item.relations?.length){
       section.append(el('h4','',`Relations sémantiques associées (${item.relations.length})`));
@@ -273,14 +300,18 @@
       ]);
       if(newAtlas.format!=='koa_ecosystem.atlas.v1'||!Array.isArray(newAtlas.repositories)||newAtlas.repositories.length!==49){throw new Error('Inventaire invalide');}
       atlas=newAtlas;localAudit=audit;qualification=local?.format==='koa_qualification.public_status.v1'?local:null;
+      $('historique-campagnes').hidden = !qualification;
       kristal=source?.format==='koa_audit.kristal_local.v1'&&source.state==='ready'?source:null;
       $('kristal-banner').classList.toggle('missing',!kristal);
       if(kristal){
-        $('kristal-banner').textContent=`Kristal local connecté · ${kristal.matched}/${kristal.inventory} dépôts rapprochés · ${kristal.mapped_components} composants explicitement liés · ${kristal.catalog_relations} assertions dans la source`;
+        $('kristal-banner').textContent=`Kristal local · ${kristal.matched}/${kristal.inventory} dépôts identifiés · ${kristal.explicit_repositories} liens explicites · ${kristal.candidate_repositories} suggestions à confirmer · ${kristal.unlinked_repositories} sans proposition` ;
+        const displayCount=n=>Number.isInteger(n)?count(n):'—';
+        $('kristal-catalog-note').textContent=`Catalogues : ${count(kristal.catalog_components)} composants · ${displayCount(kristal.catalog_contracts)} contrats · ${displayCount(kristal.catalog_capabilities)} capacités · ${count(kristal.catalog_relations)} relations sémantiques. Présence documentaire, pas qualification.`;
         $('kristal-source-title').textContent='Kristal kOA Ecosystem · local';
         $('kristal-source-note').textContent='Lecture en direct des catalogues canoniques. Aucun changement ni publication automatique.';
       }else{
         $('kristal-banner').textContent=String.raw`Kristal local indisponible · la carte intégrée reste accessible. Configure C:\mycode\Kristal\locals\Kristal-kOA-Ecosystem dans l’application Windows.`;
+        $('kristal-catalog-note').textContent='La carte intégrée et les Engineering Profiles restent consultables hors ligne. Aucune certification n’est déduite.';
         $('kristal-source-title').textContent='Carte publique kOA';
         $('kristal-source-note').textContent='Pour consulter Kristal en direct, ouvre le centre depuis le launcher Windows.';
       }

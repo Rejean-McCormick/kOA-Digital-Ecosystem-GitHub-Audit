@@ -53,6 +53,40 @@ class KristalAdapterTest(unittest.TestCase):
                 self.assertNotIn(x,raw)
             self.assertEqual(before,{f:f.read_bytes() for f in (p/'knowledge-base/sources').glob('*.json')})
 
+    def test_diagnostic_candidates_are_not_promoted_to_explicit_links(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp);fixture(p)
+            src=p/'knowledge-base/sources'
+            repos=json.loads((src/'repositories.json').read_text())
+            repos['repositories'][1]['source_refs']=['src:github-orgo']
+            (src/'repositories.json').write_text(json.dumps(repos))
+            comps=json.loads((src/'components.json').read_text())
+            comps['components'].extend([
+                {'id':'koa:orgo','label':'Orgo','kind':'workflow_system',
+                 'source_refs':['src:github-orgo'],'assertion_status':'sourced'},
+                {'id':'koa:orgo-helper','label':'Internal helper','source_refs':['src:github-orgo'],
+                 'assertion_status':'claimed'}])
+            (src/'components.json').write_text(json.dumps(comps))
+            relations=json.loads((src/'relations.json').read_text())
+            relations['relations'].append({'subject':'koa:orgo','predicate':'koa:connects_to',
+                                          'object':'koa:akor','assertion_status':'sourced'})
+            (src/'relations.json').write_text(json.dumps(relations))
+            before={f.name:f.read_bytes() for f in src.glob('*.json')}
+            result=kristal_source.build_local_kristal_view(p,INVENTORY)
+            self.assertEqual(result['explicit_repositories'],1)
+            self.assertEqual(result['candidate_repositories'],1)
+            self.assertEqual(result['unlinked_repositories'],0)  # Ekole isn't in catalog
+            orgo=result['repositories'][1]
+            self.assertEqual(orgo['association'],'candidate')
+            self.assertEqual(orgo['components'],[])
+            self.assertEqual({c['id'] for c in orgo['candidates']},{'koa:orgo','koa:orgo-helper'})
+            self.assertTrue(all(c['status']=='CANDIDATE_NOT_VALIDATED' for c in orgo['candidates']))
+            self.assertTrue(orgo['candidate_relations'])
+            self.assertFalse(orgo['relations'])
+            self.assertNotIn('src:github-orgo',json.dumps(result))
+            self.assertNotIn('source_refs',json.dumps(result))
+            self.assertEqual(before,{f.name:f.read_bytes() for f in src.glob('*.json')})
+
     def test_missing_catalog_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(FileNotFoundError):
