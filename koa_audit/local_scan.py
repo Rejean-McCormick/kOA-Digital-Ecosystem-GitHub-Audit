@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .inventory import bundled_inventory
+from .windows_process import hidden_console_kwargs
 from .report import safe_csv
 from .python_tls import tls_verification_disabled_lines
 
@@ -53,7 +54,8 @@ def _git_info(folder: Path) -> dict:
             env = os.environ.copy()
             env["GIT_TERMINAL_PROMPT"] = "0"
             p = subprocess.run(["git", "-C", str(folder), *arguments], capture_output=True,
-                               text=True, errors="replace", timeout=4, env=env, check=False)
+                               text=True, errors="replace", timeout=4, env=env, check=False,
+                               **hidden_console_kwargs())
         except (OSError, subprocess.TimeoutExpired):
             continue
         if p.returncode != 0:

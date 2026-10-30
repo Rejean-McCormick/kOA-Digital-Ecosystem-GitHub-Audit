@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Callable
 
 from .campaigns import _git_observation, _hash, _dump, _origin_matches, _git_cmd
+from .windows_process import hidden_console_kwargs
 
 MAX_TRACKED = 25000
 MAX_TOOL_BYTES = 8_000_000
@@ -38,7 +39,7 @@ def _run(argv: list[str], timeout: int) -> dict:
             p = subprocess.run(argv, stdout=output, stderr=errors, timeout=timeout,
                  check=False, stdin=subprocess.DEVNULL,
                  env={**os.environ, 'GIT_TERMINAL_PROMPT':'0', 'GIT_OPTIONAL_LOCKS':'0',
-                      'NO_COLOR':'1'}, shell=False)
+                      'NO_COLOR':'1'}, shell=False, **hidden_console_kwargs())
         except subprocess.TimeoutExpired:
             return {'status':'timeout','timeout_seconds':timeout}
         except OSError:

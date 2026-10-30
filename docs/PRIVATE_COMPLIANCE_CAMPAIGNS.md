@@ -107,3 +107,9 @@ The campaign listing uses an in-process cache keyed by ZIP and checksum modifica
 
 **Not automatic:** executing potentially state-changing CI/test suites; verifying that the distant commit remains downloadable; long-term secure backup or digitally signing archives; proving production deployment. For those, explicitly run tests in isolation, attach the results and preserve an independently backed-up source archive or protected release if retention is important.
 
+
+## v0.11.1 — Quiet Windows progress
+
+The Tkinter launcher shows stable, determinate progress for campaign collection and creation. Repository collection uses actual processed/selected counts; campaign creation advances for each frozen repository, explicit proof integration, archive construction, internal validation, and atomic publication. The bar reaches completion only after post-publication verification. Long operations without an evidence-based unit of work show a static in-progress state, not a fake percentage or flashing indicator.
+
+All application-managed child processes now use Windows-specific hidden-console creation flags (`CREATE_NO_WINDOW` and `STARTF_USESHOWWINDOW` / `SW_HIDE`), while retaining explicit argument vectors, no shell, timeouts and the existing read-only boundaries. Native authentication dialogs and user-triggered file selectors are unaffected.

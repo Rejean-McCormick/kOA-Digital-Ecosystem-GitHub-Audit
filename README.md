@@ -8,6 +8,12 @@
   **Version 0.11.0 · Verified evidence campaigns, optional local static collection, clickable proof files, dated comparisons**
 </div>
 
+## Non-flashing Windows progress — v0.11.1
+
+The Windows `.pyw` interface now uses steady, **determinate progress bars** instead of animated indicators. In **Campagnes datées**, batch collection displays completed repositories and a percentage; immutable campaign creation shows the number of repository snapshots processed and the verification/publishing phases. A successful capture ends at 100% only after its ZIP and checksums have been verified.
+
+Subprocess invocations for `git`, optional `scc`/Lizard/Ctags, dashboard publication, and CLI work use Windows `CREATE_NO_WINDOW` plus hidden startup settings, preventing transient command-window flashes. Confirmation prompts and external Git credential-manager UI may still appear when a user intentionally requests those actions. Existing evidence, read-only behavior, and public/private data separation are unchanged.
+
 ## Reliable evidence campaigns and collection — v0.11.0
 
 The **Campagnes datées** tab is now both a private archive and a controlled evidence-collection workstation. It remains fully independent from GitHub repository history and public GitHub Pages. The app does not publish campaign files or private review decisions.

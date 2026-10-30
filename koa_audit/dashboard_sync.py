@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Callable
 
 from .dashboard import _sanitize_previous, publish_reports, load_published, FORMAT, MAX_HISTORY
+from .windows_process import hidden_console_kwargs
 
 AUDIT_REPO = "Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit"
 GITHUB_REMOTE = "https://github.com/" + AUDIT_REPO + ".git"
@@ -51,7 +52,8 @@ def _run_git(git: str, *args: str, cwd: Path | None = None) -> str:
     try:
         proc = subprocess.run(cmd, cwd=cwd, text=True, capture_output=True,
                               encoding="utf-8", errors="replace", timeout=180,
-                              env={**os.environ, "GIT_TERMINAL_PROMPT": "0"})
+                              env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
+                              **hidden_console_kwargs())
     except FileNotFoundError as e:
         raise RuntimeError("Git n'est pas installé ou n'est pas dans PATH") from e
     except subprocess.TimeoutExpired as e:

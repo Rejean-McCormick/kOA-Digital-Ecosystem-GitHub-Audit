@@ -311,6 +311,7 @@ class AuditLauncher:
         self.campaign_source = StringVar(value="")
         self.campaign_run_tools = BooleanVar(value=False)
         self.campaign_collection_cancel = threading.Event()
+        self.campaign_progress_label = StringVar(value="Prêt · aucune opération en cours")
         self.profile_repo = StringVar(value="Rejean-McCormick/Konnaxion")
         self.profile_kind = StringVar(value="ENGINEERING_PROFILE.md")
         self.profile_family = StringVar(value="Tous")
@@ -358,6 +359,9 @@ class AuditLauncher:
         style.configure("TButton", font=("Segoe UI", 10), padding=(10, 7))
         style.configure("Primary.TButton", foreground="white", background=ACCENT)
         style.map("Primary.TButton", background=[("active", "#15504d"), ("disabled", "#8aa8bb")])
+        style.configure("Calm.Horizontal.TProgressbar", troughcolor="#dce9e7",
+                        background=ACCENT, bordercolor="#dce9e7", lightcolor=ACCENT,
+                        darkcolor=ACCENT, thickness=15)
         style.configure("TNotebook", background=BG)
         style.configure("TNotebook.Tab", font=("Segoe UI", 10), padding=(14, 9))
 
@@ -448,7 +452,8 @@ class AuditLauncher:
         self._action_button(controls, "Lancer l'audit OBSERVE", self._run_audit, primary=True).pack(side="left")
         self.cancel_button = ttk.Button(controls, text="Annuler", command=self._cancel, state="disabled")
         self.cancel_button.pack(side="right")
-        self.progress = ttk.Progressbar(tab, mode="indeterminate")
+        self.progress = ttk.Progressbar(tab, mode="determinate", maximum=100, value=0,
+                                        style="Calm.Horizontal.TProgressbar")
         self.progress.grid(row=2, column=0, sticky="ew", pady=(3, 8))
         ttk.Label(tab, text="Journal d'exécution (aucune clé API n'est affichée)",
                   style="Muted.TLabel").grid(row=3, column=0, sticky="w", pady=(2, 5))
@@ -521,7 +526,7 @@ class AuditLauncher:
     def _build_campaigns(self, tab: ttk.Frame) -> None:
         from koa_audit import profiles, campaigns
         tab.columnconfigure(0, weight=1)
-        tab.rowconfigure(2, weight=1)
+        tab.rowconfigure(3, weight=1)
         group = ttk.LabelFrame(tab, text="Créer une capture datée de conformité — preuves gelées sur ton PC", padding=14)
         group.grid(row=0, column=0, sticky="ew")
         group.columnconfigure(1, weight=1)
@@ -549,13 +554,22 @@ class AuditLauncher:
         self.campaign_create_button.pack(side="left", padx=(0, 8))
         ttk.Button(controls2, text="Ouvrir le dossier des campagnes",
                    command=self._campaign_folder).pack(side="left")
+        progress_row = ttk.Frame(tab)
+        progress_row.grid(row=1, column=0, sticky="ew", pady=(5, 6))
+        progress_row.columnconfigure(0, weight=1)
+        self.campaign_progress = ttk.Progressbar(progress_row, mode="determinate",
+                                                maximum=100, value=0,
+                                                style="Calm.Horizontal.TProgressbar")
+        self.campaign_progress.grid(row=0, column=0, sticky="ew")
+        ttk.Label(progress_row, textvariable=self.campaign_progress_label,
+                  style="Muted.TLabel").grid(row=1, column=0, sticky="w", pady=(3, 0))
         ttk.Label(tab, text="Les collectes utilisent Git en lecture seule et éventuellement scc/Lizard/Universal Ctags si tu les autorises. "
                   "Elles créent un résumé privé, sans code source ni chemins de fichiers, que tu peux joindre à la campagne. "
                   "Aucun test, aucun script du dépôt et aucune action GitHub n'est exécuté. "
                   "Les liens Git et les preuves indépendantes ne constituent pas une certification.",
-                  style="Muted.TLabel", wraplength=990, justify="left").grid(row=1, column=0, sticky="ew", pady=10)
+                  style="Muted.TLabel", wraplength=990, justify="left").grid(row=2, column=0, sticky="ew", pady=10)
         listing = ttk.LabelFrame(tab, text="Historique des campagnes (clic = détails · double-clic = navigateur)", padding=9)
-        listing.grid(row=2, column=0, sticky="nsew")
+        listing.grid(row=3, column=0, sticky="nsew")
         listing.columnconfigure(0, weight=1)
         listing.rowconfigure(0, weight=1)
         self.campaign_tree = ttk.Treeview(listing, columns=("name", "date", "count", "integrity"),
@@ -571,7 +585,7 @@ class AuditLauncher:
         self.campaign_tree.bind("<<TreeviewSelect>>", lambda _e: self._campaign_select())
         self.campaign_tree.bind("<Double-1>", lambda _e: self._campaign_open())
         bottom = ttk.Frame(tab)
-        bottom.grid(row=3, column=0, sticky="ew", pady=(7, 0))
+        bottom.grid(row=4, column=0, sticky="ew", pady=(7, 0))
         ttk.Label(bottom, textvariable=self.campaign_detail, style="Muted.TLabel").pack(side="left", fill="x", expand=True)
         ttk.Button(bottom, text="Vérifier SHA-256", command=self._campaign_verify).pack(side="right", padx=4)
         ttk.Button(bottom, text="Voir la campagne", command=self._campaign_open).pack(side="right", padx=4)
@@ -638,6 +652,8 @@ class AuditLauncher:
         self.campaign_busy=True
         self.campaign_collection_cancel.clear()
         self.campaign_create_button.configure(state="disabled")
+        self.campaign_progress.configure(maximum=len(selected), value=0)
+        self.campaign_progress_label.set(f"Mesure : 0/{len(selected)} dépôts · 0 %")
         self.campaign_detail.set(f"Mesure en cours : {len(selected)} copie(s)…")
         def work():
             import uuid
@@ -654,7 +670,7 @@ class AuditLauncher:
                     saved.append((repo,evidence_collector.write_report(report,target)))
                 except (OSError, ValueError, TypeError, KeyError) as error:
                     skipped.append(f"{repo} : {str(error)[:60]}")
-                self._events.put(("campaign-measuring",f"{i}/{len(selected)} dépôts examinés · {len(saved)} rapport(s) généré(s)"))
+                self._events.put(("campaign-measuring", i, len(selected), len(saved)))
             self._events.put(("campaign-measured",saved,skipped))
         threading.Thread(target=work,daemon=True,name="koa-static-collector").start()
 
@@ -692,13 +708,18 @@ class AuditLauncher:
             return
         self.campaign_busy = True
         self.campaign_create_button.configure(state="disabled")
+        from koa_audit import profiles
+        self.campaign_progress.configure(maximum=len(profiles.inventory(ROOT)) + 4, value=0)
+        self.campaign_progress_label.set("Création : préparation des données…")
         self.campaign_detail.set("Création de la campagne (lecture seule)…")
         extras={k:list(v) for k,v in self.campaign_attached.items()}
         def work():
             try:
                 from koa_audit import campaigns
                 dest=campaigns.create_campaign(ROOT,title,report,extra_proofs=extras,
-                    kristal_folder=Path(self.kristal_root.get().strip()).expanduser())
+                    kristal_folder=Path(self.kristal_root.get().strip()).expanduser(),
+                    progress=lambda done,total,caption: self._events.put(
+                        ("campaign-progress",done,total,caption)))
                 self._events.put(("campaign-created",str(dest)))
             except Exception as error:
                 self._events.put(("campaign-failed",f"{type(error).__name__}: {str(error)[:250]}"))
@@ -1328,7 +1349,9 @@ class AuditLauncher:
         for button in self._action_buttons:
             button.configure(state="disabled")
         self.cancel_button.configure(state="normal")
-        self.progress.start(12)
+        # No flashing/animated LED indicator: wait with a stable bar until
+        # the CLI reports an actual measurable number of completed operations.
+        self.progress.configure(value=0)
         self._log("\n" + "─" * 54)
         self._log(f"▶ {label}")
         self._log("Publication d'agrégats vers le seul dépôt d'audit." if label == "Publication du tableau de bord"
@@ -1337,14 +1360,14 @@ class AuditLauncher:
         thread.start()
 
     def _worker(self, args: list[str]) -> None:
-        flags = getattr(subprocess, "CREATE_NO_WINDOW", 0) if os.name == "nt" else 0
+        from koa_audit.windows_process import hidden_console_kwargs
         try:
             # Never invoke a shell or interpolate a user-supplied command line.
             proc = subprocess.Popen(
                 [child_python(), "-u", *args], cwd=str(ROOT),
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                 stdin=subprocess.DEVNULL, text=True, encoding="utf-8",
-                errors="replace", bufsize=1, creationflags=flags,
+                errors="replace", bufsize=1, **hidden_console_kwargs(),
             )
             self._process = proc
             if self._cancelled and proc.poll() is None:
@@ -1395,13 +1418,26 @@ class AuditLauncher:
                     self._log(event[1])
                     self._finish(2)
                 elif event[0] == "campaign-measuring":
-                    self.campaign_detail.set(event[1])
+                    _, done, total, saved_count = event
+                    self.campaign_progress.configure(maximum=total, value=done)
+                    self.campaign_progress_label.set(
+                        f"Mesure : {done}/{total} dépôts · {round(100 * done / total)} %")
+                    self.campaign_detail.set(
+                        f"{done}/{total} dépôts examinés · {saved_count} rapport(s) généré(s)")
+                elif event[0] == "campaign-progress":
+                    _, done, total, caption = event
+                    self.campaign_progress.configure(maximum=total, value=done)
+                    self.campaign_progress_label.set(
+                        f"Création : {done}/{total} étapes · {caption}")
                 elif event[0] == "campaign-measured":
                     self.campaign_busy=False
                     self.campaign_create_button.configure(state="normal")
                     saved, skipped=event[1],event[2]
                     cancelled=self.campaign_collection_cancel.is_set()
                     self.campaign_collection_cancel.clear()
+                    if cancelled:
+                        self.campaign_progress_label.set(
+                            "Mesure interrompue · progression conservée (sans nouvelle collecte)")
                     skipped_attach=0
                     for repo,path in saved:
                         if len(self.campaign_attached.get(repo, [])) < 15:
@@ -1409,10 +1445,10 @@ class AuditLauncher:
                         else:
                             skipped_attach+=1
                     self.campaign_detail.set(f"{len(saved)-skipped_attach} rapport(s) joints · {len(skipped)} dépôt(s) ignoré(s) · {skipped_attach} au-delà de la limite de 15 preuves")
-                    messagebox.showinfo("Mesure interrompue" if cancelled else "Mesure terminée",
-                        f"{len(saved)} rapport(s) privés générés; {len(saved)-skipped_attach} joints à la prochaine campagne.\n"
-                        f"{len(skipped)} dépôt(s) ignoré(s) (chemin ou origine Git non confirmés).\n\n"
-                        "Les rapports ne qualifient aucun jalon et restent consultables avant archivage.")
+                    if not cancelled:
+                        self.campaign_progress_label.set(
+                            f"Mesure terminée · {len(saved)} rapport(s) généré(s) · "
+                            f"{len(skipped)} ignoré(s)")
                 elif event[0] in ("campaign-created", "campaign-failed"):
                     self.campaign_busy=False
                     self.campaign_create_button.configure(state="normal")
@@ -1421,8 +1457,9 @@ class AuditLauncher:
                         self._campaign_refresh()
                         self.campaign_detail.set("Campagne figée : " + Path(event[1]).name)
                         self.status.set("Campagne enregistrée sans modifier GitHub")
-                        messagebox.showinfo("Campagne créée", "Capture enregistrée et empreinte SHA-256 générée.\n\n"+event[1])
+                        self.campaign_progress_label.set("Campagne créée et intégrité vérifiée · 100 %")
                     else:
+                        self.campaign_progress_label.set("Création interrompue · archive non publiée")
                         self.campaign_detail.set("Erreur : " + event[1])
                         messagebox.showerror("Création impossible",event[1])
         except queue.Empty:
@@ -1433,7 +1470,8 @@ class AuditLauncher:
         if not self._running:
             return
         self._running = False
-        self.progress.stop()
+        # No indeterminate animation. Only mark complete on a successful exit.
+        self.progress.configure(value=100 if exit_code == 0 and not self._cancelled else 0)
         self.cancel_button.configure(state="disabled")
         for button in self._action_buttons:
             button.configure(state="normal")

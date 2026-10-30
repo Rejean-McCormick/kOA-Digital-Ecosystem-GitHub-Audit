@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .local_scan import discover_repositories, _git_info, SECRET_RE, CODE_HEURISTICS
+from .windows_process import hidden_console_kwargs
 from .python_tls import tls_verification_disabled_lines
 
 FORMAT = "koa_audit.local_triage.v1"
@@ -40,7 +41,8 @@ def _git(folder: Path, *args: str) -> bytes | None:
     env["GIT_TERMINAL_PROMPT"] = "0"
     try:
         p = subprocess.run(["git", "-C", str(folder), *args], stdout=subprocess.PIPE,
-                           stderr=subprocess.DEVNULL, env=env, timeout=12, check=False)
+                           stderr=subprocess.DEVNULL, env=env, timeout=12, check=False,
+                           **hidden_console_kwargs())
     except (OSError, subprocess.TimeoutExpired):
         return None
     return p.stdout if p.returncode == 0 else None

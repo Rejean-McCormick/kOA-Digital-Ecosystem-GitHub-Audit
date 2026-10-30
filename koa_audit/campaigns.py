@@ -19,9 +19,10 @@ import zipfile
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from . import profiles, qualification
+from .windows_process import hidden_console_kwargs
 
 FORMAT = "koa_certification.campaign.v1"
 MANIFEST_FORMAT = "koa_certification.manifest.v1"
@@ -87,7 +88,8 @@ def _git_cmd(path: Path, *args: str) -> str | None:
     try:
         p = subprocess.run(["git", "-c", "core.fsmonitor=false", "-C", str(path), *args],
                            capture_output=True, text=True, encoding="utf-8", errors="replace",
-                           timeout=15, env={**os.environ, "GIT_TERMINAL_PROMPT": "0", "GIT_OPTIONAL_LOCKS": "0"})
+                           timeout=15, env={**os.environ, "GIT_TERMINAL_PROMPT": "0", "GIT_OPTIONAL_LOCKS": "0"},
+                           **hidden_console_kwargs())
         if p.returncode != 0:
             return None
         return p.stdout.strip()
@@ -362,7 +364,8 @@ def describe_proof(path: Path, data: bytes) -> dict:
 def create_campaign(project: Path, title: str, audit_file: Path | None = None,
                     *, store: Path | None = None, local_paths: dict[str, Path] | None = None,
                     extra_proofs: dict[str, list[Path]] | None = None,
-                    git_probe: bool = True, kristal_folder: Path | None = None) -> Path:
+                    git_probe: bool = True, kristal_folder: Path | None = None,
+                    progress: Callable[[int, int, str], None] | None = None) -> Path:
     """Freeze a campaign ZIP. Never execute project code or change source repos.
 
     extra_proofs are explicit opt-in evidence files, not recursively discovered.
@@ -385,10 +388,13 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
     assessments = profiles.load_state().get("assessments", {})
     valid_ids = {item["id"] for item in profiles.catalog(project)}
     inventory = profiles.inventory(project)
+    total_steps = len(inventory) + 4
+    if progress:
+        progress(0, total_steps, "Lecture des données et du catalogue Kristal")
     kristal_snapshot, kristal_repos = _kristal_capture(kristal_folder, inventory)
     repos = {}
     documents: dict[str, bytes] = {}
-    for repo in inventory:
+    for processed, repo in enumerate(inventory, 1):
         slug = repo.split("/", 1)[1]
         audit_entry = ((audit_ref or {}).get("repositories") or {}).get(repo.casefold())
         local = (src_paths.get(repo.casefold()) if git_probe else None)
@@ -404,6 +410,10 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
         }
         record["version_alignment"] = version_alignment(record)
         repos[slug] = record
+        if progress:
+            progress(processed, total_steps, f"Fiches conservées : {processed}/{len(inventory)}")
+    if progress:
+        progress(len(inventory), total_steps, "Intégration des preuves complémentaires")
     if extra_proofs:
         for repo_name, paths in extra_proofs.items():
             if repo_name not in inventory:
@@ -449,6 +459,8 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
         if source_shas and all(source_shas) and pinned:
             rec["version_alignment"]["attached_proofs_to_git"] = ("collector_observed_same_head_not_source_attestation"
                 if all(x==pinned for x in source_shas) else "collector_observed_different_head")
+    if progress:
+        progress(len(inventory) + 1, total_steps, "Calcul du manifeste et des empreintes")
     stamp = datetime.now(timezone.utc)
     cid = stamp.strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex[:12]
     captured = {"format": FORMAT, "campaign_id": cid, "title": title,
@@ -478,6 +490,8 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
         with zipfile.ZipFile(tmp, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
             for member, data in sorted(documents.items()):
                 archive.writestr(member, data)
+        if progress:
+            progress(len(inventory) + 2, total_steps, "Archive écrite · vérification en cours")
         if Path(tmp).stat().st_size > MAX_ZIP_BYTES:
             raise ValueError("Archive ZIP trop volumineuse")
         digest = _stream_sha256(Path(tmp))
@@ -491,6 +505,8 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
             f.write(digest + "  " + target.name + "\n")
             f.flush()
             os.fsync(f.fileno())
+        if progress:
+            progress(len(inventory) + 3, total_steps, "Intégrité validée · enregistrement final")
         # The ZIP appears atomically and exclusively; no replacing past captures.
         # The sidecar is staged first and then moved into place.  On failure,
         # clean up the freshly created ZIP, never a prior campaign.
@@ -516,6 +532,8 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
         Path(tmp).unlink(missing_ok=True)
         if staged_checksum:
             Path(staged_checksum).unlink(missing_ok=True)
+    if progress:
+        progress(total_steps, total_steps, "Campagne créée et vérifiée")
     return target
 
 
