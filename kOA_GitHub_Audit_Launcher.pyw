@@ -55,7 +55,7 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
         No free-form evidence, file paths or notes are exported through JSON.
         """
         route = urlsplit(self.path).path
-        if (route not in ("/data/local-qualification.json", "/api/kristal/atlas", "/api/campaigns/summary", "/api/review/summary")
+        if (route not in ("/data/local-qualification.json", "/api/kristal/atlas", "/api/campaigns/summary", "/api/review/summary", "/api/validation/board")
                 and not route.startswith(("/local/engineering/", "/local/campaigns", "/local/review"))):
             return super().do_GET()
         if (self.client_address[0] not in ("127.0.0.1", "::1")
@@ -79,6 +79,10 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
                     }
                 payload = json.dumps({"format": "koa_qualification.public_status.v1", "repositories": result},
                                      ensure_ascii=False).encode("utf-8")
+                kind = "application/json; charset=utf-8"
+            elif route == "/api/validation/board":
+                from koa_audit import validation_board
+                payload = json.dumps(validation_board.build(ROOT), ensure_ascii=False).encode("utf-8")
                 kind = "application/json; charset=utf-8"
             elif route == "/api/review/summary":
                 from koa_audit import evidence_review
@@ -410,34 +414,49 @@ class AuditLauncher:
         ttk.Label(header, text="Carte des 49 dépôts · Engineering Profiles cliquables · qualification par preuve · audit local optionnel",
                   style="Muted.TLabel").pack(anchor="w", pady=(3, 0))
 
+        # Three everyday intentions, and one secondary advanced workspace.
+        # The original tools are retained in nested notebooks; no operation is
+        # reimplemented, and the primary actions have one visible home.
         self.tabs = ttk.Notebook(outer)
         self.tabs.pack(fill="both", expand=True)
-        local_tab = ttk.Frame(self.tabs, padding=14)
-        triage_tab = ttk.Frame(self.tabs, padding=14)
         dashboard_tab = ttk.Frame(self.tabs, padding=14)
-        reports_tab = ttk.Frame(self.tabs, padding=14)
-        profiles_tab = ttk.Frame(self.tabs, padding=14)
-        board_tab = ttk.Frame(self.tabs, padding=14)
         campaigns_tab = ttk.Frame(self.tabs, padding=14)
-        review_tab = ttk.Frame(self.tabs, padding=14)
-        legacy_tab = ttk.Frame(self.tabs, padding=14)
-        audit_tab = ttk.Frame(self.tabs, padding=14)
-        # Dominant journey first: Ecosystem -> application -> profile / evidence.
-        # Advanced audit tools are retained but no longer occupy the initial view.
-        self.tabs.add(dashboard_tab, text="  Écosystème  ")
-        self.tabs.add(board_tab, text="  49 dépôts  ")
-        self.tabs.add(review_tab, text="  Preuves 245  ")
-        self.tabs.add(campaigns_tab, text="  Campagnes  ")
-        self.tabs.add(profiles_tab, text="  Certification  ")
-        self.tabs.add(reports_tab, text="  Rapports  ")
-        self.tabs.add(local_tab, text="  Audit local  ")
-        self.tabs.add(triage_tab, text="  Vérification  ")
-        self.tabs.add(audit_tab, text="  GitHub  ")
-        self.tabs.add(legacy_tab, text="  Historique  ")
+        dossiers_tab = ttk.Frame(self.tabs, padding=8)
+        advanced_tab = ttk.Frame(self.tabs, padding=8)
+        self.tabs.add(dashboard_tab, text="  Pilotage  ")
+        self.tabs.add(dossiers_tab, text="  Dossiers des systèmes  ")
+        self.tabs.add(campaigns_tab, text="  Campagnes datées  ")
+        self.tabs.add(advanced_tab, text="  Outils avancés  ")
+        self._dossiers_tab = dossiers_tab
+        self._campaigns_tab = campaigns_tab
+        self.dossier_tabs = ttk.Notebook(dossiers_tab)
+        self.dossier_tabs.pack(fill="both", expand=True)
+        board_tab = ttk.Frame(self.dossier_tabs, padding=14)
+        review_tab = ttk.Frame(self.dossier_tabs, padding=14)
+        profiles_tab = ttk.Frame(self.dossier_tabs, padding=14)
+        self.dossier_tabs.add(board_tab, text="  Registre des 49  ")
+        self.dossier_tabs.add(review_tab, text="  Preuves et sources  ")
+        self.dossier_tabs.add(profiles_tab, text="  Qualification et profils  ")
+        self._profiles_tab = profiles_tab
+        self.advanced_tabs = ttk.Notebook(advanced_tab)
+        self.advanced_tabs.pack(fill="both", expand=True)
+        settings_tab = ttk.Frame(self.advanced_tabs, padding=14)
+        reports_tab = ttk.Frame(self.advanced_tabs, padding=14)
+        local_tab = ttk.Frame(self.advanced_tabs, padding=14)
+        triage_tab = ttk.Frame(self.advanced_tabs, padding=14)
+        audit_tab = ttk.Frame(self.advanced_tabs, padding=14)
+        legacy_tab = ttk.Frame(self.advanced_tabs, padding=14)
+        self.advanced_tabs.add(settings_tab, text="  Sources et publication  ")
+        self.advanced_tabs.add(reports_tab, text="  Rapports  ")
+        self.advanced_tabs.add(local_tab, text="  Audit local  ")
+        self.advanced_tabs.add(triage_tab, text="  Vérification  ")
+        self.advanced_tabs.add(audit_tab, text="  GitHub  ")
+        self.advanced_tabs.add(legacy_tab, text="  Diagnostics historiques  ")
         self._build_audit(audit_tab)
         self._build_local(local_tab)
         self._build_triage(triage_tab)
         self._build_dashboard(dashboard_tab)
+        self._build_dashboard_settings(settings_tab)
         self._build_reports(reports_tab)
         self._build_profiles(profiles_tab)
         self._build_certification_board(board_tab)
@@ -530,39 +549,61 @@ class AuditLauncher:
                   style="Muted.TLabel", wraplength=900).grid(row=1, column=0, sticky="w", pady=14)
 
     def _build_dashboard(self, tab: ttk.Frame) -> None:
+        """The daily task has one obvious entrypoint; settings live in Advanced."""
         tab.columnconfigure(0, weight=1)
-        frame = ttk.LabelFrame(tab, text="Carte de l'écosystème, rapports d'ingénierie et progression des qualifications", padding=15)
+        ttk.Label(tab, text="Voir les validations réelles de mes systèmes", style="Title.TLabel").grid(
+            row=0, column=0, sticky="w", pady=(8, 8))
+        ttk.Label(tab,
+                  text="Choisir une application → lire les contrôles par catégorie → ouvrir la preuve. "
+                       "Les qualifications et campagnes antérieures restent séparées, avec dates et provenance.",
+                  wraplength=870, justify="left").grid(row=1, column=0, sticky="w", pady=(0, 16))
+        primary=ttk.LabelFrame(tab, text="Espace de travail", padding=20)
+        primary.grid(row=2, column=0, sticky="ew")
+        ttk.Button(primary, text="Ouvrir les validations et les fiches d’applications",
+                   command=self._preview_dashboard, style="Primary.TButton").pack(anchor="w", pady=(0, 12))
+        ttk.Label(primary, text="49 applications · Tests · Sécurité · Architecture · Intégration · Preuves originales",
+                  style="Muted.TLabel", wraplength=860).pack(anchor="w")
+        ttk.Label(primary, textvariable=self.kristal_status, style="Muted.TLabel",
+                  wraplength=860).pack(anchor="w", pady=(7, 0))
+        following=ttk.LabelFrame(tab, text="Reprendre mon travail", padding=16)
+        following.grid(row=3, column=0, sticky="ew", pady=(16, 0))
+        ttk.Label(following,
+                  text="Pour documenter de nouveaux résultats : mesurer ou importer les preuves dans « Campagnes datées », "
+                       "puis consulter leurs dossiers dans « Dossiers des systèmes ». Les anciens snapshots restent intacts.",
+                  wraplength=860, justify="left").pack(anchor="w")
+        ttk.Label(tab, text="Configuration Kristal, exports et publication dans « Outils avancés → Sources et publication ». "
+                  "Aucun audit ou traitement coûteux au simple démarrage.",
+                  wraplength=900, justify="left", style="Muted.TLabel").grid(
+                      row=4, column=0, sticky="w", pady=18)
+
+    def _build_dashboard_settings(self, tab: ttk.Frame) -> None:
+        """Occasional source configuration and explicit publishing controls."""
+        tab.columnconfigure(0, weight=1)
+        frame=ttk.LabelFrame(tab, text="Sources de données locales", padding=14)
         frame.grid(row=0, column=0, sticky="ew")
         frame.columnconfigure(1, weight=1)
-        self._input_row(frame, 0, "Référentiel Kristal (local)", self.kristal_root,
-                        browse=self._browse_kristal_root, width=57)
-        ttk.Label(frame, textvariable=self.kristal_status, style="Muted.TLabel").grid(
-            row=1, column=0, columnspan=3, sticky="w", pady=(0, 5))
-        self._input_row(frame, 2, "Rapport local (JSON)", self.dashboard_local,
-                        browse=lambda: self._choose_json(self.dashboard_local), width=57)
-        self._input_row(frame, 3, "Rapport GitHub (optionnel)", self.dashboard_github,
-                        browse=lambda: self._choose_json(self.dashboard_github), width=57)
-        btns=ttk.Frame(frame)
-        btns.grid(row=4, column=0, columnspan=3, sticky="w", pady=(14, 5))
-        self._action_button(btns, "Ouvrir le centre de pilotage (carte + profils)", self._preview_dashboard, primary=True).pack(side="left", padx=(0, 9))
-        ttk.Button(btns, text="Vérifier Kristal", command=self._check_kristal_root).pack(side="left", padx=(0, 9))
-        ttk.Button(btns, text="Actualiser les rapports", command=self._run_dashboard).pack(side="left", padx=(0, 9))
-        ttk.Button(btns, text="Publier sur GitHub", command=self._sync_dashboard).pack(side="left", padx=(0, 9))
-        ttk.Button(btns, text="Ouvrir le dossier docs", command=lambda: self._open_file(ROOT / "docs")).pack(side="left")
-        ttk.Button(frame, text="Consulter les 245 dossiers de preuves historiques →",
-                   command=self._review_open_browser).grid(row=5, column=0, columnspan=3, sticky="w", pady=(5, 2))
-        note=("La source Kristal est lue à chaque actualisation du navigateur local, sans changer les fichiers du référentiel. "
-              "Les associations proposées restent distinctes des liens explicites ; elles ne sont ni des intégrations vérifiées ni des certifications. Elle ne part PAS sur GitHub Pages. « Publier sur GitHub » envoie les bilans autorisés, la carte publique et "
-              "les profils d'ingénierie expurgés (avec noms publics des dépôts). "
-              "Aucun jeton à saisir, aucun nouvel audit, aucun code source ou secret publié. "
-              "Git pour Windows utilise votre connexion GitHub existante. Le bouton local d'aperçu ne publie rien.")
-        ttk.Label(tab, text=note, wraplength=910, justify="left", style="Muted.TLabel").grid(row=1, column=0, sticky="w", pady=14)
-        ttk.Label(tab, text="Parcours recommandé : ouvrir la carte → choisir un dépôt → cliquer « Engineering Profile » → suivre ses jalons. "
-                  "L’aperçu local affiche les preuves évaluées sur ce PC; la version publique n'exporte jamais ce registre.",
-                  wraplength=910, justify="left").grid(row=3, column=0, sticky="w", pady=9)
-        ttk.Label(tab, text="Une seule configuration GitHub peut être nécessaire : Settings > Pages > Source : GitHub Actions. "
-                  "Ensuite, le site se déploie automatiquement après chaque publication. Ne pas utiliser le bouton d'audit distant.",
-                  wraplength=910, justify="left").grid(row=2, column=0, sticky="w", pady=8)
+        self._input_row(frame,0,"Référentiel Kristal (local)",self.kristal_root,
+                        browse=self._browse_kristal_root,width=54)
+        self._input_row(frame,1,"Rapport local (JSON)",self.dashboard_local,
+                        browse=lambda:self._choose_json(self.dashboard_local),width=54)
+        self._input_row(frame,2,"Rapport GitHub (optionnel)",self.dashboard_github,
+                        browse=lambda:self._choose_json(self.dashboard_github),width=54)
+        ttk.Label(frame,textvariable=self.kristal_status,style="Muted.TLabel").grid(
+            row=3,column=0,columnspan=3,sticky="w")
+        controls=ttk.Frame(frame);controls.grid(row=4,column=0,columnspan=3,sticky="w",pady=11)
+        ttk.Button(controls,text="Vérifier Kristal",command=self._check_kristal_root).pack(side="left",padx=(0,9))
+        ttk.Button(controls,text="Actualiser les rapports",command=self._run_dashboard).pack(side="left",padx=(0,9))
+        ttk.Button(controls,text="Ouvrir le dossier docs",command=lambda:self._open_file(ROOT/"docs")).pack(side="left")
+        publish=ttk.LabelFrame(tab,text="Publication explicite · données publiques seulement",padding=14)
+        publish.grid(row=1,column=0,sticky="ew",pady=(16,0))
+        ttk.Label(publish,text="La publication ne contient ni les preuves privées ni Kristal local. "
+                  "Elle ne démarre jamais automatiquement.",wraplength=800).pack(anchor="w",pady=(0,10))
+        ttk.Button(publish,text="Publier le dashboard public sur GitHub",command=self._sync_dashboard).pack(anchor="w")
+
+    def _open_profiles_page(self) -> None:
+        """Navigate from any dossier to its qualification editor without a competing top-level tab."""
+        self.tabs.select(self._dossiers_tab)
+        self.dossier_tabs.select(self._profiles_tab)
 
     def _build_campaigns(self, tab: ttk.Frame) -> None:
         from koa_audit import profiles, campaigns
@@ -941,10 +982,7 @@ class AuditLauncher:
             return
         self.profile_repo.set(selected[0])
         self._profiles_refresh()
-        for index in range(self.tabs.index("end")):
-            if "Certification" in self.tabs.tab(index, "text"):
-                self.tabs.select(index)
-                break
+        self._open_profiles_page()
 
     def _build_evidence_review(self, tab: ttk.Frame) -> None:
         """Review 245 sourced historical cases; NEVER turn suggestions into claims."""
@@ -1139,10 +1177,7 @@ class AuditLauncher:
             self.qual_scope.set(current['scope'])
             self.qual_evidence.set(current['evidence'])
             self.qual_status.set(current['status'])
-        for index in range(self.tabs.index('end')):
-            if 'Certification' in self.tabs.tab(index,'text'):
-                self.tabs.select(index)
-                break
+        self._open_profiles_page()
         self.status.set('Qualification documentaire affichée. Modifier seulement si une nouvelle preuve le justifie.')
 
     def _build_profiles(self, tab: ttk.Frame) -> None:

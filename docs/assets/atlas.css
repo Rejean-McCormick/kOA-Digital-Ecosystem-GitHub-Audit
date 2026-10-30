@@ -47,3 +47,57 @@
 .campaign-bars .stage-row{display:flex;flex-direction:column;align-items:stretch;gap:5px;}
 .campaign-bars .stage-meter{height:8px;width:100%;border-radius:99px;overflow:hidden;background:#244943;}
 .campaign-bars .stage-evidence{display:block;height:100%;background:#68c4b7;}
+
+/* Current evidence and frozen campaigns must not be visually conflated. */
+.campaign-panel .campaign-scope-note{padding:8px 12px;margin:5px 0 9px;border-left:3px solid #5ea99f;background:#13352f;color:#d6efea;font-size:12px;line-height:1.5}
+
+/* v0.15 Evidence-first landing page: only hash-checked documentary proofs get a tick. */
+.validation-first{background:linear-gradient(135deg,#102e27,#10251f);border:1px solid #3c786a;border-radius:16px;margin:24px clamp(20px,3vw,54px) 8px;padding:25px;}
+.validation-first .heading{align-items:flex-start}.validation-title{font-size:clamp(29px,3.2vw,45px);line-height:1.13;margin:9px 0;color:#ebfaf5;letter-spacing:-.04em}
+.validation-first .heading p{max-width:800px;font-size:13px;color:#b4d3c7;line-height:1.6}
+.validation-live{border:1px solid #3d6a5e;padding:9px 12px;border-radius:999px;font-size:11px;color:#bddbd1;flex:none}
+.validation-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.validation-metric{padding:14px 16px;border:1px solid #345c50;border-radius:12px;background:#15362d;min-height:80px}
+.validation-metric strong{display:block;font-size:26px;letter-spacing:-.035em;font-variant-numeric:tabular-nums}.validation-metric small{color:#a4c5b9;font-size:11px;line-height:1.4}
+.validation-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:16px 0 11px;color:#a9cec1;font-size:11px}
+.validation-toolbar input,.validation-toolbar select{background:#10261f;border:1px solid #3e7766;border-radius:8px;color:#e4fff6;padding:10px 11px;font-size:12px;max-width:250px;min-width:155px}
+.validation-legend{margin-left:auto;font-size:10px}.proof-tick{color:#a3f6cb;font-weight:800}.proof-unknown{color:#bfceca;font-weight:700}
+.validation-layout{display:grid;grid-template-columns:minmax(245px,34%) minmax(0,1fr);gap:12px;align-items:start}
+.validation-list{border:1px solid #345e54;background:#0f251f;border-radius:11px;max-height:560px;overflow-y:auto}
+.validation-repo{width:100%;background:transparent;border:0;border-bottom:1px solid #244b40;color:#e5f8f1;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:11px 13px;text-align:left}
+.validation-repo:hover,.validation-repo.selected{background:#225548}.validation-repo strong{font-size:12px}.validation-repo small{font-size:10px;color:#adcabc;display:block;padding-top:4px}.validation-repo .proof-tick{font-size:12px}
+.validation-detail{padding:17px;border:1px solid #345e54;border-radius:11px;background:#102b24;min-height:390px;max-height:760px;overflow-y:auto}
+.validation-detail h3{font-size:23px;color:#e3fff7;margin:0 0 7px}.validation-detail h4{font-size:13px;color:#d9f3e8;margin:15px 0 8px}
+.validation-detail p{font-size:12px;color:#bed2cb;line-height:1.55;margin:5px 0 11px}
+.validation-categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:16px}
+.validation-category{font-size:11px;background:#1b4338;border:1px solid #396e5e;border-radius:9px;padding:11px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;color:#e1f8ee}
+.validation-category span{font-size:10px;color:#9dbeb1}.validation-category.selected{border-color:#b0f1cf;background:#24594c}
+.validation-control{margin:8px 0;border:1px solid #325e50;border-radius:9px;padding:10px 12px;background:#142f27;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.validation-control strong{display:block;color:#ddf1e6;font-size:12px}.validation-control small{color:#a5c6ba;font-size:10px;display:block;margin-top:5px;line-height:1.4}
+.validation-control a{color:#a9ebd3;font-size:11px;text-decoration:underline}.validation-control .control-status{flex:none;max-width:165px;text-align:right;font-size:10px;color:#9ab9ad;line-height:1.4}
+.validation-control .control-status.checked{color:#90e9bc;font-weight:800}.validation-ethics{margin-top:12px;color:#a9c9be;font-size:11px;line-height:1.6}
+.validation-explain{padding:10px 12px;border-left:3px solid #61b29f;background:#163a2f;color:#b9ded0;font-size:11px;line-height:1.55;margin-top:12px}
+.validation-no-data{padding:18px;color:#bacfc6;font-size:12px}
+@media(max-width:1060px){.validation-metrics{grid-template-columns:repeat(2,1fr)}.validation-legend{margin-left:0;width:100%}}
+@media(max-width:720px){.validation-first{margin:13px 10px;padding:15px}.validation-layout{grid-template-columns:1fr}.validation-list{max-height:255px}.validation-categories{grid-template-columns:repeat(2,minmax(0,1fr))}.validation-toolbar input,.validation-toolbar select{width:100%;max-width:none}}
+
+/* v0.16 — task-first navigation derived from UX-01, UX-05, UX-15 to UX-18. */
+[hidden]{display:none!important}
+.rail{width:176px;align-items:stretch;padding:20px 12px;gap:9px}
+.rail a.workspace-nav{width:100%;height:auto;min-height:43px;display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:10px 12px;border:1px solid transparent;font-size:13px;font-weight:600}
+.rail a.workspace-nav span{font-size:18px;line-height:1}
+.rail a.workspace-nav.active{background:#16433b;border-color:#387a6a;color:#eafcf4}
+.rail .brand{align-self:center;margin-bottom:24px}
+.rail-foot{align-self:center}
+.content{width:calc(100% - 176px)}
+.validation-first{margin:22px 0 12px;padding:24px;min-height:calc(100vh - 170px)}
+.validation-layout{grid-template-columns:minmax(235px,32%) minmax(0,1fr)}
+.workspace-next{font-size:12px;color:#bad6cb;margin:12px 0;padding:10px 12px;background:#122b24;border-left:3px solid #4f9b8b;border-radius:5px}
+.validation-practices{padding:12px;border:1px solid #386759;border-radius:10px;margin-top:14px}
+.validation-practices summary{cursor:pointer;color:#c0eadd;font-size:12px;font-weight:700}
+.validation-practices[open] summary{margin-bottom:12px}
+.campaign-public-note{padding:14px;border-left:3px solid #51998a;color:#cce6de;background:#17342c;border-radius:7px}
+#historique-campagnes{padding-top:35px}
+@media(max-width:740px){.rail{height:auto;width:100%;position:sticky;flex-direction:row;align-items:center;padding:8px;gap:5px}.rail .brand{display:none}.rail-foot{display:none}.rail a.workspace-nav{justify-content:center;gap:5px;font-size:11px;padding:9px 6px}.rail a.workspace-nav span{font-size:14px}.layout{display:block}.content{width:100%}.validation-first{min-height:0}}
+
+.validation-order{font-size:11px;color:#b2d1c5;margin:0 0 10px}

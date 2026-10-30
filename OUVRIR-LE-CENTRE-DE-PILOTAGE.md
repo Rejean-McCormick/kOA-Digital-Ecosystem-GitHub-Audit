@@ -1,19 +1,16 @@
 # Ouvrir le centre de pilotage kOA
 
-1. **Décompresse** toute l'archive ZIP dans un dossier ordinaire sur Windows.
-2. **Double-clique** `kOA_GitHub_Audit_Launcher.pyw`.
-3. Le premier onglet est **Écosystème**. Clique sur **Ouvrir le centre de pilotage (carte + profils)**.
-4. Dans le navigateur, explore la **Carte des contrats (12 systèmes)** ou la **Constellation (49 dépôts)**.
-5. Clique une application, puis **Lire l'Engineering Profile original** pour consulter le Markdown complet. Tu peux aussi voir les cinq jalons de qualification dans la fiche.
+1. **Décompresse** complètement le ZIP et double-clique sur `kOA_GitHub_Audit_Launcher.pyw`.
+2. Dans **Pilotage**, clique sur **Ouvrir les validations et les fiches d’applications**.
+3. Le navigateur s’ouvre sur **Validations** : les dossiers ayant des jalons étayés sont présentés en premier, sans classement de qualité. Choisis une application, puis **Tests**, **Sécurité**, **Architecture**, **Implémentation**, **Intégration** ou **Production**.
+4. Clique sur une source vérifiée pour consulter sa portée, sa date et la pièce d’origine.
+5. Va dans **Applications** pour les Engineering Profiles et la carte Kristal (sous-vue **Voir la carte**). Ouvre **Campagnes** pour comparer l’état du registre et les captures figées.
 
-**Rien à scanner et rien à publier pour consulter ces résultats.** Les 12 profils mesurés de l'inventaire sont déjà présents. Le 13e profil complémentaire reste disponible dans l'onglet Windows « Certification & profils ».
+La fenêtre Windows comporte quatre espaces : **Pilotage**, **Dossiers des systèmes** (Registre des 49, Preuves et sources, Qualification et profils), **Campagnes datées**, **Outils avancés** (sources, publication, audit local, GitHub, historiques).
 
-- Pour enregistrer des preuves et des statuts : onglet **Certification & profils** de l'application Windows.
-- Pour vérifier les 49 dépôts en tableau : **Registre des 49**.
-- Pour publier le site : bouton **Publier sur GitHub**, seulement si tu le décides. La version publique montre la carte et des rapports d'ingénierie expurgés; tes preuves et notes locales ne sont pas exportées.
-- Si l'aperçu ne s'ouvre pas : exécute `DIAGNOSTIC_LAUNCHER.cmd` et consulte le message affiché.
+**Rien à scanner ou publier pour consulter les dossiers existants.** Les profils mesurés disponibles dans l'archive sont déjà intégrés. Les tests CI historiques ne prouvent pas une certification globale. L'absence de coche verte n'est pas un échec.
 
-Le tableau de bord ne classe pas les noms de fichiers similaires, les copies de dépôts ou l'absence de certains outils comme des défauts de qualité.
+Les campagnes privées et les registres restent dans `%LOCALAPPDATA%\kOA-GitHub-Audit` et ne sont pas publiés sur GitHub Pages. Pour configurer la source Kristal locale ou publier explicitement la page publique : **Outils avancés → Sources et publication**. Si le lanceur ne s’ouvre pas, exécute `DIAGNOSTIC_LAUNCHER.cmd`.
 
 ## Mesurer et figer des preuves — v0.11.0
 
@@ -48,3 +45,24 @@ Au premier démarrage, l'application inscrit la revue fondée sur les sources du
 Dans **Preuves 245**, choisis une application et son jalon pour consulter la décision, la portée, les limites et le **document primaire original**. Les 10 cas étayés ne constituent ni 10 tests indépendants, ni une preuve de production, ni une attestation du SHA Git des clones.
 
 Une campagne déjà créée ne sera jamais modifiée. Après ouverture de cette version, crée une **nouvelle campagne datée** pour conserver le nouvel état.
+
+## Compteur de qualification et campagnes figées — v0.14.1
+
+Le chiffre principal du dashboard local mesure **uniquement les jalons « Étayé par preuve »** sur les 245 possibles. Il n'inclut pas les dossiers « À documenter », bien que ces derniers aient été examinés. Par exemple, si le registre local contient les décisions de la revue du 30 octobre, il indique **10/245 étayés, 235 à documenter, 245/245 dossiers examinés**. Ce n'est pas 10 applications globalement certifiées : les 10 preuves portent sur des périmètres historiques limités.
+
+La section **Campagne figée** montre l'état immuable de la campagne à sa date, indépendamment du **registre actuel**. Une ancienne campagne peut donc rester à **0/245** alors que le registre actuel indique **10/245**; pour conserver le nouvel état, il faut créer une nouvelle campagne datée. Les campagnes existantes ne sont jamais modifiées par l'affichage.
+
+## v0.15.0 · Premier écran : Validations
+
+La première section du navigateur présente les 49 applications et leurs catégories :
+**Tests, Sécurité, Architecture, Implémentation, Intégration, Production et Composants Kristal**.
+Cliquer une application, puis un domaine, pour consulter les contrôles et ouvrir les preuves quand elles sont réellement dans l'archive.
+Le symbole vert est toujours limité à une pièce ou à un résultat CI historique précisément identifié.
+La sécurité ne reçoit aucune validation implicite à partir de noms ou de profils.
+La carte et les Engineering Profiles se trouvent dans l’espace distinct « Applications ».
+
+Pour disposer de plus de validations vérifiables, utiliser l'onglet **Campagnes datées** pour importer les sorties JUnit, couverture et SARIF déjà disponibles; leur date et leur SHA doivent correspondre au périmètre revendiqué.
+
+## v0.16.0 · Refonte selon le guide d’architecture d’interfaces IA v2
+
+Les trois espaces du navigateur sont **Validations**, **Applications** et **Campagnes**. Le parcours dominant reste au même endroit : application → catégorie → source → portée. Les autres informations ne sont pas empilées sur la page d’accueil. Les 86 critères d’architecture et de sécurité se déplient seulement à la demande. Dans Windows, les outils rares passent sous « Outils avancés » sans perdre leurs fonctionnalités. Voir `docs/UX_REFACTOR_GUIDE_V2.md` pour la correspondance des anciens onglets et les scénarios de validation.

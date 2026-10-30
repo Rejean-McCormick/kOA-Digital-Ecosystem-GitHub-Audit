@@ -9,6 +9,140 @@
     architect:[37,88],orchestrator:[59,88],sentient:[59,13],skope:[12,37]
   };
   let atlas=null, localAudit=null, qualification=null, kristal=null, privateCampaigns=null, privateReview=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview', mapMode='contracts', mapTouched=false;
+  let validationBoard=null, validationRepo=null, validationCategory='Tests', validationSearch='', validationFilter='all';
+  // One workspace per user intent (UX-01/05/15/16). Keep older anchors working.
+  let workspace='validations', mapExpanded=false;
+  function workspaceForHash(hash){
+    if(hash==='#cartographie')return 'applications';
+    if(hash==='#apps')return 'applications';
+    if(hash==='#historique-campagnes'||hash==='#qualification')return 'campagnes';
+    return 'validations';
+  }
+  function setWorkspace(mode, anchor=''){
+    workspace=['validations','applications','campagnes'].includes(mode)?mode:'validations';
+    if(anchor==='#cartographie')mapExpanded=true;
+    else if(mode==='applications'&&anchor==='#apps')mapExpanded=false;
+    document.querySelectorAll('[data-workspace]').forEach(section=>{
+      const isVisible=section.dataset.workspace===workspace;
+      section.hidden=!isVisible || (section.id==='cartographie'&&!mapExpanded);
+    });
+    for(const item of document.querySelectorAll('[data-nav]')){
+      const active=item.dataset.nav===workspace;
+      item.classList.toggle('active',active);
+      if(active)item.setAttribute('aria-current','page');else item.removeAttribute('aria-current');
+    }
+    const publicNote=$('campaign-public-note');
+    if(publicNote)publicNote.hidden=workspace!=='campagnes'||!!qualification;
+    if(workspace==='applications' && mapExpanded && atlas)requestAnimationFrame(()=>drawMap());
+  }
+  function activateRoute(){setWorkspace(workspaceForHash(location.hash),location.hash);}
+  function validationRepoData(name){return validationBoard?.repositories?.find(x=>x.repo===name);}
+  function validationMetric(value, caption){const d=el('div','validation-metric');d.append(el('strong','',value),el('small','',caption));return d;}
+  function renderValidationBoard(){
+    const holder=$('validation-metrics'), listing=$('validation-list'), detail=$('validation-detail');
+    holder.replaceChildren();listing.replaceChildren();detail.replaceChildren();
+    if(!validationBoard){
+      $('validation-source').textContent='Données privées indisponibles sur cette page';
+      holder.append(validationMetric('49','Dépôts de l’inventaire'),validationMetric('—','Résultats locaux non publiés'),validationMetric('—','Tests vérifiés non publiés'),validationMetric('—','Contrôles de sécurité non publiés'));
+      listing.append(el('p','validation-no-data','Ouvre le dashboard depuis le lanceur Windows pour voir les résultats réels et les pièces confidentielles. Aucun verdict n’est déduit ici.'));
+      detail.append(el('p','','Les données privées de qualification ne sont pas copiées sur GitHub Pages. Les 49 fiches et les Engineering Profiles publics restent accessibles plus bas.'));
+      return;
+    }
+    $('validation-source').textContent='Registre privé local · sources contrôlées';
+    const entries=validationBoard.repositories;
+    const numPass=entries.filter(r=>r.source_verified_test).length;
+    const evaluated=entries.reduce((n,r)=>n+r.assessed_practices,0);
+    holder.append(validationMetric(String(entries.length),'Applications dans le périmètre'),
+      validationMetric(String(validationBoard.source_checked_documentary_jalons),'Jalons documentaires étayés, portée limitée'),
+      validationMetric(String(numPass),'Applications concernées par une preuve E2E locale (un parcours partagé)'),
+      validationMetric(String(validationBoard.historical_ci_success_on_observed_head||0),'CI historiques en succès au SHA observé · tests couverts non détaillés'));
+    if(evaluated)holder.append(validationMetric(String(evaluated),'Évaluations de pratiques, non certifiées'));
+    const query=validationSearch.trim().toLocaleLowerCase();
+    // Evidence-first orientation, NOT quality ranking: grouped by availability of
+    // actually verified documentation, then alphabetical for predictable browsing.
+    const filtered=entries.filter(r=>(!query||r.slug.toLocaleLowerCase().includes(query))&&
+      (validationFilter==='all'||(validationFilter==='verified'&&r.verified_stages>0)||
+       (validationFilter==='reviewed'&&r.assessed_practices>0)))
+      .sort((a,b)=>Number(b.verified_stages||0)-Number(a.verified_stages||0)||
+        a.slug.localeCompare(b.slug,'fr'));
+    if(!validationRepo||!filtered.some(r=>r.repo===validationRepo))validationRepo=filtered[0]?.repo||null;
+    if(!filtered.length)listing.append(el('p','validation-no-data','Aucune application pour ce filtre (ce n’est pas une non-conformité).'));
+    for(const r of filtered){
+      const b=el('button','validation-repo'+(r.repo===validationRepo?' selected':''));b.type='button';
+      const name=el('span');name.append(el('strong','',r.slug));
+      name.append(el('small','',r.verified_stages?`${r.verified_stages} jalon(s) documenté(s) · périmètre limité`:`Aucune pièce qualifiante vérifiée dans le registre`));
+      b.append(name,el('span',r.verified_stages?'proof-tick':'proof-unknown',r.verified_stages?'✓ '+r.verified_stages:'—'));
+      b.addEventListener('click',()=>{validationRepo=r.repo;validationCategory='Tests';renderValidationBoard();});listing.append(b);
+    }
+    const current=validationRepoData(validationRepo);
+    if(!current){detail.append(el('p','validation-no-data','Aucune fiche sélectionnée.'));return;}
+    detail.append(el('small','detail-eyebrow','VALIDATION DÉTAILLÉE · APPLICATION'),el('h3','',current.slug));
+    detail.append(el('p','','Les coches vertes confirment une conclusion documentaire dont la pièce originale et l’empreinte ont été vérifiées. Les statuts des pratiques sont des évaluations locales, pas des résultats de tests.'));
+    const categories=el('div','validation-categories');
+    const componentInfo=kristalByRepo(current.repo);
+    for(const category of [...current.categories, {label:'Composants',verified_count:0,practice_count:0,evaluated_practices:0}]){
+      const b=el('button','validation-category'+(category.label===validationCategory?' selected':''));b.type='button';
+      b.append(el('strong','',category.label),el('span','',category.label==='Composants'?
+        (componentInfo?.components?.length ? `${componentInfo.components.length} lien(s) explicite(s)` : componentInfo?.candidates?.length ? `${componentInfo.candidates.length} suggestion(s)` : 'Rattachement non documenté') : category.verified_count?`✓ ${category.verified_count} preuve(s) datée(s)`:
+        category.practice_count?`${category.evaluated_practices}/${category.practice_count} pratiques évaluées`:'Aucune pièce vérifiée'));
+      b.addEventListener('click',()=>{validationCategory=category.label;renderValidationBoard();});categories.append(b);
+    }
+    detail.append(categories);
+    const selected=current.categories.find(c=>c.label===validationCategory)||current.categories[0];
+    if(validationCategory==='Composants'){
+      detail.append(el('h4','','Composants du catalogue Kristal'));
+      if(!kristal||kristal.state!=='ready'){detail.append(el('p','','Kristal local non accessible : aucun rattachement de composant n’est inventé.'));}
+      else if(!componentInfo?.components?.length&&!componentInfo?.candidates?.length){detail.append(el('p','','Aucun rattachement de composant documenté pour ce dépôt. Cela ne dit rien de la qualité du système.'));}
+      else {
+        for(const comp of componentInfo.components||[]){
+          const row=el('div','validation-control'),left=el('div');left.append(el('strong','',comp.label||comp.id),el('small','',comp.description||comp.kind||'Composant du catalogue'));
+          row.append(left,el('span','control-status','Lien explicite dans Kristal · pas une certification'));detail.append(row);
+        }
+        for(const comp of componentInfo.candidates||[]){
+          const row=el('div','validation-control'),left=el('div');left.append(el('strong','',comp.label||comp.id),el('small','',comp.reason==='EXACT_NAME_OR_CANONICAL_ID'?'Nom ou identifiant concordant':'Référence de source commune'));
+          row.append(left,el('span','control-status','Association proposée · non validée'));detail.append(row);
+        }
+      }
+      const r=atlas?.repositories?.find(x=>x.repo===current.repo);if(r?.report)detail.append(link(r.report,'↗ Engineering Profile mesuré et provenance',''));
+      detail.append(el('p','validation-explain','Les composants proviennent du registre Kristal local. Un nom similaire, une relation sémantique ou un lien de responsabilité ne constitue pas un test d’intégration réussi.'));
+      return;
+    }
+    detail.append(el('h4','',selected.label+(selected.practice_count?` · ${selected.practice_count} critères du catalogue`:'')));
+    for(const stage of selected.stages){
+      const row=el('div','validation-control');const left=el('div');left.append(el('strong','',stage.label));
+      if(stage.scope)left.append(el('small','',stage.scope));
+      if(stage.source_verified){left.append(link(stage.source_link,'↗ Consulter la pièce originale et son empreinte',''));
+        left.append(el('small','','SHA-256 '+stage.source_sha256.slice(0,16)+'… · version du clone non attestée'));}
+      row.append(left,el('span','control-status'+(stage.source_verified?' checked':''),stage.display));detail.append(row);
+    }
+    if(selected.label==='Tests'){
+      const ci=current.historical_ci;
+      const row=el('div','validation-control'),left=el('div');left.append(el('strong','','Exécution CI historique · GitHub Actions'));
+      if(ci?.run_at)left.append(el('small','','Exécution observée : '+ci.run_at+' · SHA '+(ci.run_head_sha||'inconnu')));
+      if(ci?.source_snapshot_sha256)left.append(el('small','','Observation archivée et datée · SHA-256 du fichier '+ci.source_snapshot_sha256.slice(0,16)+'…'));
+      const status=ci?.success_observed?'Succès CI observé · portée du workflow inconnue':
+        ci?.conclusion==='success'?'Succès historique sur un autre SHA':
+        ci?.conclusion==='failure'?'Échec observé de ce workflow (pas une évaluation globale)':
+        'Aucun résultat CI attestable dans le snapshot';
+      row.append(left,el('span','control-status'+(ci?.success_observed?' checked':''),status));detail.append(row);
+      if(ci?.success_observed)detail.append(el('p','validation-explain','La conclusion « success » a été observée via l’API GitHub le 28 octobre 2026 au SHA du snapshot. Le contenu des tests du workflow n’est pas fourni, et le SHA de ta version actuelle n’est pas vérifié.'));
+    }
+    if(selected.practices.length){
+      const collection=el('details','validation-practices'),heading=el('summary','',
+        `Consulter les ${selected.practices.length} critères du catalogue · états individuels`);
+      collection.append(heading);
+      for(const item of selected.practices){
+        const row=el('div','validation-control'),left=el('div');
+        left.append(el('strong','',item.id+' · '+item.title),el('small','',item.section));
+        const right=el('span','control-status',item.display);row.append(left,right);collection.append(row);
+      }
+      detail.append(collection);
+    }
+    detail.append(el('p','validation-explain',selected.label==='Sécurité'? 'Aucun contrôle de sécurité du catalogue ne reçoit automatiquement un crochet vert : une analyse statique ou la présence d’un fichier ne démontre pas qu’un contrôle passe un test. Un journal ciblé et vérifiable est nécessaire.':
+      selected.label==='Tests'?'Un même rapport E2E historique peut concerner deux applications. Cela ne correspond pas à deux campagnes de tests indépendantes ni à un succès CI du commit actuel.':'Les preuves historiques documentent seulement le périmètre et la date indiqués, pas la préparation globale du dépôt.'));
+    const app=atlas?.repositories?.find(x=>x.repo===current.repo);
+    if(app){const actions=el('p');actions.append(link('#apps','↗ Ouvrir la fiche de cette application',''));actions.querySelector('a').addEventListener('click',()=>selectRepo(current.repo,false));detail.append(actions);}
+  }
   function el(tag,cls,content){const x=document.createElement(tag);if(cls)x.className=cls;if(content!==undefined)x.textContent=String(content);return x;}
   function link(href,text,klass){const a=el('a',klass,text);a.href=href;return a;}
   function repoByName(name){return atlas.repositories.find(r=>r.repo===name);}
@@ -25,16 +159,32 @@
         const width=counts[key]*100/Math.max(1,total);
         if(width>0){const span=el('span',klass);span.style.width=width+'%';meter.append(span);}
       }
-      const meta=el('div','stage-meta',qualification?`${counts['Étayé par preuve']} preuves · ${counts['Non évalué']} non évalués`:'Non publié / non évalué');
+      const pending=counts['À documenter'];
+      const evidenced=counts['Étayé par preuve'];
+      const other=[];
+      if(counts['Non évalué'])other.push(`${counts['Non évalué']} non évalués`);
+      if(counts['Non applicable'])other.push(`${counts['Non applicable']} non applicables`);
+      const metaLabel=qualification?[`${evidenced}/${total} étayés`,`${pending} à documenter`,...other].join(' · '):'Non publié / non évalué';
+      const meta=el('div','stage-meta',metaLabel);
       row.append(left,meter,meta);holder.append(row);
     });
     if(qualification){
-      let assessed=0,evidenced=0;
-      for(const r of data){for(const [key] of stages){let status=statusFor(r.repo,key);if(status!=='Non évalué')assessed++;if(status==='Étayé par preuve')evidenced++;}}
-      $('kpi-qualification').textContent=`${count(assessed)} / ${count(total*5)}`;
-      $('kpi-qualification-note').textContent=`Jalons examinés · ${count(evidenced)} étayés par preuve` +
-        (privateReview?` · ${count(privateReview.cases)} dossiers historiques consultables`:'');
-      $('qual-mode').textContent='Données de qualification locales, conservées sur ton PC';
+      let examined=0,evidenced=0,pending=0,notEvaluated=0,notApplicable=0;
+      for(const r of data){for(const [key] of stages){
+        const status=statusFor(r.repo,key);
+        if(status!=='Non évalué')examined++;
+        if(status==='Étayé par preuve')evidenced++;
+        else if(status==='À documenter')pending++;
+        else if(status==='Non applicable')notApplicable++;
+        else notEvaluated++;
+      }}
+      // Only source-supported, scope-limited stages count as evidenced; reviewing a case is NOT certification.
+      $('kpi-qualification').textContent=`${count(evidenced)} / ${count(total*5)}`;
+      const parts=[`${count(pending)} à documenter`,`${count(examined)}/${count(total*5)} dossiers examinés`];
+      if(notEvaluated)parts.push(`${count(notEvaluated)} non évalués`);
+      if(notApplicable)parts.push(`${count(notApplicable)} non applicables`);
+      $('kpi-qualification-note').textContent=parts.join(' · ');
+      $('qual-mode').textContent='Registre actuel · qualifications limitées à leur portée et à leur date, non à l’application entière';
     }else{
       $('kpi-qualification').textContent='Non publié';
       $('kpi-qualification-note').textContent='Ouvrir via l’application pour voir les états privés';
@@ -288,6 +438,7 @@
   function selectRepo(repo,fromMap=false,keepTab=false){
     if(!repoByName(repo))return;
     activeRepo=repo;if(!keepTab)detailTab='overview';directory();renderDetail();drawKristal();
+    setWorkspace('applications','#apps');
     if(fromMap){$('apps').scrollIntoView({behavior:'smooth',block:'start'});}
     const url=new URL(location.href);url.searchParams.set('app',repo.split('/').pop());
     history.replaceState(null,'',url.pathname+url.search+'#apps');
@@ -299,28 +450,39 @@
   async function refresh(){
     $('load-status').textContent='Chargement…';
     try{
-      const [newAtlas, audit, local, source, campaignSummary, reviewSummary]=await Promise.all([
+      const [newAtlas, audit, local, source, campaignSummary, reviewSummary, board]=await Promise.all([
         getJSON('data/ecosystem.json?at='+Date.now()),
         getJSON('data/dashboard.json?at='+Date.now(),true),
         getJSON('data/local-qualification.json?at='+Date.now(),true),
         getJSON('/api/kristal/atlas?at='+Date.now(),true),
         getJSON('/api/campaigns/summary?at='+Date.now(),true),
         getJSON('/api/review/summary?at='+Date.now(),true),
+        getJSON('/api/validation/board?at='+Date.now(),true),
       ]);
       if(newAtlas.format!=='koa_ecosystem.atlas.v1'||!Array.isArray(newAtlas.repositories)||newAtlas.repositories.length!==49){throw new Error('Inventaire invalide');}
+      validationBoard=board?.format==='koa.validation_board.private.v1'&&board.local_only?board:null;
       atlas=newAtlas;localAudit=audit;qualification=local?.format==='koa_qualification.public_status.v1'?local:null;
       privateCampaigns = campaignSummary?.format==='koa_certification.latest_summary.v1'?campaignSummary:null;
       privateReview = reviewSummary?.format==='koa.evidence_review.summary.v1'?reviewSummary:null;
       const reviewLink=$('review-private-link'); if(reviewLink)reviewLink.hidden=!privateReview;
-      $('historique-campagnes').hidden = !qualification;
+      const historyLink=$('campaigns-local-link'); if(historyLink)historyLink.hidden=!qualification;
+      // Historic panels are private; the route remains navigable even on public Pages.
+      setWorkspace(workspace,location.hash);
       const latestPanel = $('latest-campaign');latestPanel.replaceChildren();
       if(qualification){
         if(privateCampaigns?.available){
           const c=privateCampaigns.latest;
-          latestPanel.append(el('p','',`Dernière campagne : ${c.frozen_at.slice(0,10)} · ${count(c.engineering_profiles)}/${count(c.repository_count)} profils figés · ${count(c.proof_files)} preuves jointes · ${count(c.practice_reviews)} pratiques examinées.`));
+          latestPanel.append(el('p','',`Campagne figée du ${c.frozen_at.slice(0,10)} (état historique) · ${count(c.engineering_profiles)}/${count(c.repository_count)} profils figés · ${count(c.proof_files)} pièces jointes · ${count(c.practice_reviews)} pratiques examinées.`));
+          const frozenEvidenced=stages.reduce((sum,[key])=>sum+(Number(c.stages_evidenced?.[key])||0),0);
+          const totalPossible=atlas.repositories.length*stages.length;
+          const currentEvidenced=atlas.repositories.reduce((sum,r)=>sum+stages.filter(([id])=>statusFor(r.repo,id)==='Étayé par preuve').length,0);
+          latestPanel.append(el('p','campaign-scope-note',`Jalons étayés — campagne figée : ${count(frozenEvidenced)}/${count(totalPossible)} · registre actuel : ${count(currentEvidenced)}/${count(totalPossible)}. Les décisions postérieures à la campagne n’en modifient pas le contenu.`));
+          if(currentEvidenced!==frozenEvidenced){
+            latestPanel.append(el('p','campaign-scope-note','Pour conserver l’état actuel, crée une nouvelle campagne dans l’application Windows. Aucune ancienne campagne n’est réécrite.'));
+          }
           const list=el('div','campaign-bars');
           for(const [id,label] of stages){
-            const n=c.stages_evidenced[id]||0,row=el('div','stage-row');
+            const n=c.stages_evidenced?.[id]||0,row=el('div','stage-row');
             row.append(el('span','',label+` · ${n}/${c.repository_count} étayés`));
             const meter=el('div','stage-meter'),fill=el('span','stage-evidence');
             fill.style.width=(100*n/Math.max(1,c.repository_count))+'%';meter.append(fill);row.append(meter);list.append(row);
@@ -330,6 +492,7 @@
         }else latestPanel.append(el('p','','Aucune campagne locale encore créée. Le registre de qualification reste disponible dans l’application Windows.'));
       }
       kristal=source?.format==='koa_audit.kristal_local.v1'&&source.state==='ready'?source:null;
+      renderValidationBoard();
       $('kristal-banner').classList.toggle('missing',!kristal);
       if(kristal){
         $('kristal-banner').textContent=`Kristal local · ${kristal.matched}/${kristal.inventory} dépôts identifiés · ${kristal.explicit_repositories} liens explicites · ${kristal.candidate_repositories} suggestions à confirmer · ${kristal.unlinked_repositories} sans proposition` ;
@@ -359,8 +522,21 @@
       renderDetail();$('load-status').textContent='Données disponibles';
     }catch(e){$('load-status').textContent='Données indisponibles';$('repo-list').replaceChildren(el('div','empty','Impossible de lire l’inventaire du tableau de bord. Lance l’aperçu depuis l’application Windows.'));}
   }
+  $('validation-search').addEventListener('input',e=>{validationSearch=e.target.value;renderValidationBoard();});
+  $('validation-filter').addEventListener('change',e=>{validationFilter=e.target.value;renderValidationBoard();});
   $('search').addEventListener('input',e=>{searchText=e.target.value.trim().toLocaleLowerCase();directory();});
   $('refresh').addEventListener('click',refresh);
+  window.addEventListener('hashchange',activateRoute);
+  // Update immediately on ordinary in-page clicks, even in restricted previews
+  // where a hashchange event can be suppressed.
+  document.addEventListener('click',event=>{
+    const a=event.target.closest?.('a[href^="#"]');
+    if(!a)return;
+    const anchor=a.getAttribute('href');
+    if(['#validations','#apps','#cartographie','#qualification','#historique-campagnes'].includes(anchor))
+      setWorkspace(workspaceForHash(anchor),anchor);
+  });
+  activateRoute();
   $('view-contracts').addEventListener('click',()=>{mapTouched=true;switchMap('contracts');});
   $('view-all').addEventListener('click',()=>{mapTouched=true;switchMap('all');});
   $('view-kristal').addEventListener('click',()=>{mapTouched=true;switchMap('kristal');});

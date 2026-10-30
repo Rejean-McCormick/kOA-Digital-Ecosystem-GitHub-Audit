@@ -5,8 +5,22 @@
 
   **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.14.0 · Scoped evidence adjudication, 245 documentary cases, immutable campaigns**
+  **Version 0.16.0 · Task-first navigation informed by the supplied UX Architecture Guide v2**
 </div>
+
+## Task-first navigation — v0.16.0
+
+The Windows app uses **Pilotage / Dossiers des systèmes / Campagnes datées / Outils avancés**. The browser opens on **Validations**; applications (with optional Kristal map) and dated campaigns are separate spaces rather than an endlessly stacked dashboard. Source-checked evidence and qualification rules are unchanged. See [UX guide v2 adoption](docs/UX_REFACTOR_GUIDE_V2.md).
+
+## Evidence-first landing page — foundation v0.15.0
+
+The local dashboard now opens with a **49-system evidence register**. For each repository, it shows six categories (Tests, Security, Architecture, Implementation, Integration and Production), the 86 **unscored** architecture/security practices, and its documented/proposed Kristal component bindings. A checkmark is reserved for **reviewed, original-source-verified documentary claims** or clearly labelled **historical CI success observations at the observed SHA**; neither is a blanket security or production certification.
+
+The historical reviewed report supports 10 scope-limited documentary stages (including two applications sharing one local E2E run); three GitHub Actions last-run success observations match the October 28 snapshot SHA. **Neither establishes the result of an unobserved test or a current-HEAD success**. Public GitHub Pages displays no private validation results. Read [the evidence-first method](docs/EVIDENCE_FIRST_HOME_V015.md).
+
+## Dashboard evidence counter clarity — v0.14.1
+
+The local dashboard uses **evidenced stages / 245** as the primary qualification indicator. Reviewed-but-unproven stages appear as **to document**, not as qualified. All five stage bars separately display supported and to-document counts. The latest dated campaign panel explicitly distinguishes the **frozen campaign state** from the **current private registry**; previously created ZIP campaigns are immutable. The original source-adjudicated conclusions and local review behavior remain unchanged.
 
 ## Owner-requested documentary adjudication — v0.14.0
 
