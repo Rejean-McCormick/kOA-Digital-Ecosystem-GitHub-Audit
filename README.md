@@ -5,8 +5,16 @@
 
   **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.11.0 · Verified evidence campaigns, optional local static collection, clickable proof files, dated comparisons**
+  **Version 0.12.0 · Opt-in report discovery, immutable evidence snapshots, Git provenance and local progress dashboards**
 </div>
+
+## Private evidence automation and dated progress — v0.12.0
+
+In **Campagnes datées**, discover already-generated **JUnit, coverage and SARIF** reports from a selected clone or local folder references in an existing `audit.json`. Discovery uses a strict directory/filename allowlist and checks the Git remote identity; it never executes tests, recursively scans source, uploads evidence or mutates repositories. **Confirmation is required before attaching any private report bytes.** If a report changes after discovery, campaign creation refuses the capture until it is reviewed again.
+
+The local atlas now shows a **latest-campaign summary**, five separate manually supported stage bars and a comparison with the previous campaign. Application cards link to their historical private records, frozen Engineering Profiles, reports, recorded commit and SHA-pinned GitHub ZIP link. Comparisons distinguish added/removed report bytes using their content hashes; they are documentary progress, not automatic certification. Existing archives and the stable Windows progress bars remain compatible.
+
+See [Evidence automation and dated progress](docs/EVIDENCE_AUTOMATION_AND_PROGRESS_V012.md) and [Private compliance campaigns](docs/PRIVATE_COMPLIANCE_CAMPAIGNS.md). The public GitHub Pages site never accesses these local records.
 
 ## Non-flashing Windows progress — v0.11.1
 

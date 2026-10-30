@@ -18,3 +18,5 @@
 - [Kristal local repository source](Kristal-Local-Repository-Source)
 
 - [Dated Compliance Snapshots](Dated-Compliance-Snapshots)
+
+- [Evidence Discovery & Dated Progress](Evidence-Discovery-and-Dated-Progress)

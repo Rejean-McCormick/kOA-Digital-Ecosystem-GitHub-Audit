@@ -26,3 +26,13 @@ Dans **Campagnes datées**, sélectionne ton ancien `audit.json` ou le dossier d
 - Aucune fenêtre de console Git, `scc`, Lizard ou Ctags ne doit s'ouvrir puis disparaître pendant ces opérations sur Windows. Les outils facultatifs nécessitent toujours ton accord.
 - Pour les opérations qui ne donnent pas de décompte fiable, la barre n'invente pas de pourcentage et reste stable jusqu'au résultat.
 - Les confirmations demandées par l'application ou un gestionnaire d'identifiants Git restent possibles : ce ne sont pas des fenêtres de console.
+
+## Découvrir les preuves et voir la progression — v0.12.0
+
+1. Dans **Campagnes datées**, choisis le clone local d’une application ou un ancien `audit.json` avec les chemins des clones.
+2. Clique sur **Trouver rapports de ce clone** ou **Trouver rapports des clones de l’audit**. La barre de progression indique les dépôts examinés.
+3. Examine les noms trouvés, puis **confirme** si tu veux joindre ces rapports JUnit, couverture ou SARIF à la prochaine campagne. Aucun test n’est exécuté.
+4. Crée ta **campagne figée** : si un document a changé après la découverte, relance la découverte pour le revoir.
+5. Ouvre le dashboard **Écosystème** : la section privée des campagnes affiche les profils, les rapports et les cinq jalons à cette date. Clique **Fiche figée · dernière campagne** depuis une application, ou **Comparer les deux dernières campagnes**.
+
+Cette fonction utilise exclusivement l’aperçu **local**. Elle n’envoie pas les pièces sur GitHub; un rapport importé ne prouve pas à lui seul sa concordance avec le commit Git.

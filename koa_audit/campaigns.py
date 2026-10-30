@@ -288,6 +288,22 @@ def version_alignment(record: dict) -> dict:
                     "Fichiers ignorés, non suivis et sous-modules non contrôlés."}
 
 
+def proof_version_relation(proof: dict, record: dict) -> str:
+    """A Git SHA match is a metadata comparison, NOT proof of execution at SHA."""
+    recorded = (record.get("historical_audit") or {}).get("recorded_git") or {}
+    audit = record.get("historical_audit") or {}
+    observed = record.get("observed_git") or {}
+    pinned = recorded.get("head") or audit.get("reported_head") or observed.get("head")
+    source = proof.get("source_commit")
+    if not isinstance(source, str) or not SHA_PATTERN.fullmatch(source):
+        return "unverified_report_not_bound_to_commit"
+    if not pinned or not SHA_PATTERN.fullmatch(pinned):
+        return "collector_sha_without_campaign_git_reference"
+    if source.lower() != pinned.lower():
+        return "collector_git_head_differs_from_reference"
+    return "collector_git_head_matches_reference_not_artifact_attestation"
+
+
 def _archive_limits(documents: dict[str, bytes]) -> None:
     """Match the reader's constraints *before* any persistent filesystem write."""
     if len(documents) > MAX_FILES:
@@ -349,6 +365,7 @@ def describe_proof(path: Path, data: bytes) -> dict:
                           "github_workflows":_nonnegative(obj.get("github_workflow_files")),
                           "source_commit_reported":source_sha if isinstance(source_sha,str) and SHA_PATTERN.fullmatch(source_sha) else None,
                           "tracked_worktree":str(git.get("worktree","unknown"))[:80],
+                          "collector_reported_at":str(obj.get("captured_at", ""))[:50],
                           "note":"Révision Git observée au moment de la mesure; résultats de tests et validation de production non exécutés."}
             elif isinstance(obj, dict) and isinstance(obj.get("totals"), dict):
                 value = obj["totals"].get("percent_covered")
@@ -365,7 +382,8 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
                     *, store: Path | None = None, local_paths: dict[str, Path] | None = None,
                     extra_proofs: dict[str, list[Path]] | None = None,
                     git_probe: bool = True, kristal_folder: Path | None = None,
-                    progress: Callable[[int, int, str], None] | None = None) -> Path:
+                    progress: Callable[[int, int, str], None] | None = None,
+                    expected_proof_sha256: dict[Path, str] | None = None) -> Path:
     """Freeze a campaign ZIP. Never execute project code or change source repos.
 
     extra_proofs are explicit opt-in evidence files, not recursively discovered.
@@ -432,8 +450,12 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
                 existing_total = sum(len(content) for content in documents.values())
                 if existing_total + path.stat().st_size > MAX_CAMPAIGN or len(documents) + 2 > MAX_FILES:
                     raise ValueError("Limite totale de la campagne atteinte avant lecture de la preuve")
-                documents[member] = path.read_bytes()
-                proof_summary = describe_proof(path, documents[member])
+                raw = path.read_bytes()
+                expected = (expected_proof_sha256 or {}).get(path)
+                if expected is not None and _hash(raw) != expected:
+                    raise ValueError("Rapport modifié depuis la découverte : refaire l'aperçu avant d'archiver")
+                documents[member] = raw
+                proof_summary = describe_proof(path, raw)
                 proof_commit = None
                 provenance = "file_imported_not_bound_to_git"
                 if proof_summary.get("recognition") == "koa_static_metadata_summary":
@@ -447,12 +469,15 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
                     except (TypeError,ValueError):
                         pass
                 filelist.append({"name": path.name[:140], "member": member, "sha256": _hash(documents[member]),
+                                 "imported_at": _now(),
                                  "kind": path.suffix.lower().lstrip("."),
                                  "source_commit": proof_commit, "provenance": provenance,
                                  "summary": proof_summary})
             repos[slug]["attached_proofs"] = filelist
     for rec in repos.values():
         proofs = rec.get("attached_proofs") or []
+        for proof in proofs:
+            proof["version_relation"] = proof_version_relation(proof, rec)
         recorded = (rec.get("historical_audit") or {}).get("recorded_git") or {}
         pinned = recorded.get("head") or (rec.get("historical_audit") or {}).get("reported_head") or (rec.get("observed_git") or {}).get("head")
         source_shas = [p.get("source_commit") for p in proofs]
@@ -621,8 +646,20 @@ def campaign_coverage(snapshot: dict) -> dict:
     proof_count = sum(len(row.get("attached_proofs") or []) for row in records.values())
     practice_rows = sum(len([v for v in (row.get("practices") or {}).values()
                              if v.get("status", "Non évalué") != "Non évalué"]) for row in records.values())
+    kinds = {}
+    versions = {"collector_git_head_matches_reference_not_artifact_attestation": 0,
+                "collector_git_head_differs_from_reference": 0,
+                "collector_sha_without_campaign_git_reference": 0,
+                "unverified_report_not_bound_to_commit": 0}
+    for record in records.values():
+        for proof in record.get("attached_proofs") or []:
+            kind = (proof.get("summary") or {}).get("recognition", "document_only")
+            kinds[kind] = kinds.get(kind, 0) + 1
+            version = proof.get("version_relation") or proof_version_relation(proof, record)
+            versions[version] = versions.get(version, 0) + 1
     return {"repository_count":len(records),"engineering_profiles":profiles_count,
-            "attached_proofs":proof_count,"practice_reviews":practice_rows,"stages":stages}
+            "attached_proofs":proof_count,"practice_reviews":practice_rows,"stages":stages,
+            "proof_categories":kinds,"proof_version_relations":versions}
 
 
 def compare_campaigns(older_id: str, newer_id: str, store: Path | None = None) -> dict:
@@ -634,7 +671,9 @@ def compare_campaigns(older_id: str, newer_id: str, store: Path | None = None) -
     items = []
     totals = {"profiles_added": 0, "profiles_removed": 0, "stage_new_evidence": 0,
               "stage_evidence_revised": 0, "stage_evidence_withdrawn": 0,
-              "practices_reviewed_added": 0, "commit_changed": 0}
+              "practices_reviewed_added": 0, "commit_changed": 0,
+              "proof_files_added": 0, "proof_files_removed": 0,
+              "report_kinds_added": 0}
     for slug in sorted(set(previous) | set(current)):
         old, new = previous.get(slug, {}), current.get(slug, {})
         op, np = old.get("profiles") or {}, new.get("profiles") or {}
@@ -662,7 +701,19 @@ def compare_campaigns(older_id: str, newer_id: str, store: Path | None = None) -
             return ((oldaudit.get("recorded_git") or {}).get("head") or oldaudit.get("reported_head") or obs.get("head"))
         commit_changed = bool(sha(old) and sha(new) and sha(old)!=sha(new))
         totals["commit_changed"] += commit_changed
-        items.append({"slug":slug,"new_evidence":incoming,"revised":revised,"withdrawn":withdrawn,
+        proof_set=lambda rec: {(p.get("sha256"), (p.get("summary") or {}).get("recognition"))
+                              for p in (rec.get("attached_proofs") or []) if p.get("sha256")}
+        old_files, new_files = proof_set(old), proof_set(new)
+        files_added, files_removed = len(new_files-old_files),len(old_files-new_files)
+        totals["proof_files_added"] += files_added
+        totals["proof_files_removed"] += files_removed
+        old_kinds = {(p.get("summary") or {}).get("recognition")
+                     for p in (old.get("attached_proofs") or [])}
+        new_kinds = {(p.get("summary") or {}).get("recognition")
+                     for p in (new.get("attached_proofs") or [])}
+        totals["report_kinds_added"] += len(new_kinds-old_kinds)
+        items.append({"slug":slug,"proof_files_added":files_added,"proof_files_removed":files_removed,
+                      "new_evidence":incoming,"revised":revised,"withdrawn":withdrawn,
                       "new_practice_reviews":added_reviews,"profile_added":new_engineering and not old_engineering,
                       "profile_removed":old_engineering and not new_engineering,"commit_changed":commit_changed})
     return {"older": {"id":older_id,"title":a["title"],"date":a["frozen_at"], "coverage":campaign_coverage(a)},
@@ -730,6 +781,38 @@ def list_campaigns(store: Path | None = None) -> list[dict]:
     return found
 
 
+def latest_summary(store: Path | None = None) -> dict:
+    """Private status-only summary for the *loopback* atlas (not GitHub Pages)."""
+    rows = [r for r in list_campaigns(store) if r.get("integrity") == "ok"]
+    output = {"format": "koa_certification.latest_summary.v1", "available": bool(rows)}
+    if not rows:
+        return output
+    most_recent = rows[0]
+    snapshot = read_campaign(most_recent["id"], store)
+    coverage = campaign_coverage(snapshot)
+    output["latest"] = {
+        "id": most_recent["id"], "frozen_at": most_recent["frozen_at"],
+        "repository_count": coverage["repository_count"],
+        "engineering_profiles": coverage["engineering_profiles"],
+        "proof_files": coverage["attached_proofs"],
+        "practice_reviews": coverage["practice_reviews"],
+        "stages_evidenced": {key: info["counts"]["Étayé par preuve"]
+                            for key, info in coverage["stages"].items()},
+        "proof_categories": coverage["proof_categories"],
+        # Names only from the fixed inventory. No notes, proof contents, paths,
+        # review scope or manual decisions are exposed by this endpoint.
+        "repositories": {record["repository"]: {
+            "engineering_profile": bool((record.get("profiles") or {}).get("engineering")),
+            "proof_files": len(record.get("attached_proofs") or []),
+            "manually_evidenced_stages": sum(1 for claim in (record.get("qualification") or {}).values()
+                                              if isinstance(claim,dict) and claim.get("status")=="Étayé par preuve")
+            } for record in snapshot["repository_profiles_snapshot"].values()},
+    }
+    if len(rows) >= 2:
+        output["previous_id"] = rows[1]["id"]
+    return output
+
+
 def render_local_page(route: str, store: Path | None = None) -> str:
     """Build a private, click-through history view for the loopback preview only."""
     from html import escape
@@ -770,12 +853,29 @@ def render_local_page(route: str, store: Path | None = None) -> str:
             items.append("<tr><td><a href='" + link + "'>"+escape(rec["title"])+"</a></td>"
                          "<td>"+escape(rec["frozen_at"])+"</td><td>"+str(rec["repositories"])+
                          "</td><td>"+("Empreinte vérifiée" if rec["integrity"] == "ok" else "Archive à vérifier")+"</td></tr>")
+        timeline = []
+        for rec in reversed([r for r in rows if r["integrity"] == "ok"][-12:]):
+            try:
+                coverage = campaign_coverage(read_campaign(rec["id"], store))
+                total = max(1, coverage["repository_count"])
+                ratio = round(100 * coverage["engineering_profiles"] / total, 1)
+                described = str(coverage["engineering_profiles"]) + "/" + str(coverage["repository_count"])
+                timeline.append("<div class='metric'><label><span><a href='/local/campaigns/"+
+                                rec["id"]+"'>"+escape(rec["title"])+"</a> · "+escape(rec["frozen_at"][:10])+
+                                "</span><strong>"+described+" profils · "+str(coverage["attached_proofs"])+
+                                " rapports joints</strong></label><div class='track'><div class='fill' "
+                                "style='width:"+str(ratio)+"%'></div></div></div>")
+            except (OSError, ValueError, KeyError, TypeError, zipfile.BadZipFile):
+                pass
+        timeline_html = ("<div class='panel'><h2>Évolution de la couverture documentaire</h2>"
+                         "<p>Barres : profils disponibles dans chaque campagne, pas taux de conformité ou de développement.</p>"+
+                         "".join(timeline)+"</div>") if timeline else ""
         return page("Campagnes", "<h1>Campagnes de conformité</h1>"
                     "<p>Chaque campagne est une capture datée, indépendante des modifications futures des dépôts. "
                     "Aucun état « appliqué » n’est inféré d’un scan ou d’une taille de code.</p>"
                     "<table><thead><tr><th>Campagne</th><th>Date UTC</th><th>Dépôts</th><th>Intégrité</th></tr></thead><tbody>"
                     + ("".join(items) or "<tr><td colspan='4'>Aucune campagne figée pour le moment. Crée-en une dans le launcher Windows.</td></tr>")
-                    + "</tbody></table><p>Les ZIP et empreintes restent dans ton dossier de campagnes local, jamais dans GitHub Pages.</p>")
+                    + "</tbody></table>"+timeline_html+"<p>Les ZIP et empreintes restent dans ton dossier de campagnes local, jamais dans GitHub Pages.</p>")
     if len(parts) == 4 and parts[2] == "compare":
         comparison = compare_campaigns(parts[3].split("--")[0], parts[3].split("--")[-1], store) if "--" in parts[3] else None
         if comparison is None:
@@ -790,18 +890,21 @@ def render_local_page(route: str, store: Path | None = None) -> str:
             after=new_coverage["stages"][key]["counts"]["Étayé par preuve"]
             charts.append("<div class='metric'><label><span>"+escape(label)+"</span><strong>"+
                           str(before)+" → "+str(after)+" preuves étayées</strong></label>"
-                          "<div class='track'><div class='fill prior' style='width:"+str(round(100*before/before_total,2))+"%'></div></div>"
-                          "<div class='track'><div class='fill' style='width:"+str(round(100*after/after_total,2))+"%'></div></div></div>")
+                          "<div class='track'><div class='fill prior' style='width:"+str(min(100,round(100*before/before_total,2)))+"%'></div></div>"
+                          "<div class='track'><div class='fill' style='width:"+str(min(100,round(100*after/after_total,2)))+"%'></div></div></div>")
         chart_html=("<div class='panel'><h2>Évolution des cinq jalons · preuves validées manuellement</h2>"
                     "<p>Gris : campagne précédente · turquoise : campagne récente. "
                     "Non évalué n'est ni échec ni défaut.</p>"+"".join(charts)+"</div>")
-        rows = "".join("<tr><td>"+escape(row["slug"])+"</td><td>"+str(row["new_evidence"])+
+        rows = "".join("<tr><td><a href='/local/campaigns/"+comparison["newer"]["id"]+
+                       "/app/"+escape(row["slug"])+"'>"+escape(row["slug"])+"</a></td><td>"+
+                       str(row["proof_files_added"])+" / "+str(row["proof_files_removed"])+
+                       "</td><td>"+str(row["new_evidence"])+
                        "</td><td>"+str(row["withdrawn"])+"</td><td>"+str(row["new_practice_reviews"])+
                        "</td><td>"+("Oui" if row["commit_changed"] else "—")+"</td></tr>" for row in comparison["repositories"])
         return page("Comparaison des campagnes", "<h1>Comparaison documentaire</h1><p>"+
                     escape(comparison["older"]["title"])+" → "+escape(comparison["newer"]["title"])+
                     "</p><p>Aucune certification déduite automatiquement.</p><div class='grid'>"+cards+
-                    "</div>"+chart_html+"<table><tr><th>Application</th><th>Nouvelles preuves</th><th>Preuves retirées</th>"
+                    "</div>"+chart_html+"<table><tr><th>Application</th><th>Rapports ajoutés / retirés</th><th>Nouveaux jalons étayés</th><th>Jalons non étayés depuis</th>"
                     "<th>Pratiques évaluées en plus</th><th>Commit différent</th></tr>"+rows+"</table>")
     if len(parts) < 3 or parts[:2] != ["local", "campaigns"] or not ID_PATTERN.fullmatch(parts[2]):
         raise ValueError("Route de campagne invalide")
@@ -851,6 +954,12 @@ def render_local_page(route: str, store: Path | None = None) -> str:
                    "<a href='"+urls["commit"]+"' rel='noopener noreferrer' target='_blank'>Ouvrir sur GitHub</a> · "
                    "<a href='"+urls["download_zip"]+"' rel='noopener noreferrer' target='_blank'>Télécharger ZIP</a>"
                    "</p>" if urls else "<p>Aucun commit Git SHA disponible pour cette capture.</p>")
+        labels = {
+            "collector_git_head_matches_reference_not_artifact_attestation": "SHA du collecteur concordant (exécution du rapport non attestée)",
+            "collector_git_head_differs_from_reference": "SHA du collecteur différent de la version historique choisie",
+            "collector_sha_without_campaign_git_reference": "SHA du collecteur seul, version historique non connue",
+            "unverified_report_not_bound_to_commit": "Rapport importé, version Git non vérifiée",
+        }
         proof_rows = []
         for index, proof in enumerate(record.get("attached_proofs") or []):
             link = "/local/campaigns/" + cid + "/proof/" + quote(slug) + "/" + str(index)
@@ -858,7 +967,8 @@ def render_local_page(route: str, store: Path | None = None) -> str:
                               "</a> — SHA-256 : "+escape(proof.get("sha256", ""))[:20]+"… — "
                               +escape(str((proof.get("summary") or {}).get("recognition", "document_only")))+
                               " — Git à la collecte : "+escape(str(proof.get("source_commit") or "non relié"))[:18]+
-                              " (rapport déclaré, non certifié)</li>")
+                              " · Relation au SHA : "+escape(labels.get(proof.get("version_relation") or proof_version_relation(proof,record),"Provenance inconnue"))+
+                              " (rapport observé, non certifié)</li>")
         align = record.get("version_alignment") or version_alignment(record)
         alignment = ("<p>Comparaison des SHA Git : <strong>"+escape(align["git_comparison"])+
                      "</strong> · Profil ↔ commit : <strong>non vérifié (snapshot indépendant)</strong>. "
@@ -963,6 +1073,17 @@ def render_local_page(route: str, store: Path | None = None) -> str:
                       "<small>À documenter : "+str(amounts["À documenter"])+
                       " · Non évalué : "+str(amounts["Non évalué"])+
                       " · Non applicable : "+str(amounts["Non applicable"])+"</small></div>")
+    kinds = coverage.get("proof_categories") or {}
+    relations = coverage.get("proof_version_relations") or {}
+    rows = "".join("<tr><td>"+escape(str(kind))+"</td><td>"+str(count)+"</td></tr>"
+                   for kind,count in sorted(kinds.items()))
+    summary += ("<div class='panel'><h2>Rapports archivés et provenance Git</h2>"
+                "<p>Rapports présents dans le ZIP, sans les réexécuter : " +str(coverage["attached_proofs"])+
+                ". Une concordance de SHA ne prouve pas que le rapport a été généré à ce commit.</p>"
+                +("<table><tr><th>Type de preuve importée</th><th>Nombre</th></tr>"+rows+"</table>" if rows else "<p>Aucun rapport complémentaire.</p>")+
+                "<p>SHA collecteur concordant : "+str(relations.get("collector_git_head_matches_reference_not_artifact_attestation",0))+
+                " · SHA différent : "+str(relations.get("collector_git_head_differs_from_reference",0))+
+                " · Non relié / inconnu : "+str(relations.get("unverified_report_not_bound_to_commit",0))+".</p></div>")
     summary += "<div class='panel'><h2>Qualification documentée · 5 jalons indépendants</h2>"+"".join(visual)+"</div>"
     note = ("<div class='panel'><strong>Important</strong><p>Les liens de téléchargement ciblent un SHA, "
             "pas main. Leur disponibilité distante n’a pas été testée. "

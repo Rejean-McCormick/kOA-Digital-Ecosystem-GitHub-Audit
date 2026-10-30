@@ -1,4 +1,4 @@
-# Private, dated compliance campaigns (v0.11.0)
+# Private, dated compliance campaigns (v0.12.0)
 
 A **campaign** is an explicitly created, dated snapshot of available evidence and manually reviewed decisions. It is **not** a certification, a Git tag, a release, a backup of every source file, or a live link to the head of a repository.
 
@@ -113,3 +113,7 @@ The campaign listing uses an in-process cache keyed by ZIP and checksum modifica
 The Tkinter launcher shows stable, determinate progress for campaign collection and creation. Repository collection uses actual processed/selected counts; campaign creation advances for each frozen repository, explicit proof integration, archive construction, internal validation, and atomic publication. The bar reaches completion only after post-publication verification. Long operations without an evidence-based unit of work show a static in-progress state, not a fake percentage or flashing indicator.
 
 All application-managed child processes now use Windows-specific hidden-console creation flags (`CREATE_NO_WINDOW` and `STARTF_USESHOWWINDOW` / `SW_HIDE`), while retaining explicit argument vectors, no shell, timeouts and the existing read-only boundaries. Native authentication dialogs and user-triggered file selectors are unaffected.
+
+## v0.12.0 — Approved report discovery and private progress
+
+See [Evidence automation and dated progress](EVIDENCE_AUTOMATION_AND_PROGRESS_V012.md) for the bounded discovery allowlist, explicit import consent, changed-file protection, per-proof Git provenance and latest-campaign atlas. Older campaign archives require no migration.

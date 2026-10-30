@@ -55,7 +55,7 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
         No free-form evidence, file paths or notes are exported through JSON.
         """
         route = urlsplit(self.path).path
-        if (route not in ("/data/local-qualification.json", "/api/kristal/atlas")
+        if (route not in ("/data/local-qualification.json", "/api/kristal/atlas", "/api/campaigns/summary")
                 and not route.startswith(("/local/engineering/", "/local/campaigns"))):
             return super().do_GET()
         if (self.client_address[0] not in ("127.0.0.1", "::1")
@@ -93,6 +93,10 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
                                   "Vérifier le dossier dans l'application Windows.",
                     }
                 payload = json.dumps(source, ensure_ascii=False).encode("utf-8")
+                kind = "application/json; charset=utf-8"
+            elif route == "/api/campaigns/summary":
+                from koa_audit import campaigns
+                payload = json.dumps(campaigns.latest_summary(), ensure_ascii=False).encode("utf-8")
                 kind = "application/json; charset=utf-8"
             elif route.startswith("/local/campaigns"):
                 from koa_audit import campaigns
@@ -308,6 +312,7 @@ class AuditLauncher:
         self.campaign_detail = StringVar(value="Aucune campagne encore sélectionnée")
         self.campaign_busy = False
         self.campaign_attached = {}
+        self.campaign_expected_hashes = {}
         self.campaign_source = StringVar(value="")
         self.campaign_run_tools = BooleanVar(value=False)
         self.campaign_collection_cancel = threading.Event()
@@ -548,11 +553,15 @@ class AuditLauncher:
         ttk.Button(controls, text="Annuler après le dépôt en cours", command=self._campaign_cancel_measure).pack(side="left", padx=(0, 8))
         controls2 = ttk.Frame(group)
         controls2.grid(row=6, column=0, columnspan=3, sticky="w", pady=(3, 10))
-        ttk.Button(controls2, text="Voir rapports mesurés", command=self._campaign_open_collections).pack(side="left", padx=(0, 8))
-        self.campaign_create_button = ttk.Button(controls2, text="Créer une campagne figée",
+        ttk.Button(controls2, text="Trouver rapports de ce clone", command=self._campaign_discover_one).pack(side="left", padx=(0, 8))
+        ttk.Button(controls2, text="Trouver rapports des clones de l'audit", command=self._campaign_discover_all).pack(side="left", padx=(0, 8))
+        ttk.Button(controls2, text="Voir mesures enregistrées", command=self._campaign_open_collections).pack(side="left", padx=(0, 8))
+        controls3 = ttk.Frame(group)
+        controls3.grid(row=7, column=0, columnspan=3, sticky="w", pady=(3, 10))
+        self.campaign_create_button = ttk.Button(controls3, text="Créer une campagne figée",
                                                  command=self._campaign_create, style="Primary.TButton")
         self.campaign_create_button.pack(side="left", padx=(0, 8))
-        ttk.Button(controls2, text="Ouvrir le dossier des campagnes",
+        ttk.Button(controls3, text="Ouvrir le dossier des campagnes",
                    command=self._campaign_folder).pack(side="left")
         progress_row = ttk.Frame(tab)
         progress_row.grid(row=1, column=0, sticky="ew", pady=(5, 6))
@@ -564,7 +573,9 @@ class AuditLauncher:
         ttk.Label(progress_row, textvariable=self.campaign_progress_label,
                   style="Muted.TLabel").grid(row=1, column=0, sticky="w", pady=(3, 0))
         ttk.Label(tab, text="Les collectes utilisent Git en lecture seule et éventuellement scc/Lizard/Universal Ctags si tu les autorises. "
-                  "Elles créent un résumé privé, sans code source ni chemins de fichiers, que tu peux joindre à la campagne. "
+                  "Les recherches de rapports existants sont limitées à quelques emplacements connus; elles demandent ton accord avant toute copie. "
+                  "Les rapports peuvent contenir des données sensibles et leur version Git n’est pas automatiquement vérifiée. "
+                  "Les mesures créent un résumé privé, sans code source ni chemins de fichiers. "
                   "Aucun test, aucun script du dépôt et aucune action GitHub n'est exécuté. "
                   "Les liens Git et les preuves indépendantes ne constituent pas une certification.",
                   style="Muted.TLabel", wraplength=990, justify="left").grid(row=2, column=0, sticky="ew", pady=10)
@@ -674,6 +685,59 @@ class AuditLauncher:
             self._events.put(("campaign-measured",saved,skipped))
         threading.Thread(target=work,daemon=True,name="koa-static-collector").start()
 
+    def _campaign_discover_one(self) -> None:
+        folder = Path(self.campaign_source.get().strip())
+        if not folder.is_dir():
+            messagebox.showinfo("Choisir le clone", "Sélectionne d'abord un clone local.")
+            return
+        self._campaign_discover([(self.campaign_repo.get(), folder)])
+
+    def _campaign_discover_all(self) -> None:
+        from koa_audit import campaigns, profiles
+        path = Path(self.campaign_audit.get().strip())
+        if not path.is_file():
+            messagebox.showinfo("Rapport local requis", "Choisis un audit.json avec chemins locaux existants.")
+            return
+        try:
+            locations = campaigns._source_lookup(campaigns._read_json(path))
+        except (OSError, ValueError, TypeError) as error:
+            messagebox.showerror("Rapport illisible", str(error)); return
+        selected = [(repo, locations[repo.casefold()]) for repo in profiles.inventory(ROOT)
+                    if repo.casefold() in locations and locations[repo.casefold()].is_dir()]
+        if not selected:
+            messagebox.showinfo("Copies absentes", "Aucun clone de ce rapport n'est actuellement accessible.")
+            return
+        self._campaign_discover(selected)
+
+    def _campaign_discover(self, selected: list[tuple[str, Path]]) -> None:
+        if self.campaign_busy or self._running:
+            messagebox.showinfo("Opération en cours", "Attends la fin de l'opération en cours."); return
+        if not messagebox.askyesno("Découvrir les rapports existants",
+                f"Examiner {len(selected)} clone(s) pour trouver uniquement JUnit, couverture et SARIF "
+                "à des emplacements connus ?\n\n"
+                "Les rapports ne seront ni exécutés, ni copiés avant ta confirmation. "
+                "Une preuve existante n'est pas nécessairement celle du commit courant."):
+            return
+        self.campaign_busy = True
+        self.campaign_collection_cancel.clear()
+        self.campaign_create_button.configure(state="disabled")
+        self.campaign_progress.configure(maximum=len(selected), value=0)
+        self.campaign_progress_label.set(f"Recherche : 0/{len(selected)} dépôts · 0 %")
+        self.campaign_detail.set("Recherche ciblée des rapports existants…")
+        def work():
+            from koa_audit import evidence_discovery
+            found, skipped = [], []
+            for done, (repo, folder) in enumerate(selected, 1):
+                if self.campaign_collection_cancel.is_set():
+                    break
+                try:
+                    found.extend(evidence_discovery.discover(folder, repo))
+                except (OSError, ValueError, TypeError) as error:
+                    skipped.append(f"{repo} : {str(error)[:65]}")
+                self._events.put(("campaign-discovering", done, len(selected), len(found)))
+            self._events.put(("campaign-discovered", found, skipped))
+        threading.Thread(target=work, daemon=True, name="koa-evidence-discovery").start()
+
     def _campaign_attach(self) -> None:
         path = filedialog.askopenfilename(title="Choisir une preuve à figer dans la prochaine campagne",
                     filetypes=[("Rapport / preuve", "*.json *.xml *.sarif *.md *.txt *.pdf *.html"), ("Tous", "*.*")])
@@ -703,6 +767,7 @@ class AuditLauncher:
                 f"Créer une capture privée datée pour les 49 dépôts ?\n\n"
                 f"Rapport historique : {'oui' if report else 'non'}\n"
                 f"Pièces jointes explicites : {attachment_count}\n\n"
+                "Les rapports joints ont une version Git non attestée sauf déclaration explicite du collecteur.\n"
                 "Les certifications ne seront pas calculées automatiquement.\n"
                 "Aucun dépôt Git ni GitHub ne sera modifié."):
             return
@@ -713,10 +778,13 @@ class AuditLauncher:
         self.campaign_progress_label.set("Création : préparation des données…")
         self.campaign_detail.set("Création de la campagne (lecture seule)…")
         extras={k:list(v) for k,v in self.campaign_attached.items()}
+        expected_hashes={p:d for p,d in self.campaign_expected_hashes.items()
+                         if any(p in paths for paths in extras.values())}
         def work():
             try:
                 from koa_audit import campaigns
                 dest=campaigns.create_campaign(ROOT,title,report,extra_proofs=extras,
+                    expected_proof_sha256=expected_hashes,
                     kristal_folder=Path(self.kristal_root.get().strip()).expanduser(),
                     progress=lambda done,total,caption: self._events.put(
                         ("campaign-progress",done,total,caption)))
@@ -1429,6 +1497,48 @@ class AuditLauncher:
                     self.campaign_progress.configure(maximum=total, value=done)
                     self.campaign_progress_label.set(
                         f"Création : {done}/{total} étapes · {caption}")
+                elif event[0] == "campaign-discovering":
+                    _, done, total, found_count = event
+                    self.campaign_progress.configure(maximum=total, value=done)
+                    self.campaign_progress_label.set(
+                        f"Recherche : {done}/{total} dépôts · {round(100 * done / total)} %")
+                    self.campaign_detail.set(f"Rapports reconnus : {found_count} · copies examinées : {done}")
+                elif event[0] == "campaign-discovered":
+                    self.campaign_busy = False
+                    self.campaign_create_button.configure(state="normal")
+                    discovered, skipped = event[1], event[2]
+                    cancelled = self.campaign_collection_cancel.is_set()
+                    self.campaign_collection_cancel.clear()
+                    self.campaign_progress_label.set(
+                        f"Recherche {'interrompue' if cancelled else 'terminée'} · "
+                        f"{len(discovered)} rapport(s) reconnu(s) · {len(skipped)} clone(s) ignoré(s)")
+                    if discovered:
+                        samples = "\n".join(f"• {r['repository'].split('/')[-1]} : {r['name']}"
+                                            for r in discovered[:12])
+                        if len(discovered) > 12:
+                            samples += f"\n… et {len(discovered)-12} autres"
+                        if messagebox.askyesno("Confirmer l'import privé",
+                                f"{len(discovered)} rapports existants trouvés :\n\n{samples}\n\n"
+                                "Ils peuvent contenir des informations sensibles. "
+                                "Ils seront COPIÉS uniquement dans le prochain ZIP privé; "
+                                "aucun résultat de test n'est réexécuté.\n\nJoindre ces rapports ?"):
+                            accepted = 0; already = 0
+                            for result in discovered:
+                                repo, path = result['repository'], result['path']
+                                attached = self.campaign_attached.setdefault(repo, [])
+                                if path not in attached and len(attached) < 15:
+                                    attached.append(path); accepted += 1
+                                    self.campaign_expected_hashes[path] = result['sha256']
+                                else: already += 1
+                            self.campaign_detail.set(
+                                f"{accepted} rapport(s) préparé(s) pour la prochaine campagne · "
+                                f"{already} déjà joints ou au-delà des limites · {len(skipped)} ignorés")
+                        else:
+                            self.campaign_detail.set("Rapports identifiés, aucun fichier importé (choix conservé).")
+                    else:
+                        self.campaign_detail.set(
+                            f"Aucun rapport reconnu aux emplacements connus · {len(skipped)} clone(s) ignoré(s). "
+                            "Ce n'est pas une non-conformité.")
                 elif event[0] == "campaign-measured":
                     self.campaign_busy=False
                     self.campaign_create_button.configure(state="normal")
@@ -1454,6 +1564,7 @@ class AuditLauncher:
                     self.campaign_create_button.configure(state="normal")
                     if event[0] == "campaign-created":
                         self.campaign_attached.clear()
+                        self.campaign_expected_hashes.clear()
                         self._campaign_refresh()
                         self.campaign_detail.set("Campagne figée : " + Path(event[1]).name)
                         self.status.set("Campagne enregistrée sans modifier GitHub")

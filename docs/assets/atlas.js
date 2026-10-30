@@ -8,7 +8,7 @@
     kristal:[82,37],linux:[82,65],spaces:[82,88],ik:[12,70],
     architect:[37,88],orchestrator:[59,88],sentient:[59,13],skope:[12,37]
   };
-  let atlas=null, localAudit=null, qualification=null, kristal=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview', mapMode='contracts', mapTouched=false;
+  let atlas=null, localAudit=null, qualification=null, kristal=null, privateCampaigns=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview', mapMode='contracts', mapTouched=false;
   function el(tag,cls,content){const x=document.createElement(tag);if(cls)x.className=cls;if(content!==undefined)x.textContent=String(content);return x;}
   function link(href,text,klass){const a=el('a',klass,text);a.href=href;return a;}
   function repoByName(name){return atlas.repositories.find(r=>r.repo===name);}
@@ -250,6 +250,11 @@
     else actions.append(el('span','disabled-link','Engineering Profile non fourni'));
     // The repository name has been validated against the bundled inventory.
     actions.append(link('https://github.com/'+encodeURI(r.repo),'Ouvrir le dépôt GitHub','secondary-link'));
+    if(privateCampaigns?.available && privateCampaigns.latest.repositories?.[r.repo]){
+      const cid=privateCampaigns.latest.id;
+      actions.append(link('/local/campaigns/'+cid+'/app/'+encodeURIComponent(r.slug),
+                   '↗ Fiche figée · dernière campagne','secondary-link'));
+    }
     holder.append(actions,detailTabs());
     const section=el('div');
     const m=r.engineering;
@@ -292,15 +297,33 @@
   async function refresh(){
     $('load-status').textContent='Chargement…';
     try{
-      const [newAtlas, audit, local, source]=await Promise.all([
+      const [newAtlas, audit, local, source, campaignSummary]=await Promise.all([
         getJSON('data/ecosystem.json?at='+Date.now()),
         getJSON('data/dashboard.json?at='+Date.now(),true),
         getJSON('data/local-qualification.json?at='+Date.now(),true),
         getJSON('/api/kristal/atlas?at='+Date.now(),true),
+        getJSON('/api/campaigns/summary?at='+Date.now(),true),
       ]);
       if(newAtlas.format!=='koa_ecosystem.atlas.v1'||!Array.isArray(newAtlas.repositories)||newAtlas.repositories.length!==49){throw new Error('Inventaire invalide');}
       atlas=newAtlas;localAudit=audit;qualification=local?.format==='koa_qualification.public_status.v1'?local:null;
+      privateCampaigns = campaignSummary?.format==='koa_certification.latest_summary.v1'?campaignSummary:null;
       $('historique-campagnes').hidden = !qualification;
+      const latestPanel = $('latest-campaign');latestPanel.replaceChildren();
+      if(qualification){
+        if(privateCampaigns?.available){
+          const c=privateCampaigns.latest;
+          latestPanel.append(el('p','',`Dernière campagne : ${c.frozen_at.slice(0,10)} · ${count(c.engineering_profiles)}/${count(c.repository_count)} profils figés · ${count(c.proof_files)} preuves jointes · ${count(c.practice_reviews)} pratiques examinées.`));
+          const list=el('div','campaign-bars');
+          for(const [id,label] of stages){
+            const n=c.stages_evidenced[id]||0,row=el('div','stage-row');
+            row.append(el('span','',label+` · ${n}/${c.repository_count} étayés`));
+            const meter=el('div','stage-meter'),fill=el('span','stage-evidence');
+            fill.style.width=(100*n/Math.max(1,c.repository_count))+'%';meter.append(fill);row.append(meter);list.append(row);
+          }
+          latestPanel.append(list);
+          if(privateCampaigns.previous_id)latestPanel.append(link('/local/campaigns/compare/'+privateCampaigns.previous_id+'--'+c.id,'Comparer les deux dernières campagnes ↗','small-button'));
+        }else latestPanel.append(el('p','','Aucune campagne locale encore créée. Le registre de qualification reste disponible dans l’application Windows.'));
+      }
       kristal=source?.format==='koa_audit.kristal_local.v1'&&source.state==='ready'?source:null;
       $('kristal-banner').classList.toggle('missing',!kristal);
       if(kristal){
