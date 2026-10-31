@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Mode: selected / all / rollback'
+        description: 'Mode: selected / all / rollback / republish'
         required: true
         type: choice
-        options: [selected, all, rollback]
+        options: [selected, all, rollback, republish]
         default: selected
       repositories:
         description: 'Comma-separated repository names, only for selected (e.g. Kolor,Karacter)'

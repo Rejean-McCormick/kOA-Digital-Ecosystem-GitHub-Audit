@@ -204,44 +204,68 @@ def _l(fr: str, en: str) -> str:
 
 
 def _generate_index(manifest: dict, prefix: str) -> str:
-    rows = []
-    for r in manifest["repos"]:
-        links = []
-        for d in r.get("documents", []):
-            links.append(f"<li><a href='{_e(prefix + d['page'])}'>{_e(d['path'])}</a> <small>({_e(d['kind'])})</small></li>")
-        if not links:
-            links = [f"<li><small>{_l('Aucune copie disponible', 'No captured copy')}</small></li>"]
-        repo_link = f"https://github.com/{r['repo']}"
-        flag = (f"<strong>{_l('↻ Conservé', '↻ Retained')}</strong>" if r["status"] in {"retained", "fallback"} else
-                f"<strong>{_l('✓ Capturé', '✓ Captured')}</strong>" if r["status"] == "captured" else
-                f"<strong>{_l('— Indisponible', '— Unavailable')}</strong>")
-        rows.append("<section class='repository'>"+f"<h2>{_e(r['repo'])}</h2><p>{flag} · <small>{_e(r.get('captured_at') or '—')}</small></p>"
-                    + f"<p><a href='{_e(repo_link)}'>{_l('Dépôt source', 'Source repository')}</a> · <code>{_e((r.get('revision') or '—')[:12])}</code></p>"
-                    + (f"<p><small>{_e(r['note'])}</small></p>" if r.get('note') else "")
-                    + "<ul>"+"".join(links)+"</ul></section>")
-    release = manifest["release_id"]
-    stats = f"{len(manifest['repos'])} · {len(manifest.get('selected', []))}"
-    body = ("<header><p><a href='"+_e(prefix+"../index.html")+"'>kOA Digital Ecosystem</a></p>"
-            "<div class='head'><nav><button type='button' id='fr' aria-label='Français'>FR</button> <button type='button' id='en' aria-label='English'>EN</button></nav><h1>kOA Graph — " + _l('Publications datées', 'Published snapshots') + "</h1><p>"
-            + _e(manifest['published_at']) + " UTC · <code>"+_e(release)+"</code></p></div>"
-            "<p>" + _l('Contenu figé à la publication. Les sources GitHub peuvent évoluer sans changer cette copie.',
-                        'Frozen publication. Live GitHub repositories may change without modifying this copy.') + "</p>"
-            f"<p><strong>{_e(stats)}</strong> " + _l('dépôts · sélection actualisée', 'repositories · selected refreshed') + "</p></header><main>"+"".join(rows)+"</main>"
-            "<footer>" + _l('Copie documentaire, pas une preuve de certification.', 'Documentation copy only, not certification evidence.') + "</footer>")
-    style = ("<style>body{background:#f2f7f4;color:#173733;font:15px system-ui;margin:auto;padding:20px;max-width:1250px}"
-             "a{color:#166860}header{background:white;border-radius:16px;padding:18px 25px;margin-bottom:16px}"
-             "main{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}"
-             ".repository{background:white;border:1px solid #d9e6df;border-radius:14px;padding:18px;overflow-wrap:anywhere}"
-             ".repository h2{font-size:18px;margin-top:0}.repository ul{padding-left:19px;line-height:1.7}"
-             "small,footer{color:#60726b}code{font-size:12px}footer{margin-top:23px}"
-             "html[lang=fr] .en,html[lang=en] .fr{display:none}button{padding:7px 12px;background:#e6f3ed;border:1px solid #bfd9cd;border-radius:8px;cursor:pointer}</style>")
-    return ("<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
-            "<title>kOA Graph — Published snapshots</title>"+style+"</head><body>"+body+"<script>"
-            "const key='koa-graph-ui-language-v1';const q=new URLSearchParams(location.search).get('lang');"
-            "function setLanguage(l){if(!['fr','en'].includes(l))return;document.documentElement.lang=l;try{localStorage.setItem(key,l)}catch(e){}}"
-            "let initial=q;try{initial=initial||localStorage.getItem(key)}catch(e){}setLanguage(initial||'fr');"
-            "document.getElementById('fr').onclick=()=>setLanguage('fr');document.getElementById('en').onclick=()=>setLanguage('en');"
-            "</script></body></html>")
+    """Reuse the local dashboard's directory/detail layout for frozen publications.
+
+    The viewer fetches ONLY this release's immutable manifest (or the dated pointer
+    for the current publication). It never reads live GitHub while presenting.
+    """
+    archived = bool(prefix)
+    assets = prefix + "../assets/"
+    home = prefix + "../index.html"
+    pointer = "" if archived else "../data/publication-current.json"
+    manifest_url = "manifest.json" if archived else ""
+    stamp = _e(manifest.get("published_at", ""))
+    count = len(manifest.get("repos", []))
+    chosen = len(manifest.get("selected", []))
+    return ("<!doctype html><html lang='fr'><head><meta charset='utf-8'>"
+            "<meta name='viewport' content='width=device-width,initial-scale=1'>"
+            "<meta name='description' content='kOA Graph — publications documentaires datées'>"
+            "<title>kOA Graph · Publications datées</title>"
+            f"<link rel='stylesheet' href='{_e(assets)}atlas.css'>"
+            "</head><body><div class='layout'>"
+            "<nav class='rail' aria-label='Navigation principale'>"
+            f"<a class='brand' href='{_e(home)}#apps' aria-label='kOA'><img src='{_e(assets)}logo.svg' alt='kOA'></a>"
+            f"<a class='workspace-nav' href='{_e(home)}#validations'><span aria-hidden='true'>✓</span> Validations</a>"
+            f"<a class='workspace-nav' href='{_e(home)}#apps'><span aria-hidden='true'>▦</span> Applications</a>"
+            "<a class='workspace-nav active' href='#publication-viewer' aria-current='page'><span aria-hidden='true'>◷</span> Publications</a>"
+            "<div class='rail-foot'>kOA</div></nav>"
+            "<div class='content'><header class='topbar'>"
+            f"<div class='brandline'><img src='{_e(assets)}logo.svg' alt=''><div><strong>kOA Digital Ecosystem</strong>"
+            "<small>Centre de pilotage · Publications documentaires</small></div></div>"
+            "<div class='topactions'><div class='lang-switch' role='group' aria-label='Langue / Language'>"
+            "<button type='button' data-lang='fr' aria-pressed='true'>FR</button>"
+            "<button type='button' data-lang='en' aria-pressed='false'>EN</button></div>"
+            "<span class='indicator'></span><span id='published-load'>Chargement de la publication</span>"
+            "</div></header><main>"
+            "<section class='explorer section' id='publication-viewer'"
+            f" data-pointer-url='{_e(pointer)}' data-manifest-url='{_e(manifest_url)}'"
+            f" data-pages-prefix='{_e(prefix)}'>"
+            "<div class='heading'><div><div class='eyebrow'>PUBLICATIONS · SOURCES FIGÉES</div>"
+            "<h2>Les applications et leurs documents.</h2>"
+            "<p>Sélectionne un dépôt pour consulter ses documents datés. La publication reste stable si le dépôt source change.</p>"
+            "</div><div class='results-label'><span id='published-count'>" + str(count) + "</span> dépôts</div></div>"
+            "<div class='publication-summary'>"
+            "<span>Version : <code id='published-id'>" + _e(manifest['release_id']) + "</code></span>"
+            "<span>Publiée (UTC) : <strong id='published-date'>" + stamp + "</strong></span>"
+            "<span>Dépôts : <strong id='published-total'>" + str(count) + "</strong></span>"
+            "<span>Actualisés : <strong id='published-selected'>" + str(chosen) + "</strong></span>"
+            "</div><div class='explorer-grid'>"
+            "<div class='directory'><div class='search-wrap'>"
+            "<label for='published-repo-search'>Rechercher une application ou un document</label>"
+            "<input type='search' id='published-repo-search' placeholder='Kolor, Karacter, README…' autocomplete='off'>"
+            "</div><div class='filters' id='published-filters' role='group' aria-label='Filtrer les dépôts'></div>"
+            "<div class='repo-list' id='published-repo-list' aria-label='Dépôts publiés'></div></div>"
+            "<aside class='detail publication-detail' id='published-detail' aria-live='polite'>"
+            "<div class='detail-placeholder'>Sélectionne un dépôt pour voir ses documents figés.</div>"
+            "</aside></div></section>"
+            "<section class='method-section'><div class='method-icon'>i</div>"
+            "<div><strong>Documentation datée, sans certification implicite.</strong>"
+            "<p>Cette page consulte une copie approuvée. Les dépôts GitHub peuvent évoluer indépendamment."
+            " Les contrôles, tests et qualifications restent distincts des documents publiés.</p></div></section>"
+            "</main><footer><span>kOA Digital Ecosystem · kOA Graph</span>"
+            "<span>Version figée · publication contrôlée</span></footer></div></div>"
+            f"<script defer src='{_e(assets)}i18n.js'></script>"
+            f"<script defer src='{_e(assets)}publication-viewer.js'></script></body></html>")
 
 
 def _publish_from_captures(docs: Path, selection: list[str], mode: str,
@@ -339,6 +363,28 @@ def _publish_from_captures(docs: Path, selection: list[str], mode: str,
         raise
 
 
+def republish_current(docs: Path) -> dict:
+    """Update the public VIEW without collecting or modifying a dated snapshot."""
+    pointer = docs / "data" / "publication-current.json"
+    payload = json.loads(pointer.read_text(encoding="utf-8"))
+    release_id = payload.get("release_id", "")
+    if not RELEASE_RE.fullmatch(release_id):
+        raise ValueError("Invalid published release pointer")
+    manifest = _load_previous(docs)
+    if manifest.get("release_id") != release_id:
+        raise ValueError("Manifest release does not match current pointer")
+    for record in manifest.get("repos", []):
+        for document in record.get("documents", []):
+            path = PurePosixPath(document["page"])
+            if (not path.parts or path.parts[0] != "releases" or
+                    ".." in path.parts or not
+                    (docs / "publications" / Path(*path.parts)).is_file()):
+                raise RuntimeError("Frozen document missing or invalid")
+    (docs / "publications" / "index.html").write_text(
+        _generate_index(manifest, ""), encoding="utf-8")
+    return manifest
+
+
 def rollback(docs: Path, publication_id: str, now: str) -> dict:
     if not RELEASE_RE.fullmatch(publication_id):
         raise ValueError("Invalid release ID")
@@ -362,7 +408,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--docs", type=Path, default=Path("docs"))
     p.add_argument("--inventory", type=Path, default=Path("data/initial_inventory.json"))
     p.add_argument("--additions", type=Path, default=Path("config/publication_repositories.json"))
-    p.add_argument("--mode", choices=["all", "selected", "rollback"], default="selected")
+    p.add_argument("--mode", choices=["all", "selected", "rollback", "republish"], default="selected")
     p.add_argument("--repos", default="")
     p.add_argument("--rollback-release", default="")
     p.add_argument("--publication-id", default="")
@@ -370,7 +416,9 @@ def main(argv: list[str] | None = None) -> int:
     now = datetime.now(timezone.utc)
     timestamp = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     release_id = args.publication_id or now.strftime("%Y%m%dT%H%M%SZ") + f"-{os.getenv('GITHUB_RUN_ID','0')}-{os.getenv('GITHUB_RUN_ATTEMPT','1')}"
-    if args.mode == "rollback":
+    if args.mode == "republish":
+        result = republish_current(args.docs)
+    elif args.mode == "rollback":
         result = rollback(args.docs, args.rollback_release, timestamp)
     else:
         allowed = allowed_repositories(args.inventory, args.additions)

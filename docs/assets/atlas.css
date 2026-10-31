@@ -143,3 +143,25 @@
 .lang-switch button[aria-pressed="true"] { background:#2d776b; color:#fff; }
 .lang-switch button:focus-visible { outline:2px solid #b5fbe2; outline-offset:2px; }
 @media(max-width:700px){ .lang-switch button{padding:6px 8px}.topactions{flex-wrap:wrap;justify-content:flex-end} }
+
+/* Publication views reuse the local application's directory/detail UI. */
+html[lang="fr"] .en, html[lang="en"] .fr {display:none!important}
+.publication-summary {display:flex;flex-wrap:wrap;gap:8px 17px;align-items:center;border:1px solid #31594f;background:#0d211d;border-radius:10px;padding:12px 15px;margin:-3px 0 18px;color:#b9d8ce;font-size:11px}
+.publication-summary code{font-size:11px;color:#e4f8f1;overflow-wrap:anywhere}
+.publication-detail .detail-role{font-size:12px}
+.publication-provenance {background:#102c25;border:1px solid #31594f;padding:10px 13px;border-radius:10px;margin:5px 0 18px;overflow-wrap:anywhere}
+.publication-provenance p{font-size:11px;color:#b8d5c9;margin:3px 0}
+.publication-doc-search{display:flex;flex-direction:column;gap:7px;margin:14px 0}
+.publication-doc-search label{font-size:11px;color:#b7d4c7}
+.publication-doc-search input{width:100%;padding:11px;background:#0e2922;color:#f4fffa;border:1px solid #3b6d5f;border-radius:8px}
+.publication-doc-groups{display:flex;flex-direction:column;gap:9px}
+.publication-doc-group{border:1px solid #31594f;border-radius:10px;background:#0e2821;overflow:hidden}
+.publication-doc-group summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:12px 14px;gap:10px;color:#e1f6ea;font-size:12px;list-style:none}
+.publication-doc-group summary::-webkit-details-marker{display:none}
+.publication-doc-scroll{max-height:330px;overflow-y:auto;padding:0 12px 10px}
+.publication-doc-row{padding:9px 4px;border-top:1px solid #264d40;display:flex;flex-direction:column;gap:3px;overflow-wrap:anywhere}
+.publication-document-link{color:#a9e3d2;font-size:12px;text-decoration:none}
+.publication-document-link:hover{text-decoration:underline}
+.publication-doc-row small{color:#7fa99a;font-size:10px}
+.publication-disclaimer{margin-top:19px;font-size:11px;color:#b3d0c2;border-left:3px solid #4d9f8b;padding:10px;background:#10362c}
+@media(max-width:740px){.publication-summary{flex-direction:column;align-items:start}.publication-detail{min-height:280px}}
