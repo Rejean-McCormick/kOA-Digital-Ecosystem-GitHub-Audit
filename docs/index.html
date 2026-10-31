@@ -1,7 +1,21 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="kOA Graph — graphe des composants, qualification par preuve et Engineering Profiles.">
-<title>kOA Graph · Centre de pilotage</title><link rel="stylesheet" href="assets/atlas.css"></head>
+<title>kOA Graph · Centre de pilotage</title><link rel="stylesheet" href="assets/atlas.css"><style>
+/* Publication controlled on GitHub Actions: external link and static help only. */
+.koa-pages-entry{display:inline-flex;gap:7px;align-items:center;position:relative;flex-shrink:0}
+.koa-pages-entry .koa-pages-link{display:inline-block;background:#236e62;border-color:#51aa98;color:#fff;text-decoration:none;font-weight:700;white-space:nowrap}
+.koa-pages-entry .koa-pages-link:hover{background:#2b897a}
+.koa-pages-help summary{list-style:none;cursor:pointer;border:1px solid #346a63;border-radius:8px;padding:9px 11px;color:#d9f2e8;background:#173930;white-space:nowrap}
+.koa-pages-help summary::-webkit-details-marker{display:none}
+.koa-pages-help summary:focus-visible,.koa-pages-link:focus-visible{outline:2px solid #a9e9d7;outline-offset:3px}
+.koa-pages-help-panel{position:absolute;right:0;top:calc(100% + 10px);z-index:40;width:min(365px,calc(100vw - 28px));padding:17px 19px;border-radius:12px;border:1px solid #518779;background:#102b25;color:#edf9f3;box-shadow:0 16px 38px #000a;font-size:12px;white-space:normal;line-height:1.6}
+.koa-pages-help-panel strong{display:block;margin-bottom:8px;font-size:13px}
+.koa-pages-help-panel ol{margin:0;padding-left:21px}
+.koa-pages-help-panel li{margin-bottom:7px}
+.koa-pages-help-panel p{margin:8px 0 0;color:#a9ccc0}
+@media(max-width:740px){.koa-pages-entry{flex-wrap:wrap}.koa-pages-help-panel{right:-70px}}
+</style></head>
 <body>
 <div class="layout">
   <nav class="rail" aria-label="Navigation principale">
@@ -14,7 +28,36 @@
   <div class="content">
     <header class="topbar" id="accueil">
       <div class="brandline"><img alt="" src="assets/logo.svg"><div><strong>kOA Digital Ecosystem</strong><small>Centre de pilotage · Preuves, systèmes et campagnes</small></div></div>
-      <div class="topactions"><a class="small-button" href="publications/index.html">Publications / Releases</a><span id="publication-stamp" style="font-size:11px;color:#52756c"></span><div class="lang-switch" role="group" aria-label="Langue / Language"><button type="button" data-lang="fr" aria-pressed="true" title="Français">FR</button><button type="button" data-lang="en" aria-pressed="false" title="English">EN</button></div><span class="indicator"></span><span id="load-status">Chargement de l’inventaire</span><button class="small-button" id="refresh" type="button">↻ Actualiser</button></div>
+      <div class="topactions"><div class="koa-pages-entry">
+  <a class="small-button koa-pages-link" href="https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/actions/workflows/dashboard-pages.yml" target="_blank" rel="noopener noreferrer" title="Ouvrir le workflow de publication / Open publication workflow">
+    <span class="fr">Publier sur Pages ↗</span><span class="en">Publish to Pages ↗</span>
+  </a>
+  <details class="koa-pages-help">
+    <summary><span class="fr">Comment ?</span><span class="en">How?</span></summary>
+    <div class="koa-pages-help-panel">
+      <div class="fr">
+        <strong>Publication dans GitHub Actions</strong>
+        <ol>
+          <li>Ouvre le lien, puis clique sur <b>Run workflow</b>.</li>
+          <li>Choisis la branche <code>main</code> et le mode : <code>all</code> (tous les dépôts) ou <code>selected</code> (dépôts choisis).</li>
+          <li>Règle <code>preview_only</code> sur <code>true</code> pour vérifier, ou <code>false</code> pour publier.</li>
+          <li>Clique sur <b>Run workflow</b>, puis vérifie les coches vertes des jobs.</li>
+        </ol>
+        <p>Le mode <code>republish</code> (sans nouvelle collecte) n’apparaîtra qu’après installation du workflow qui le prend en charge.</p>
+      </div>
+      <div class="en">
+        <strong>Publish through GitHub Actions</strong>
+        <ol>
+          <li>Open the link and click <b>Run workflow</b>.</li>
+          <li>Select the <code>main</code> branch and mode: <code>all</code> (all repositories) or <code>selected</code> (chosen repositories).</li>
+          <li>Set <code>preview_only</code> to <code>true</code> to preview, or <code>false</code> to publish.</li>
+          <li>Click <b>Run workflow</b>, then check that the jobs succeed.</li>
+        </ol>
+        <p><code>republish</code> (no new collection) is available only after installing a workflow version that supports it.</p>
+      </div>
+    </div>
+  </details>
+</div><a class="small-button" href="publications/index.html">Publications / Releases</a><span id="publication-stamp" style="font-size:11px;color:#52756c"></span><div class="lang-switch" role="group" aria-label="Langue / Language"><button type="button" data-lang="fr" aria-pressed="true" title="Français">FR</button><button type="button" data-lang="en" aria-pressed="false" title="English">EN</button></div><span class="indicator"></span><span id="load-status">Chargement de l’inventaire</span><button class="small-button" id="refresh" type="button">↻ Actualiser</button></div>
     </header>
     <main>
       <section class="validation-first section" data-workspace="validations" id="validations" aria-label="Validations vérifiables par application">
