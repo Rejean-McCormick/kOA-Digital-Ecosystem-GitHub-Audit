@@ -63,6 +63,10 @@ def make_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", type=Path, default=Path("docs"), help="Site directory (default docs)")
     p = sub.add_parser("dashboard-sync", help="One-click publish of safe aggregates to the audit GitHub repo; Git credentials via Git for Windows")
     p.add_argument("--audit-json", type=Path, action="append", help="Optional report; discovers recent existing reports if omitted")
+    p = sub.add_parser("docs-collect", help="Index documentation in an owner-supplied repos/ ZIP (offline, metadata only)")
+    p.add_argument("--zip", type=Path, required=True, help="Input ZIP with repos/<name>/...")
+    p.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
+    p.add_argument("--out", type=Path, required=True, help="New private local .json outside docs/")
     p = sub.add_parser("import-legacy", help="Import a historical summary JSON as metadata-only evidence")
     p.add_argument("--tool", choices=sorted(SCHEMAS), required=True)
     p.add_argument("--repo", required=True, help="Explicit owner/repository binding")
@@ -129,6 +133,14 @@ def execute(args: argparse.Namespace) -> int:
                           "finding_patterns": report["findings_by_type"],
                           "missing_locally": len(report["inventory_repositories_missing_locally"]),
                           "reports": str(args.out.resolve())}, indent=2, ensure_ascii=False))
+        return 0
+    if args.command == "docs-collect":
+        from .documentation_collector import collect_zip, write_private_index
+        report = collect_zip(args.zip, args.inventory)
+        dest = write_private_index(report, args.out)
+        print(json.dumps({"output": str(dest), "repositories": report["repositories_observed"],
+                          "registered": report["registered_observed"],
+                          "new_candidates": report["new_candidates"]}, ensure_ascii=False, indent=2))
         return 0
     if args.command == "import-legacy":
         result = ingest(args.tool, args.repo, args.input, member=args.member)

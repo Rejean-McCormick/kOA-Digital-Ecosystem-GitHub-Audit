@@ -130,3 +130,16 @@
 .validation-first .heading{margin-bottom:8px}.validation-first .heading p{margin-top:4px;margin-bottom:2px}
 .validation-metrics{margin:12px 0!important}.validation-metric{min-height:64px!important;padding:10px 13px!important}.validation-metric strong{font-size:23px!important}
 .validation-toolbar{margin:10px 0 6px!important}.validation-order{margin-bottom:6px!important}
+
+/* Links for verified new repositories pending registry admission. */
+.documentation-candidates{display:flex;flex-wrap:wrap;gap:12px}
+.documentation-candidate{background:#fff;border:1px solid #dce7e3;border-radius:12px;padding:14px;min-width:min(320px,100%);flex:1}
+.documentation-candidate strong{display:block;margin-bottom:8px}
+.documentation-candidate small{display:block;color:#596c68;margin-top:8px;line-height:1.45}
+
+/* kOA Graph bilingual published interface (FR / EN). */
+.lang-switch { display:inline-flex; gap:3px; align-items:center; border:1px solid #468177; padding:3px; border-radius:10px; background:#102922; flex-shrink:0; }
+.lang-switch button { appearance:none; font:inherit; font-weight:750; font-size:12px; border:0; border-radius:7px; padding:7px 9px; background:transparent; color:#b8d8cf; cursor:pointer; }
+.lang-switch button[aria-pressed="true"] { background:#2d776b; color:#fff; }
+.lang-switch button:focus-visible { outline:2px solid #b5fbe2; outline-offset:2px; }
+@media(max-width:700px){ .lang-switch button{padding:6px 8px}.topactions{flex-wrap:wrap;justify-content:flex-end} }

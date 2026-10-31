@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="kOA Digital Ecosystem — atlas des applications, qualification par preuve et Engineering Profiles.">
-<title>kOA · Centre de pilotage</title><link rel="stylesheet" href="assets/atlas.css"></head>
+<meta name="description" content="kOA Graph — graphe des composants, qualification par preuve et Engineering Profiles.">
+<title>kOA Graph · Centre de pilotage</title><link rel="stylesheet" href="assets/atlas.css"></head>
 <body>
 <div class="layout">
   <nav class="rail" aria-label="Navigation principale">
@@ -14,7 +14,7 @@
   <div class="content">
     <header class="topbar" id="accueil">
       <div class="brandline"><img alt="" src="assets/logo.svg"><div><strong>kOA Digital Ecosystem</strong><small>Centre de pilotage · Preuves, systèmes et campagnes</small></div></div>
-      <div class="topactions"><span class="indicator"></span><span id="load-status">Chargement de l’inventaire</span><button class="small-button" id="refresh" type="button">↻ Actualiser</button></div>
+      <div class="topactions"><a class="small-button" href="publications/index.html">Publications / Releases</a><span id="publication-stamp" style="font-size:11px;color:#52756c"></span><div class="lang-switch" role="group" aria-label="Langue / Language"><button type="button" data-lang="fr" aria-pressed="true" title="Français">FR</button><button type="button" data-lang="en" aria-pressed="false" title="English">EN</button></div><span class="indicator"></span><span id="load-status">Chargement de l’inventaire</span><button class="small-button" id="refresh" type="button">↻ Actualiser</button></div>
     </header>
     <main>
       <section class="validation-first section" data-workspace="validations" id="validations" aria-label="Validations vérifiables par application">
@@ -27,10 +27,10 @@
         <p class="validation-ethics">Les pièces historiques vérifiées ne sont pas automatiquement liées au commit actuel. Les 53 pratiques de sécurité et les 33 pratiques d’architecture sont des <strong>critères d’examen</strong>, pas des contrôles passés automatiquement. Les résultats restent privés sur ton PC.</p>
       </section>
       <section class="intro" data-workspace="applications" hidden>
-        <div><div class="eyebrow">OBSERVATOIRE DES APPLICATIONS <span>·</span> VUE D’ENSEMBLE</div><h1>Explorer la carte<br><em>de ton écosystème.</em></h1>
+        <div><div class="eyebrow">OBSERVATOIRE DES APPLICATIONS <span>·</span> VUE D’ENSEMBLE</div><h1>Explorer le graphe<br><em>de ton écosystème.</em></h1>
           <p>Retrouve tes applications, consulte leurs profils d’ingénierie et suis les qualifications avec des preuves. Aucune pénalité pour la taille, les noms de fichiers ou les copies locales.</p>
         </div>
-        <div class="date-card"><div class="date-caption">SOURCE ARCHITECTURALE</div><strong id="kristal-source-title">Kristal / kOA Ecosystem</strong><p id="kristal-source-note">Connexion au référentiel local en cours. Le site GitHub Pages utilise la carte publique intégrée.</p><a href="#cartographie">Explorer la carte ↓</a></div>
+        <div class="date-card"><div class="date-caption">SOURCE ARCHITECTURALE</div><strong id="kristal-source-title">Kristal / kOA Ecosystem</strong><p id="kristal-source-note">Connexion au référentiel local en cours. Le site GitHub Pages utilise le graphe public intégré.</p><a href="#cartographie">Explorer le graphe ↓</a></div>
       </section>
       <section id="historique-campagnes" class="section" data-workspace="campagnes" hidden>
         <div class="heading"><div><div class="eyebrow">REGISTRE PRIVÉ · DATES ET VERSIONS</div>
@@ -39,7 +39,7 @@
         </div><a class="small-button" href="/local/campaigns" id="campaigns-local-link">Ouvrir l'historique, les preuves et les versions GitHub →</a>
         <p><a class="small-button" href="/local/review" id="review-private-link" hidden>Consulter les 245 dossiers de preuves historiques →</a></p>
         <div class="campaign-panel" id="latest-campaign" aria-live="polite"></div>
-        <p class="campaign-public-note" id="campaign-public-note" hidden>Le registre des campagnes est privé. Ouvre cet écran avec le lanceur Windows pour retrouver les archives et les décisions figées. La carte publique et les profils restent consultables dans « Applications ».</p>
+        <p class="campaign-public-note" id="campaign-public-note" hidden>Le registre des campagnes est privé. Ouvre cet écran avec le lanceur Windows pour retrouver les archives et les décisions figées. Le graphe public et les profils restent consultables dans « Applications ».</p>
       </section>
       <section class="kpis" data-workspace="campagnes" aria-label="Indicateurs factuels" hidden>
         <article class="kpi"><div class="kpi-label">Dépôts de référence</div><strong id="kpi-total">49</strong><div class="kpi-foot">Inventaire officiel kOA</div></article>
@@ -53,25 +53,29 @@
         <div class="footline"><span class="dot teal"></span> Étayé par preuve <span class="dot amber"></span> À documenter <span class="dot gray"></span> Non évalué / non applicable <span class="foot-explain">« À vérifier » ne signifie pas échec.</span></div>
       </section>
       <section class="section map-section" data-workspace="applications" id="cartographie" hidden>
-        <div class="heading"><div><div class="eyebrow"><a href="#apps">← Revenir aux fiches</a> · CARTE DES RESPONSABILITÉS</div><h2>Comment tes systèmes se parlent.</h2><p>Relations conceptuelles tirées du référentiel kOA, non des tests d'intégration exécutés.</p></div><div class="map-legend"><span><i class="legend-line"></i> Documenté</span><span><i class="legend-line dashed"></i> Proposé</span></div></div>
+        <div class="heading"><div><div class="eyebrow"><a href="#apps">← Revenir aux fiches</a> · GRAPHE DES RESPONSABILITÉS</div><h2>Comment tes systèmes se parlent.</h2><p>Relations conceptuelles tirées du référentiel kOA, non des tests d'intégration exécutés.</p></div><div class="map-legend"><span><i class="legend-line"></i> Documenté</span><span><i class="legend-line dashed"></i> Proposé</span></div></div>
         <div class="source-banner" id="kristal-banner" role="status">Référentiel Kristal : vérification locale en cours…</div><p class="kristal-catalog-note" id="kristal-catalog-note">Les statistiques du référentiel s’affichent ici lorsque Kristal est accessible localement.</p>
-        <div class="map-view-toggle" role="group" aria-label="Vue de la carte"><button type="button" id="view-contracts" class="map-view-button active" aria-pressed="true">Carte des responsabilités · 12 systèmes</button><button type="button" id="view-all" class="map-view-button" aria-pressed="false">Constellation · 49 dépôts</button><button type="button" id="view-kristal" class="map-view-button" aria-pressed="false">Kristal canonique · 49 dépôts</button></div>
-        <div class="map-scroller" id="map-scroller"><div id="ecosystem-map" class="ecosystem-map" role="group" aria-label="Carte interactive des systèmes kOA"><svg id="map-lines" viewBox="0 0 1150 640" aria-hidden="true" preserveAspectRatio="none"></svg><div id="map-nodes" class="map-nodes"></div></div></div>
+        <div class="map-view-toggle" role="group" aria-label="Vue du graphe"><button type="button" id="view-contracts" class="map-view-button active" aria-pressed="true">Graphe des responsabilités · 12 systèmes</button><button type="button" id="view-all" class="map-view-button" aria-pressed="false">Constellation · 49 dépôts</button><button type="button" id="view-kristal" class="map-view-button" aria-pressed="false">Kristal canonique · 49 dépôts</button></div>
+        <div class="map-scroller" id="map-scroller"><div id="ecosystem-map" class="ecosystem-map" role="group" aria-label="Graphe interactif des systèmes kOA"><svg id="map-lines" viewBox="0 0 1150 640" aria-hidden="true" preserveAspectRatio="none"></svg><div id="map-nodes" class="map-nodes"></div></div></div>
         <div class="constellation" id="constellation" hidden aria-label="Constellation des 49 dépôts"></div>
         <div class="kristal-constellation" id="kristal-constellation" hidden aria-label="Dépôts rapprochés avec le registre canonique Kristal"></div>
-        <div class="map-help">Le mode « Kristal canonique » lit les fichiers <code>knowledge-base/sources/</code> sur ton PC. Les liens explicites, les propositions et les dépôts sans association sont séparés; aucun de ces états ne constitue un verdict de qualité. Sélectionne un système pour ouvrir sa fiche et, lorsqu'il existe, son <strong>Engineering Profile</strong>. La carte montre les responsabilités; elle n'affirme pas une intégration en production.</div>
+        <div class="map-help">Le mode « Kristal canonique » lit les fichiers <code>knowledge-base/sources/</code> sur ton PC. Les liens explicites, les propositions et les dépôts sans association sont séparés; aucun de ces états ne constitue un verdict de qualité. Sélectionne un système pour ouvrir sa fiche et, lorsqu'il existe, son <strong>Engineering Profile</strong>. Le graphe montre les responsabilités; elle n'affirme pas une intégration en production.</div>
       </section>
       <section class="explorer section" data-workspace="applications" id="apps" hidden>
-        <div class="heading"><div><div class="eyebrow">PARCOURS PAR APPLICATION</div><h2>Les applications et leurs dossiers.</h2><p>Choisis une application : profil mesuré, jalons et relations Kristal restent dans sa fiche. <a href="#cartographie" id="show-map-link">Voir la carte des responsabilités ↗</a></p></div><div class="results-label" id="result-count">49 applications</div></div>
+        <div class="heading"><div><div class="eyebrow">PARCOURS PAR APPLICATION</div><h2>Les applications et leurs dossiers.</h2><p>Choisis une application : profil mesuré, jalons et relations Kristal restent dans sa fiche. <a href="#cartographie" id="show-map-link">Voir le graphe des responsabilités ↗</a></p></div><div class="results-label" id="result-count">49 applications</div></div>
         <div class="explorer-grid">
           <div class="directory"><div class="search-wrap"><label for="search">Rechercher une application</label><input id="search" type="search" placeholder="Ex. Konnaxion, Orgo, Kristal…" autocomplete="off"></div><div class="filters" id="group-filters" role="group" aria-label="Filtrer les applications"></div><div class="repo-list" id="repo-list" aria-label="Liste des applications"></div></div>
-          <aside class="detail" id="detail" aria-live="polite"><div class="detail-placeholder">Sélectionne une application sur la carte ou dans la liste pour afficher son dossier.</div></aside>
+          <aside class="detail" id="detail" aria-live="polite"><div class="detail-placeholder">Sélectionne une application sur le graphe ou dans la liste pour afficher son dossier.</div></aside>
         </div>
+      </section>
+      <section id="documentary-candidate-section" class="section" data-workspace="applications" hidden>
+        <div class="heading"><div><div class="eyebrow">NOUVEAUX DÉPÔTS · LIENS DOCUMENTAIRES</div><h2>Dépôts repérés hors inventaire.</h2><p>Accès direct au README et au wiki GitHub, si disponibles. Ces liens ne constituent pas une preuve d’intégration ni une admission au registre.</p></div></div>
+        <div id="documentary-candidates" class="documentation-candidates"></div>
       </section>
       <section class="method-section" data-workspace="validations"><div class="method-icon">i</div><div><strong>Ce tableau de bord suit les preuves, pas les impressions.</strong><p>« Profil disponible » mesure une documentation d'ingénierie. « Audit réalisé » mesure la couverture des observations. Les preuves déjà vérifiées sont reconnues automatiquement, sans validation manuelle à répéter. Les rapports sont fondés sur des snapshots et ne démontrent pas à eux seuls la qualité, la sécurité ou la complétion fonctionnelle.</p><p>Les diagnostics automatiques restent consultables séparément : <a href="observations.html">ouvrir les observations techniques (vue secondaire)</a>.</p></div></section>
     </main>
     <footer><span>kOA Digital Ecosystem · Centre de pilotage</span><span>49 dépôts · 5 jalons indépendants · rapports d'ingénierie vérifiables</span></footer>
   </div>
 </div>
-<script defer src="assets/atlas.js"></script>
+<script defer src="assets/i18n.js"></script><script defer src="assets/atlas.js"></script><script>fetch('data/publication-current.json').then(r=>r.ok?r.json():null).then(x=>{if(x){document.getElementById('publication-stamp').textContent='UTC '+(x.deployed_at||x.published_at);}}).catch(()=>{});</script>
 </body></html>

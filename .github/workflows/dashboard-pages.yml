@@ -1,38 +1,116 @@
-name: Publier le tableau de bord kOA
+name: kOA Graph - publication datee FR EN
 
+# Le site public ne change PAS automatiquement lorsque les depots bougent.
+# Seule l'action manuelle de publication peut deployer une nouvelle version.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'docs/**'
-      - '.github/workflows/dashboard-pages.yml'
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Mode: selected / all / rollback'
+        required: true
+        type: choice
+        options: [selected, all, rollback]
+        default: selected
+      repositories:
+        description: 'Comma-separated repository names, only for selected (e.g. Kolor,Karacter)'
+        required: false
+        type: string
+        default: 'Kolor,Karacter'
+      rollback_release:
+        description: 'Existing dated release ID, only for rollback'
+        required: false
+        type: string
+      preview_only:
+        description: 'Preview only (true) or publish after approval (false)'
+        required: true
+        type: boolean
+        default: true
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: koa-dashboard-pages
-  cancel-in-progress: true
+  group: koa-graph-pages-publication
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  candidate:
+    name: Build the frozen, dated candidate
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 60
+    steps:
+      - name: Checkout source and previous publications
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build pinned public docs only
+        env:
+          PUBLICATION_MODE: ${{ inputs.mode }}
+          PUBLICATION_REPOS: ${{ inputs.repositories }}
+          ROLLBACK_ID: ${{ inputs.rollback_release }}
+        run: |
+          python -m koa_audit.publication_snapshots \
+            --mode "$PUBLICATION_MODE" \
+            --repos "$PUBLICATION_REPOS" \
+            --rollback-release "$ROLLBACK_ID"
+      - name: Check generated site and freeze artifact
+        run: |
+          python -m unittest discover -s tests -p 'test_publication_snapshots.py' -v
+          test -s docs/publications/index.html
+          test -s docs/data/publication-current.json
+          tar -czf koa-graph-publication-candidate.tar.gz docs/publications docs/data/publication-current.json
+      - name: Save candidate for review and repeatable publication
+        uses: actions/upload-artifact@v4
+        with:
+          name: koa-graph-publication-candidate
+          path: koa-graph-publication-candidate.tar.gz
+          retention-days: 30
+
+  publish:
+    name: Publish only after approved deployment
+    needs: candidate
+    if: ${{ !inputs.preview_only && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
+      - name: Checkout same commit used for candidate
         uses: actions/checkout@v4
-      - name: Configurer GitHub Pages
+        with:
+          persist-credentials: true
+      - name: Retrieve exactly the prepared candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: koa-graph-publication-candidate
+      - name: Install candidate in dated, versioned site directory
+        run: |
+          tar -xzf koa-graph-publication-candidate.tar.gz
+          python - <<'PYCODE'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          file = Path('docs/data/publication-current.json')
+          data = json.loads(file.read_text(encoding='utf-8'))
+          data['deployed_at'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+          file.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PYCODE
+          git add docs/publications docs/data/publication-current.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: publish frozen kOA Graph snapshot (${{ inputs.mode }})'
+          git push origin HEAD:main
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Uploader le site statique public
+      - name: Upload exact published tree
         uses: actions/upload-pages-artifact@v4
         with:
           path: docs
-      - name: Publier le site
+      - name: Deploy atomic static site artifact
         id: deployment
         uses: actions/deploy-pages@v4

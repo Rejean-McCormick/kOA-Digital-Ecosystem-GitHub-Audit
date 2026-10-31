@@ -1,0 +1,16 @@
+{
+  "format": "koa.github_documentation_candidates.v1",
+  "scope": "external_links_only",
+  "source_date": "2026-10-31",
+  "notes": "Ces dépôts ont été constatés sur GitHub mais n'appartiennent pas automatiquement à l'inventaire officiel. Les liens README et wiki ne sont pas vérifiés individuellement.",
+  "repositories": [
+    {
+      "repo": "Rejean-McCormick/Kolor",
+      "verification": "github_repository_present"
+    },
+    {
+      "repo": "Rejean-McCormick/Karacter",
+      "verification": "github_repository_present"
+    }
+  ]
+}

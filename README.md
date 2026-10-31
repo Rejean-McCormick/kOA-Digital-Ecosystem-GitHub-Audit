@@ -8,6 +8,17 @@
   **Version 0.21.0 · Automatic evidence recognition, simplified validation labels and 47 functional spec sheets**
 </div>
 
+
+## kOA Graph — publication datée, sélectionnable / Dated selective publishing
+
+The public GitHub Pages site is no longer redeployed on each `docs/` push. Open **Actions → kOA Graph - publication datee FR EN** and choose `selected` (e.g. `Kolor,Karacter`), `all`, or `rollback`. Start with `preview_only=true`; publishing requires `preview_only=false` and any configured `github-pages` environment approval. Documentation is archived with source commits and UTC dates, leaving earlier snapshots intact when development repositories change. See [FR/EN publishing guide](docs/PUBLICATIONS_DATEES_FR_EN.md).
+
+## kOA Graph — published FR/EN interface / interface publique FR/EN
+
+The GitHub Pages dashboard now offers a persistent **FR / EN** switch on the Command Center and Technical Observations pages. It links to each repository's README and wiki without copying the documents. Language selection changes UI labels only: raw evidence, system names, provenance, snapshots and engineering reports remain untouched and may be in their original language.
+
+The repository already has a GitHub Pages deployment workflow (`.github/workflows/dashboard-pages.yml`). Publication instructions in both languages: [`docs/PUBLISH_FR_EN.md`](docs/PUBLISH_FR_EN.md). **The HTML/JS is public; private campaign records and local source files are never sent to Pages by this change.**
+
 ## v0.20.0 — Corrected source attribution and searchable file structure
 
 The home dashboard now includes **Modules & fichiers** for all 47 supplied code snapshots. It is a reproducible, SHA-256-backed file-tree inventory, not a feature or security certification. The Skope and SenTient overclaims found in independent review were corrected and 16 descriptions backed only by test/docs files were downgraded. Existing JUnit results and dated campaign status remain intact. Read `docs/SOURCE_STRUCTURE_AND_LIMITS_2026_10_30.md` for scope and caveats.
