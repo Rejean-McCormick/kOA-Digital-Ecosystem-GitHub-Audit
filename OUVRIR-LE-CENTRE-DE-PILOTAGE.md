@@ -1,3 +1,13 @@
+## v0.20.0 · Relecture corrective et modules sourcés
+
+Dans **Pilotage → Centre de pilotage → Validations**, sélectionne un dépôt, puis **Modules & fichiers** pour parcourir les sources classées par rôle, avec références SHA-256. La classification de chemins est un inventaire technique, pas un verdict, ni une certification. Les 47 snapshots antérieurs restent distincts des versions GitHub actuelles.
+
+## v0.20.0 · SmartDump 35 dépôts / 47 fiches techniques
+
+Le dashboard local permet maintenant d’explorer **47 fiches fonctionnelles sourcées sur 49 dépôts officiels**. Le lot SmartDump du 30 octobre 2026 apporte **35 fiches supplémentaires** avec fonctions décrites, technologies détectées, sources et empreintes SHA-256. **Kompose et Kontexte** n’étaient pas dans les archives reçues; aucune conclusion négative n’en découle. Les 12 Engineering Profiles mesurés restent un compteur différent.
+
+Les nouveaux snapshots n’ont **pas été exécutés en test** : aucun nouveau crochet vert n’est attribué pour ce lot. Les 172 PASS ciblés proviennent de cinq exécutions isolées antérieures et ne démontrent ni la conformité des 47 dépôts ni la réussite de leurs 53 pratiques de sécurité. Les fiches sont disponibles via **Pilotage → Centre de pilotage → Validations → Fonctionnalités / Technologies**. Enregistre une nouvelle campagne datée pour figer cette revue; les anciennes campagnes demeurent inchangées.
+
 # Ouvrir le centre de pilotage kOA
 
 1. **Décompresse** complètement le ZIP et double-clique sur `kOA_GitHub_Audit_Launcher.pyw`.
@@ -80,3 +90,9 @@ Les trois espaces du navigateur sont **Validations**, **Applications** et **Camp
 Choisis le filtre « **Avec fiche technique issue d’un snapshot** » pour voir les trois dossiers détaillés. Les 46 autres n’ont pas encore de spécification fonctionnelle extraite, ce qui n’est pas une non-conformité.
 
 La carte, les Engineering Profiles et les campagnes continuent de fonctionner. Les anciens ZIP de campagne ne changent pas; une nouvelle campagne conserve aussi les fiches et rapports JUnit source.
+
+## v0.18.0 · Neuf nouvelles fiches fonctionnelles
+
+Dans **Pilotage → Centre de pilotage → Validations**, utilise le filtre des fiches issues de snapshots pour sélectionner un des **12 systèmes examinés**. Le volet **Fonctionnalités** présente les tâches et modules avec leurs sources SHA-256; **Technologies** montre les frameworks, contrats et composants. Dans **Tests**, les journaux JUnit locaux sont cliquables pour Da’at, EncyKlopedia et Interaction-Kernel, ainsi que pour les deux suites ciblées antérieures.
+
+Ces tests attestent uniquement leur exécution sur les ZIP fournis; ils ne vérifient pas les commits Git actuels. Voir `docs/SNAPSHOT_REVIEW_NINE_2026_10_30.md`.

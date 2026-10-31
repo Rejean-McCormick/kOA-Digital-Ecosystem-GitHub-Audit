@@ -56,7 +56,7 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
         """
         route = urlsplit(self.path).path
         if (route not in ("/data/local-qualification.json", "/api/kristal/atlas", "/api/campaigns/summary", "/api/review/summary", "/api/validation/board")
-                and not route.startswith(("/local/engineering/", "/local/campaigns", "/local/review", "/local/spec-tests/"))):
+                and not route.startswith(("/local/engineering/", "/local/campaigns", "/local/review", "/local/spec-tests/", "/local/snapshot-tests/"))):
             return super().do_GET()
         if (self.client_address[0] not in ("127.0.0.1", "::1")
                 or self.headers.get("Sec-Fetch-Site", "same-origin") == "cross-site"
@@ -90,6 +90,13 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
                 if not re.fullmatch(r"[A-Za-z0-9_.-]{1,120}", slug):
                     self.send_error(404); return
                 payload = spec_tests.report_for_slug(ROOT, slug)
+                if payload is None:
+                    self.send_error(404); return
+                kind = "application/xml; charset=utf-8"
+            elif route.startswith("/local/snapshot-tests/"):
+                from koa_audit import snapshot_runs
+                slug = unquote(route[len("/local/snapshot-tests/"):])
+                payload = snapshot_runs.report_for_slug(ROOT, slug)
                 if payload is None:
                     self.send_error(404); return
                 kind = "application/xml; charset=utf-8"

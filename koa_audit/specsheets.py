@@ -13,7 +13,7 @@ from pathlib import Path
 
 FORMAT = 'koa.private.specsheets.snapshot.v1'
 BUNDLE = 'KOA-SPECSHEETS-2026-10-30.json'
-SHA256 = '7870986ddebebef693cb0abc3d50f6bc99e254ff090a2ad473d4de906e14d4c0'
+SHA256 = '8edfc457a59bd33f1aa60ea2b12ea7fb142b1df15c1751f1efbd17871b83a639'
 ALLOWED_STATUSES = {'code_observed', 'specification_only'}
 
 
@@ -21,7 +21,7 @@ def load(project: Path) -> dict:
     """Fail closed if the reviewed source index is missing or altered."""
     path = Path(project) / 'private_evidence' / BUNDLE
     empty = {'format': FORMAT, 'repositories': {}, 'state': 'unavailable'}
-    if not path.is_file() or path.is_symlink() or path.stat().st_size > 500_000:
+    if not path.is_file() or path.is_symlink() or path.stat().st_size > 1_500_000:
         return empty
     raw = path.read_bytes()
     if hashlib.sha256(raw).hexdigest() != SHA256:

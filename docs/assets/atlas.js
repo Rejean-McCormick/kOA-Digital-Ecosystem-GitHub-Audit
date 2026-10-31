@@ -61,12 +61,12 @@
       return;
     }
     detail.append(el('p','spec-overview',spec.overview));
-    const meta=el('p','spec-meta','Source : '+spec.snapshot+' · SHA-256 '+spec.snapshot_sha256.slice(0,20)+'… · commit non attesté. Aucune exécution de test démontrée par ce ZIP.');
+    const meta=el('p','spec-meta','Sélection représentative, non exhaustive. Source : '+spec.snapshot+' · SHA-256 '+spec.snapshot_sha256.slice(0,20)+'… · commit non attesté. Aucune exécution de test démontrée par ce ZIP.');
     detail.append(meta);
     const items=technical?spec.technical:spec.features;
     const groups=[...new Set(items.map(x=>x.group))];
     const summary=el('div','spec-summary');
-    summary.append(el('strong','',String(items.length)),el('span','',technical?'technologies repérées':'fonctions observées ou spécifiées'),el('strong','',String(current.targeted_test_run?.passed||0)),el('span','','tests unitaires ciblés PASS sur ce ZIP · pas validation de toutes les fonctions'));
+    summary.append(el('strong','',String(items.length)),el('span','',technical?'technologies documentées':'fonctions sélectionnées (non exhaustif)'),el('strong','',String((current.targeted_test_run?.passed||0)+(current.isolated_test_run?.passed||0))),el('span','','tests PASS observés sur ce ZIP · périmètre des suites seulement'));
     detail.append(summary);
     for(const group of groups){
       const box=el('details','spec-group');box.open=true;
@@ -80,7 +80,7 @@
         if(item.technologies?.length){const tags=el('div','spec-tech-tags');
           item.technologies.forEach(t=>tags.append(el('span','',t)));row.append(tags);}
         if(item.test_definitions?.length){
-          const run=current.targeted_test_run;
+          const run=[current.targeted_test_run,current.isolated_test_run].find(r=>r?.snapshot_sha256===spec.snapshot_sha256 && r?.test_files?.some(t=>item.test_definitions.some(d=>d.path===t.path && d.sha256===t.sha256)));
           const matched=run?.test_files?.filter(t=>item.test_definitions.some(d=>d.path===t.path && d.sha256===t.sha256))||[];
           if(matched.length){
             const check=el('div','spec-unit-success');check.append(el('span','','✓ '+run.passed+' tests unitaires ciblés PASS pour '+matched.map(x=>x.path).join(', ')));
@@ -93,6 +93,41 @@
       detail.append(box);
     }
     detail.append(el('p','validation-explain','La présence d’une implémentation, d’un framework, d’un fichier pytest ou d’un scénario ne donne pas un crochet vert. Les tests doivent avoir un journal de succès et une provenance compatibles avec la version.'));
+  }
+  function renderStructureDetail(detail,current){
+    const structure=current.structure||{};
+    detail.append(el('h4','','Modules et surfaces du code'));
+    if(!structure.roles?.length){
+      detail.append(el('p','validation-explain','Aucun fichier technique classé pour cette archive. Cela ne signifie ni absence de fonctionnalité, ni échec.'));
+      return;
+    }
+    detail.append(el('p','validation-explain','Cartographie reproductible des chemins de fichiers du ZIP, avec exemples et empreintes SHA-256. Les catégories sont estimées à partir des répertoires et extensions : elles ne démontrent ni fonctionnement, ni test réussi, ni sécurité validée.'));
+    detail.append(el('p','spec-meta',`${structure.classified_files} fichiers techniques classés · ${structure.snapshot_file_count} entrées du ZIP · commit Git non attesté. Ne pas utiliser comme taux de complétion.`));
+    const langs=Object.entries(structure.languages_file_counts||{}).slice(0,12);
+    if(langs.length){
+      const tags=el('div','spec-tech-tags');
+      langs.forEach(([name,n])=>tags.append(el('span','',`${name} · ${n} fichiers`)));
+      detail.append(tags);
+    }
+    for(const group of structure.roles){
+      const box=el('details','spec-group');
+      box.append(el('summary','',`${group.label} · ${group.file_count} fichiers / ${group.module_count} sous-ensembles`));
+      for(const module of group.modules){
+        const row=el('div','spec-feature');
+        const head=el('div','spec-feature-head');head.append(el('strong','',module.module));
+        head.append(el('span','spec-state',`${module.file_count} fichiers observés`));row.append(head);
+        if(module.examples?.length){
+          const examples=el('details','spec-evidence');
+          examples.append(el('summary','','Fichiers témoins et empreintes'));
+          for(const e of module.examples){
+            const r=el('div','spec-source');r.append(el('span','',e.path),el('code','',`SHA-256 ${e.sha256}`));examples.append(r);
+          }
+          row.append(examples);
+        }
+        box.append(row);
+      }
+      detail.append(box);
+    }
   }
   function renderValidationBoard(){
     const holder=$('validation-metrics'), listing=$('validation-list'), detail=$('validation-detail');
@@ -108,8 +143,8 @@
     const entries=validationBoard.repositories;
     const evaluated=entries.reduce((n,r)=>n+r.assessed_practices,0);
     holder.append(validationMetric(String(entries.length),'Applications dans le périmètre'),
-      validationMetric(String(validationBoard.functional_specsheets_reviewed||0),'Fiches fonctionnelles vérifiées par source'),
-      validationMetric(String(validationBoard.targeted_unit_tests_passed||0),'Tests unitaires ciblés PASS · snapshots datés'),
+      validationMetric(String(validationBoard.functional_specsheets_reviewed||0),'Fiches fonctionnelles sourcées · non certifiées'),
+      validationMetric(String((validationBoard.targeted_unit_tests_passed||0)+(validationBoard.additional_isolated_test_passes||0)),'Tests PASS isolés · 5 suites de snapshots sans SHA Git'),
       validationMetric(String(validationBoard.source_checked_documentary_jalons),'Jalons documentaires étayés · périmètre limité'));
     if(evaluated)holder.append(validationMetric(String(evaluated),'Pratiques examinées, non certifiées'));
     const query=validationSearch.trim().toLocaleLowerCase();
@@ -127,7 +162,7 @@
       const b=el('button','validation-repo'+(r.repo===validationRepo?' selected':''));b.type='button';
       const name=el('span');name.append(el('strong','',r.slug));
       name.append(el('small','',r.verified_stages?`${r.verified_stages} jalon(s) documenté(s) · périmètre limité`:
-        r.specsheet?.state==='snapshot_reviewed'?`${r.specsheet.features.length} fonctions décrites · tests : ${r.targeted_test_run?.passed||0} PASS ciblés`:'Aucune pièce qualifiante vérifiée dans le registre'));
+        r.specsheet?.state==='snapshot_reviewed'?`${r.specsheet.features.length} fonctions décrites · tests : ${(r.targeted_test_run?.passed||0)+(r.isolated_test_run?.passed||0)} PASS ciblés`:'Aucune pièce qualifiante vérifiée dans le registre'));
       b.append(name,el('span',r.verified_stages?'proof-tick':'proof-unknown',r.verified_stages?'✓ '+r.verified_stages:'—'));
       b.addEventListener('click',()=>{validationRepo=r.repo;validationCategory='Fonctionnalités';renderValidationBoard();});listing.append(b);
     }
@@ -137,18 +172,20 @@
     detail.append(el('p','','Fiche technique et fonctions détectées dans les snapshots : une implémentation visible n’est pas un test réussi. Les coches vertes restent réservées aux preuves vérifiées et datées.'));
     const categories=el('div','validation-categories');
     const componentInfo=kristalByRepo(current.repo);
-    for(const category of [{label:'Fonctionnalités',verified_count:0,practice_count:0,evaluated_practices:0}, {label:'Technologies',verified_count:0,practice_count:0,evaluated_practices:0}, ...current.categories, {label:'Composants',verified_count:0,practice_count:0,evaluated_practices:0}]){
+    for(const category of [{label:'Fonctionnalités',verified_count:0,practice_count:0,evaluated_practices:0}, {label:'Technologies',verified_count:0,practice_count:0,evaluated_practices:0}, {label:'Modules & fichiers',verified_count:0,practice_count:0,evaluated_practices:0}, ...current.categories, {label:'Composants',verified_count:0,practice_count:0,evaluated_practices:0}]){
       const b=el('button','validation-category'+(category.label===validationCategory?' selected':''));b.type='button';
       b.append(el('strong','',category.label),el('span','',category.label==='Composants'?
-        (componentInfo?.components?.length ? `${componentInfo.components.length} lien(s) explicite(s)` : componentInfo?.candidates?.length ? `${componentInfo.candidates.length} suggestion(s)` : 'Rattachement non documenté') : category.label==='Tests'&&current.targeted_test_run?`${current.targeted_test_run.passed} tests unitaires ciblés PASS` :
+        (componentInfo?.components?.length ? `${componentInfo.components.length} lien(s) explicite(s)` : componentInfo?.candidates?.length ? `${componentInfo.candidates.length} suggestion(s)` : 'Rattachement non documenté') : category.label==='Tests'&&(current.targeted_test_run||current.isolated_test_run)?`${(current.targeted_test_run?.passed||0)+(current.isolated_test_run?.passed||0)} tests PASS sur snapshot` :
         category.label==='Sécurité'&&current.targeted_test_run?.test_files?.some(x=>x.path.includes('test_security_gate.py'))?`${current.targeted_test_run.passed} tests gate PASS · 53 critères non certifiés` :
         category.label==='Fonctionnalités'?
         (current.specsheet?.state==='snapshot_reviewed'? `${current.specsheet.features.length} fonctions identifiées · validation globale non attestée`:'Snapshot à examiner') : category.label==='Technologies'?
-        (current.specsheet?.state==='snapshot_reviewed'? `${current.specsheet.technical.length} composants observés`:'Source à examiner') : category.verified_count?`✓ ${category.verified_count} preuve(s) datée(s)`:
+        (current.specsheet?.state==='snapshot_reviewed'? `${current.specsheet.technical.length} composants observés`:'Source à examiner') : category.label==='Modules & fichiers' ?
+        `${current.structure?.classified_files||0} fichiers classés · arborescence du ZIP` : category.verified_count?`✓ ${category.verified_count} preuve(s) datée(s)`:
         category.practice_count?`${category.practice_count} critères du référentiel · ${category.evaluated_practices} évalués manuellement`:'Aucune pièce vérifiée'));
       b.addEventListener('click',()=>{validationCategory=category.label;renderValidationBoard();});categories.append(b);
     }
     detail.append(categories);
+    if(validationCategory==='Modules & fichiers'){renderStructureDetail(detail,current);return;}
     if(validationCategory==='Fonctionnalités'||validationCategory==='Technologies'){
       renderSpecsheetDetail(detail,current,validationCategory==='Technologies');return;
     }
@@ -188,6 +225,15 @@
         left.append(link(run.junit_link,'↗ Voir le rapport JUnit original validé par SHA-256',''));
         row.append(left,el('span','control-status checked','PASS vérifié · suite ciblée seulement'));detail.append(row);
       }
+    }
+    if(selected.label==='Tests'&&current.isolated_test_run){
+      const run=current.isolated_test_run;
+      const row=el('div','validation-control'),left=el('div');
+      left.append(el('strong','','✓ '+run.passed+' tests réussis sur une copie isolée du ZIP'));
+      left.append(el('small','',run.framework+' · '+run.scope+' · SHA-256 '+run.snapshot_sha256.slice(0,20)+'… · aucun commit Git attesté'));
+      left.append(link(run.junit_link,'↗ Rapport JUnit du snapshot · empreinte vérifiée',''));
+      row.append(left,el('span','control-status checked','PASS vérifié · périmètre limité'));
+      detail.append(row);
     }
     if(selected.label==='Tests'){
       const ci=current.historical_ci;

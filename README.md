@@ -5,14 +5,34 @@
 
   **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.17.0 · Functional specifications, developer technology layers, and targeted test evidence**
+  **Version 0.20.0 · 47 source-attributed functional spec sheets, dated evidence and an unchanged validation baseline**
 </div>
+
+## v0.20.0 — Corrected source attribution and searchable file structure
+
+The home dashboard now includes **Modules & fichiers** for all 47 supplied code snapshots. It is a reproducible, SHA-256-backed file-tree inventory, not a feature or security certification. The Skope and SenTient overclaims found in independent review were corrected and 16 descriptions backed only by test/docs files were downgraded. Existing JUnit results and dated campaign status remain intact. Read `docs/SOURCE_STRUCTURE_AND_LIMITS_2026_10_30.md` for scope and caveats.
+
+## SmartDump: 35 additional source-grounded functional sheets — v0.20.0
+
+The owner-provided `SmartDump_20261030_200705.zip` contains **35 new repository snapshots** and indexes, independently of 12 previously reviewed snapshots. The local dashboard now covers **47/49 official repositories with a representative functional spec sheet**, grounded in SHA-256 fingerprints of the corresponding archived source files. **Kompose and Kontexte were not in the bundle.** This is an evidence inventory, not a statement that every feature, control, or test suite has passed.
+
+Important distinctions: **Konductor is design documentation rather than an implemented runtime in this ZIP**; **UCKK-Assets is a course/brand corpus, not a backend**; **kristal-public indicates BLOCKED hosted-collection qualification**; **Konstellation-Publisher is a local transaction rehearsal, not a remote deployer**. These states are preserved in their individual sheets. No new test execution, green checkmark, Git SHA attribution, security certification, or production verdict was fabricated for the 35 new snapshots. The **172 prior isolated test cases**, 10 scope-limited documentary qualifications, 53 security criteria and 33 architecture criteria remain unchanged. The source ZIPs themselves are **not redistributed**; the new private index stores selected source names and hashes only, and is frozen with new campaigns.
+
+See [Snapshot batch review](docs/SMARTDUMP_35_REVIEW_2026_10_30.md) for the complete per-repository coverage and source caveats.
+
+## Nine more source-grounded specification sheets — v0.18.0
+
+This update reviews nine additional owner-provided ZIP snapshots: **Daat, EncyKlopedia, Interaction-Kernel, kOA-Linux-Koali, Koali-Spaces, Konfid, Konnaxion, Kristal-Framework and Orgo**. Together with the prior three, the local dashboard now contains **12 functional spec sheets** with **71 functional observations** and **59 technology/component entries**, all bound to individual ZIPs and hashed source members. A source observation does not constitute a successful test or an operational certification.
+
+Three independently executed suites on extracted, isolated snapshots have reproducible local JUnit evidence: **Daat 99/99**, **EncyKlopedia 9/9**, and **Interaction-Kernel Python runtime 19/19** (with 14 additional subtests). Together with the two prior targeted suites (45 checks), this represents **172 passing test cases across five scoped runs**, not a generic readiness score or a total of security practices. Test logs are private/local, have SHA-256 checks, and are preserved in **new** dated campaigns. No provided ZIP is assumed equal to a current Git HEAD. The 53 security practices and historic qualification stage judgments are unchanged.
+
+See [Nine-repository reviewed sources, execution scope and limitations](docs/SNAPSHOT_REVIEW_NINE_2026_10_30.md).
 
 ## Functional specification sheets — v0.17.0
 
 The local landing page now opens on **Fonctionnalités** for each selected application: audience-facing tasks and components, with developer-facing **Technologies** grouped into frameworks, APIs/contracts, data, identity/access, security and tests. Every supported claim links to relative source paths and exact SHA-256 digests in the frozen snapshot review. We deliberately distinguish **code observed**, **scenario only**, **test definitions**, and **tests actually passed**. No existing security, production or full-feature maturity status is inferred.
 
-Three user-supplied snapshots are reviewed: KonnaxionDiag, Konnaxion-Capsule-Manager and Konnaxion-Worlds (16 functional observations and 17 technology entries). Targeted unit tests were run on isolated copies of two ZIPs: **3/3 PASS for KonnaxionDiag** and **42/42 PASS for Capsule Manager Security Gate contracts**. Their sanitized JUnit reports are clickable only via the local dashboard. The 53 security pattern criteria stay separate and are **not** marked 42/53 passed. No repository HEAD is asserted to match these ZIPs. The other 46 repos retain their existing Engineering Profiles, Kristal map, and qualification data, without invented functional specs. New private campaigns keep frozen copies of this historical review and its test logs.
+Three user-supplied snapshots are reviewed: KonnaxionDiag, Konnaxion-Capsule-Manager and Konnaxion-Worlds (16 functional observations and 17 technology entries). Targeted unit tests were run on isolated copies of two ZIPs: **3/3 PASS for KonnaxionDiag** and **42/42 PASS for Capsule Manager Security Gate contracts**. Their sanitized JUnit reports are clickable only via the local dashboard. The 53 security pattern criteria stay separate and are **not** marked 42/53 passed. No repository HEAD is asserted to match these ZIPs. The remaining 2 official repos (Kompose and Kontexte) have no supplied functional source snapshot (see v0.20.0 above). New private campaigns keep frozen copies of this historical review and its test logs.
 
 See [Functional specification sheets, test provenance and limitations](docs/FUNCTIONAL_SPECSHEETS_V017.md).
 

@@ -529,6 +529,40 @@ def create_campaign(project: Path, title: str, audit_file: Path | None = None,
                     documents[dest] = raw
                     functional_review['test_logs'].append({'member': dest, 'sha256': _hash(raw)})
                     functional_review['targeted_unit_tests'] += r['passed']
+    # Reproducible structural map of files from ZIP snapshots. Preserve it in
+    # the campaign, but never treat directory/extension classifications as PASS.
+    if functional_review is not None:
+        from . import source_structure
+        if source_structure.load(project).get('state') == 'verified_structure':
+            content = (project / 'private_evidence' / source_structure.BUNDLE).read_bytes()
+            member = 'private/snapshot_specs/source-structure-2026-10-30.json'
+            documents[member] = content
+            functional_review['source_structure'] = {
+                'member': member, 'sha256': _hash(content),
+                'source_date': '2026-10-30', 'linked_to_current_commit': False,
+                'interpretation': 'observed_file_structure_not_feature_validation',
+            }
+    # Independently preserve extra isolated test reports from the nine new code
+    # snapshots. They are anchored to ZIP bytes and NOT linked to a Git commit.
+    if functional_review is not None:
+        from . import snapshot_runs
+        isolated = snapshot_runs.load(project)
+        if isolated:
+            manifest_raw = (project / 'private_evidence' / snapshot_runs.MANIFEST).read_bytes()
+            member = 'private/snapshot_specs/isolated-test-runs-2026-10-30.json'
+            documents[member] = manifest_raw
+            functional_review['isolated_test_manifest'] = {'member': member, 'sha256': _hash(manifest_raw)}
+            functional_review['additional_isolated_tests'] = 0
+            for repo, result in isolated.items():
+                slug = repo.partition('/')[2]
+                raw = snapshot_runs.report_for_slug(project, slug)
+                if raw is None:
+                    raise ValueError('Journal de tests isolés indisponible après validation')
+                destination = 'private/snapshot_specs/' + slug + '.junit.xml'
+                documents[destination] = raw
+                functional_review['test_logs'].append({'member': destination, 'sha256': _hash(raw),
+                                                       'source': 'isolated_user_supplied_zip_not_git'})
+                functional_review['additional_isolated_tests'] += result['passed']
     if progress:
         progress(len(inventory) + 1, total_steps, "Calcul du manifeste et des empreintes")
     stamp = datetime.now(timezone.utc)

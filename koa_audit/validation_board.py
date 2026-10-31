@@ -13,7 +13,7 @@ import hashlib
 from pathlib import Path
 from urllib.parse import quote
 
-from . import evidence_adjudication, profiles, qualification, specsheets, spec_tests
+from . import evidence_adjudication, profiles, qualification, specsheets, spec_tests, snapshot_runs, source_structure
 
 FORMAT = 'koa.validation_board.private.v1'
 CI_SNAPSHOT_SHA256 = '8913d64a8e389ac4dc86810cbe3cd4ca2e248933cb499fbb4cc2b1f1683fed45'
@@ -65,8 +65,10 @@ def build(project: Path, qualification_path: Path | None = None,
     project = Path(project)
     patterns = profiles.catalog(project)
     historic_ci = _load_historical_ci(project)
-    snapshot_runs = spec_tests.load(project)
+    verified_run_snapshots = spec_tests.load(project)
+    extra_runs = snapshot_runs.load(project)
     spec_index = specsheets.load(project)
+    structure_index = source_structure.load(project)
     assessment_state = profiles.load_state(practice_path)['assessments']
     claim_state = qualification.load_state(qualification_path)['claims']
     # Evidence source is verified against archive and every referenced file hash.
@@ -154,7 +156,9 @@ def build(project: Path, qualification_path: Path | None = None,
         repositories.append({
             'repo': repo, 'slug': slug, 'categories': categories,
             'specsheet': specsheets.for_repository(project, repo, spec_index),
-            'targeted_test_run': snapshot_runs.get(repo),
+            'structure': source_structure.for_repository(project, repo, structure_index),
+            'targeted_test_run': verified_run_snapshots.get(repo),
+            'isolated_test_run': extra_runs.get(repo),
             'verified_stages': sum(s['source_verified'] for s in stage_list),
             'assessed_practices': sum(p['status'] != 'Non évalué' for p in practice_rows),
             'source_verified_test': any(s['id'] == 'qualified' and s['source_verified'] for s in stage_list),
@@ -165,7 +169,11 @@ def build(project: Path, qualification_path: Path | None = None,
         'format': FORMAT, 'local_only': True, 'official_repositories': len(repositories),
         'criteria': {'security_per_repo': 53, 'architecture_per_repo': 33, 'qualification_per_repo': 5},
         'functional_specsheets_reviewed': sum(r['specsheet']['state'] == 'snapshot_reviewed' for r in repositories),
-        'targeted_unit_tests_passed': sum(r['passed'] for r in snapshot_runs.values()),
+        'source_structure_repositories': sum(bool(r['structure'].get('roles')) for r in repositories),
+        'source_structure_files_classified': sum(r['structure'].get('classified_files',0) for r in repositories),
+        'targeted_unit_tests_passed': sum(r['passed'] for r in verified_run_snapshots.values()),
+        'additional_isolated_test_passes': sum(r['passed'] for r in extra_runs.values()),
+        'isolated_test_runs': len(extra_runs),
         'source_checked_documentary_jalons': total_verified,
         'security_controls_test_verified': 0,
         'historical_ci_success_on_observed_head': sum(v['success_observed'] for v in historic_ci.values()),

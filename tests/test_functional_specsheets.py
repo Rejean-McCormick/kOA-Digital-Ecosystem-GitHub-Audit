@@ -15,14 +15,15 @@ class FunctionalSpecificationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             board = validation_board.build(ROOT,Path(tmp)/'q.json',Path(tmp)/'p.json')
         self.assertEqual(board['official_repositories'],49)
-        self.assertEqual(board['functional_specsheets_reviewed'],3)
+        self.assertEqual(board['functional_specsheets_reviewed'],47)
+        self.assertEqual(board['additional_isolated_test_passes'],127)
         self.assertEqual(board['targeted_unit_tests_passed'],45)
         by_slug={x['slug']:x for x in board['repositories']}
         self.assertEqual(len(by_slug['KonnaxionDiag']['specsheet']['features']),4)
         self.assertEqual(len(by_slug['Konnaxion-Capsule-Manager']['specsheet']['features']),6)
         self.assertEqual(len(by_slug['Konnaxion-Worlds']['specsheet']['features']),6)
-        self.assertEqual(by_slug['Orgo']['specsheet']['state'],'not_reviewed')
-        self.assertFalse(by_slug['Orgo']['specsheet']['features'])
+        self.assertEqual(by_slug['Orgo']['specsheet']['state'],'snapshot_reviewed')
+        self.assertEqual(len(by_slug['Orgo']['specsheet']['features']),7)
         self.assertEqual(board['security_controls_test_verified'],0)
 
     def test_present_feature_is_never_marked_passed(self):
@@ -108,7 +109,8 @@ class FrozenFunctionalEvidenceTest(unittest.TestCase):
             with zipfile.ZipFile(made) as z:
                 self.assertIn(ref['member'],z.namelist())
                 self.assertEqual(hashlib.sha256(z.read(ref['member'])).hexdigest(),ref['sha256'])
-                self.assertEqual(len(ref['test_logs']),2)
+                self.assertEqual(len(ref['test_logs']),5)
+                self.assertEqual(ref['additional_isolated_tests'],127)
                 for log in ref['test_logs']:
                     self.assertEqual(hashlib.sha256(z.read(log['member'])).hexdigest(),log['sha256'])
             self.assertEqual(campaigns.list_campaigns(folder/'campaigns')[0]['integrity'],'ok')
