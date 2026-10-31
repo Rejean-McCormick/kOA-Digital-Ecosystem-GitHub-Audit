@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · Kontrol.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · Kontrol.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 62c3bb451bac · SHA-256 77c2df1b8dc7edc4</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/wiki/Kontrol' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kontrol — Administration and Moderation
+
+Kontrol is Konnaxion&#x27;s administrative application surface.
+
+Canonical backend:
+
+```text
+backend/konnaxion/kontrol/
+```
+
+## Current state
+
+- `AuditLog`;
+- `ModerationTicket`;
+- `KonsensusConfig`.
+
+The backend also exposes administration/reporting views for usage, performance and Smart Vote reporting.
+
+## Current UI
+
+```text
+/kontrol/dashboard
+/kontrol/audit-log
+/kontrol/moderation/*
+/kontrol/users/all
+/kontrol/roles
+/kontrol/konsensus
+```
+
+## Ownership rule
+
+Kontrol may present and administrate multiple Konnaxion domains, but the existence of an admin screen does not transfer the underlying domain ownership to Kontrol.
+</pre></body></html>

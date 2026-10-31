@@ -1,0 +1,62 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · docs/Technical-Reference/EkoH Smart Vote/ekoh-module-file-architecture.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · docs/Technical-Reference/EkoH Smart Vote/ekoh-module-file-architecture.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 921af218845310bb</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/EkoH%20Smart%20Vote/ekoh-module-file-architecture.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&gt; **Implementation-alignment notice (2026-10-02):** the active EkoH owner is `backend/konnaxion/ekoh/`. The tree below preserves an older packaging sketch and is not authoritative for current paths. Current taxonomy loading uses `python manage.py load_isced`, not direct `loaddata`. See `EkoH - Expertise Taxonomy (ISCED-F 2013).md`.
+
+F**ile architecture for the EkoH module alone** (everything lives under `modules/ekoh-smartvote/ekoh/`):
+
+ekoh/                        \# Django app root  (namespace: konnaxion.ekoh)  
+├── \_\_init\_\_.py  
+├── apps.py                 \# EkohConfig – sets default schema search\_path  
+├── models/                 \# One file per logical group  
+│   ├── \_\_init\_\_.py  
+│   ├── taxonomy.py         \# ExpertiseCategory (UNESCO codes)  
+│   ├── scores.py           \# UserExpertiseScore, UserEthicsScore  
+│   ├── config.py           \# ScoreConfiguration (weights)  
+│   ├── privacy.py          \# ConfidentialitySetting  
+│   ├── audit.py            \# ContextAnalysisLog, ScoreHistory  
+│   └── signals.py          \# cross-model hooks  
+├── migrations/  
+│   ├── 0001\_initial.py     \# creates schema ekoh\_smartvote \+ tables  
+│   ├── 0002\_unesco\_fixture.py  
+│   └── 0003\_partition\_helpers.py  
+├── serializers/            \# DRF serializers split by concern  
+│   ├── \_\_init\_\_.py  
+│   ├── profile.py  
+│   ├── score\_admin.py  
+│   └── audit.py  
+├── views/  
+│   ├── \_\_init\_\_.py  
+│   ├── profile.py          \# /ekoh/profile/:uid (GET)  
+│   ├── admin.py            \# /ekoh/score/recalc (POST)  
+│   └── bulk\_ingest.py      \# /ekoh/score/bulk  
+├── urls.py                 \# router for the three viewsets  
+├── services/               \# pure-logic (no Django imports)  
+│   ├── \_\_init\_\_.py  
+│   ├── multidimensional\_scoring.py  
+│   ├── contextual\_analysis.py  
+│   ├── ethics\_evaluator.py  
+│   └── taxonomy\_loader.py  
+├── tasks/  
+│   ├── \_\_init\_\_.py  
+│   ├── recalc.py           \# Celery task ekoh\_score\_recalc  
+│   ├── contextual.py       \# contextual\_analysis\_batch  
+│   └── emerging\_expert.py  
+├── fixtures/  
+│   └── isced\_f\_2013.json  
+├── admin.py                \# Django admin registrations  
+├── tests/                  \# pytest; 90 % coverage target  
+│   ├── \_\_init\_\_.py  
+│   ├── test\_models.py  
+│   ├── test\_services.py  
+│   └── test\_api.py  
+└── README.md               \# stand-alone quick-start for Ekoh app
+
+Key points:
+
+* **Self-contained:** no imports from Konnaxion core; only depends on `auth_user` table.
+
+* **Schema isolation:** every migration opens with `schema_editor.execute(&quot;SET search_path TO ekoh_smartvote,public&quot;)`.
+
+* **Pip-installable:** `pyproject.toml` at `modules/ekoh-smartvote/` exposes `konnaxion.ekoh` as a namespace package.
+
+* **Taxonomy synchronization:** `python manage.py load_isced` upserts the version-pinned ISCED-F 2013 EkoH profile and preserves existing expertise scores.
+
+</pre></body></html>

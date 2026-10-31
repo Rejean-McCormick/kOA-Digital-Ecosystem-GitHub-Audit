@@ -1,0 +1,161 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/24-api-contracts.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/24-api-contracts.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 7e33415679656bd3</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/24-api-contracts.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># API et contrats publics — 1.0
+
+## 1. Endpoints
+
+| Méthode | Endpoint | Scope | Rôle |
+|---|---|---|---|
+| GET | `/api/health` | public | liveness + version |
+| GET | `/api/ready` | public | readiness du service |
+| GET | `/api/version` | public | version/build/schémas ; identité corpus optionnelle |
+| GET | `/api/bootstrap[?readerPolicyRef=…]` | `read` | contexte, Lens/registry policy-scoped, renderer catalog, profil visible |
+| GET | `/api/capabilities` | `read` | capacités d’intégration et navigation |
+| GET | `/api/metrics` | `metrics` | métriques structurées |
+| POST | `/api/query` | `read` | ResultSet |
+| POST | `/api/facets` | `read` | facettes policy-scoped |
+| POST | `/api/entity` | `read` | inspecteur entité |
+| POST | `/api/constellation` | `read` | projection Constellation |
+| POST | `/api/navigation/plan` | `read` | NavigationPlan 1.0 |
+| POST | `/api/navigation/project` | `read` | projection spécialisée 1.0 |
+| POST | `/api/evidence` | `read` | assertions/evidence visibles |
+| POST | `/api/validate-state` | `read` | validation/migration ExplorationState |
+| POST | `/api/sa/request` | `sa` | construction requête SA |
+| POST | `/api/sa` | `sa` | réalisation SA configurée |
+
+`GET /api/health`, `/api/ready` et `/api/version` sont volontairement minimaux. `/api/ready` vérifie notamment les index policy-scoped et le profil navigation préchauffé. `/api/version` expose `version`, `buildId`, `sourceManifestSha256`, `sourceFileCount` et, si fourni par le pipeline, `artifactSha256`; l’identité du corpus n’est ajoutée que si `KONSTELLATION_EXPOSE_CORPUS_IDENTITY=true`.
+
+## 2. Authentification
+
+Les profils non locaux utilisent :
+
+```http
+Authorization: Bearer &lt;token&gt;
+```
+
+`KONSTELLATION_AUTH_TOKENS` mappe les tokens vers un principal :
+
+```json
+{
+  &quot;&lt;token-long&gt;&quot;: {
+    &quot;id&quot;: &quot;reader-1&quot;,
+    &quot;roles&quot;: [&quot;public&quot;, &quot;research&quot;],
+    &quot;scopes&quot;: [&quot;read&quot;, &quot;metrics&quot;]
+  }
+}
+```
+
+Les scopes API sont distincts des rôles d’accès au contenu. Deux principaux ayant les mêmes rôles peuvent partager les mêmes index de lecture ; leurs scopes continuent de contrôler les endpoints accessibles.
+
+## 3. Erreurs
+
+Format stable :
+
+```json
+{
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;UNSUPPORTED_CAPABILITY&quot;,
+    &quot;message&quot;: &quot;...&quot;,
+    &quot;requestId&quot;: &quot;...&quot;,
+    &quot;details&quot;: {}
+  }
+}
+```
+
+`X-Request-ID` est renvoyé dans les headers et le même identifiant est utilisé dans les logs. `details` ne doit jamais contenir de données masquées par policy.
+
+## 4. NavigationPlan 1.0
+
+```json
+{
+  &quot;schemaVersion&quot;: &quot;1.0&quot;,
+  &quot;mode&quot;: &quot;adaptive&quot;,
+  &quot;derived&quot;: true,
+  &quot;semantics&quot;: &quot;navigation-affordances-not-kristal-authority&quot;,
+  &quot;scope&quot;: {&quot;kind&quot;: &quot;selection&quot;, &quot;entityType&quot;: &quot;node&quot;},
+  &quot;primaryRecipeId&quot;: &quot;proofs&quot;,
+  &quot;views&quot;: [
+    {
+      &quot;id&quot;: &quot;proofs&quot;,
+      &quot;label&quot;: &quot;Preuves&quot;,
+      &quot;rendererId&quot;: &quot;dag-proof&quot;,
+      &quot;score&quot;: 0.93,
+      &quot;reason&quot;: &quot;...&quot;,
+      &quot;relationIds&quot;: [&quot;proof_dependency&quot;]
+    }
+  ],
+  &quot;actions&quot;: [],
+  &quot;profile&quot;: {&quot;schemaVersion&quot;:&quot;1.0&quot;,&quot;scope&quot;:&quot;result-set&quot;,&quot;entityType&quot;:&quot;node&quot;,&quot;affordances&quot;:{}}
+}
+```
+
+Sans focus, le planner peut utiliser un `ResultSetProfile` borné. Avec focus, le `FocusProfile` prévaut.
+
+## 5. Navigation Projection 1.0
+
+Toutes les projections spécialisées contiennent au minimum :
+
+```json
+{
+  &quot;schemaVersion&quot;: &quot;1.0&quot;,
+  &quot;projectionKind&quot;: &quot;dag&quot;,
+  &quot;recipeId&quot;: &quot;proofs&quot;,
+  &quot;rendererId&quot;: &quot;dag-proof&quot;,
+  &quot;derived&quot;: true,
+  &quot;truncated&quot;: false,
+  &quot;nextCursor&quot;: null,
+  &quot;totalCandidates&quot;: 42,
+  &quot;explanation&quot;: {
+    &quot;reason&quot;: &quot;...&quot;,
+    &quot;relationIds&quot;: [&quot;proof_dependency&quot;]
+  }
+}
+```
+
+Les champs spécifiques sont **obligatoires et validés par famille** :
+
+| `projectionKind` | Champs structurants requis |
+|---|---|
+| `timeline-lineage` | `items`, `links` |
+| `tree` | `nodes`, `edges`, `roots` |
+| `dag` | `nodes`, `edges`, `roots`, `terminals`, `acyclic`, `cycles` |
+| `flow` | `nodes`, `transitions`, `starts`, `terminals` |
+| `causal-feedback` | `nodes`, `edges`, `cycles` |
+| `matrix` | `rows`, `columns`, `cells` |
+| `state-flow` | `records`, `transitions`, `semantics` |
+| `traceability` | `nodes`, `edges` |
+| `multiscale` | `layers`, `memberships`, `nodes`, `crossLinks` |
+| `spatial` | `points`, `places` |
+
+Le schéma valide aussi la forme interne des nœuds, arêtes, transitions, cellules, records et points. Les 10 fixtures de référence sont dans `examples/projections/`. Les données restent bornées par `pageSize`, `nodeBudget`, `edgeBudget` et le Renderer Registry.
+
+## 6. Reader Policy
+
+La policy est résolue depuis `query.context.readerPolicyRef` avant : query, facets, entity, bootstrap, evidence, constellation, planning et projection. `GET /api/bootstrap?readerPolicyRef=…` retourne le registre relationnel, les Lens/facettes/pivots et les groupes de Constellation filtrés pour ce même scope. Les plans/projections sont donc dérivés du **même état visible** que les résultats.
+
+## 7. Versioning
+
+Chaque contrat public possède :
+
+- `schemaVersion` ;
+- JSON Schema ;
+- tests ;
+- compatibilité documentée ;
+- migration lorsqu’une rupture est nécessaire.
+
+QuerySpec, Lens et relation registry restent actuellement en 0.2 : ils ne sont pas artificiellement renumérotés lorsqu’aucune rupture de contrat n’est nécessaire. Les nouveaux contrats de navigation/exploration sont en 1.0.
+
+## 8. Idempotence
+
+Les endpoints de lecture sont déterministes pour un même corpus, Reader Policy, roles, Lens, QuerySpec et version de service. Une projection est toujours une opération dérivée de lecture.
+
+## 6. Optional isolated Framework v11 local endpoints (October 27 preview)
+
+The following endpoints exist in `server/index.mjs` but are **not** part of the traditional v6/v10 QuerySpec/Reader Policy/NavigationPlan pipeline. They are opt-in, read-only, require `read` scope, the `local` deployment profile and a matching principal in the private `KONSTELLATION_V11_CONFIG` allowlist.
+
+| Method | Endpoint | Meaning |
+| --- | --- | --- |
+| GET | `/api/v11/catalog` | Allowed dataset IDs, titles and locales without exposing configured local paths |
+| GET | `/api/v11/view?dataset=framework-demo&amp;locale=fr-CA` | Validated, derived exact-pinned Framework v11 read view |
+| GET | `/api/v11/neighborhood?dataset=framework-demo&amp;locale=fr-CA&amp;id=KQ1001` | Entity neighborhood with KQ/KP/KA/KS source and assertion references |
+
+`framework-demo` is **only an example dataset ID**; its presence depends on the private operator configuration. Unconfigured or unavailable datasets/locales/entities return 404; disallowed principals return 403. The underlying v11 view has no independently verified per-assertion access labels, so **authorization is for the entire configured dataset**. See [the v11 reader guide](34-v11-local-reader.md).
+</pre></body></html>

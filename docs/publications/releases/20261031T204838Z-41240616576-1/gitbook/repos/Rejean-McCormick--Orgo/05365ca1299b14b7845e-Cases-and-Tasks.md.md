@@ -1,0 +1,74 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Orgo/wiki/Cases-and-Tasks | commit: b89ca31f268c521cbd70ab1c736338a8c5039df7 | SHA-256: d4bab76310f1a56b64a2979bb94121942a6365baf054664417d70bc0b1b28ea3 -->
+
+# Cases and Tasks
+
+Cases and Tasks are the two most important work objects in Orgo.
+
+## Task: the unit of work
+
+A **Task** represents something that should be done or tracked operationally.
+
+Examples:
+
+- inspect a reported leak;
+- contact a person about a request;
+- review a document;
+- follow up on a support incident;
+- prepare a report;
+- distribute information to a defined audience.
+
+Every Task uses the same core lifecycle:
+
+```text
+Pending
+   ↓
+In progress
+   ├── On hold → In progress
+   ├── Completed
+   ├── Failed
+   └── Escalated
+
+Pending / On hold can also be cancelled when appropriate.
+```
+
+The exact wording shown by a user interface can be friendlier, but the underlying states remain consistent.
+
+## Case: durable context
+
+A **Case** represents a situation that may need multiple actions or continued attention.
+
+Examples:
+
+- a building problem with several repair steps;
+- a sensitive HR matter;
+- a student-support situation;
+- a recurring operational issue;
+- a request that spans several teams.
+
+A Case can remain open while multiple Tasks are created, completed or escalated around it.
+
+## Why both are needed
+
+Without Cases, long-running situations become disconnected lists of tasks.
+
+Without Tasks, a Case can become a passive folder with no clear action.
+
+Orgo keeps the distinction explicit:
+
+```text
+Case = why / context / continuing situation
+Task = what needs to happen
+```
+
+## A Case is not the outside world
+
+A Case may refer to something owned by another system, but it does not become that thing.
+
+For example:
+
+```text
+Orgo Case ≠ Konnaxion Topic
+Orgo Task ≠ Konnaxion Consultation
+```
+
+The same principle applies to other external systems: Orgo can coordinate work around an external object without copying its entire meaning into the Task/Case model.

@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Scenario-Mosaic · docs/VALIDATION_V3_8.txt</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Scenario-Mosaic · docs/VALIDATION_V3_8.txt</h1><p class='meta'><small>Rejean-McCormick/Koali-Scenario-Mosaic · 4ac4e787ef01 · SHA-256 88a4ae4b006f9c13</small><br><a href='https://github.com/Rejean-McCormick/Koali-Scenario-Mosaic/blob/4ac4e787ef01295c9100c73d8b5bbf9a19d9ef03/docs/VALIDATION_V3_8.txt' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>
+&gt; koali-scenario-mosaic@1.8.0 validate
+&gt; npm run validate:mosaic &amp;&amp; npm run validate:repo &amp;&amp; npm run validate:images &amp;&amp; npm run validate:copy &amp;&amp; npm run validate:name
+
+
+&gt; koali-scenario-mosaic@1.8.0 validate:mosaic
+&gt; node scripts/validate-mosaic.mjs
+
+✓ 120 assignments
+✓ 150 slots / 30 reserved
+✓ exact 20 × 6 regular honeycomb panorama
+✓ 8 contiguous 5 × 3 category territories
+✓ panoramic viewBox ratio 3.57:1
+
+&gt; koali-scenario-mosaic@1.8.0 validate:repo
+&gt; python scripts/validate-repo.py
+
+120 scenarios; 20 × 6 panoramic honeycomb; 8 category territories; compact preview; color legend; single active cell
+
+&gt; koali-scenario-mosaic@1.8.0 validate:images
+&gt; python scripts/validate-images.py
+
+Scenario PNGs available: 31 / 120
+PNG IDs: SCN-001, SCN-002, SCN-003, SCN-004, SCN-005, SCN-006, SCN-007, SCN-008, SCN-009, SCN-010, SCN-011, SCN-012, SCN-013, SCN-014, SCN-015, SCN-016, SCN-017, SCN-018, SCN-019, SCN-020, SCN-021, SCN-023, SCN-080, SCN-081, SCN-082, SCN-083, SCN-084, SCN-100, SCN-101, SCN-102, SCN-103
+SVG fallback scenarios: 89
+Scenario image validation passed.
+
+&gt; koali-scenario-mosaic@1.8.0 validate:copy
+&gt; python scripts/validate-copy.py
+
+Preview-copy validation: 120 scenarios checked; title duplication forbidden
+Scenario preview-copy validation passed.
+
+&gt; koali-scenario-mosaic@1.8.0 validate:name
+&gt; node scripts/validate-name.mjs
+
+✓ canonical product name: Koali Scenario Mosaic
+✓ npm package: koali-scenario-mosaic
+✓ no stale public/product name found
+</pre></body></html>

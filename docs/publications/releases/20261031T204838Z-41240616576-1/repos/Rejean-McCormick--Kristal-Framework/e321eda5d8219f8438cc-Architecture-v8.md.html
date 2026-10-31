@@ -1,0 +1,59 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Architecture-v8.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Architecture-v8.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 0086e14f1594b63a</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Architecture-v8' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># v8 Architecture
+
+&gt; **v9 note:** This page documents the preserved v8 language/query architecture. V9 adds representation-independent logical state below/around these read capabilities. See [[Architecture-v9]].
+
+
+## Layer model
+
+```text
+                 canonical / authoritative
+┌─────────────────────────────────────────────────────┐
+│ v6 portable state + v7 semantic registries / Mesh  │
+└─────────────────────────────────────────────────────┘
+               │                         │
+               │                         │
+       lexical companions          derived read models
+               │                         │
+        Language Resolver          KQP Query Engine
+               │                         │
+               └──────────┬──────────────┘
+                          │
+                   Context Compiler
+                          │
+                 human / AI projections
+```
+
+v8 uses a CQRS-like separation: canonical state is optimized for integrity and semantic fidelity; derived read models are optimized for lookup, query and presentation. This does **not** require asynchronous infrastructure or a particular database.
+
+## Anti-corruption boundaries
+
+Adapters isolate v6, v7 and external KOS formats from v8 query internals. External identifiers remain mappings; legacy fields are not silently reinterpreted to simplify implementation.
+
+## Federation and sharding
+
+Large semantic or lexical universes may be sharded by subject, jurisdiction, organization or operational locality. Sharding is an operational partition: **semantic identity remains stable across shards**.
+
+## Derived material
+
+Unless an inherited contract says otherwise, these are read-side material:
+
+- query/search/vector indexes;
+- lexical-resolution caches;
+- semantic slices;
+- AI context bundles;
+- compact symbol tables;
+- query plans;
+- rendered human views.
+
+Derived material must remain traceable to source state/snapshot.
+
+## Graceful degradation
+
+- missing lexicon → preserve semantic ID;
+- unavailable index → slower exact query or explicit unsupported operation;
+- unavailable shard → partial result with missing-shard disclosure;
+- exhausted budget → truncated result with continuation/omission metadata;
+- unavailable tokenizer → bytes/items remain authoritative and token estimate is omitted or marked heuristic.
+
+No degradation path may fabricate semantic content.
+</pre></body></html>

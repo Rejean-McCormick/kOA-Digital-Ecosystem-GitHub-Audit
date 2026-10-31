@@ -1,0 +1,64 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/09-source-audit.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/09-source-audit.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 6bd06dadd225636b</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/09-source-audit.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Audit des sources et références d&#x27;architecture
+
+## 1. Références utilisées
+
+La conception finale de Konstellation s&#x27;appuie sur les contrats et snapshots de l&#x27;écosystème, notamment :
+
+- Kristal Standard / `kristal-framework` ;
+- `kristal-reference` ;
+- Interaction Kernel ;
+- SemantiK Architect ;
+- SemantiK Runtime Orchestrator ;
+- Koali / Scenario / Mosaic / Index ;
+- Konnaxion ;
+- Orgo ;
+- Kristal Kollection ;
+- exemples de Kristals Math, HumanBody, HistoryTech, ScolQc, HospitalOps, Power et autres corpus disponibles.
+
+## 2. Enseignements structurants
+
+### Kristal v6
+
+Le centre canonique est `kristal_state`, incluant notamment :
+
+- `coordinates` ;
+- `valuations` ;
+- `record_role` ;
+- `actionability` ;
+- conflits ;
+- succession ;
+- lineage ;
+- evidence ;
+- provenance.
+
+Les timelines, pathways, indexes et graphes d&#x27;interface sont des **vues dérivées**.
+
+### SemantiK / runtime
+
+Le terme **capability** est déjà utilisé pour des promesses ou capacités runtime. Konstellation emploie donc le terme **navigation affordance / affordance de navigation** pour ses observations dérivées.
+
+### Actionability
+
+`automatic` n&#x27;est pas une autorisation d&#x27;exécution. Cette distinction est normative dans Konstellation.
+
+## 3. Sources de vérité dans le repo
+
+Ordre de priorité documentaire :
+
+1. schémas sous `contracts/` pour les formats effectivement implémentés ;
+2. ADRs pour les décisions d&#x27;architecture ;
+3. docs 1.0 pour la cible normative ;
+4. `IMPLEMENTATION.md` pour le delta entre code et cible ;
+5. rapports `VALIDATION-v0.x.md` pour l&#x27;historique.
+
+## 4. Règle d&#x27;audit futur
+
+Lorsqu&#x27;un contrat upstream change :
+
+1. enregistrer la version exacte ;
+2. comparer le schéma ;
+3. identifier les hypothèses Konstellation affectées ;
+4. mettre à jour l&#x27;adaptateur ;
+5. ajouter/mettre à jour un ADR si la frontière d&#x27;autorité change ;
+6. ajouter des tests de compatibilité.
+</pre></body></html>

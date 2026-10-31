@@ -1,0 +1,60 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/12-references/exemples-de-resultats.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/12-references/exemples-de-resultats.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 5f44fefadfce8299</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/12-references/exemples-de-resultats.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Exemples d&#x27;entrées/sorties et pièges de lecture
+
+## Observation livrée (forme simplifiée)
+
+`central_store.record_diagnostic()` reçoit le dictionnaire produit par le bridge. Un sous-ensemble représentatif :
+
+```json
+{
+  &quot;format&quot;: &quot;kristal.manager-kristaldiag/1.0&quot;,
+  &quot;engine&quot;: &quot;KristalDiag (source fourni, intégré au Manager)&quot;,
+  &quot;workspace&quot;: &quot;C:\\mycode\\Kristal\\locals\\Kristal-Accounting&quot;,
+  &quot;profile&quot;: &quot;V9-State-Reader&quot;,
+  &quot;verdict&quot;: &quot;PASS&quot;,
+  &quot;process_status&quot;: &quot;EXECUTED_EXIT_0&quot;,
+  &quot;input_fingerprint&quot;: {&quot;kristal.workspace.json&quot;: &quot;sha256:&lt;empreinte&gt;&quot;},
+  &quot;input_changed_during_run&quot;: false,
+  &quot;qualification&quot;: &quot;NOT_ESTABLISHED&quot;,
+  &quot;attestation&quot;: &quot;NOT_VERIFIED&quot;
+}
+```
+
+Exemple explicatif : la valeur `PASS` est **une illustration**, non un rapport daté à importer.
+
+## Après lecture de l&#x27;index
+
+```json
+{
+  &quot;status&quot;: &quot;PASS&quot;,
+  &quot;profile&quot;: &quot;V9-State-Reader&quot;,
+  &quot;freshness&quot;: &quot;CURRENT&quot;,
+  &quot;observed_at&quot;: &quot;2026-10-31T12:00:00Z&quot;,
+  &quot;payload&quot;: {&quot;format&quot;: &quot;kristal.manager-kristaldiag/1.0&quot;}
+}
+```
+
+Un import d&#x27;ancien CSV porte un fingerprint vide et est `STALE_OR_UNVERIFIED`, même avec un verdict `PASS`.
+
+## Rapport Arketype réel
+
+```json
+{
+  &quot;format&quot;: &quot;arketype.structural-observation/0.1&quot;,
+  &quot;project&quot;: &quot;Kristal-Accounting&quot;,
+  &quot;declaration&quot;: {&quot;primary_archetype&quot;: &quot;ARK-01&quot;},
+  &quot;comparison&quot;: &quot;BASE_INSPIREE_1_SUR_3&quot;,
+  &quot;declared_level&quot;: &quot;1/3&quot;,
+  &quot;ambiguity&quot;: &quot;AUCUN_CANDIDAT_PROBANT&quot;
+}
+```
+
+La comparaison utilise les noms de champs et les chemins, **pas** la signification des assertions. Dans l&#x27;interface, afficher « 1 critère structurel sur 3 observé », pas « Kristal valide à 33 % ».
+
+## Résultat manager
+
+`READY` et `LOCAL_CHECKS_PASSED` sont des observations de structure/intégrité locale. `review` signifie une décision sémantique en attente; une simple inférence limitée dans les 16 natifs n&#x27;établit pas une corruption de leur état.
+
+## Tests de contrat
+
+Valider le parseur sur des clés supplémentaires, dates absentes, anciens alias, chaînes vides, schémas non connus, evidence path externe, version supérieure du rapport et provenance inconnue. Une entrée invalide ne doit jamais être traitée comme `PASS`.
+</pre></body></html>

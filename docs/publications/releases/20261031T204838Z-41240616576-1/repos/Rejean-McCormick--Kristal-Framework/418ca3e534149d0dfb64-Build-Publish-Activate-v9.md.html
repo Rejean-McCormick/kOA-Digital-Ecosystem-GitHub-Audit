@@ -1,0 +1,62 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Build-Publish-Activate-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Build-Publish-Activate-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 3b0dae201ce74442</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Build-Publish-Activate-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Build / Publish / Activate
+
+V9 separates three lifecycle operations:
+
+```text
+BUILD != PUBLISH != ACTIVATE
+```
+
+## BUILD
+
+Produces candidate Logical Artifacts and materializations from declared Derivations.
+
+BUILD does not change the active state.
+
+## PUBLISH
+
+Validates candidates and creates an immutable State Snapshot.
+
+Recommended order:
+
+```text
+1. write physical blobs
+2. verify blob digests
+3. write materialization manifests
+4. reconstruct/verify logical commitments
+5. construct immutable State Snapshot
+6. validate snapshot
+7. publish snapshot
+```
+
+## ACTIVATE
+
+Moves a mutable channel pointer such as `production` or `HEAD` to a published immutable snapshot.
+
+```text
+production → S42
+```
+
+may atomically become:
+
+```text
+production → S43
+```
+
+S42 remains unchanged.
+
+## Crash consistency
+
+A failure before activation must leave the previous active state usable. Unreferenced candidate blobs may later be garbage-collected.
+
+## Concurrent publication
+
+A publisher may use compare-and-swap semantics against the expected previous commitment. A pointer conflict is not automatically a semantic conflict.
+
+```text
+STORAGE CONFLICT != SEMANTIC CONFLICT
+```
+
+## Rollback
+
+Rollback selects a retained prior immutable snapshot. It does not rewrite history to pretend the newer snapshot never existed.
+</pre></body></html>

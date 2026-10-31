@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Publication-and-Discovery-v10.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Publication-and-Discovery-v10.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 dc186aa3c1fec714</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Publication-and-Discovery-v10' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Publication &amp; Discovery — v10
+
+V10 separates an exact semantic state from the operational facts of its publication and discovery.
+
+## Verifiable Publication Record
+
+A `kristal_publication` binds an exact v9 `state_ref` and State Commitment to a host binding, publication identity and retrievable bytes. For the baseline, each `resources[]` entry includes **role, locator, media type, exact byte size and SHA-256 blob digest**.
+
+The reference non-normative bundle tool format `kristal.publication-bundle/1.0` contains, at minimum in the managed GitHub publication path:
+
+```text
+state-snapshot.json
+bundle-manifest.json
+publication.json
+```
+
+Before finalizing publication, validate the local bundle and verify the remotely downloaded bytes. A retry is idempotent **only** if the existing Publication Record and verified bundle are identical; otherwise report a conflict.
+
+## Lifecycle
+
+```text
+BUILD → QUALIFY/VALIDATE → PUBLISH immutable bytes → optionally ACTIVATE
+```
+
+Publication is not activation. A GitHub Release may be the publication location; an Environment/deployment or other selected pointer may serve the activation plane when configured. A best-effort Environment is **not** a required approval gate.
+
+## Discovery and exact federation
+
+A `kristal_directory` is a **mutable** locator. It may advertise nodes, bindings and channels; it is not authoritative knowledge and omission is not negation. Exact federation uses pinned v9 `State Snapshot.references[]`.
+
+See [[Directories-and-Federation-v10]], [[Workflow-GitHub-v10]] and [[Conformance-v10]].
+
+*Normative source: Framework `spec/v10/Publication-and-Discovery.md`.*
+</pre></body></html>

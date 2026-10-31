@@ -1,0 +1,175 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/DocV14/Konnaxion%20v14%20-%20Database%20Schema%20Reference.md | commit: 59601fb9cd74fb8f9d8037ed97a0441f285242a1 | SHA-256: 65406712b474fdc959bf6d7ce0c66df6a93d8b5638459052547f456dadd4c509 -->
+
+# Konnaxion v14 — Database Schema Reference
+
+## Purpose
+
+This reference identifies **canonical ownership and major current model families**. It does not duplicate every migration field; the Django models and migrations remain the executable physical schema.
+
+## 1. users
+
+Canonical owner: `konnaxion.users`.
+
+Shared user identity is referenced by Konnaxion domain models through `AUTH_USER_MODEL = users.User`.
+
+## 2. ethiKos
+
+Canonical owner: `konnaxion.ethikos`.
+
+Current models:
+
+| Model | Role |
+|---|---|
+| `EthikosCategory` | topic classification |
+| `EthikosTopic` | civic/deliberation topic |
+| `EthikosStance` | one user's topic-level stance |
+| `EthikosArgument` | argument/reply node |
+| `ArgumentSource` | source/evidence attached to argument |
+| `ArgumentImpactVote` | argument-level impact evaluation |
+| `ArgumentSuggestion` | proposed structured change/contribution |
+| `DiscussionParticipantRole` | participant role in a discussion |
+| `DiscussionVisibilitySetting` | discussion visibility policy |
+| `DemoScenarioImport` | demo-import tracking |
+
+Key invariants:
+
+- `EthikosStance.value` is constrained to `-3..+3`;
+- one stance per `(user, topic)`;
+- `ArgumentImpactVote` is distinct from `EthikosStance`;
+- Smart Vote readings do not rewrite these source rows.
+
+### Alignment issue
+
+`EthikosTopic.expertise_category` currently targets `kollective_intelligence.ExpertiseCategory`; the canonical EkoH taxonomy is `ekoh.ExpertiseCategory`. This relation must be realigned in code/data migrations.
+
+## 3. EkoH
+
+Canonical owner: `konnaxion.ekoh`.
+
+Current model families:
+
+| Model | Role |
+|---|---|
+| `ExpertiseCategory` | hierarchical UNESCO ISCED-F 2013 expertise taxonomy (`code`, `parent`, `depth`, `path`) |
+| `UserExpertiseScore` | user/domain expertise score |
+| `UserEthicsScore` | governed ethics/reliability context |
+| `ScoreConfiguration` | score configuration |
+| `ScoreHistory` | score change trace |
+| `ConfidentialitySetting` | identity privacy |
+| `RatingVisibilitySetting` | rating visibility policy |
+| `RatingAccessScope` | hierarchical access scope |
+| `RatingScopeSubject` | subject membership in access scope |
+| `RatingAccessGrant` | viewer access grant |
+| `ContextAnalysisLog` | non-authoritative contextual analysis record |
+
+The EkoH taxonomy and scores are the canonical source for EkoH/Smart Vote contextual expertise. New code must not use `kollective_intelligence` compatibility equivalents as source of truth.
+
+The default EkoH taxonomy profile is **10 broad (`01`–`10`) / 26 substantive narrow / 77 substantive detailed = 113 categories**. This is a deliberate subset of the full ISCED-F 2013 classification (11 / 29 / about 80), excluding generic and special catch-all coding categories from default expertise scoring. See `../EkoH Smart Vote/EkoH - Expertise Taxonomy (ISCED-F 2013).md`.
+
+## 4. Smart Vote
+
+Canonical owner: `konnaxion.smart_vote`.
+
+Current models:
+
+| Model | Role |
+|---|---|
+| `Consultation` | Smart Vote consultation/reading context |
+| `ConsultationRelevance` | consultation → EkoH domain relevance |
+| `SourceConsultationBinding` | explicit source object → consultation binding |
+| `VoteModality` | ballot modality definition |
+| `Vote` | current Smart Vote ballot row |
+| `VoteResult` | current aggregate row |
+| `VoteLedger` | vote ledger record |
+
+### Architectural interpretation
+
+For ethiKos-bound readings, the source of civic truth is `EthikosStance`; `SourceConsultationBinding` references it indirectly through the topic and Smart Vote computes a separate reading.
+
+The fields `Vote.weighted_value` and `VoteResult.sum_weighted_value` must not be treated as universal/canonical civic truth. The code path that creates them requires alignment with the source-fact/derived-reading separation.
+
+## 5. keenKonnect
+
+Canonical owner: `konnaxion.keenkonnect`.
+
+Current model families include projects, project resources, tasks, messages, teams, ratings and tags.
+
+## 6. KonnectED
+
+Canonical owner: `konnaxion.konnected`.
+
+Current model families include:
+
+- certification paths;
+- evaluations;
+- peer validations;
+- portfolios;
+- interoperability mappings;
+- knowledge resources;
+- recommendations;
+- learning progress;
+- offline packages;
+- mentorship;
+- co-creation;
+- forums.
+
+## 7. Kreative
+
+Canonical owner: `konnaxion.kreative`.
+
+Current model families include:
+
+- tags;
+- artworks;
+- gallery relations;
+- collaboration sessions;
+- traditions;
+- virtual exhibitions;
+- digital archives/documents;
+- AI catalogue entries;
+- cultural partners.
+
+## 8. TeamBuilder
+
+Canonical owner: `konnaxion.teambuilder`.
+
+Models:
+
+- `Problem`;
+- `ProblemChangeEvent`;
+- `BuilderSession`;
+- `Team`;
+- `TeamMember`.
+
+## 9. Shared/admin models
+
+Konnaxion also contains moderation, trust, Kontrol and shared user/platform state. These remain Konnaxion-owned and should not be merged into Orgo/Kristal models merely for integration convenience.
+
+## 10. Physical database scope
+
+The current settings register EkoH and Smart Vote separately and use the `ekoh_smartvote,public` search path for their tables. Physical schema placement does not merge their logical ownership.
+
+## 11. Ecosystem persistence boundary
+
+Konnaxion's database stores Konnaxion-owned operational state. Integration with Interaction Kernel, Da’at or Kristal does not change the ownership of the model families above.
+
+A future IK/Kristal adapter may add local integration records such as:
+
+- outbox/delivery state;
+- idempotency/correlation keys;
+- export/snapshot metadata;
+- `ArtifactRef` / digest / locator linkage;
+- receipt or application-state records.
+
+Those records are integration metadata. They must not duplicate a mutable Kristal knowledge store inside Konnaxion or make a Runtime Pack database the canonical Konnaxion persistence layer.
+
+Target separation:
+
+```text
+Konnaxion domain tables        = operational source of truth
+export/snapshot + outbox       = durable interoperability boundary
+Kristal Exchange               = epistemic artifact
+Runtime Pack / SQLite / index  = derived query/runtime materialization
+```
+
+If a derived runtime database is lost, it must be possible to restore/rebuild it from its declared authoritative inputs without reconstructing Konnaxion's operational history from that derived database.

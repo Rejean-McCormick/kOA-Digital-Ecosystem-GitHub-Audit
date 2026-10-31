@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · Operations-Builds.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · Operations-Builds.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · dd52671208ae · SHA-256 b591223b6093d8b0</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/wiki/Operations-Builds' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Build operations
+
+Build operations use **Build Record v2** and Kristal v5 semantics.
+
+## Knowledge build sequence
+
+A Profile may use:
+
+```text
+native/source input
+  -&gt; Structured Epistemic State
+  -&gt; Working Exchange
+  -&gt; validation/review
+  -&gt; authority recognition
+  -&gt; Reference Exchange
+  -&gt; Runtime Pack
+```
+
+Claim-IR/Resolved Claim-IR may appear when an extractor/resolver Profile requires them.
+
+## Gates
+
+Do not use the historical universal rule “validation failure means compile must not run”. Instead record separate status and enforce the gate appropriate to the requested transition:
+
+- compile eligibility;
+- reference eligibility;
+- publication eligibility;
+- distribution eligibility;
+- activation eligibility.
+
+A production kOA policy can require validated/recognized Reference material before release or activation while still retaining a Working Exchange for diagnosis/review.
+
+## Build evidence
+
+Record exact dependency pins, input refs/digests, deterministic tool/profile versions, Working/Reference output refs, Validation Reports, Authority Recognition refs, Runtime Pack refs and reason codes.
+</pre></body></html>

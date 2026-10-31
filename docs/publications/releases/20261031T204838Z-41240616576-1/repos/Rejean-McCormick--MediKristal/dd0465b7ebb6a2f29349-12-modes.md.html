@@ -1,0 +1,39 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal · docs/12-modes.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal · docs/12-modes.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal · ed1ed01cc8a7 · SHA-256 1c52a11ce38793c6</small><br><a href='https://github.com/Rejean-McCormick/MediKristal/blob/ed1ed01cc8a71c4464087c31db80bc20b9eb58e6/docs/12-modes.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 12 — Modes, fournisseurs et synchronisation
+
+## Matrice
+
+| Fonction | offline_free | online_free | online_extended |
+|---|---|---|---|
+| Évaluation avec corpus installé | Oui | Oui | Oui |
+| Import manuel de connaissances | Oui | Oui | Oui |
+| Requêtes réseau externes | Non | Sources explicitement gratuites/autorisées | Sources gratuites et fournisseurs autorisés |
+| Réservation externe | Non, sauf réseau local autorisé distinct du WAN | Si connecteur disponible | Si connecteur disponible |
+| Appel payant | Non | Non | Uniquement sous budget/politique |
+| Dépendance kOA | Aucune | Facultative | Facultative |
+
+`offline_free` bloque le WAN et les services distants fournisseurs, mais un déploiement établissement peut autoriser son LAN local explicitement ; le profil doit annoncer `network_scope=none|lan|internet`. Les tests offline strict utilisent `none` hors loopback. Gratuité et connectivité sont deux attributs distincts ; gratuit ne signifie pas anonyme, sans conditions ou redistribuable.
+
+## Fournisseur
+
+Enregistrer `provider_id`, types de services, endpoint allowlist, authentification dans coffre local, coût/quota, données admises, finalité, résidence déclarée, droits, timeout, version API, durée de cache et fallback. Le principal du fournisseur a privilèges minimaux. Les fournisseurs de données ne reçoivent pas le cas entier lorsqu&#x27;une requête conceptuelle suffit.
+
+Les services possibles incluent terminologie, contenu clinique, modèle, interactions, transcription ou infrastructure. Les modes payants ne renforcent pas automatiquement la qualité ni les permissions. Le résultat garde source, modèle et limites ; un résultat propriétaire peut limiter le droit de republier dans Kristal.
+
+## Budget atomique
+
+Avant appel payant : vérifier politique, finalité, données transmissibles, fournisseur activé et quota ; réserver atomiquement une estimation maximale de coût ; effectuer l&#x27;appel avec identifiant ; rapprocher usage réel et libérer le solde. En cas de coût inconnu sans plafond garanti, demander une autorisation budgétaire explicite ou refuser selon politique. Retry peut facturer deux fois : réconciliation et idempotence fournisseur indispensables. Concurrence testée pour empêcher plusieurs workers de dépasser le plafond.
+
+## Synchronisation
+
+Les corpus sont des objets immuables ; synchroniser blobs et manifests par hash, puis admission locale. Les cas sont des données opérationnelles ; échanger des événements et versions autorisés, pas fusionner deux bases par last-write-wins. Un poste autonome est initialement propriétaire de ses cas ; un fonctionnement multi-maître n&#x27;est pas annoncé avant mise en œuvre des conflits explicites.
+
+Pour les observations append-only, fusionner événements distincts après déduplication ; les amendements concurrents forment conflit. Consentements, prescriptions, réservations et décisions cliniques ne sont pas fusionnés automatiquement. Le serveur propriétaire d&#x27;une réservation décide de son état. Les clocks de transport ne définissent pas la chronologie clinique.
+
+## Dégradation
+
+Panne réseau : continuer avec capacités locales admises ; exposer âge des données. Absence de prix : résultat coût inconnu. Absence de service d&#x27;interactions : contrôle incomplet. Timeout moteur : statut failed/partial et parties disponibles clairement séparées. Aucun fallback caché vers un LLM cloud, un modèle ancien révoqué ou un fournisseur payant.
+
+## IA optionnelle
+
+LLM local/cloud peut assister extraction, traduction, recherche documentaire et rédaction d&#x27;explications. Sorties marquées propositions, sources vérifiées, outils sous permissions serveur. Interdire fabrication de références, modification des paramètres sans révision, action externe autonome hors politique, et instructions provenant des documents. Les embeddings peuvent aider à retrouver des candidats, pas affirmer une équivalence ou quantifier la maladie.
+</pre></body></html>

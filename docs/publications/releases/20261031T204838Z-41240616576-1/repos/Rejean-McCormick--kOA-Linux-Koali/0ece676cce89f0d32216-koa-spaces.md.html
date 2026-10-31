@@ -1,0 +1,140 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/04-components/subsystems/koa-spaces.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/04-components/subsystems/koa-spaces.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 402845024d74ac6c</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/04-components/subsystems/koa-spaces.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-SUB-KOA-SPACES&quot;,
+  &quot;document_class&quot;: &quot;explanatory_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;subsystem_boundaries&quot;,
+  &quot;scope&quot;: [
+    &quot;global&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/subsystems/koa-spaces.subsystem.json&quot;,
+    &quot;02-system/21-koa-spaces-experience-layer.md&quot;,
+    &quot;02-system/22-koa-spaces-interface-composition.md&quot;,
+    &quot;02-system/24-koa-spaces-design-system.md&quot;,
+    &quot;contracts/artifact-contracts/space-definition.schema.json&quot;,
+    &quot;contracts/artifact-contracts/module-interface-manifest.schema.json&quot;,
+    &quot;contracts/artifact-contracts/interface-theme.schema.json&quot;,
+    &quot;contracts/artifact-contracts/interface-asset-manifest.schema.json&quot;,
+    &quot;contracts/subsystems/koa-spaces.subsystem.json&quot;
+  ],
+  &quot;decision_ids&quot;: [],
+  &quot;requirement_ids&quot;: [],
+  &quot;lock_ids&quot;: [
+    &quot;LOCK-SPACES-001&quot;
+  ],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [
+    &quot;DOC-SYS-021&quot;,
+    &quot;DOC-SYS-022&quot;,
+    &quot;DOC-SYS-035&quot;
+  ],
+  &quot;tags&quot;: [
+    &quot;subsystem&quot;,
+    &quot;koa-spaces&quot;,
+    &quot;integration-boundary&quot;,
+    &quot;interface&quot;,
+    &quot;navigation&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# kOA Spaces Subsystem Boundary
+
+## Purpose
+
+This page defines the kOA operating and integration boundary for kOA Spaces. It does not reproduce the subsystem&#x27;s future internal implementation documentation.
+
+## Official Documentation Location
+
+The official subsystem documentation is expected at `subsystems/koa-spaces/`.
+
+That path is reserved for a directory junction or symbolic link to the independent kOA Spaces repository when it is created and mounted. The active kOA boundary contract is `contracts/subsystems/koa-spaces.subsystem.json`; the mounted repository remains authoritative for the subsystem&#x27;s internal implementation documentation.
+
+## Role in kOA
+
+kOA Spaces is an optional contextual experience subsystem. It composes navigation and interface contributions for installed systems without changing the kOA-Linux core or acquiring business authority.
+
+## kOA-Owned Boundary
+
+kOA-Linux owns:
+
+- subsystem activation and process lifecycle;
+- artifact admission for Space definitions and manifests;
+- identity and capability assertions exposed to the subsystem;
+- local network exposure;
+- storage and cache limits;
+- audit integration;
+- health and readiness integration;
+- backup coordination for presentation state;
+- safe degradation and removal behavior.
+
+## Subsystem-Owned Behavior
+
+kOA Spaces owns:
+
+- the integrated outer application frame when kOA Spaces is the active composition host;
+- installed-product/module selection behavior;
+- surface navigation, context-header, command, and optional inspector composition;
+- route composition;
+- interface localization and accessibility behavior;
+- Space activation, rollback, and preference state;
+- rendering adapters for declared interface contributions;
+- integrated registry composition from installed and admitted manifests.
+
+## Excluded Authority
+
+kOA Spaces does not own:
+
+- Konnaxion, Orgo, Ariane, UCKK, or other subsystem internals;
+- the kOA Mediatheque or UCKK Mediatheque;
+- course, task, media, governance, identity, or audit records;
+- authorization decisions;
+- Publication Gateway decisions;
+- direct cross-subsystem writes;
+- hidden synchronization or data replication;
+- standalone product entry points or product-owned shells;
+- private UI implementation dependencies between products.
+
+## Konnaxion Compatibility
+
+Konnaxion can contribute its surfaces, routes, navigation, commands, inspectors, and widgets through one interface manifest or a set of namespaced manifests. Its existing page shells remain inside the kOA Spaces main workspace. The integrated outer frame is rendered once by kOA Spaces. When Konnaxion runs standalone, it can render the same shared Koali shell primitives itself without requiring kOA Spaces.
+
+Koali and Konnaxion can align on generic presentation conventions such as Ant Design patterns, visual tokens, PageShell structure, navigation behavior, density, iconography, responsive rules, and accessibility behavior. This alignment does not transfer Konnaxion business functions into Koali. Konnaxion remains the owner of its pages, commands, workflows, validation, services, APIs, and domain state.
+
+Konnaxion can be installed as a locally hosted browser-rendered surface. Web technology describes its rendering model and does not imply a dependency on the public Web. Locally declared offline-capable Konnaxion functions can operate through local assets and local services when the integration is admitted.
+
+## Product UI Portability
+
+kOA Spaces is an optional composition host, not a mandatory UI runtime for independently packaged products. A product can remain functional with its own standalone application entry point while using the same shared Koali design and shell contract used in integrated mode.
+
+The product registry is derived from installed and admitted interface manifests. Removing one product removes its interface contributions from the registry without requiring source changes to unrelated products. kOA Spaces does not hard-code ordinary business knowledge about Orgo Cases, Konnaxion workflows, Kristal operations, or another product domain into the shell.
+
+## Integration Contract
+
+The kOA boundary accepts only validated declarative artifacts:
+
+- Space definitions;
+- module interface manifests;
+- route contributions;
+- sidebar definitions;
+- top-bar widget definitions;
+- activation receipts;
+- interface themes;
+- interface asset manifests.
+
+Executable code follows the normal subsystem release and artifact admission lifecycle. A Space definition is not an executable plugin package.
+
+## Failure Behavior
+
+- Invalid optional contributions are disabled and reported.
+- Invalid required contributions block Space activation.
+- Removing kOA Spaces leaves subsystem data unchanged and does not invalidate otherwise installed standalone product interfaces.
+- Loss of network access preserves the local frame, locally admitted presentation assets, and declared offline routes.
+- Loss of a module never activates an undeclared substitute.
+
+## Validation
+
+Boundary validation confirms that presentation artifacts are schema-valid, route-safe, capability-bounded, offline-declared, non-authoritative, and free of direct cross-domain write claims.
+</pre></body></html>

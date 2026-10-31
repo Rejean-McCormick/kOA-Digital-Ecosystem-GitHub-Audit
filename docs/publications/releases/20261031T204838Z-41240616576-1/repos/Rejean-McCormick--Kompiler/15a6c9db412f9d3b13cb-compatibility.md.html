@@ -1,0 +1,89 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/02-protocol/compatibility.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/02-protocol/compatibility.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 c152b4591de96186</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/02-protocol/compatibility.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kristal Compatibility
+
+Kompiler `0.5.x` targets **Kristal Standard 7.0.0-draft.3.2** as its native meta-orchestration layer while preserving the v6 source/projection contract unchanged.
+
+## Compatibility hierarchy
+
+```text
+Kristal v5 query/runtime surfaces
+        ↓ adapters
+Kristal v6 kristal_state sources  ← preserved identity/wire semantics
+        ↓ referenced by
+Kristall v7 meta-plane            ← native Kompiler meta target
+        ↓ Surface compilation
+Kompiler Context Pack 1.1
+        ↓ optional materialization
+v6 kristal_state + extensions.kristal_v7
+```
+
+## v7 first-class meta semantics
+
+Kompiler preserves, when present:
+
+- native opaque `KQ`, `KP`, `KA`, and `KS` identities;
+- reversible source-referent mappings;
+- assertion families and their provenance;
+- subject regions;
+- primary and optional secondary orientation axes;
+- Mesh `edge_semantics` and edge status;
+- derivation lineage;
+- semantic resonance as a non-authoritative signal;
+- projection recipes and source-policy inputs;
+- Kristall manifest/snapshot identity.
+
+Kompiler MUST NOT treat resonance as identity, equivalence, truth, causality, authority, or permission.
+
+## v6 source semantics remain unchanged
+
+A v7 deployment can consume v6 `kristal_state` artifacts unchanged. Kompiler therefore continues to preserve:
+
+- stable referents;
+- assertion status;
+- valuations and value semantics;
+- coordinates and applicability;
+- record role;
+- actionability;
+- evidence/source;
+- validation and authority recognition;
+- conflicts, succession and lineage;
+- deterministic state identity.
+
+The source v6 canonicalization/hash boundary remains separate from the v7 meta hash boundary.
+
+## v5 adapter compatibility
+
+Legacy Runtime Pack/query adapters may preserve:
+
+- subject/predicate/object query semantics;
+- assertion status and certainty fields;
+- validation status;
+- authority channels;
+- reader-policy visibility;
+- deterministic pagination/order;
+- declared resource limits;
+- constrained join behavior where exposed.
+
+## No silent semantic coercion
+
+Forbidden implicit mappings include:
+
+```text
+resonance high        ≠ identity
+Mesh path             ≠ factual assertion
+structural edge       ≠ source claim
+v5 certainty=high     ≠ v6 actionability=automatic
+validated             ≠ universal truth
+v6 valuation high     ≠ permission to act
+state hash valid      ≠ epistemically validated
+```
+
+Any cross-version mapping must be named, versioned, traceable and reversible to source fields.
+
+
+## Contract ownership
+
+Kristal Standard contracts are external and canonical in the `kristal` monorepo. Kompiler pins them by version + contract-set SHA-256 and does not carry local copies. A contract mismatch fails closed instead of silently accepting schema drift.
+
+
+Kompiler 0.5 also narrows its ecosystem boundary: direct raw source-catalog integrations are not part of the runtime contract. Source authority belongs upstream; Kompiler consumes knowledge read surfaces and preserves provenance.
+</pre></body></html>

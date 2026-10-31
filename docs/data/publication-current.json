@@ -1,6 +1,6 @@
 {
-  "release_id": "20261031T200524Z-41237228728-1",
-  "published_at": "2026-10-31T20:05:24Z",
+  "release_id": "20261031T204838Z-41240616576-1",
+  "published_at": "2026-10-31T20:48:38Z",
   "mode": "all",
   "selected": [
     "Rejean-McCormick/Akor",
@@ -55,5 +55,5 @@
     "Rejean-McCormick/UCKK-Assets",
     "Rejean-McCormick/UCKK-Ops-Console"
   ],
-  "deployed_at": "2026-10-31T20:06:49Z"
+  "deployed_at": "2026-10-31T20:50:02Z"
 }

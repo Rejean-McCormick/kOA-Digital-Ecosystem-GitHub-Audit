@@ -1,0 +1,105 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/08-examples/pollution-session.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/08-examples/pollution-session.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 4a84d62b44769a18</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/08-examples/pollution-session.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Example: Pollution Research Session
+
+This example demonstrates the intended human ↔ LLM ↔ Kompiler loop.
+
+## 1. Inventory
+
+Kompiler advertises targets such as:
+
+```text
+Environment
+Chemistry
+HumanBody
+Power
+Economics
+Law
+```
+
+The exact operations come from the current capability snapshot.
+
+## 2. Human question
+
+&gt; Fais une réflexion approfondie sur la pollution : causes, mécanismes, conséquences et leviers.
+
+## 3. LLM-generated Query Plan
+
+```json
+{
+  &quot;protocol&quot;: &quot;kompiler.query&quot;,
+  &quot;version&quot;: &quot;1.1&quot;,
+  &quot;request_id&quot;: &quot;pollution-001&quot;,
+  &quot;capability_snapshot_id&quot;: &quot;cap:sha256:EXAMPLE&quot;,
+  &quot;intent&quot;: &quot;build_context&quot;,
+  &quot;topic&quot;: &quot;pollution&quot;,
+  &quot;operations&quot;: [
+    {
+      &quot;id&quot;: &quot;pollutants&quot;,
+      &quot;target&quot;: &quot;Environment&quot;,
+      &quot;operation&quot;: &quot;find&quot;,
+      &quot;params&quot;: {&quot;topic&quot;: &quot;pollution&quot;, &quot;limit&quot;: 300}
+    },
+    {
+      &quot;id&quot;: &quot;chemistry&quot;,
+      &quot;target&quot;: &quot;Chemistry&quot;,
+      &quot;operation&quot;: &quot;mechanisms&quot;,
+      &quot;inputs&quot;: [{&quot;from&quot;: &quot;pollutants&quot;, &quot;selector&quot;: &quot;$.records[*].referent_ids[*]&quot;}],
+      &quot;params&quot;: {&quot;limit&quot;: 300}
+    },
+    {
+      &quot;id&quot;: &quot;health&quot;,
+      &quot;target&quot;: &quot;HumanBody&quot;,
+      &quot;operation&quot;: &quot;mechanisms&quot;,
+      &quot;inputs&quot;: [{&quot;from&quot;: &quot;pollutants&quot;, &quot;selector&quot;: &quot;$.records[*].referent_ids[*]&quot;}],
+      &quot;params&quot;: {&quot;limit&quot;: 300}
+    },
+    {
+      &quot;id&quot;: &quot;energy&quot;,
+      &quot;target&quot;: &quot;Power&quot;,
+      &quot;operation&quot;: &quot;relations&quot;,
+      &quot;params&quot;: {&quot;relation&quot;: &quot;emission_source&quot;, &quot;limit&quot;: 200}
+    }
+  ],
+  &quot;budget&quot;: {
+    &quot;max_items&quot;: 1000,
+    &quot;max_bytes&quot;: 1500000,
+    &quot;target_tokens&quot;: 100000
+  },
+  &quot;return&quot;: {
+    &quot;include_provenance&quot;: true,
+    &quot;include_conflicts&quot;: true,
+    &quot;include_gaps&quot;: true
+  }
+}
+```
+
+Operation IDs and parameters above are illustrative; a real LLM MUST use only the actual advertised capabilities.
+
+## 4. Kompiler output
+
+The Context Pack might summarize:
+
+```json
+{
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;summary&quot;: {
+    &quot;record_count&quot;: 497,
+    &quot;referent_count&quot;: 143,
+    &quot;relation_count&quot;: 812,
+    &quot;conflict_count&quot;: 18,
+    &quot;gap_count&quot;: 7
+  }
+}
+```
+
+## 5. Supercharged conversation
+
+The user pastes the pack into the LLM and can now ask follow-ups such as:
+
+- compare biological and economic consequences;
+- distinguish causal mechanisms from correlations;
+- identify conflicting evidence;
+- adapt the explanation to a particular audience;
+- ask Kompiler to fill one of the explicit gaps.
+
+The expensive acquisition/structuring work does not need to be repeated for every follow-up while the pack remains in active context.
+</pre></body></html>

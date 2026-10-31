@@ -1,0 +1,23 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Daat · ADR-0002-ALIGNMENT-MEASUREMENT.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Daat · ADR-0002-ALIGNMENT-MEASUREMENT.md</h1><p class='meta'><small>Rejean-McCormick/Daat · 210088db6d91 · SHA-256 802290b3958a8959</small><br><a href='https://github.com/Rejean-McCormick/Daat/wiki/ADR-0002-ALIGNMENT-MEASUREMENT' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR-0002 — Transparent scoped adapter burden measurement
+
+**Status:** Proposed for review · **Date:** 2026-10-12
+
+## Decision proposed
+
+Measure per capability and pinned contract edge: coverage, transformation classes, total burden points, burden per semantic obligation, disclosed loss, unsupported mandatory obligations and unresolved ambiguities. An adapter with high burden can still fully conform; no opacity or universal ranking.
+
+## Method
+
+Use the transform class weights and definitions in `../07-ALIGNMENT-METRICS.md` with mandatory golden fixtures and reproducible reports. An opt-in public badge may assert a specific **tested capability+contract version**, not overall superiority.
+
+## Tradeoffs
+
+Weighted costs can be imperfect, change with schemas, and obscure hidden upstream transforms; review actual native source fixtures and publish raw rule inventories. Never hide changed denominator/scope. Security overhead is never counted as semantic mapping burden.
+
+## Rejected alternatives
+
+- Lines of code alone.
+- Number of fields mapped alone.
+- Opaque 0–100 score without coverage/context.
+- Rejection of valid non-native systems based on distance.
+</pre></body></html>

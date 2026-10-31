@@ -1,0 +1,9 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Spek/wiki/Educational-Privacy | commit: 4eb78305f912b1e78e9caa5a9afd83b6a9e03253 | SHA-256: 4c1cd4c07e54459d29ad1adacd9dcf6ddb388e35ddc23071e606bc5f71289160 -->
+
+# Educational Privacy
+
+Spek is a static publisher, not an authenticated student portal. It **must not** embed learner identities, individualized assessments, teacher-only solutions, student media, session grants, private diagnoses, consent metadata or hidden classroom access controls in public HTML/JSON/PDF.
+
+The `spek.educational-projection/1` import accepts curated `public_demo` or already reviewed `public_released_excerpt` only, for **local preview**. Structural allowlist checks reject unrecognized fields and sensitive file locators; no technical filter can certify the privacy of arbitrary natural-language prose. Review the entire exported data with the school/institution. Kompose authorization, Ekole pedagogy and source/publication rights remain independent decisions.
+
+See [[Ekole Integration]] and [[Kompose Integration]].

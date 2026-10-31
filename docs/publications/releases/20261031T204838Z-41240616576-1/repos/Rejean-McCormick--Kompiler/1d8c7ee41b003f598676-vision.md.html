@@ -1,0 +1,65 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/00-overview/vision.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/00-overview/vision.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 d4e779baf51f5949</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/00-overview/vision.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Vision and Scope
+
+## One-sentence definition
+
+**Kompiler compiles structured knowledge from one or more Kristals into a task-specific Context Pack for an AI conversation or agent workflow.**
+
+## The problem
+
+Large language models reason well when the active context is strong, but constructing that context is often the expensive part. Traditional retrieval commonly returns a small collection of passages. Kompiler instead assembles a structured problem model: assertions, referents, relations, valuations, conflicts, provenance, gaps, and derived projections selected for the current task.
+
+The canonical workflow is:
+
+```text
+human question
+    ↓
+LLM identifies information needs
+    ↓
+kompiler.query
+    ↓
+local Kompiler runtime
+    ↓
+Kristal adapters → Kristals
+    ↓
+adapter-output normalization + joins + compilation + budgeting
+    ↓
+kompiler.context-pack
+    ↓
+LLM reasoning for the rest of the conversation
+```
+
+## Goals
+
+Kompiler MUST support:
+
+- heavy, multi-operation, multi-Kristal query plans;
+- local/offline execution where the underlying Kristals permit it;
+- deterministic execution after a query plan has been accepted;
+- capability discovery so an LLM does not guess available operations;
+- explicit DAG dependencies between operations;
+- preservation of Kristal epistemic metadata and provenance;
+- bounded output sized for an LLM context window;
+- multi-pass research where later queries fill gaps found in an earlier Context Pack;
+- transport independence;
+- explicit compatibility with heterogeneous existing Kristal query surfaces.
+
+## Non-goals
+
+Kompiler is not:
+
+- a source crawler, acquisition pipeline, or canonical source store;
+- a DaaT replacement or IK↔Kristal mapping authority;
+- a Kristall semantic-identity/crystallization authority;
+- a truth engine;
+- an authority registry;
+- a general-purpose shell executor;
+- a replacement for Kristal validation;
+- a mechanism for silently upgrading `claimed`, `sourced`, high-valued, or validated material into universal truth;
+- a system that grants mutation permission based on `actionability`;
+- a requirement that all Kristals use the same storage model;
+- a requirement that the LLM itself be deterministic.
+
+## Deterministic boundary
+
+The LLM may produce different valid plans for the same natural-language prompt. **Kompiler&#x27;s deterministic promise begins after an accepted Query Plan is fixed.** Given identical Kristal content, adapter versions, policies, configuration, and request bytes, deterministic operations SHOULD return byte-stable normalized outputs and stable ordering within their declared contract.
+</pre></body></html>

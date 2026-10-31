@@ -1,0 +1,64 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/08-examples/multi-pass-session.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/08-examples/multi-pass-session.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 92163da1aca633f4</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/08-examples/multi-pass-session.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Example: Multi-pass Context Compilation
+
+## Pass 1 — broad context
+
+The first Query Plan prioritizes breadth across several Kristals.
+
+Resulting pack reports:
+
+```json
+{
+  &quot;gaps&quot;: [
+    {
+      &quot;gap_id&quot;: &quot;gap:children-pm25&quot;,
+      &quot;question&quot;: &quot;Long-term PM2.5 evidence for children is under-covered.&quot;,
+      &quot;suggested_targets&quot;: [&quot;HumanBody&quot;]
+    },
+    {
+      &quot;gap_id&quot;: &quot;gap-costs&quot;,
+      &quot;question&quot;: &quot;Economic cost estimates are absent.&quot;,
+      &quot;suggested_targets&quot;: [&quot;Economics&quot;]
+    }
+  ]
+}
+```
+
+## Pass 2 — fill selected gaps
+
+The LLM emits a new plan:
+
+```json
+{
+  &quot;protocol&quot;: &quot;kompiler.query&quot;,
+  &quot;version&quot;: &quot;1.1&quot;,
+  &quot;request_id&quot;: &quot;pollution-002&quot;,
+  &quot;parent_context_pack_id&quot;: &quot;ctx:sha256:PASS1&quot;,
+  &quot;intent&quot;: &quot;fill_context_gaps&quot;,
+  &quot;operations&quot;: [
+    {
+      &quot;id&quot;: &quot;children_health&quot;,
+      &quot;target&quot;: &quot;HumanBody&quot;,
+      &quot;operation&quot;: &quot;find&quot;,
+      &quot;params&quot;: {
+        &quot;topic&quot;: &quot;PM2.5&quot;,
+        &quot;population&quot;: &quot;children&quot;
+      }
+    },
+    {
+      &quot;id&quot;: &quot;costs&quot;,
+      &quot;target&quot;: &quot;Economics&quot;,
+      &quot;operation&quot;: &quot;cost_estimates&quot;,
+      &quot;params&quot;: {&quot;topic&quot;: &quot;air pollution&quot;}
+    }
+  ]
+}
+```
+
+## Lineage
+
+The second Context Pack includes `parent_context_pack_id`. A UI may offer a merged conversation view, but each pack remains independently hashable and auditable.
+
+## Why separate passes
+
+Multi-pass compilation lets the LLM spend context/query budget where the first structured result reveals actual uncertainty, rather than over-querying every possible dimension up front.
+</pre></body></html>

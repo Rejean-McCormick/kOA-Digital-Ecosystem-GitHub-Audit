@@ -1,7 +1,7 @@
 {
   "format": "koa.graph.public.v1",
   "owner_repository": "Rejean-McCormick/kOA-Digital-Ecosystem",
-  "owner_commit": "4ed4b8928665ebd723b68f8b3f2cb2f196d6374f",
+  "owner_commit": "90865538b0c16be08423843208f4c5e6785a7523",
   "graph_sha256": "7e5529fe336d1c329223d05f4986f72d5d0a51cb6b47ea8ddcc99476cc2c737a",
   "inventory_sha256": "772cefca4fbe8b61a14e662124482a0f38c1190a4bcf9f1283817e9c97d55c54",
   "source_date": "2026-10-31",

@@ -1,0 +1,25 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Ekole · Hors-ligne-et-sobriete.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Ekole · Hors-ligne-et-sobriete.md</h1><p class='meta'><small>Rejean-McCormick/Ekole · fef1626a87db · SHA-256 8a23c04d21460dcb</small><br><a href='https://github.com/Rejean-McCormick/Ekole/wiki/Hors-ligne-et-sobriete' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Hors ligne, bande passante et sobriété
+
+## Une architecture conçue pour s&#x27;exécuter localement
+
+Le modèle visé d&#x27;Ekole est simple : **le contenu structuré est préparé à l&#x27;avance**, projeté en pages ou fichiers statiques, puis consulté avec un navigateur. Le fonctionnement normal des vues Élève et des exercices déterministes ne nécessite pas d&#x27;appels permanents à une IA distante.
+
+Deux déploiements sont possibles :
+
+- **Un poste local** : Ekole est lancé sur la machine, généralement sur `127.0.0.1:8765` (interface Enseignant séparée sur `8766`).
+- **Un serveur d&#x27;école sur le réseau local** : plusieurs appareils consultent un **export Élève isolé** via le Wi-Fi de l&#x27;école, même sans accès Internet extérieur. Un tel déploiement nécessite une configuration réseau et des protections appropriées.
+
+## Pourquoi cela peut être léger
+
+Une grande partie des connaissances est constituée de **texte, identifiants et relations**. Les pages peuvent être mises en cache et les graphes locaux produits à l&#x27;avance. Les calculs des MiniLabs sont principalement des opérations déterministes modestes, sans inférence par grand modèle en continu.
+
+**Attention :** la bande passante effective dépend aussi des **images, polices, vidéos, bibliothèques et appareils**. Une médiathèque riche peut être volumineuse. Le caractère « très faible consommation » est un objectif d&#x27;optimisation, pas une mesure publiée.
+
+## Économie et écologie : une promesse à vérifier
+
+L&#x27;absence d&#x27;API IA au moment de chaque réponse peut limiter les frais récurrents et certaines consommations de ressources externes; le stockage, les appareils, le réseau local, l&#x27;hébergement et la création initiale du contenu ont toutefois un coût matériel et énergétique. **Aucun bilan carbone comparatif n&#x27;a été établi** pour Ekole.
+
+## Ce qui dépend encore d&#x27;Internet
+
+L&#x27;usage peut être autonome *si les ressources sont installées et les liens externes facultatifs*. **GitHub**, la recherche de sources nouvelles, les mises à jour, l&#x27;hébergement public ou les échanges avec des outils d&#x27;IA durant l&#x27;édition, eux, peuvent exiger Internet. Hors ligne à l&#x27;exécution n&#x27;est pas synonyme de hors ligne pour tout le cycle de conception.
+</pre></body></html>

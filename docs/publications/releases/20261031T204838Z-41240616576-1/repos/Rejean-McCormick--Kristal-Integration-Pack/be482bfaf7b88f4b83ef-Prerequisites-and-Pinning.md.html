@@ -1,0 +1,32 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · Prerequisites-and-Pinning.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · Prerequisites-and-Pinning.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 5403bdad35a318f0</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/Prerequisites-and-Pinning' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Prerequisites and Framework Pinning
+
+## Required tools
+
+- Python 3.11+ with the Framework&#x27;s `jsonschema` runtime dependency.
+- Node.js 22+ for the stand-alone CLI; use Node 24.15+ when reproducing the historical Konstellation release environment.
+- Exact local Framework `11.0.0-draft.4` for v11 checks and handoff.
+- Optional Kompiler service for **legacy** commands only, reachable on a local loopback interface.
+
+## What the v11 pin protects
+
+`contracts/v11-framework-pin.json` specifies the profile `kristal-integration-framework-pin/v11.0-draft.4`, exact Framework version and SHA-256 of **13** consumed files: `VERSION`, eight v11 schema files and four v11 Python tool files. The list includes `tools/v11/interop_preflight.py`.
+
+Before importing or running Framework validators, `tools/v11_integration.py` checks the exact version and content hashes. A different Framework checkout is a **review requirement**, not a reason to force execution.
+
+```bash
+python tools/v11_integration.py check \
+  --framework /absolute/path/to/Kristal-Framework-v11.0.0-draft.4 \
+  --registry /path/registry.json --graph /path/graph.json \
+  --crosswalk /path/crosswalk.json --catalog /path/catalog.json
+```
+
+For historical **Kompiler v10** live tests, `contracts/contract-set.json` is a different source with a different trust model. Its SHA-256 must be obtained and approved independently for the actual Framework checkout; do **not** copy a digest from an old C5 report as a universal production value.
+
+## Files deliberately not bundled
+
+- Framework checkout and upstream executable dependencies.
+- Authoring Kit and diK runnable distributions.
+- Real Wikidata snapshots, secrets, local Kristal collections, and production Reader Policies.
+
+See [[Verification-and-Release]] and [[Security-and-Trust-Boundaries]].
+</pre></body></html>

@@ -1,0 +1,693 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konductor · docs/References/SwarmCraft.txt</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konductor · docs/References/SwarmCraft.txt</h1><p class='meta'><small>Rejean-McCormick/Konductor · f69b57d02089 · SHA-256 f298bb9b6eba6bfb</small><br><a href='https://github.com/Rejean-McCormick/Konductor/blob/f69b57d0208973ee7508490d0dc221986d653b9c/docs/References/SwarmCraft.txt' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># SwarmCraft Final Report — AI-Optimized
+
+## 0. Executive classification
+
+```text
+PROJECT: SwarmCraft
+TYPE: Deterministic multi-agent creative-writing engine
+PRIMARY VALUE: Production-style orchestration for long-running AI projects
+SECONDARY VALUE: RAG continuity, central state, controlled file mutation, human steering
+NOT PRIMARY VALUE: Deep agent-to-agent reasoning or dynamic swarm intelligence
+```
+
+SwarmCraft is valuable because it rejects the “multi-agent chatroom” model and instead uses a deterministic architecture: stateless AI services, a central Matrix, a scanner, an orchestrator, controlled tools, and a lifecycle around draft/review/revision/lock. The README explicitly describes the move toward a deterministic pipeline where creative intent and project state are decoupled from agent logic. 
+
+---
+
+## 1. Core architecture
+
+```text
+SwarmCraft =
+  Brain layer     = ai_services/
+  Logic layer     = core/
+  Memory layer    = data/
+  Control layer   = data/control.json + Director Console
+  Artifact layer  = data/manuscripts/
+  Truth layer     = data/matrix.json + data/story_bible/
+```
+
+The official architecture docs call this the **Three-Pillar Architecture**: Brain, Logic, and Memory. Brain contains specialized AI services; Logic contains deterministic orchestration, scanner, and tools; Memory contains Matrix, Story Bible, and manuscript files. 
+
+```text
+Brain:
+  architect.py   = planner
+  narrator.py    = writer
+  editor.py      = reviewer / critic
+  client.py      = LLM gateway
+  interviewer.py = story intake / story bible extractor
+
+Logic:
+  orchestrator.py = main loop
+  scanner.py      = file-system-to-Matrix sync
+  agent_tools.py  = sandboxed file operations
+  memory_store.py = RAG memory
+
+Memory:
+  matrix.json       = project runtime state
+  story_bible/*.json = creative source of truth
+  manuscripts/*.md  = generated artifacts
+  control.json      = runtime steering
+```
+
+---
+
+## 2. Main runtime loop
+
+```text
+SCAN → PLAN → DISPATCH → EXECUTE → SCAN
+```
+
+The docs describe SwarmCraft/TextCraft as a continuous pulse driven by `core/orchestrator.py`: scanner reads physical files and updates `matrix.json`; architect analyzes the Matrix and returns a JSON decision; orchestrator routes to narrator/editor; service executes and modifies manuscripts through controlled tools. 
+
+AI implementation form:
+
+```python
+while project_status not in {&quot;COMPLETE&quot;, &quot;STOP&quot;}:
+    matrix = scanner.scan()
+
+    if control.system_status == &quot;PAUSED&quot;:
+        sleep()
+        continue
+
+    decision = architect.plan_next_step(
+        matrix=matrix,
+        story_bible=story_bible,
+        override=control.architect_override,
+    )
+
+    if decision.action_type == &quot;wait&quot;:
+        sleep()
+        continue
+
+    result = dispatch(decision)
+
+    apply_result_to_matrix(result)
+
+    scanner.scan()
+```
+
+---
+
+## 3. Best architectural idea: central Matrix
+
+SwarmCraft’s `matrix.json` is the system’s single runtime truth. It stores project status, scan timestamp, total word count, narrative integrity score, per-chapter path, word count, status, continuity check, editor notes, and active task. 
+
+```python
+class ProjectMatrix:
+    meta: Meta
+    metrics: Metrics
+    content: dict[ArtifactID, ContentState]
+    active_task: ActiveTask | None
+```
+
+Recommended generalized schema:
+
+```python
+class ContentState:
+    id: str
+    title: str
+    path: str
+    word_count: int
+    status: Literal[
+        &quot;EMPTY&quot;,
+        &quot;DRAFTING&quot;,
+        &quot;REVIEW_READY&quot;,
+        &quot;REVISION_NEEDED&quot;,
+        &quot;LOCKED&quot;,
+    ]
+    continuity_check: Literal[&quot;PENDING&quot;, &quot;PASS&quot;, &quot;FAIL&quot;]
+    editor_notes: list[str]
+    last_modified: str
+```
+
+Design rule:
+
+```text
+Do not let agents infer project state from memory.
+Force them to read the Matrix.
+If Matrix may be stale, run Scanner before generation.
+```
+
+The docs explicitly state that the Matrix is truth and services should not guess project state; if the Matrix is out of sync, the Scanner must run before generation. 
+
+---
+
+## 4. Best lifecycle pattern
+
+SwarmCraft’s content lifecycle is:
+
+```text
+EMPTY
+→ DRAFTING
+→ REVIEW_READY
+→ REVISION_NEEDED
+→ LOCKED
+```
+
+The Matrix schema defines this lifecycle: empty files go to narrator generation, drafting files continue writing, review-ready files go to editor, failed continuity becomes revision-needed, and passed editor checks become locked with no further AI modifications allowed. 
+
+Generalize this for your AI:
+
+```text
+NOT_STARTED
+→ IN_PROGRESS
+→ REVIEW_READY
+→ REVISION_REQUIRED
+→ APPROVED
+→ LOCKED
+```
+
+Non-negotiable rule:
+
+```text
+A locked artifact cannot be modified by AI unless explicitly unlocked by human control.
+```
+
+---
+
+## 5. Stateless services
+
+SwarmCraft’s AI layer is explicitly stateless but context-aware. Services accept `project_root`, load the relevant Story Bible, Matrix, and Memory, execute one task, and return. 
+
+This is one of the best patterns to copy.
+
+```text
+Bad:
+  Long-lived agent owns hidden state.
+
+Good:
+  Service receives state snapshot.
+  Service performs one bounded task.
+  Service returns structured result.
+  Runtime updates Matrix.
+```
+
+Recommended interface:
+
+```python
+class AIService(Protocol):
+    async def execute(
+        self,
+        task_payload: dict,
+        project_root: Path,
+        memory_store: MemoryStore | None,
+    ) -&gt; ServiceResult:
+        ...
+```
+
+Service roles:
+
+```text
+Architect = decides next action
+Narrator  = generates or revises artifact
+Editor    = validates artifact
+Client    = provider adapter
+```
+
+---
+
+## 6. Controlled file mutation
+
+SwarmCraft does not let agents freely write files. All file operations go through `agent_tools.py`. `_resolve_path()` resolves paths inside the active project’s `data/` sandbox and raises `SecurityError` if access escapes the sandbox. 
+
+Available tool patterns include:
+
+```text
+read_file
+write_file
+append_file
+edit_file
+list_files
+assign_task
+```
+
+The `edit_file` tool performs strict find-and-replace, rejects missing search text, and rejects ambiguous edits when the search text occurs multiple times. 
+
+Copy this strongly:
+
+```python
+class ToolPolicy:
+    sandbox_root: Path
+    allowed_operations: set[str]
+    allowed_paths: list[str]
+    deny_absolute_paths: bool = True
+    deny_parent_traversal: bool = True
+```
+
+Design rule:
+
+```text
+Agents never mutate disk directly.
+Agents request tool calls.
+Tools enforce sandbox, path scope, and ambiguity checks.
+```
+
+---
+
+## 7. Narrator operation modes
+
+The narrator distinguishes between:
+
+```text
+GENERATE  = new file
+CONTINUE  = append new content
+REVISE    = targeted edit
+```
+
+The code checks whether a target manuscript already has content, inspects `action_type`, detects revision/continuation keywords, and chooses `write_file`, `append_file`, or `edit_file` accordingly. 
+
+This is highly reusable beyond writing.
+
+Generalized pattern:
+
+```python
+if artifact_missing:
+    mode = &quot;generate&quot;
+elif user_intent in {&quot;continue&quot;, &quot;extend&quot;}:
+    mode = &quot;append&quot;
+elif user_intent in {&quot;fix&quot;, &quot;revise&quot;, &quot;improve&quot;}:
+    mode = &quot;surgical_edit&quot;
+else:
+    mode = &quot;append&quot;
+```
+
+Design rule:
+
+```text
+Never overwrite an existing artifact unless the operation mode explicitly says overwrite.
+```
+
+---
+
+## 8. Editor as validator, not just writer
+
+The Editor service loads project configuration, story brief, characters, timeline, target draft, and optional RAG memory. It reviews for continuity errors, forbidden tropes, and style violations, and its final output must be JSON with `verdict: PASS | FAIL` and notes. 
+
+AI implementation:
+
+```python
+class ReviewVerdict(BaseModel):
+    verdict: Literal[&quot;PASS&quot;, &quot;FAIL&quot;]
+    notes: list[str]
+    minor_edits_applied: list[str] = []
+```
+
+Review policy:
+
+```text
+Minor typo → Editor may fix directly.
+Major plot/logic/continuity issue → Editor must flag, not silently rewrite.
+PASS → lock artifact.
+FAIL → return notes and route to revision.
+```
+
+This pattern is valuable for any AI system that produces persistent artifacts.
+
+---
+
+## 9. RAG continuity memory
+
+`MemoryStore` manages persistent RAG memory using ChromaDB when enabled. It creates a `narrative_memory` collection and stores embeddings under each project’s `data/memory_db`. 
+
+Use this conceptually, but generalize beyond narrative:
+
+```text
+RAG memory should store:
+- approved artifacts
+- previous decisions
+- canonical facts
+- reviewer notes
+- locked outputs
+```
+
+Recommended memory policy:
+
+```python
+class MemoryItem:
+    content: str
+    source_artifact: str
+    status: Literal[&quot;draft&quot;, &quot;approved&quot;, &quot;locked&quot;]
+    timestamp: str
+    tags: list[str]
+    confidence: float
+```
+
+Important rule:
+
+```text
+Do not use RAG as hidden state.
+Use RAG as searchable evidence attached to artifacts.
+```
+
+---
+
+## 10. Human steering layer
+
+SwarmCraft uses `data/control.json` for runtime control. It contains `system_status`, an `architect_override` object, and `runtime_settings`. 
+
+The README/addendum describes the interaction model: the engine reacts to `data/control.json`; primary controls are `RUNNING | PAUSED | STOP`, architect override, instruction, and optional forced target. It also supports a Director Console where freeform lines become override instructions. 
+
+Copy this as a control plane:
+
+```python
+class ControlState:
+    system_status: Literal[&quot;RUNNING&quot;, &quot;PAUSED&quot;, &quot;STOP&quot;]
+    override: Override | None
+    runtime_settings: RuntimeSettings
+
+class Override:
+    active: bool
+    instruction: str | None
+    force_target: str | None
+```
+
+Design rule:
+
+```text
+Human steering should not mutate agent internals.
+Human steering should write control state.
+Runtime reads control state at safe boundaries.
+```
+
+---
+
+## 11. File-driven UI / mission control
+
+The TUI reads `matrix.json` and `control.json`, injects architect overrides, and polls the active manuscript for streaming display. The dashboard code toggles pause/resume by writing `control.json` and injects user commands by setting `architect_override.active` and `architect_override.instruction`. 
+
+This is useful because the UI is not deeply coupled to agent objects. It observes files and writes control state.
+
+Recommended UI design:
+
+```text
+UI should observe:
+- Matrix
+- active task
+- artifact content
+- logs
+- control state
+
+UI should write:
+- pause/resume/stop
+- override instruction
+- forced target
+- runtime settings
+```
+
+---
+
+## 12. What to copy
+
+```text
+COPY_FROM_SWARMCRAFT:
+
+1. Three-layer architecture:
+   Brain / Logic / Memory
+
+2. Stateless AI services:
+   Service receives context, acts once, terminates.
+
+3. Central Matrix:
+   Machine-readable source of runtime truth.
+
+4. Scanner:
+   File system reality is re-indexed before planning.
+
+5. Deterministic loop:
+   SCAN → PLAN → DISPATCH → EXECUTE → SCAN.
+
+6. Strict artifact lifecycle:
+   EMPTY → DRAFTING → REVIEW_READY → REVISION_NEEDED → LOCKED.
+
+7. Controlled file tools:
+   read/write/append/edit through sandboxed tools only.
+
+8. Editor as gatekeeper:
+   PASS locks artifact; FAIL creates notes for revision.
+
+9. RAG continuity:
+   Retrieval supports consistency but does not replace Matrix.
+
+10. Control plane:
+    data/control.json + Director Console style override.
+
+11. Story Bible pattern:
+    Separate creative intent from runtime state.
+
+12. Multi-project isolation:
+    Project root determines Matrix, Story Bible, memory, and manuscripts.
+```
+
+---
+
+## 13. What not to copy directly
+
+```text
+DO_NOT_COPY_DIRECTLY:
+
+1. Do not treat it as a general multi-agent framework.
+   It is a deterministic application runtime.
+
+2. Do not rely only on files for every event.
+   For larger systems, add an event log or database.
+
+3. Do not make RAG optional without fallback rules.
+   If RAG is disabled, reviewers need explicit non-RAG context.
+
+4. Do not let prompt text enforce all safety.
+   Keep path sandboxing and lifecycle locks in code.
+
+5. Do not use only freeform JSON parsing.
+   Use Pydantic/typed schemas for service outputs.
+
+6. Do not restrict this design only to writing.
+   Generalize Matrix + lifecycle + reviewer to all artifact domains.
+```
+
+---
+
+## 14. AI-readable implementation spec
+
+```yaml
+system_name: SwarmCraftInspiredRuntime
+
+purpose:
+  - long_running_artifact_generation
+  - deterministic_multi_agent_orchestration
+  - human_steered_ai_workflows
+  - continuity_preserving_generation
+
+core_primitives:
+  Project:
+    fields:
+      - project_id
+      - project_root
+      - data_dir
+      - matrix_path
+      - control_path
+      - memory_db_path
+
+  Matrix:
+    role: source_of_truth
+    written_by:
+      - scanner
+      - orchestrator
+    read_by:
+      - architect
+      - editor
+      - dashboard
+    contains:
+      - project_status
+      - metrics
+      - artifacts
+      - active_task
+
+  Service:
+    rule: stateless_context_aware_function
+    services:
+      architect:
+        responsibility: plan_next_step
+      narrator:
+        responsibility: generate_continue_or_revise
+      editor:
+        responsibility: validate_and_return_verdict
+      interviewer:
+        responsibility: extract_structured_project_seed
+
+  Orchestrator:
+    loop:
+      - scan
+      - plan
+      - dispatch
+      - execute
+      - apply_result
+      - rescan
+
+  ToolLayer:
+    rule: all_mutation_through_sandboxed_tools
+    tools:
+      - read_file
+      - write_file
+      - append_file
+      - edit_file
+      - list_files
+
+  ControlPlane:
+    source: data/control.json
+    fields:
+      - system_status
+      - architect_override
+      - runtime_settings
+
+artifact_lifecycle:
+  - EMPTY
+  - DRAFTING
+  - REVIEW_READY
+  - REVISION_NEEDED
+  - LOCKED
+
+review_policy:
+  pass:
+    action: lock_artifact
+  fail:
+    action: route_to_revision
+  minor_typos:
+    action: editor_may_patch
+  major_continuity_error:
+    action: flag_not_rewrite
+
+safety_rules:
+  - no_absolute_paths
+  - no_parent_traversal
+  - no_direct_agent_file_write
+  - no_locked_artifact_modification
+  - matrix_must_be_scanned_before_planning
+  - every_service_output_must_be_schema_validated
+```
+
+---
+
+## 15. Recommended generalized architecture for your AI
+
+```text
+multiagent_ai/
+├── brain/
+│   ├── architect_service.py
+│   ├── generator_service.py
+│   ├── reviewer_service.py
+│   └── client.py
+│
+├── logic/
+│   ├── orchestrator.py
+│   ├── scanner.py
+│   ├── dispatcher.py
+│   ├── lifecycle.py
+│   └── tool_executor.py
+│
+├── memory/
+│   ├── matrix.py
+│   ├── rag_store.py
+│   ├── artifact_store.py
+│   └── project_state.py
+│
+├── data/
+│   ├── control.json
+│   ├── matrix.json
+│   ├── project_bible/
+│   └── artifacts/
+│
+└── ui/
+    ├── dashboard.py
+    └── director_console.py
+```
+
+---
+
+## 16. Minimal pseudocode
+
+```python
+async def run_project(project_root: Path):
+    scanner = Scanner(project_root)
+    matrix_store = MatrixStore(project_root)
+    control_store = ControlStore(project_root)
+    memory = MemoryStore(project_root)
+
+    while True:
+        control = control_store.read()
+
+        if control.system_status == &quot;STOP&quot;:
+            break
+
+        if control.system_status == &quot;PAUSED&quot;:
+            await sleep()
+            continue
+
+        matrix = scanner.scan()
+        matrix_store.write(matrix)
+
+        if matrix.project_status == &quot;COMPLETE&quot;:
+            break
+
+        decision = await architect.plan_next_step(
+            matrix=matrix,
+            project_root=project_root,
+            override=control.architect_override,
+        )
+
+        if decision.action_type == &quot;wait&quot;:
+            await sleep()
+            continue
+
+        result = await dispatcher.execute(
+            decision=decision,
+            project_root=project_root,
+            memory_store=memory,
+        )
+
+        matrix = apply_result(matrix, decision, result)
+        matrix_store.write(matrix)
+
+        scanner.scan()
+```
+
+---
+
+## 17. Final verdict
+
+```text
+SwarmCraft is worth analyzing.
+
+Its value is not “smart swarm reasoning”.
+Its value is deterministic reliability.
+
+Best lesson:
+Use stateless AI services around a central, inspectable Matrix.
+
+Second-best lesson:
+Separate creative intent, runtime state, artifacts, memory, and control.
+
+Third-best lesson:
+Never let agents mutate the world directly. Route all mutation through sandboxed tools and reviewer-controlled lifecycle transitions.
+```
+
+For your AI, SwarmCraft should be used as the reference for:
+
+```text
+project state
+artifact lifecycle
+review locks
+human steering
+file-safe generation
+RAG continuity
+deterministic orchestration
+```
+
+It should be combined with:
+
+```text
+MetaGPT for agent event/state mechanics
+CrewAI for clean task abstractions
+Nexussy for software-delivery workers and handoff
+SwarmCraft for Matrix-driven artifact reliability
+```
+</pre></body></html>

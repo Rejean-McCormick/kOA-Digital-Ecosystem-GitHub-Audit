@@ -1,0 +1,77 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/07-development/testing-conformance.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/07-development/testing-conformance.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 a7e83eccbc5c6bd2</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/07-development/testing-conformance.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Testing and Conformance
+
+## Test layers
+
+### Unit tests
+
+Cover parsers, validators, selectors, DAG planning, normalization, ranking, hashing, and budget logic.
+
+### Adapter contract tests
+
+Every adapter runs against a fixture and proves:
+
+- capability declaration matches behavior;
+- valid parameters execute;
+- invalid parameters fail before native execution;
+- source IDs/provenance survive normalization;
+- deterministic ordering is stable when declared;
+- timeout/output caps are enforced.
+
+### Integration tests
+
+Exercise multi-adapter DAGs and Context Pack compilation.
+
+### Property tests
+
+Recommended properties:
+
+- plan cycle detection is total;
+- canonical hashing is stable under JSON object key order changes;
+- exact dedupe is idempotent;
+- applying the same budget policy twice is idempotent;
+- normalized deterministic result order does not depend on parallel completion order.
+
+### Golden vectors
+
+Store canonical examples for:
+
+- capabilities;
+- valid/invalid queries;
+- each stable error code;
+- full and partial Context Packs;
+- semantic hashes.
+
+## Conformance suites
+
+A runtime is protocol-conformant only if it passes the protocol vector suite. An adapter is target-conformant only if it passes the generic adapter suite plus its own domain fixtures.
+
+## Kristal-specific tests
+
+For v6 adapters, test preservation of:
+
+- typed valuations/value states;
+- record role;
+- actionability;
+- coordinates/applicability;
+- source state identity behavior.
+
+For v5 adapters, test preservation of:
+
+- certainty;
+- validation/authority metadata;
+- reader-policy visibility;
+- pagination/order/caps where exposed.
+
+## Security tests
+
+Mandatory cases include:
+
+- shell metacharacters in string params;
+- `../` path traversal;
+- symlink escape;
+- huge stdout;
+- hanging subprocess;
+- malformed JSON output;
+- unknown capability injection;
+- capability snapshot mismatch.
+</pre></body></html>

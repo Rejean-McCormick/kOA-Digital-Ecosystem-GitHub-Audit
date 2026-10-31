@@ -1,0 +1,24 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · Limits-and-Roadmap.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · Limits-and-Roadmap.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 1df0883ed7a9a70f</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/Limits-and-Roadmap' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Limits and Roadmap
+
+## Current release boundaries
+
+- The Pack is a **candidate** read-only v11 adapter and a separately guarded legacy Konstellation/Kompiler overlay.
+- No canonical KQ/KP mutation, schema migration, dictionary activation, authoring registration, or publication is performed by the v11 path.
+- The old v6 projection requires a compatible v7 Surface; it cannot generally convert v9, v10 or v11 semantic states.
+- The real diK alpha.7 executable and a production-size Wikidata dump have **not** been qualified end-to-end in this Pack release.
+- Full Konstellation build, browser tests, multiuser policy enforcement and live Kompiler HTTP integration are still separate.
+- No production signatures, reviewer authentication or C1/C2/C3 release gates are implemented here.
+
+## Priorities for a future stable integration
+
+1. Re-run the handoff against the **exact distributed diK alpha.7 artifacts**, using representative and permissioned source data.
+2. Qualify the Authoring Kit and Framework on common reviewed pins, including crash recovery and registered catalog revisions.
+3. Complete Konstellation owner integration and enforce per-principal Reader Policies across all Kompiler requests; only then consider shared deployment.
+4. Perform source and browser tests on the actual host at its supported Node version, plus failure and authorization negative tests.
+5. Qualify C3 and any public/private distribution through the responsible owner systems; avoid new navigation or publishing authorities.
+6. Review and version the contract manifests whenever a Framework validator or semantic schema changes.
+
+The architecture should remain **non-canonical at the Integration Pack boundary**. Stabilization is an evidence and integration effort, not an invitation to infer identities from labels.
+
+See [[Qualification-and-Testing]] and [[Architecture-and-Ownership]].
+</pre></body></html>

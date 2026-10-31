@@ -1,0 +1,18 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/90-reference/adr/adr-0013-kristal-v6-actionability-boundary.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/90-reference/adr/adr-0013-kristal-v6-actionability-boundary.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 f987a472daa814a5</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/90-reference/adr/adr-0013-kristal-v6-actionability-boundary.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR-0013: Kristal v6 generalized state and actionability boundary
+
+- **Status:** Accepted
+- **Date:** 2026-10-01
+- **Scope:** ecosystem interpretation of Kristal Standard 6.0.0
+
+## Decision
+
+Adopt Kristal v6 `kristal_state`, typed `valuations[]`, `coordinates`, `applicability`, `record_role` and `actionability` across the active knowledge boundary.
+
+`actionability` is descriptive/policy metadata. It may be used to select an automation route, but it never authorizes a cross-system mutation by itself. The receiving owner contract, identity/authority check and admission rules remain mandatory.
+
+`record_role` similarly does not create authority: an `authoritative_constraint` must retain a provenance/authority chain to the actual external authority; an `observed_state` remains a snapshot of the source owner&#x27;s state; an `organizational_rule` remains scoped to the declaring organization.
+
+## Consequence
+
+The ecosystem can automate deterministic work with minimal friction while preserving human review/decision for cases where expertise or authority is required. Completed actions and human decisions can return as traceable records, allowing the knowledge corpus to improve over time without turning Kristal into a central operational database or orchestrator.
+</pre></body></html>

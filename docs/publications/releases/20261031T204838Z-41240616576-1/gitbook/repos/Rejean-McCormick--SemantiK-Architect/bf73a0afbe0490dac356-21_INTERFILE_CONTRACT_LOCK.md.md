@@ -1,0 +1,88 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/SemantiK-Architect/blob/74b07c42811dae0c68549d8554c00bc44a04298d/docs/21_INTERFILE_CONTRACT_LOCK.md | commit: 74b07c42811dae0c68549d8554c00bc44a04298d | SHA-256: b191324c29c99bb0183a36741588b23b0984f423d7cd0bd043a4dcb6d77d19a0 -->
+
+# Interfile / Producer-Consumer Contract Lock
+
+Status: **LOCKED / normative**
+
+This document prevents adjacent modules from redefining shared objects independently.
+
+## Canonical flow contracts
+
+| Contract | Producer | Consumer | Persistence | Public? |
+|---|---|---|---|---|
+| `CommunicationRequest` | inbound ACL / SDK mapper | `RenderCommunication` use case | no by core | yes |
+| Kristal portable-v6 communication projection | upstream semantic/communication authority | `KristalV6Acl` | no by core | boundary contract |
+| `CommunicationPlan` | `CommunicationPlanner` | `LanguagePlanner` | no | diagnostic only |
+| `LexicalPlanningContext` | `LexicalKnowledgePort` adapter | `LanguagePlanner` | optional cache outside core | no |
+| `LanguagePlan` | `LanguagePlanner` | lexical binder + output planning | no | diagnostic only |
+| `LexicalBindingSet` | `LexicalBindingPort` adapter | `RealizerPort` | optional artifact/cache ref | no |
+| `RealizationResult` | `RealizerPort` | output assembler / coverage validator | no | no |
+| `CommunicationResult` | output assembler | driving adapter/client | caller choice | yes |
+| `RuntimeSetDescriptor` | `RuntimeCatalogPort` | render use case / readiness | immutable catalog | operational public |
+
+
+## Kristal portable-v6 communication projection
+
+This is a boundary contract, not a core semantic type. Kristall v7 is additive above the portable v6 artifact and does not change this SA ingress contract. It binds a pinned Kristal State reference and explicitly selected assertion metadata to one already-mapped canonical `CommunicationRequest`. Every selected assertion ID must survive in request `source_refs`. The adapter may add v6 metadata to `supporting_context`; it may not synthesize new obligations or alter their communicative force.
+
+## CommunicationRequest
+
+Must already be canonical. Core planners never receive raw Orgo/Kristal/eThikos objects.
+
+## CommunicationPlan
+
+Contains only language-neutral grouping/sequence/discourse intent. It may reference obligation IDs and semantic IDs, never GF operations or lexical runtime IDs.
+
+## LexicalPlanningContext
+
+Ephemeral language-specific knowledge keyed by semantic IDs. It may include valency/class/government/availability metadata needed for planning.
+
+It MUST NOT contain inflected strings used as a hidden renderer and MUST NOT mutate the semantic graph.
+
+## LanguagePlan
+
+Contains target-language block topology and `RealizationUnit`s. Each unit references an SA↔GF `operation_id` and unresolved lexical slots/concept references where applicable.
+
+The planner MUST NOT require PGF objects.
+
+## LexicalBindingSet
+
+Immutable map from `RealizationUnit` lexical slots to exact runtime lexical references plus lexical artifact identity.
+
+The binding set is separate from `LanguagePlan` so the plan remains a planning artifact and lexical binding can be tested/replaced independently.
+
+Conceptual shape:
+
+```text
+LexicalBindingSet
+  runtime_lexicon_id
+  bindings:
+    (unit_id, slot_id) -> lexical_ref
+```
+
+## RealizerPort input
+
+The realizer receives:
+
+```text
+LanguagePlan
++ LexicalBindingSet
++ RuntimeSetDescriptor
++ remaining deadline/cancellation context
+```
+
+It returns `RealizationResult` containing realized unit text and unit IDs. It does not assemble transport-specific Markdown/HTML.
+
+## CommunicationResult assembly
+
+Output assembly combines realized units according to `LanguagePlan` block topology, then coverage validation proves all obligations are discharged.
+
+A result cannot be marked successful before coverage validation completes.
+
+## Mutation rule
+
+All canonical/inter-stage values are immutable. Stages return new values rather than mutating earlier contracts in place.
+
+## Version rule
+
+Public contracts (`CommunicationRequest`, `CommunicationResult`) are schema-versioned. Internal contracts are package-versioned and locked by architecture tests; incompatible redesign requires an ADR and updates to this document.

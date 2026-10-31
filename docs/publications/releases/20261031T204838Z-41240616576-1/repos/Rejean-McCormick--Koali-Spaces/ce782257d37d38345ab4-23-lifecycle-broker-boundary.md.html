@@ -1,0 +1,38 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/23-lifecycle-broker-boundary.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/23-lifecycle-broker-boundary.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 f67ce8608b9063eb</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/04-runtime-and-security/23-lifecycle-broker-boundary.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 23. Frontière lifecycle / presentation
+
+Sélectionner une application dans Koali ne donne pas au renderer une autorité de process management.
+
+Si un runtime est installé mais inactif :
+
+```text
+user selects module
+    |
+    v
+SurfaceResolutionService
+    |
+    +-- ready -&gt; descriptor -&gt; render
+    |
+    `-- inactive
+          |
+          v
+ declared lifecycle capability?
+          |
+          v
+ owner/broker lifecycle request
+          |
+       receipt/state
+          |
+       readiness
+          |
+          v
+       descriptor -&gt; render
+```
+
+Le broker concret appartient à l&#x27;architecture kOA applicable ; la Surface Layer n&#x27;invente pas ce propriétaire.
+
+`LOCK-KS-SURF-139` — **La sélection ou navigation vers une surface ne lance jamais directement un processus privilégié depuis le renderer ou `ApplicationHost`.**
+
+`LOCK-KS-SURF-140` — **Toute demande start/stop/restart/activate d&#x27;un runtime passe par un owner ou broker lifecycle déclaré ; la Surface Layer n&#x27;appelle pas directement Docker, systemd, un shell ou un service manager.**
+
+`LOCK-KS-SURF-141` — **Artifact admis, manifest actif, runtime actif, runtime ready et surface montée sont des états distincts et ne doivent pas être confondus.**
+</pre></body></html>

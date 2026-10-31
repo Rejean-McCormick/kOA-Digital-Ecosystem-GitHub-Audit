@@ -1,0 +1,20 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontainer · Wiki-Publishing.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontainer · Wiki-Publishing.md</h1><p class='meta'><small>Rejean-McCormick/Kontainer · c9674410bf4a · SHA-256 6a4baad90970242c</small><br><a href='https://github.com/Rejean-McCormick/Kontainer/wiki/Wiki-Publishing' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Publishing this Wiki
+
+These pages are **GitHub Wiki-ready Markdown**, but no remote repository has been changed by their creation. To publish them:
+
+1. Create or enable **Wiki** on the intended GitHub repository (where available).
+2. Clone that repository&#x27;s `.wiki.git` URL using your normal GitHub authentication.
+3. Copy all `.md` files from this bundle into the root of the wiki checkout.
+4. Review titles, ownership, and any repository naming choices. The software delivered in the source archive remains **Kristal-Container 1.0.0rc1** with module `kristal_container`.
+5. Commit and push through the repository&#x27;s normal review and permission process.
+
+```bash
+# Replace ORG/REPO with the actual owner and repository
+# git clone https://github.com/ORG/REPO.wiki.git
+# cp /path/to/Kontainer-GitHub-Wiki/*.md REPO.wiki/
+# cd REPO.wiki
+# git add . &amp;&amp; git commit -m &quot;Add Kontainer English wiki&quot; &amp;&amp; git push
+```
+
+The repository&#x27;s source documentation and its `docs/FORMAT.md` remain the implementation-level reference. Adapt any branding, links, policies, licensing, and release status as the project evolves; do not turn unsupported capability statements into assurances.
+</pre></body></html>

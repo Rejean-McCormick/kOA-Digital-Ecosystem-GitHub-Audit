@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Wikidata-Crosswalk-v11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Wikidata-Crosswalk-v11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 c09545f14aa93da8</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Wikidata-Crosswalk-v11' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Wikidata compatibility through a persistent crosswalk
+
+Kristal **does not imitate Wikidata&#x27;s Q-number sequence**. Internal KQ/KP identities remain stable and have their own namespace; Wikidata&#x27;s Q/P identifiers are external records in `kristal_external_crosswalk`.
+
+## Rules
+
+- Internal **KQ↔Wikidata Q** and **KP↔Wikidata P**; wrong combinations are invalid.
+- Mappings use a typed relation: `exactMatch`, `closeMatch`, `broadMatch`, `narrowMatch`, `relatedMatch`.
+- Statuses include `candidate`, `accepted`, `rejected`, `superseded`.
+- An accepted exact match requires a review decision and `KS` evidence. A shared word or AI score is never proof of identity.
+- A single active crosswalk view must not contain conflicting accepted exact matches; superseded decisions remain traceable.
+
+## Existing KQ, later external Q
+
+```text
+Today:   KQ85001 → internal canonical graph
+          no exact Wikidata mapping yet
+
+Later:   Wikidata creates Q…
+          candidate → context/evidence review → accepted exactMatch
+
+Result:  KQ85001 remains unchanged
+          a new versioned mapping is added externally
+```
+
+Likewise, Wikidata redirects, merges or splits do not silently merge local KQ identities. Reconciliation can supersede an old external decision but must preserve history and existing logical commitments.
+
+## Import strategy
+
+A local Wikidata mirror is a **candidate retrieval and lexical source**. Once a source Q/P is connected by `accepted + exactMatch`, an offline importer can extract its labels and aliases into language-specific imported dictionary layers. A candidate/closeMatch is not an accepted exact import route. Neither absence of an external Q nor a missing translation deletes the internal referent.
+
+**See also:** [[Semantic-Identity-v11]] · [[Dictionary-Management-v11]] · [[diK-Integration-v11]].
+</pre></body></html>

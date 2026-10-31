@@ -1,0 +1,58 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/KristalDiag · docs/ARCHITECTURE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/KristalDiag · docs/ARCHITECTURE.md</h1><p class='meta'><small>Rejean-McCormick/KristalDiag · 554111a9df58 · SHA-256 38b2b6126eb0e5cf</small><br><a href='https://github.com/Rejean-McCormick/KristalDiag/blob/554111a9df588af01f7d4b6e0ee6145aa9675be9/docs/ARCHITECTURE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture
+
+KristalDiag is an **external, independent, read-only examiner**.
+
+```text
+Framework / Local Kristal / GitHub collection / publication bundle
+                    │
+                    ▼ read only
+               KristalDiag
+                    │
+                    ▼
+          qualification evidence
+```
+
+It is deliberately outside the lifecycle ownership chain:
+
+```text
+Kristal Local Kit        -&gt; local authoring + v9/AI read-surface construction
+Kristal Manager          -&gt; local inventory + validation orchestration + GitHub sync
+Kristal GitHub Setup     -&gt; hosted network bootstrap + qualify/publish/activate
+Kompiler                 -&gt; optional read-only context compilation
+KristalDiag              -&gt; independent examination only
+```
+
+## Examiner independence
+
+The target&#x27;s own `schemas/` are inventory/audit evidence, not the schemas used to qualify that target. SchemaStore uses frozen packaged examiner contracts. The exact examiner resources are protected by `contract-manifest.json`.
+
+V9 commitments are recomputed by the Python implementation in `kristaldiag/v9.py`. V10 publication identity, publication-bundle byte bindings, GitHub read-surface digests and collection-index digests are independently recomputed by `kristaldiag/v10.py`.
+
+## v10 boundary
+
+KristalDiag enforces the architectural split:
+
+```text
+SEMANTIC STATE != HOSTING != PUBLICATION LOCATION != DISCOVERY DIRECTORY != AI READ SURFACE
+```
+
+A host move, sync operation, repository visibility change or rebuilt AI/read surface is not a semantic revision. A collection index is derived discovery, not semantic authority. Publication binds exact state identity plus retrievable bytes; activation remains a distinct lifecycle decision.
+
+## Draft.3 GitHub collection examination
+
+When present, K29 independently verifies:
+
+- `kristal.github-read-surface/1.0` documents;
+- `.kristal/sync-manifest.json` using `kristal.github-sync-manifest/1.0`;
+- `kristals/index.json` using `kristal.github-collection-index/1.0`;
+- exact hosted file sizes and SHA-256 digests;
+- the v9 State Commitment bound by the hosted surface;
+- `AI_MANIFEST.json` and `ai/INDEX.json` coherence;
+- absence of unmanaged files in an exact Manager-owned subtree.
+
+Large collection subtrees are byte-verified with bounded parallel workers. KristalDiag remains read-only.
+
+## Scheduling and evidence
+
+Levels normally execute in isolated Python worker processes under bounded timeouts. The parent runner fingerprints the target before/after and emits an evidence manifest covering every result artifact.
+</pre></body></html>

@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Core-Concepts.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Core-Concepts.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 4eb78305f912 · SHA-256 a3f17695778972af</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Core-Concepts' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Core Concepts
+
+## Canonical state
+
+Kristal&#x27;s canonical knowledge has upstream governance. Spek neither rewrites nor replaces it; compilation starts from a **derived editorial projection**.
+
+## Semantic unit
+
+A stable identifier, type (`claim`, `premise`, `qualification`, etc.), epistemic status and optional evidence references. Units remain identifiable in output HTML.
+
+## Realization
+
+A localized short expression bound by `realization_key`, `language`, and declared qualification state. SemantiK Architect can supply these through an explicit upstream bridge; the shipped demo uses manually prepared fixture sentences. The optional Wiki integration accepts frozen qualified declarations but does not itself invoke SemantiK.
+
+## Layout
+
+A versioned, typed contract describing allowed information and cardinality. The layout produces **reading order and visual hierarchy**, while semantic units carry the subject matter. Layouts are not scientific evidence.
+
+## Spek sheet and article
+
+A **Spek sheet** is a rendered section such as a result card. A larger article is an ordered composition of sheets; it need not mimic long prose to explain a finding, method, argument, or comparison.
+
+## Build artifact
+
+HTML, PDF, and XeLaTeX are derived representations. Their manifest records source/realization/layout fingerprints and output checksums.
+
+## Publication versus activation
+
+Local build, language verification, scientific review, disclosure authorization, public deployment and Kristal activation are distinct, governed actions. Neither CI success nor a `production_candidate` manifest permits skipping the upstream gates.
+
+## Arketype profile and Wiki page
+
+An Arketype profile is a content-structure compatibility choice, **not** a new Spek layout contract. In the optional Wiki extension it constrains which of the eight Spek layouts may appear in a page. Spek assembles the selected sections into GitHub Wiki Markdown only after the upstream owner has supplied typed units and realizations. See [[Wiki Templates by Archetype]].
+</pre></body></html>

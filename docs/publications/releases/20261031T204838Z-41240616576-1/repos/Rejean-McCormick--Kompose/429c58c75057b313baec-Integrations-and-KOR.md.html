@@ -1,0 +1,28 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · Integrations-and-KOR.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · Integrations-and-KOR.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · ec94ee500739 · SHA-256 9ce63c879b5a49a2</small><br><a href='https://github.com/Rejean-McCormick/Kompose/wiki/Integrations-and-KOR' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Integrations — KOR, Kontexte, Ekole, and Orgo
+
+**KOMPOSE is independent of KOR** (ADR 0006). KOR can eventually present an authorized narrative interface; there is **no live KOR adapter** in this repository. Independence from KOR does **not** imply that KOMPOSE can operate real Tandem Tasks: **Orgo is the sole operational authority** (ADR 0008).
+
+## Implemented local integration examples
+
+| Source / audience | Local operation | Not implemented |
+|---|---|---|
+| Kontexte `kontexte.mission/1` and role definitions | B6 synthetic scenario plan, role projection, fallback proposal, mock replay | Orgo Case/Task creation, learner identity, actual fragment delivery |
+| Ekole `ekole.tandem-teacher-preview/1.0` | Strict JSON structure and field whitelist | Authentication, verified WorldRelease, operational admission or competency |
+| KOR narrative client | `examples/integrations/kor.adapter.example.json` manifest | Runtime transport, student views, permission-filtered API |
+
+## Future client-facing privacy boundaries
+
+Only audience-authorized missions, roles and scripted prompts should be sent by a real server. Never send pupil diagnostics, rankings, accommodations, affinities/aversions, hidden fragment bodies, or sensitive teacher decisions to narrative clients. UI hiding alone is not authorization.
+
+## Required steps for any live integration
+
+1. Identify the authoritative owner of each operation and data field.
+2. Establish signed/authenticated teacher and institutional identity, tenant/World scoping and versioned contracts.
+3. Perform real Orgo permission checks and enforce recipient filtering before delivery.
+4. Test negative access, duplicate/replayed events, out-of-order transitions, offline recovery and rollback.
+5. Obtain educational and privacy approval before any child or real-world content appears.
+
+**No HTTP calls or deployed adapters are included** in the current examples.
+
+[[Home|← Home]] · [[Tandem-Orgo-Boundary|Operational authority]] · [[Architecture|Architecture →]]
+</pre></body></html>

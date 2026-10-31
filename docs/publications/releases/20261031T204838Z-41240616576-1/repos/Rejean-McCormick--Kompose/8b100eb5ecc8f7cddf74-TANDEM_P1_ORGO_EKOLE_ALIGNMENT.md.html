@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · docs/TANDEM_P1_ORGO_EKOLE_ALIGNMENT.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · docs/TANDEM_P1_ORGO_EKOLE_ALIGNMENT.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · a5a2d855584d · SHA-256 e7db4e1a98b5b1c3</small><br><a href='https://github.com/Rejean-McCormick/Kompose/blob/a5a2d855584d55d7ee5553207cb2e2b95d9c823d/docs/TANDEM_P1_ORGO_EKOLE_ALIGNMENT.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tandem P1 — KOMPOSE validateur, pas orchestrateur opérationnel
+
+Le code `src/kompose/lifecycle.py` et `coordination.py` sont conservés comme **modèles
+purs de simulation**, indépendants de KOR. En production scolaire, ils ne peuvent
+pas remplacer les transitions Orgo. Voir [ADR 0008](adr/0008-tandem-orgo-operational-authority.md).
+
+Validation du JSON synthétique exporté depuis Kontexte :
+
+```powershell
+$env:PYTHONPATH=&#x27;src&#x27;
+python -m kompose.cli verify-ekole-preview examples/integrations/ekole-fete-sorciere.synthetic.json
+```
+
+Le vérificateur rejette tout champ supplémentaire (identité d&#x27;enfant, note, photo,
+texte secret, token ou attribution directe). L&#x27;exemple inclus reprend les 11 étapes
+du pilote Kontexte, **pas** des tâches Orgo réellement créées. Les UUID sont des
+valeurs de démonstration; leur existence et leurs droits ne sont pas validés.
+
+Pour Ekole P1, l&#x27;aperçu n&#x27;est accessible que via son outil enseignant local.
+Son résultat n&#x27;est pas une preuve de qualification, un reçu Orgo, une autorisation
+scolaire ni un engagement de compétence acquise.
+
+## Sécurité du transfert P1
+
+- Le fichier de prévisualisation reste **local, synthétique, sans authentification**; sa conformité structurelle ne prouve ni les permissions ni une WorldRelease.
+- Le lecteur de l’outil Kompose interdit les clés JSON dupliquées, liens symboliques, entrées supérieures à 128 KiB et tout champ supplémentaire.
+- Les tenant, World et release utilisent des UUID canonisés pour **éviter la confusion de périmètre**; leur existence et leur correspondance ne sont **pas prouvées**.
+- Le passage au runtime exigera une opération distincte, authentifiée et autorisée par Orgo, sous supervision enseignante. Aucun élève réel dans ce lot.
+- Wiki facultatif : aucune donnée d’interopérabilité ni de sécurité n’est lue depuis les pages de wiki.
+</pre></body></html>

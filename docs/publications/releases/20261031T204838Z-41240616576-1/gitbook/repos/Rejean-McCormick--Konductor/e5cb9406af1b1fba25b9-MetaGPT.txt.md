@@ -1,0 +1,801 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Konductor/blob/f69b57d0208973ee7508490d0dc221986d653b9c/docs/References/MetaGPT.txt | commit: f69b57d0208973ee7508490d0dc221986d653b9c | SHA-256: 8e3230771f52246b88e7ef640389c2254991d6a4ff363d92319ec600e0979f56 -->
+
+# Final MetaGPT Report — Optimized for AI Implementation
+
+## 0. Primary conclusion
+
+MetaGPT’s strongest contribution is not the “software company” metaphor alone. Its real strength is that it turns multi-agent collaboration into a **disciplined event/state/action runtime**.
+
+MetaGPT’s own README defines the framework as a software-company multi-agent system: one-line requirement in, artifacts out, with roles such as product managers, architects, project managers, and engineers, coordinated through SOPs. Its stated philosophy is `Code = SOP(Team)`. 
+
+For your own AI, copy this core pattern:
+
+```text id="gy8tfs"
+LLM agents must not operate as free-form personas.
+They should operate as event-driven roles inside a controlled runtime.
+
+Runtime = Environment + RoleContext + Message + Action + Memory + ToolPolicy + Budget
+```
+
+---
+
+## 1. MetaGPT’s hidden architecture pattern
+
+```text id="s79at7"
+MetaGPT Core Pattern:
+
+Team
+  controls budget, rounds, project start, hiring
+
+Environment
+  routes messages to roles
+
+Role
+  owns private inbox, memory, working memory, state, todo, watch list
+
+Message
+  carries content, structured content, sender, recipients, cause_by, metadata
+
+Action
+  is the atomic executable skill
+
+ActionNode
+  creates structured, reviewable, revisable outputs
+
+ExperiencePool
+  reuses prior successful executions
+
+Engineer / QA loops
+  implement iterative build → summarize → test → debug cycles
+```
+
+This is the deeper trick:
+
+```text id="59lttd"
+Agents are not only prompted.
+Agents are subscribed to events.
+
+Messages are not only text.
+Messages are routed work packets.
+
+Actions are not only LLM calls.
+Actions are bounded executable states.
+
+Outputs are not only markdown.
+Outputs are structured artifacts.
+
+Coding is not one-shot.
+Coding is iterative and file-reference-based.
+```
+
+---
+
+## 2. Critical reusable mechanisms
+
+### 2.1 Private agent context
+
+Each role owns a `RoleContext` containing environment, message buffer, memory, working memory, state, todo action, watch set, news list, react mode, and max react loop. This is the core anti-chaos mechanism. 
+
+Copy this.
+
+```python id="upslmt"
+class RoleContext:
+    env: Environment
+    inbox: MessageQueue
+    memory: Memory
+    working_memory: Memory
+    state: int
+    todo: Action | None
+    watch: set[EventType]
+    news: list[Message]
+    react_mode: ReactMode
+    max_react_loop: int
+```
+
+Do **not** use one global chat log as the primary coordination layer.
+
+---
+
+### 2.2 Watch-based message filtering
+
+MetaGPT lets roles subscribe to interesting actions through `_watch()`. During observation, a role filters incoming messages by `cause_by` or direct recipient.  
+
+Copy this as a typed event subscription system:
+
+```python id="ot61og"
+def observe(role):
+    raw = role.inbox.pop_all()
+
+    role.news = [
+        msg for msg in raw
+        if msg.event_type in role.watch
+        or role.id in msg.recipients
+    ]
+
+    role.memory.add_batch(role.news)
+```
+
+This prevents every agent from reacting to everything.
+
+---
+
+### 2.3 Role as finite-state machine
+
+MetaGPT’s `Role` does not just answer. It selects a next action. If the role has one action, it runs that action; if it runs in ordered mode, it increments state; otherwise the runtime can dynamically choose the next action. 
+
+The standard loop is:
+
+```text id="e88gg5"
+think → act → think → act
+until no todo or max_react_loop reached
+```
+
+MetaGPT’s `_react()` implements this bounded think-act loop. 
+
+Copy this pattern:
+
+```python id="iqs70v"
+async def react(role):
+    actions_taken = 0
+
+    while actions_taken < role.ctx.max_react_loop:
+        has_todo = await role.think()
+        if not has_todo:
+            break
+
+        result = await role.act()
+        actions_taken += 1
+
+    return result
+```
+
+---
+
+### 2.4 Environment as message router
+
+MetaGPT’s `Environment` hosts roles, stores addresses, routes messages, and calls role runs. Its `publish_message()` distributes messages to roles whose addresses match the message recipients, while also keeping history for debugging.  
+
+Copy this rule:
+
+```text id="nymxpd"
+Only Environment may route messages.
+Roles may publish messages.
+Roles should not directly mutate other roles.
+```
+
+Recommended version:
+
+```python id="e6r34d"
+class Environment:
+    roles: dict[AgentID, Role]
+    routes: dict[AgentID, set[Address]]
+    history: list[Message]
+
+    def publish(message: Message):
+        recipients = resolve(message.recipients)
+        for role in recipients:
+            role.inbox.push(message)
+        history.append(message)
+```
+
+---
+
+### 2.5 Message as typed work packet
+
+MetaGPT’s `Message` contains `id`, `content`, optional structured `instruct_content`, `role`, `cause_by`, `sent_from`, `send_to`, and `metadata`. 
+
+The queue abstraction supports `pop`, `pop_all`, and `push`, which gives each role an asynchronous private inbox. 
+
+Use this stricter schema:
+
+```python id="tcj0zh"
+class Message:
+    id: str
+    content: str
+    structured_content: BaseModel | None
+    sender: AgentID
+    recipients: set[AgentID | Route]
+    event_type: EventType
+    cause_by: ActionType
+    artifact_refs: list[ArtifactRef]
+    metadata: dict
+    timestamp: datetime
+```
+
+Rename `cause_by` to `event_type` or keep both:
+
+```text id="hv52hk"
+cause_by = which action produced this message
+event_type = why this message matters to subscribers
+```
+
+---
+
+## 3. MetaGPT’s clever tricks to copy
+
+### Trick 1 — Event subscription instead of group chat
+
+MetaGPT roles watch action types and process only relevant messages. This is the single most important reliability trick. 
+
+```text id="plwsrd"
+Naive:
+  All agents read all messages.
+
+MetaGPT-style:
+  Agents subscribe to events and recipients.
+```
+
+---
+
+### Trick 2 — Self-routing
+
+MetaGPT uses `send_to` and internal routing so agents can create their own next work item. The engineer code comments explicitly mention external transmission of internal messages and the use of message filtering. 
+
+Implement:
+
+```python id="vntxdr"
+role.publish(
+    Message(
+        sender=role.id,
+        recipients={role.id},
+        event_type="summarize_code_needed",
+        cause_by="WriteCode",
+        artifact_refs=[...],
+    )
+)
+```
+
+This lets complex agents run sub-workflows without requiring the top-level orchestrator to micromanage every step.
+
+---
+
+### Trick 3 — Structured output trees with ActionNode
+
+`ActionNode` is a tree of structured output fields. Each node contains a key, expected type, instruction, example, content, and optional children. 
+
+It can dynamically create Pydantic model classes from mappings. 
+
+Copy this as your `SchemaNode` system:
+
+```python id="i3addx"
+class SchemaNode:
+    key: str
+    expected_type: type
+    instruction: str
+    example: Any
+    children: dict[str, SchemaNode]
+
+    def to_model() -> type[BaseModel]:
+        ...
+```
+
+Use it for:
+
+```text id="k4jv0r"
+PRD
+SystemDesign
+TaskList
+CodePlan
+CodePatch
+CodeReview
+TestResult
+BugReport
+FinalAnswer
+```
+
+---
+
+### Trick 4 — Review and revise only wrong fields
+
+ActionNode supports review and revision modes. The review path returns comments only for mismatched keys, and the revise path updates incorrect values rather than regenerating the entire artifact. 
+
+Copy this because it reduces instability:
+
+```text id="t6mykx"
+Bad:
+  Regenerate the whole document after a small error.
+
+Better:
+  Identify invalid fields.
+  Revise only invalid fields.
+  Preserve valid fields.
+```
+
+---
+
+### Trick 5 — Experience cache
+
+MetaGPT’s `exp_cache` decorator tries to fetch a perfect previous experience. If none exists, it executes the function, optionally scores and stores the new experience, then returns the raw response.  
+
+The examples show experience pool usage through `@exp_cache()` and querying stored experiences. 
+
+Copy this:
+
+```python id="kggb7e"
+@experience_cache(task_type="write_code")
+async def write_code(req: CodeRequest) -> CodePatch:
+    ...
+```
+
+Store:
+
+```text id="u46zah"
+request
+response
+score
+agent_id
+task_type
+tool_trace
+artifact_refs
+timestamp
+```
+
+This gives learning-by-reuse without model fine-tuning.
+
+---
+
+### Trick 6 — Dynamic tool agent shell
+
+`RoleZero` is a dynamic role that supports tools, a tool recommender, command execution map, special tool commands, and bounded reaction loops. 
+
+RoleZero also maps tool names to callable implementations, including editor operations. 
+
+Copy this, but make it stricter:
+
+```python id="umh2pj"
+class DynamicRole(Role):
+    tools: list[ToolSpec]
+    tool_execution_map: dict[str, Callable]
+    special_commands: set[str]
+    exclusive_commands: set[str]
+    planner: Planner
+    permissions: ToolPolicy
+```
+
+Use structured JSON tool calls, not raw command text.
+
+---
+
+### Trick 7 — Quick-think before full agent loop
+
+RoleZero first tries quick classification. If the message is a quick or ambiguous request, it can answer without entering the full tool loop. It only enters the heavier loop when needed. 
+
+Copy this router:
+
+```python id="q8xarj"
+kind = classify_request(user_msg)
+
+if kind == "quick":
+    return direct_answer()
+if kind == "ambiguous":
+    return ask_clarifying_question()
+if kind == "search":
+    return search_agent.run()
+if kind == "task":
+    return dynamic_agent.run()
+```
+
+This lowers cost and reduces unnecessary agentic behavior.
+
+---
+
+### Trick 8 — Observe inside the reaction loop
+
+RoleZero re-observes during the reaction loop, allowing the agent to adapt to new messages while working. It also checks `max_react_loop` and can ask a human whether to continue. 
+
+Copy this:
+
+```python id="bqsr29"
+while steps < max_steps:
+    await observe()
+    if not await think():
+        break
+    await act()
+```
+
+This is better than observing once and blindly continuing.
+
+---
+
+### Trick 9 — Inject live workspace state into coding agents
+
+`Engineer2` dynamically injects current terminal and editor state into the command prompt. It runs `pwd`, sets the editor workdir, and records `editor_open_file` and `current_directory`. 
+
+Copy this for coding agents:
+
+```text id="scp20o"
+Prompt state should include:
+- current_directory
+- open_file
+- git_branch
+- changed_files
+- last_command
+- last_error
+- test_status
+- artifact_refs
+```
+
+This reduces hallucinated paths and bad tool calls.
+
+---
+
+### Trick 10 — File references instead of full files
+
+The engineer code comments say MetaGPT replaced file data in messages with file names and added incremental iteration. 
+
+Copy this exactly.
+
+```python id="a3gby6"
+Message(
+    content="Review implementation",
+    artifact_refs=[
+        ArtifactRef(path="src/app.py", version="abc123"),
+        ArtifactRef(path="tests/test_app.py", version="abc123"),
+    ],
+)
+```
+
+Do not pass huge files through agent chat.
+
+---
+
+### Trick 11 — Incremental coding context builder
+
+The engineer builds `CodingContext` from design docs, task docs, old code docs, and code plan/change docs. 
+
+It then computes affected files from changed task/design/code-plan documents rather than blindly rewriting the entire project. 
+
+Copy this:
+
+```python id="t7ym0n"
+class CodingContext:
+    requirement: DocumentRef
+    design_doc: DocumentRef
+    task_doc: DocumentRef
+    old_code_doc: DocumentRef | None
+    code_plan_and_change_doc: DocumentRef | None
+    target_file: Path
+    bug_feedback: str | None
+    test_logs: str | None
+```
+
+---
+
+### Trick 12 — QA as routed state machine
+
+QAEngineer routes by message cause: code output leads to tests, test/debug output leads to running code, run-code output leads to debugging. It also has a test-round limit. 
+
+Copy this as a mandatory production loop:
+
+```text id="f0p7r2"
+CodeReady
+  → WriteTests
+
+TestsWritten or Debugged
+  → RunTests
+
+TestsFailed
+  → DebugError
+
+TestsPassed
+  → ApproveArtifact
+
+RoundLimitExceeded
+  → StopAndEscalate
+```
+
+QA must not be optional in your system.
+
+---
+
+## 4. AI implementation blueprint
+
+```text id="iphhmg"
+SYSTEM_NAME: MultiAgentAI
+
+CORE_OBJECTS:
+  Environment:
+    - owns roles
+    - routes messages
+    - stores history
+    - executes scheduler
+
+  Role:
+    - owns RoleContext
+    - observes messages
+    - thinks/selects action
+    - acts
+    - publishes result
+
+  RoleContext:
+    - inbox
+    - memory
+    - working_memory
+    - state
+    - todo
+    - watch
+    - news
+    - max_react_loop
+
+  Message:
+    - id
+    - sender
+    - recipients
+    - event_type
+    - cause_by
+    - content
+    - structured_content
+    - artifact_refs
+    - metadata
+
+  Action:
+    - name
+    - input_schema
+    - output_schema
+    - run()
+
+  SchemaNode:
+    - structured LLM output
+    - dynamic model generation
+    - review()
+    - revise()
+
+  ExperiencePool:
+    - query similar past runs
+    - reuse perfect experience
+    - execute if no match
+    - score and save result
+
+  ToolExecutor:
+    - validate command
+    - enforce permissions
+    - sandbox side effects
+    - log result
+```
+
+---
+
+## 5. Recommended architecture for your AI
+
+```text id="k6lifq"
+multiagent_ai/
+├── protocol/
+│   ├── message.py
+│   ├── event_type.py
+│   ├── artifact_ref.py
+│   └── schemas.py
+│
+├── runtime/
+│   ├── environment.py
+│   ├── scheduler.py
+│   ├── role_context.py
+│   ├── checkpoint.py
+│   ├── tracing.py
+│   └── budget.py
+│
+├── roles/
+│   ├── role.py
+│   ├── dynamic_role.py
+│   ├── product_manager.py
+│   ├── architect.py
+│   ├── engineer.py
+│   ├── qa_engineer.py
+│   └── reviewer.py
+│
+├── actions/
+│   ├── action.py
+│   ├── write_prd.py
+│   ├── write_design.py
+│   ├── write_tasks.py
+│   ├── write_code.py
+│   ├── summarize_code.py
+│   ├── run_tests.py
+│   └── debug_error.py
+│
+├── tools/
+│   ├── terminal.py
+│   ├── editor.py
+│   ├── browser.py
+│   ├── search.py
+│   └── git.py
+│
+├── memory/
+│   ├── working_memory.py
+│   ├── long_term_memory.py
+│   ├── experience_pool.py
+│   └── provenance.py
+│
+└── workflows/
+    ├── software_company.py
+    ├── research_pipeline.py
+    └── coding_pipeline.py
+```
+
+---
+
+## 6. Non-negotiable design rules
+
+```text id="xdc8cv"
+RULE 1:
+Agents must not share one global chat as their main input.
+
+RULE 2:
+Every role must have a private inbox.
+
+RULE 3:
+Every message must have sender, recipients, event_type, cause_by, and artifact_refs.
+
+RULE 4:
+All routing must go through Environment.
+
+RULE 5:
+Roles must subscribe to event types through watch lists.
+
+RULE 6:
+Agents must choose from bounded actions.
+
+RULE 7:
+Important outputs must be structured and validated.
+
+RULE 8:
+Review and revise invalid fields only.
+
+RULE 9:
+Files must be passed by reference, not copied into messages.
+
+RULE 10:
+Coding must be incremental: write → summarize → test → debug → repeat.
+
+RULE 11:
+Dynamic tools must be permissioned and sandboxed.
+
+RULE 12:
+Every run must have max_rounds, max_cost, max_tool_calls, and checkpoints.
+
+RULE 13:
+Experience reuse must be scored and provenance-aware.
+
+RULE 14:
+QA/review must be mandatory before final approval.
+
+RULE 15:
+Human approval is required for external side effects.
+```
+
+---
+
+## 7. Anti-patterns to avoid
+
+```text id="j5u6ld"
+AVOID:
+- all agents reading all messages
+- agent personas without state/action boundaries
+- raw markdown as the only output format
+- unbounded ReAct loops
+- unrestricted terminal/browser/editor tools
+- passing full files through prompts
+- memory as undifferentiated chat history
+- no budget control
+- no replayable traces
+- optional QA
+- relying on “agents will naturally coordinate”
+```
+
+---
+
+## 8. Minimal runtime pseudocode
+
+```python id="igynvm"
+class Environment:
+    def publish(self, message: Message):
+        for role in self.roles.values():
+            if self.should_deliver(message, role):
+                role.ctx.inbox.push(message)
+
+        self.history.append(message)
+
+    async def run(self, max_rounds: int):
+        for _ in range(max_rounds):
+            active = [r for r in self.roles.values() if not r.is_idle]
+            if not active:
+                break
+            await gather(*(role.run() for role in active))
+
+
+class Role:
+    async def run(self):
+        await self.observe()
+        if not self.ctx.news:
+            return None
+
+        return await self.react()
+
+    async def observe(self):
+        raw = self.ctx.inbox.pop_all()
+        self.ctx.news = [
+            msg for msg in raw
+            if msg.event_type in self.ctx.watch
+            or self.id in msg.recipients
+        ]
+        self.ctx.memory.add_batch(self.ctx.news)
+
+    async def react(self):
+        steps = 0
+        while steps < self.ctx.max_react_loop:
+            await self.observe()
+
+            if not await self.think():
+                break
+
+            result = await self.act()
+            steps += 1
+
+        return result
+```
+
+---
+
+## 9. Final implementation priority
+
+Build in this order:
+
+```text id="kbiy2r"
+1. Message schema
+2. MessageQueue
+3. Environment router
+4. RoleContext
+5. Base Role observe/think/act loop
+6. Action abstraction
+7. SchemaNode structured outputs
+8. ArtifactRef system
+9. ToolExecutor with permissions
+10. ExperiencePool
+11. Engineer loop
+12. QA loop
+13. Checkpoints and traces
+14. Human approval gates
+```
+
+---
+
+## 10. Final synthesis
+
+MetaGPT works because it wraps LLMs in a disciplined runtime:
+
+```text id="c6q454"
+LLM + role identity is not enough.
+
+You need:
+- event routing
+- private context
+- bounded action selection
+- structured artifacts
+- review/revise loops
+- experience reuse
+- incremental code workflows
+- tool safety
+- QA state machines
+- budget limits
+```
+
+The best architecture to build from this snapshot is:
+
+```text id="5jxdxb"
+MetaGPT-style SOP discipline
++ typed message/event runtime
++ private inbox per role
++ structured ActionNode-like outputs
++ experience cache
++ file-reference artifact system
++ mandatory QA/debug loop
++ sandboxed dynamic tools
+```
+
+Final directive for your AI:
+
+```text id="lzkcqn"
+Build agents as event subscribers, not chat participants.
+Build workflows as state machines, not conversations.
+Build outputs as validated artifacts, not free text.
+Build tools as permissioned commands, not open-ended powers.
+```

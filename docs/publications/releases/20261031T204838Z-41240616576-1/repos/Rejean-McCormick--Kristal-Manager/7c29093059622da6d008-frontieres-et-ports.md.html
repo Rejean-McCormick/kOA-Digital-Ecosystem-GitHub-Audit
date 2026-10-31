@@ -1,0 +1,53 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/02-architecture/frontieres-et-ports.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/02-architecture/frontieres-et-ports.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 0208f9c32704a719</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/02-architecture/frontieres-et-ports.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Frontières de modules et contrats de ports
+
+Les signatures suivantes sont **CIBLE** (architecture proposée), non des fonctions déjà importables du snapshot.
+
+```python
+from dataclasses import dataclass
+from typing import Protocol, Iterable
+
+@dataclass(frozen=True)
+class WorkspaceRef:
+    state_ref: str
+    path: str
+    display_name: str
+
+@dataclass(frozen=True)
+class RunRequest:
+    workspace: WorkspaceRef
+    engine: str
+    profile: str
+    mode: str = &quot;read_only&quot;
+
+class InventoryPort(Protocol):
+    def scan(self, roots: list[str]) -&gt; Iterable[WorkspaceRef]: ...
+
+class ExaminerPort(Protocol):
+    def applicability(self, request: RunRequest) -&gt; tuple[bool, str]: ...
+    def run(self, request: RunRequest) -&gt; dict: ...
+
+class ObservationStore(Protocol):
+    def append(self, observation: dict) -&gt; str: ...
+    def latest(self, state_ref: str, kind: str, profile: str) -&gt; dict | None: ...
+```
+
+## Séparation obligatoire
+
+| Responsable | Possède | N&#x27;a pas le droit de |
+|---|---|---|
+| `domain` | règles, invariants, erreurs stables | importer Tk, lancer subprocess, écrire SQLite |
+| `application` | ordre des tâches, politique d&#x27;exécution | interpréter le schéma V9 en dur |
+| `inventory adapter` | observation des workspaces | éditer des canons ou des PRF |
+| `diagnostics adapter` | invocation autorisée, paramètres, preuves | transformer un exit 0 en qualification |
+| `classifier` | propositions et leurs justifications | enregistrer `approved` automatiquement |
+| `persistence` | transactions, clés, migrations | décider que tel ARK est correct |
+| `gui` | sélection, filtres, progression, feedback | recalculer son propre verdict divergent |
+
+## Contrats d&#x27;erreur
+
+Exceptions transformées à la frontière en `INPUT_INVALID`, `ENGINE_MISSING`, `PROFILE_NOT_APPLICABLE`, `TIMEOUT`, `ENGINE_ERROR`, `STORAGE_UNAVAILABLE`, `SOURCE_CHANGED`, `CANCELLED`, chacune avec origine et cause facultative. Le client n&#x27;interprète pas des chaînes arbitraires venant de stdout.
+
+## Politique d&#x27;écriture
+
+Les commandes `scan`, `analyze`, `diagnose`, `search`, `import-history` sont non-canoniques. Un éventuel `apply_patch` futur nécessite un autre port, un plan de modifications, des sauvegardes, une approbation et une vérification Kit; jamais un simple changement d&#x27;état de `ObservationStore`.
+</pre></body></html>

@@ -1,0 +1,262 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/02-system/21-koa-spaces-experience-layer.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/02-system/21-koa-spaces-experience-layer.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 81cb36c8689caf11</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/02-system/21-koa-spaces-experience-layer.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-SYS-021&quot;,
+  &quot;document_class&quot;: &quot;normative_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;system&quot;,
+  &quot;scope&quot;: [
+    &quot;global&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/subsystems/koa-spaces.subsystem.json&quot;,
+    &quot;contracts/artifact-contracts/space-definition.schema.json&quot;,
+    &quot;contracts/artifact-contracts/module-interface-manifest.schema.json&quot;,
+    &quot;contracts/artifact-contracts/space-activation-receipt.schema.json&quot;,
+    &quot;contracts/artifact-contracts/interface-theme.schema.json&quot;,
+    &quot;contracts/artifact-contracts/interface-asset-manifest.schema.json&quot;,
+    &quot;02-system/06-capability-model.md&quot;,
+    &quot;02-system/08-offline-behavior.md&quot;,
+    &quot;04-components/04-subsystem-documentation-boundaries.md&quot;,
+    &quot;contracts/architecture-patterns.contract.json&quot;,
+    &quot;contracts/artifact-contracts/integration-resilience-policy.schema.json&quot;,
+    &quot;contracts/artifact-contracts/experience-view-adapter.schema.json&quot;,
+    &quot;contracts/artifact-contracts/cqrs-projection.schema.json&quot;,
+    &quot;contracts/artifact-contracts/cache-policy.schema.json&quot;
+  ],
+  &quot;decision_ids&quot;: [
+    &quot;DEC-RES-001&quot;,
+    &quot;DEC-BFF-001&quot;,
+    &quot;DEC-CQRS-001&quot;,
+    &quot;DEC-CACHE-001&quot;
+  ],
+  &quot;requirement_ids&quot;: [
+    &quot;REQ-PATTERN-006&quot;,
+    &quot;REQ-PATTERN-007&quot;,
+    &quot;REQ-PATTERN-008&quot;,
+    &quot;REQ-PATTERN-009&quot;,
+    &quot;REQ-PATTERN-010&quot;,
+    &quot;REQ-PATTERN-011&quot;,
+    &quot;REQ-PATTERN-031&quot;,
+    &quot;REQ-PATTERN-032&quot;,
+    &quot;REQ-PATTERN-033&quot;,
+    &quot;REQ-PATTERN-034&quot;,
+    &quot;REQ-PATTERN-035&quot;,
+    &quot;REQ-PATTERN-036&quot;,
+    &quot;REQ-PATTERN-037&quot;,
+    &quot;REQ-PATTERN-038&quot;,
+    &quot;REQ-PATTERN-039&quot;,
+    &quot;REQ-PATTERN-040&quot;,
+    &quot;REQ-PATTERN-041&quot;,
+    &quot;REQ-PATTERN-042&quot;
+  ],
+  &quot;lock_ids&quot;: [
+    &quot;LOCK-SPACES-001&quot;,
+    &quot;LOCK-RES-001&quot;,
+    &quot;LOCK-BFF-001&quot;,
+    &quot;LOCK-CQRS-001&quot;,
+    &quot;LOCK-CACHE-001&quot;
+  ],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [
+    &quot;DOC-SYS-000&quot;,
+    &quot;DOC-SYS-006&quot;,
+    &quot;DOC-SYS-008&quot;,
+    &quot;DOC-COMP-SUBSYSTEM-BOUNDARIES&quot;,
+    &quot;DOC-SYS-034&quot;
+  ],
+  &quot;tags&quot;: [
+    &quot;koa-spaces&quot;,
+    &quot;experience-layer&quot;,
+    &quot;contextual-interface&quot;,
+    &quot;optional-subsystem&quot;,
+    &quot;offline&quot;,
+    &quot;local-first&quot;,
+    &quot;presentation&quot;,
+    &quot;architecture-patterns&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# kOA Spaces Experience Layer
+
+## 1. Purpose
+
+kOA Spaces is the optional integrated experience-composition layer for kOA-Linux Operating System. It allows one stable core to compose installed product interfaces into contextual navigational structures for a school, enterprise, community, trade, project, or personal installation.
+
+kOA Spaces is not the sole owner or mandatory runtime of product user interfaces. Each independently owned product can retain a standalone interface that remains functional when kOA Spaces is absent. When kOA Spaces is installed, it composes admitted product contributions into one coherent Koali experience without taking ownership of product business behavior.
+
+kOA Spaces is not part of the privileged core. It is an independently versioned subsystem that consumes declared interfaces and capabilities. It can be installed, replaced, disabled, or omitted without changing the authority, storage, policy, lifecycle, security rules, or standalone operability of the other installed products.
+
+## 2. Public and Technical Identity
+
+- Public product name: **kOA Spaces**.
+- Technical subsystem identifier: `koa_spaces`.
+- A configured user environment is a **Space**.
+- The portable declarative package is a **Space definition**.
+- A business system or capability contributes an **interface module manifest**.
+- A validated visual token package is an **interface theme**.
+- A locally installable set of shell or module presentation assets is described by an **interface asset manifest**.
+
+A presentation module is not a new authority domain. It is a navigational contribution that represents a subsystem, component, integration, or locally available capability inside a Space.
+
+## 3. Architectural Role
+
+When active as the integrated Koali composition host, kOA Spaces owns:
+
+- the integrated visual frame;
+- the installed-product/module selector;
+- the shared context header and its placement rules;
+- the rendering of the active product surface&#x27;s navigation contribution;
+- route composition and collision detection;
+- responsive and accessibility behavior of the global frame;
+- activation, rollback, and local caching of validated Space definitions;
+- restoration of the user&#x27;s last permitted location.
+
+kOA Spaces does not own:
+
+- business data;
+- workflow state;
+- course state or learning progress;
+- media authority;
+- identity, roles, or capabilities;
+- authorization decisions;
+- governance policy;
+- direct writes into subsystem databases;
+- the internal interface architecture of contributing systems;
+- the standalone entry point or standalone shell of a contributing product;
+- a duplicate implementation of a contributing system&#x27;s business functions.
+
+The experience layer composes what an owner exposes. It does not recreate the owner&#x27;s feature set in a second Koali implementation.
+
+## 3.1 Product UI Autonomy and Portability
+
+A Koali product user interface is independently operable and composable. A product that exposes a graphical interface SHOULD support both of these modes when applicable:
+
+- **standalone** — the product renders its own application entry point using the shared Koali visual and interaction contract or a compatible implementation;
+- **integrated** — the product contributes declarative routes, navigation, commands, contextual inspection surfaces, and capability metadata to an admitted composition host such as kOA Spaces.
+
+The shared Koali UI implementation is a reusable presentation library and contract, not a business application and not a mandatory central runtime. A product may depend on that shared UI library without depending on another product.
+
+Product removal is a first-class operation. Removing Orgo, Konnaxion, Kristal-facing surfaces, or another independently packaged product SHALL NOT require source changes to unrelated product interfaces. The integrated product registry is derived from installed and admitted product manifests rather than from a hard-coded list in the global frame.
+
+A product interface SHALL NOT import another product&#x27;s private UI implementation to obtain ordinary shell, navigation, or page-frame behavior. Cross-product user journeys use declared integration contracts, stable routes, commands, or public interface contributions.
+
+## 4. Composition Model
+
+A Space definition selects a set of installed interface module manifests. Each manifest contributes:
+
+- one stable product/module identity;
+- a public label and icon;
+- one or more declared surface profiles;
+- a home route per applicable surface;
+- namespaced route contributions;
+- navigation groups for the active surface;
+- optional commands, contextual inspectors, top-bar widgets, and shortcuts;
+- capability requirements;
+- offline behavior;
+- accessibility and localization metadata;
+- optional compatibility with a locally installed interface asset bundle and the active design system.
+
+The Space can reorder modules and assign context-specific public labels without changing their stable identifiers. For example, an interface contribution with `module_id: uckk_learning` can be displayed as **Learn**, while `module_id: orgo` can be displayed as **Produce**.
+
+## 5. Authority Boundary
+
+Interface visibility is never authorization. A hidden route, menu item, widget, or module does not revoke or grant authority. Every action continues to be authorized by the owning subsystem, component, integration, or kOA core service.
+
+A Space definition cannot:
+
+- grant a capability;
+- create a trust root;
+- weaken disclosure controls;
+- replace a subsystem contract;
+- bypass Publication Gateway;
+- write directly across authority boundaries;
+- load executable code that was not admitted through the declared software and artifact lifecycle.
+
+Visual or technical alignment between two interfaces does not merge their authority, release ownership, code ownership, storage, or business responsibility.
+
+## 6. Local-First Web-Technology Model
+
+A browser-rendered or web-technology interface is a rendering choice, not an Internet dependency.
+
+kOA Spaces and locally admitted module surfaces can use HTML, CSS, JavaScript, React, or another maintained browser-rendered technology while remaining fully local to the node. Public Internet connectivity is not implied by the use of those technologies.
+
+For an offline-capable local surface:
+
+- required application assets are installable locally;
+- required fonts, icons, style sheets, scripts, and localization resources are locally available;
+- no public CDN is part of the runtime dependency path;
+- local APIs and local capability providers remain reachable through declared local transports;
+- network-only functions expose their declared unavailable or degraded state instead of blocking unrelated local functions.
+
+A module can contain both local and network-dependent capabilities. The offline claim applies only to the capabilities and routes that the owning module declares as locally available.
+
+## 7. Offline Behavior
+
+The global frame, active Space definition, installed module manifests, navigation labels, accessibility resources, interface theme, and permitted cached interface assets remain available offline.
+
+A module declares one of these offline behaviors for each route and widget:
+
+- `available` — complete declared local function remains available;
+- `cached_read_only` — previously admitted content can be consulted;
+- `degraded` — a declared local fallback is used;
+- `unavailable` — the route remains identifiable but cannot execute.
+
+Network loss does not cause automatic module substitution. Online-only widgets disappear or enter a declared unavailable state without changing business authority.
+
+## 8. Relationship to Konnaxion
+
+The composition model deliberately aligns with the established Konnaxion interface pattern where that alignment improves coherence for users and reduces unnecessary divergence.
+
+Inside kOA Spaces:
+
+- kOA Spaces owns the integrated outer frame;
+- Konnaxion contributes its public product entry, surfaces, routes, navigation, commands, inspectors, and widgets when its integration is admitted;
+- Konnaxion page shells can continue to structure Konnaxion content inside the main page surface;
+- Konnaxion does not recreate a second integrated outer frame inside the kOA Spaces frame;
+- when Konnaxion runs standalone, it can render the same shared Koali shell primitives itself without requiring kOA Spaces;
+- kOA Spaces does not reproduce Konnaxion business pages, workflows, validation, services, or domain state.
+
+Shared visual language, interaction patterns, design tokens, frontend libraries, or PageShell conventions are compatible with this boundary. They are implementation alignment, not function duplication.
+
+Konnaxion can be packaged as a locally hosted browser-rendered application surface. Its use of web technology does not make public Internet connectivity a prerequisite for capabilities that Konnaxion declares as local and offline-capable.
+
+The same ownership rule applies to Orgo, Ariane, the kOA Mediatheque, UCKK learning surfaces, administration, and later systems.
+
+## 9. Ariane Integration
+
+Ariane may interpret an intent and request navigation to a permitted route. kOA Spaces resolves the route, activates the relevant module, and presents the destination. Ariane does not bypass route capability checks or subsystem authorization.
+
+## 10. Replaceability
+
+The core remains operable without kOA Spaces. A deployment may use:
+
+- another compliant experience layer;
+- subsystem-native interfaces;
+- a restricted appliance interface;
+- command-line or administrative surfaces.
+
+Removing kOA Spaces cannot delete or reinterpret business data and cannot make an otherwise installed product lose its standalone interface solely because the composition host was removed. Its local state is limited to presentation configuration, validated manifests, navigation state, preferences, admitted presentation assets, and activation receipts.
+
+## 11. Validation Criteria
+
+A conforming kOA Spaces installation demonstrates that:
+
+- every active module has a validated manifest;
+- every contributed route is unique after composition;
+- the selected default module exists and is permitted;
+- sidebar depth and top-bar slot limits are respected;
+- unavailable capabilities cannot be reached through deep links;
+- offline behavior is declared for every route and widget;
+- local offline surfaces resolve required presentation assets without a public Internet dependency;
+- no Space definition grants authority or embeds business state;
+- no presentation module duplicates another subsystem&#x27;s authoritative business function;
+- activation is atomic and produces a receipt;
+- rollback restores the previous validated Space definition;
+- disabling kOA Spaces leaves the core and subsystem authorities intact.
+
+## Experience view adapters
+
+kOA Spaces may consume validated experience view adapters when a Space needs bounded aggregation or a data shape distinct from owner interfaces. The adapter belongs to the experience integration package, remains presentation-only, delegates commands to owners, and cannot become a universal business API.
+</pre></body></html>

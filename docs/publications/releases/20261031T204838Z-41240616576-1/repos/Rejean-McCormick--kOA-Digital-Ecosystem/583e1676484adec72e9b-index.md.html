@@ -1,0 +1,66 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/index.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/index.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 f1efcd52c26f4c0a</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/40-integration/identity-oidc/index.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Common Identity &amp; OIDC Integration Profile
+
+**File:** `docs/2-Technical-Reference/40-integration/identity-oidc/index.md`  
+**Status:** Normative (kOA)  
+**External normative reference:** OpenID Connect / OAuth specifications as implemented by the selected Identity Provider. This documentation defines the kOA integration profile and does not replace those protocol specifications.
+
+---
+
+## 1) Purpose
+
+Define how human identity can be federated across **Orgo**, **Konnaxion**, and **UCKK-Moodle** without collapsing application boundaries or making any application depend on another for ordinary operation.
+
+The governing design is:
+
+```text
+standalone-first
++ optional OIDC federation
++ local authorization
++ no shared passwords
++ no shared application database
+```
+
+## 2) Canonical model
+
+```text
+                       Identity Provider
+                         OIDC / SSO
+                              |
+                        issuer + subject
+                              |
+          +-------------------+-------------------+
+          |                   |                   |
+          v                   v                   v
+        Orgo              Konnaxion          UCKK-Moodle
+     local account       local account        local account
+     local RBAC          local roles          local roles/
+                                             capabilities
+```
+
+A common identity authenticates a human. It does **not** grant cross-application authority.
+
+## 3) Canonical federated identity key
+
+The portable identity key is:
+
+```text
+(issuer, subject)
+```
+
+Email, display name, Orgo UUID, Konnaxion user ID, and Moodle user ID are attributes or local identifiers, not ecosystem identity keys.
+
+## 4) Documents
+
+- `principles.md` — hard invariants and ownership boundaries
+- `identity-model.md` — Person, FederatedIdentity, LocalAccount, Membership
+- `oidc-profile.md` — kOA OIDC profile and login resolution
+- `local-authorization.md` — authorization remains application-owned
+- `standalone-resilience.md` — outage and break-glass behavior
+- `application-profiles.md` — Orgo, Konnaxion, UCKK-Moodle profiles
+- `provisioning-lifecycle.md` — linking, JIT provisioning, deactivation
+- `security-conformance.md` — security and acceptance gates
+
+## 5) Related ADR
+
+See `../../90-reference/adr/adr-0006-common-identity-oidc.md`.
+</pre></body></html>

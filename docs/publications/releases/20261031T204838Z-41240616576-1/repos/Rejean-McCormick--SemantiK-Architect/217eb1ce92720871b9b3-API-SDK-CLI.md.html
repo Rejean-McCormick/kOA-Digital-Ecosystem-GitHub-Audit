@@ -1,0 +1,65 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · API-SDK-CLI.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · API-SDK-CLI.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 7431de9f70faa6bb</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/API-SDK-CLI' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># API, SDK &amp; CLI
+
+SA exposes the same canonical use cases through multiple driving adapters.
+
+## Core use cases
+
+- `RenderCommunication`
+- `ValidateRequest`
+- `ListCapabilities`
+- `ValidateRuntime`
+- `ExplainGeneration`
+
+## Python SDK
+
+Conceptually:
+
+```python
+from semantik_architect import SemantikArchitect
+
+sa = SemantikArchitect.from_runtime_root(&quot;runtime&quot;)
+
+sa.validate_request(request)
+sa.render(request)
+sa.explain(request)
+sa.capabilities()
+sa.validate_runtime(&quot;runtime-set-id&quot;)
+```
+
+`render()` accepts either a canonical `CommunicationRequest` or its public mapping/JSON shape.
+
+## CLI
+
+```text
+semantik-architect --runtime-root runtime validate-request request.json
+semantik-architect --runtime-root runtime render request.json
+semantik-architect --runtime-root runtime explain request.json
+semantik-architect --runtime-root runtime capabilities
+semantik-architect --runtime-root runtime validate-runtime &lt;runtime-set-id&gt;
+semantik-architect --runtime-root runtime conformance suite.json
+semantik-architect --runtime-root runtime serve --host 127.0.0.1 --port 8765
+```
+
+Use `-` instead of a request filename where supported to read JSON from standard input.
+
+## Explain generation
+
+`explain` is a diagnostic view of planning/runtime choices. It is **not** an epistemic authority and does not replace the original structured content.
+
+## Stable errors
+
+Application failures use a machine-readable error envelope with:
+
+```text
+code
+category
+stage
+message_safe
+retryable
+request_id?
+runtime_set_id?
+details?
+```
+
+See [[Errors &amp; Troubleshooting|Errors-and-Troubleshooting]].
+</pre></body></html>

@@ -1,0 +1,258 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/04-components/uckk-publication-bridge.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/04-components/uckk-publication-bridge.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 2f5195d33022ea3c</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/04-components/uckk-publication-bridge.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-COMP-UCKK-PUB-001&quot;,
+  &quot;document_class&quot;: &quot;normative_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;component_integration&quot;,
+  &quot;scope&quot;: [
+    &quot;integration:uckk-publication&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/integrations/uckk-publication.integration.json&quot;,
+    &quot;contracts/components/koa-mediatheque.component.json&quot;,
+    &quot;contracts/components/publication-gateway.component.json&quot;,
+    &quot;contracts/artifact-contracts/uckk-publication-package.schema.json&quot;,
+    &quot;contracts/artifact-contracts/uckk-publication-receipt.schema.json&quot;,
+    &quot;02-system/12-koa-mediatheque-system-boundary.md&quot;,
+    &quot;contracts/integrations/uckk-import.integration.json&quot;,
+    &quot;contracts/artifact-contracts/shared-mediatheque-frame.schema.json&quot;,
+    &quot;contracts/artifact-contracts/uckk-learning-package.schema.json&quot;,
+    &quot;contracts/artifact-contracts/uckk-import-receipt.schema.json&quot;,
+    &quot;04-components/uckk-import-bridge.md&quot;,
+    &quot;contracts/architecture-patterns.contract.json&quot;,
+    &quot;contracts/artifact-contracts/integration-resilience-policy.schema.json&quot;,
+    &quot;contracts/artifact-contracts/dead-letter-record.schema.json&quot;,
+    &quot;contracts/artifact-contracts/distributed-workflow.schema.json&quot;,
+    &quot;contracts/artifact-contracts/large-payload-reference.schema.json&quot;
+  ],
+  &quot;decision_ids&quot;: [
+    &quot;DEC-MEDIATHEQUE-001&quot;,
+    &quot;DEC-UCKK-EXT-001&quot;,
+    &quot;DEC-DATA-001&quot;,
+    &quot;DEC-COMP-001&quot;,
+    &quot;DEC-GOV-001&quot;,
+    &quot;DEC-OFFLINE-001&quot;,
+    &quot;DEC-RES-001&quot;,
+    &quot;DEC-MSG-001&quot;,
+    &quot;DEC-WF-001&quot;,
+    &quot;DEC-PAYLOAD-001&quot;
+  ],
+  &quot;requirement_ids&quot;: [
+    &quot;REQ-UCKK-PUB-001&quot;,
+    &quot;REQ-UCKK-PUB-002&quot;,
+    &quot;REQ-UCKK-PUB-003&quot;,
+    &quot;REQ-UCKK-PUB-004&quot;,
+    &quot;REQ-UCKK-PUB-005&quot;,
+    &quot;REQ-UCKK-PUB-006&quot;,
+    &quot;REQ-UCKK-PUB-007&quot;,
+    &quot;REQ-UCKK-PUB-008&quot;,
+    &quot;REQ-UCKK-PUB-009&quot;,
+    &quot;REQ-UCKK-PUB-010&quot;,
+    &quot;REQ-UCKK-PUB-011&quot;,
+    &quot;REQ-UCKK-PUB-012&quot;,
+    &quot;REQ-UCKK-IMPORT-001&quot;,
+    &quot;REQ-UCKK-IMPORT-002&quot;,
+    &quot;REQ-UCKK-IMPORT-003&quot;,
+    &quot;REQ-UCKK-IMPORT-004&quot;,
+    &quot;REQ-UCKK-IMPORT-005&quot;,
+    &quot;REQ-UCKK-IMPORT-006&quot;,
+    &quot;REQ-PATTERN-006&quot;,
+    &quot;REQ-PATTERN-007&quot;,
+    &quot;REQ-PATTERN-008&quot;,
+    &quot;REQ-PATTERN-009&quot;,
+    &quot;REQ-PATTERN-010&quot;,
+    &quot;REQ-PATTERN-011&quot;,
+    &quot;REQ-PATTERN-012&quot;,
+    &quot;REQ-PATTERN-013&quot;,
+    &quot;REQ-PATTERN-014&quot;,
+    &quot;REQ-PATTERN-015&quot;,
+    &quot;REQ-PATTERN-016&quot;,
+    &quot;REQ-PATTERN-017&quot;,
+    &quot;REQ-PATTERN-018&quot;,
+    &quot;REQ-PATTERN-019&quot;,
+    &quot;REQ-PATTERN-020&quot;,
+    &quot;REQ-PATTERN-021&quot;,
+    &quot;REQ-PATTERN-022&quot;,
+    &quot;REQ-PATTERN-023&quot;,
+    &quot;REQ-PATTERN-024&quot;,
+    &quot;REQ-PATTERN-025&quot;,
+    &quot;REQ-PATTERN-026&quot;,
+    &quot;REQ-PATTERN-027&quot;,
+    &quot;REQ-PATTERN-028&quot;,
+    &quot;REQ-PATTERN-029&quot;,
+    &quot;REQ-PATTERN-030&quot;
+  ],
+  &quot;lock_ids&quot;: [
+    &quot;LOCK-UCKK-EXT-001&quot;,
+    &quot;LOCK-MEDIATHEQUE-001&quot;,
+    &quot;LOCK-GATE-001&quot;,
+    &quot;LOCK-DATA-001&quot;,
+    &quot;LOCK-GOV-001&quot;,
+    &quot;LOCK-OFFLINE-001&quot;,
+    &quot;LOCK-UCKK-EXT-002&quot;,
+    &quot;LOCK-RES-001&quot;,
+    &quot;LOCK-MSG-001&quot;,
+    &quot;LOCK-WF-001&quot;,
+    &quot;LOCK-PAYLOAD-001&quot;
+  ],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [
+    &quot;DOC-SYS-012&quot;,
+    &quot;DOC-COMP-MEDIATHEQUE-001&quot;,
+    &quot;DOC-COMP-UCKK-IMPORT-001&quot;,
+    &quot;DOC-SYS-034&quot;
+  ],
+  &quot;tags&quot;: [
+    &quot;integration&quot;,
+    &quot;uckk&quot;,
+    &quot;moodle&quot;,
+    &quot;publication&quot;,
+    &quot;bridge&quot;,
+    &quot;external-platform&quot;,
+    &quot;idempotency&quot;,
+    &quot;offline-queue&quot;,
+    &quot;import-from-uckk&quot;,
+    &quot;offline-learning&quot;,
+    &quot;architecture-patterns&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# UCKK Publication Bridge
+
+## 1. Purpose
+
+The UCKK Publication Bridge implements the outbound `publish_to_uckk` direction of the governed Mediatheque interchange boundary.
+
+It maps an explicitly authorized kOA publication package to the online UCKK Moodle platform and returns a structured receipt. It is not the UCKK platform, not either Mediatheque, not an authorization authority, and not an inbound import mechanism.
+
+The opposite `import_from_uckk` direction requires a separate controlled import contract. Keeping the directions separate prevents a publication adapter from becoming an implicit synchronization service.
+
+## 2. Separation of Responsibilities
+
+| Owner | Responsibility |
+| --- | --- |
+| kOA Mediatheque | Local source records, versions, content bindings, rights, provenance, export history, and accepted local copies of imported content |
+| Publication Gateway | Outbound disclosure request, authorization decision, obligations, and cross-domain receipt chain |
+| UCKK Publication Bridge | Outbound UCKK capability discovery, mapping, package transport, idempotency, retry, and remote result normalization |
+| Controlled UCKK import path | Inbound retrieval, source and license verification, integrity and compatibility validation, quarantine, and delivery to local acceptance |
+| External UCKK platform | Online Moodle courses, learning paths, activities, permissions, UCKK Mediatheque records, and remote lifecycle |
+
+The shared Mediatheque frame supports mapping but does not combine these authority domains.
+
+## 3. Inputs and Outputs
+
+Input:
+
+`text
+uckk-publication-package.schema.json
+`
+
+Output:
+
+`text
+uckk-publication-receipt.schema.json
+`
+
+The package binds exact local versions, rights assertions, destination mapping, authorization, manifest, and idempotency key. The receipt records per-item remote outcomes and references.
+
+## 4. Publication Sequence
+
+1. Validate package schema and manifest.
+2. Confirm that the authorization is still valid.
+3. Resolve the allowlisted UCKK endpoint and Moodle API version.
+4. Resolve credentials from the dedicated secret store.
+5. Check destination capabilities and mapping compatibility.
+6. Reconcile the idempotency key with any prior attempt.
+7. Transfer only the selected authorized content and metadata.
+8. Normalize per-item results.
+9. Verify the remote response when signatures or digests are supported.
+10. Produce a local receipt and evidence references.
+
+## 5. Offline and Retry Behavior
+
+The bridge can retain an authorized package in a protected queue while offline. The queue exposes:
+
+- package identity;
+- destination;
+- creation and expiry;
+- attempt count;
+- next attempt time;
+- cancellation reason;
+- last known outcome.
+
+A retry reuses the idempotency key. A new package is required when the source version, rights, authorization, destination mapping, or package contents change.
+
+An ambiguous timeout does not immediately retry as a new publication. The bridge first reconciles the idempotency key with UCKK to avoid duplicate remote objects.
+
+## 6. Security
+
+- Endpoints must be allowlisted.
+- Transport security and authenticated API access are required.
+- Credentials are least-privilege and never embedded in packages or media records.
+- Logs exclude content and restricted metadata.
+- Rate limits, payload limits, and retry limits are mandatory.
+- Direct database access is prohibited.
+- External AI is not required.
+
+## 7. Rights and Withdrawal
+
+The bridge transmits only the representation approved by Publication Gateway. It does not independently interpret consent or rights.
+
+When a local right, consent, or authorization is withdrawn:
+
+- pending work is cancelled;
+- future retries stop;
+- a supported withdrawal notice may be sent;
+- the result is recorded;
+- history is not falsified;
+- deletion from the external platform is not claimed unless UCKK explicitly confirms it.
+
+## 8. Inbound Import Is a Separate Direction
+
+This contract is the outbound `publish_to_uckk` direction only. The active sibling contract `contracts/integrations/uckk-import.integration.json` owns `import_from_uckk`.
+
+UCKK-to-kOA acquisition is governed by the separate active UCKK Import integration, which requires:
+
+- explicit source and object selection;
+- course or learning-path dependency manifests;
+- license, rights, restriction, and provenance validation;
+- signature and content-integrity verification;
+- quarantine and malware controls;
+- compatibility and required-resource validation;
+- explicit acceptance into the kOA Mediatheque;
+- an import receipt and conflict policy.
+
+Outbound and inbound operations may share the Mediatheque frame and common transport utilities. They do not share authorization, queue state, retry decisions, receipts, or authority by implication. They must not be implemented as background bidirectional synchronization.
+
+## 9. Failure Codes
+
+Recommended normalized codes include:
+
+`text
+AUTHENTICATION_FAILED
+AUTHORIZATION_EXPIRED
+SOURCE_VERSION_CHANGED
+RIGHTS_CHANGED
+DESTINATION_UNAVAILABLE
+DESTINATION_UNSUPPORTED
+MAPPING_INCOMPATIBLE
+CONTENT_REJECTED
+RATE_LIMITED
+PARTIAL_PUBLICATION
+REMOTE_RESULT_AMBIGUOUS
+RECEIPT_INVALID
+CANCELLED
+`
+
+## 10. Conformance
+
+The bridge conforms only when it proves explicit Publication Gateway authorization, least-privilege credentials, no direct database writes, bounded retry, idempotent reconciliation, per-item receipts, source-authority preservation, and local operation independent from UCKK.
+
+Passing outbound conformance does not establish inbound import or complete two-direction Mediatheque interchange conformance.
+
+## Distributed publication resilience
+
+`publish_to_uckk` is implemented as a distributed workflow. Authorization, package construction, remote transfer, remote acceptance, and terminal receipt are distinct steps. Remote calls use the declared circuit policy. Large media uses verified references or bounded package members. Exhausted asynchronous failures enter monitored quarantine. Remote acceptance is never inferred from local send success.
+</pre></body></html>

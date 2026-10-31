@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · Artifacts-Operational.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · Artifacts-Operational.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · dd52671208ae · SHA-256 19de417ad4cda430</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/wiki/Artifacts-Operational' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Operational integration artifacts
+
+## Build Record
+
+A Build Record may remain as **ecosystem correlation/reproducibility evidence**. It must not replace Kristal artifacts, kOA-Linux Release Sets, component active-state records or lifecycle receipts.
+
+It should keep independent statuses for compilation, validation, recognition, publication and activation and reference the owning artifacts rather than re-declaring them.
+
+## kOA-Linux Release Set
+
+Release Set is the platform release compatibility artifact. It binds versions across independent release channels and carries compatibility/activation metadata under the kOA-Linux contract.
+
+Digital Ecosystem&#x27;s former `Release Record v2` is deprecated as an authority. If retained for analytics/audit compatibility, it is only a projection that references `release_set_id` and owner receipts.
+
+## Runtime Pack local state
+
+For kOA-Linux deployments, `kristal_runtime` owns:
+
+- Runtime Pack verification/compatibility record;
+- active Runtime Pack record;
+- activation receipt;
+- rollback receipt;
+- runtime health state.
+
+kOA Node Agent may execute the narrow privileged host transition required by the profile. A receipt does not replace the owner component&#x27;s active-state record.
+
+## Koali Space state
+
+Koali Space activation/rollback/deactivation belongs to Koali Spaces and is unrelated to Kristal Runtime Pack active state.
+</pre></body></html>

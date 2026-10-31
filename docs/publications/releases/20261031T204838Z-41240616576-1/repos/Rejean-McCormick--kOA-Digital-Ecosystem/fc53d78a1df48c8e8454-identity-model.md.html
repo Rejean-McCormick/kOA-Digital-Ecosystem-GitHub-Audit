@@ -1,0 +1,56 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/identity-model.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/identity-model.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 96627861c5dbc17a</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/40-integration/identity-oidc/identity-model.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Common Identity Model
+
+**Status:** Normative (kOA)
+
+## 1) Concepts
+
+```text
+Person
+FederatedIdentity
+LocalAccount
+Membership
+Role / Permission
+```
+
+A `Person` may have zero or more federated identities and zero or more application-local accounts.
+
+A `FederatedIdentity` is identified by:
+
+```text
+issuer + subject
+```
+
+A `LocalAccount` is identified only inside its owning application.
+
+## 2) Relationship
+
+```text
+Person
+  |
+  +-- FederatedIdentity (issuer, subject)
+  |
+  +-- Orgo account ------ memberships ------ Orgo roles/permissions
+  +-- Konnaxion account - memberships ------ Konnaxion roles
+  +-- Moodle account ---- enrolments ------- Moodle roles/capabilities
+```
+
+## 3) Email is an attribute
+
+Email MUST NOT be used as the ecosystem-wide identity key because it can change, collide, be recycled, or differ by context.
+
+A matching email MAY assist a controlled linking workflow but MUST NOT silently merge accounts.
+
+## 4) Multiple issuers
+
+Subject values are scoped to their issuer namespace:
+
+```text
+issuer A / subject 123
+!=
+issuer B / subject 123
+```
+
+## 5) Service identities
+
+Machine-to-machine integrations MUST use service identities or scoped credentials separate from human SSO identities.
+</pre></body></html>

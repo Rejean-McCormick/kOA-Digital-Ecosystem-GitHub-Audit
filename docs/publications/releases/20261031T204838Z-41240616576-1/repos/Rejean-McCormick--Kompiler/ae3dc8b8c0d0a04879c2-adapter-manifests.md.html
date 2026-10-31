@@ -1,0 +1,45 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/09-reference/adapter-manifests.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/09-reference/adapter-manifests.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 f1c3b2c5dd0ed76e</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/09-reference/adapter-manifests.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Adapter Manifest Reference
+
+A manifest is administrator-controlled configuration. Query Plans cannot modify it.
+
+```toml
+id = &quot;kristal-humanbody&quot;
+version = &quot;1.0.0&quot;
+target_id = &quot;HumanBody&quot;
+kind = &quot;kristal&quot;
+
+[source]
+root = &quot;/absolute/path/to/Kristal-HumanBody/knowledge-base&quot;
+
+[implementation]
+type = &quot;kristal-humanbody&quot;
+```
+
+Register manifests from `kompiler.toml`:
+
+```toml
+[adapters.humanbody]
+manifest = &quot;~/.config/kompiler/adapters/humanbody.toml&quot;
+```
+
+For temporary explicit development roots, `KOMPILER_KRISTAL_ROOTS` may contain an OS-path-separator-delimited list. Those roots are signature-detected but source scripts are not executed during discovery.
+
+## Kristall v7 manifest
+
+A v7 meta-plane target uses `kind = &quot;kristall&quot;` and the built-in `kristall-v7` implementation:
+
+```toml
+id = &quot;kristall-v7&quot;
+version = &quot;1.0.0&quot;
+target_id = &quot;Kristall:kristall-main&quot;
+kind = &quot;kristall&quot;
+
+[source]
+root = &quot;/absolute/path/to/Kristall-v7-deployment&quot;
+
+[implementation]
+type = &quot;kristall-v7&quot;
+```
+
+The source root must contain or resolve a v7 `kristall_manifest`. Discovery may expose both this meta-plane target and nested source Kristals.
+</pre></body></html>

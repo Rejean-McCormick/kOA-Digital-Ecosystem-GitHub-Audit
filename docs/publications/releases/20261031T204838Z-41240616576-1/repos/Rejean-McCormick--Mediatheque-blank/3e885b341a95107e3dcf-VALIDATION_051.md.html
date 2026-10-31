@@ -1,0 +1,35 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Mediatheque-blank · docs/VALIDATION_051.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Mediatheque-blank · docs/VALIDATION_051.md</h1><p class='meta'><small>Rejean-McCormick/Mediatheque-blank · a853781bba11 · SHA-256 9ac3732c2c676396</small><br><a href='https://github.com/Rejean-McCormick/Mediatheque-blank/blob/a853781bba11179da00bd16735ff4e13ef9499f4/docs/VALIDATION_051.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Blank 0.5.1 — alignement sur le moteur Médiathèque 0.5.1
+
+## Périmètre
+
+- Moteur commun réutilisé tel quel, dans un dossier frère `../mediatheque`.
+- Template sans aucun octet de base, preuve, source ou document utilisateur.
+- Instance locale privée SQLite avec configuration explicite et contrôle en lecture seule.
+- Import EncyK `encyk.source-evidence-handoff/2.0.0` **par le moteur**, jamais par un récepteur copié dans Blank.
+
+## Corrections
+
+1. Avant : `Initialize.ps1` et `Start.ps1` utilisaient directement le moteur voisin, sans
+   inspection de la version ni protection de toutes les variables `KOA_*` héritées.
+   Après : contrôle `instance_guard.py` et chemins explicites par instance.
+2. Avant : aucun `.gitignore`; `GitSink.bat` lançait `git add --all` sans borne.
+   Après : données ignorées et contrôle de l&#x27;index avant **et après** l&#x27;ajout.
+3. Avant : aucun chemin ergonomique d&#x27;import Skope/EncyK depuis le modèle.
+   Après : `Import-EncyK.ps1`, PLAN par défaut, acceptation explicite et reçu local privé.
+4. `Initialize.ps1` ne remplace plus une base existante; `Start.ps1` lie l&#x27;UI à
+   `127.0.0.1` et exige un schéma source SQLite existant.
+
+## Ce qui reste hors qualification
+
+- Pas de test réel PowerShell 7/Windows ni d&#x27;installation Streamlit dans la CI Linux.
+- Pas d&#x27;ingestion des véritables preuves situées sur `D:`.
+- Pas d&#x27;audit exhaustif de stockage, authentification ou publication.
+- Aucun autre moteur que `koa-mediatheque` `0.5.1` n&#x27;est autorisé par ce template.
+- Le moteur 0.5.1 conserve sa propre logique d&#x27;importation et ses limites.
+
+## Critère de compatibilité
+
+Une instance Blank ne doit pas se lancer si le moteur voisin est absent ou si
+son `pyproject.toml` déclare une autre version que `0.5.1`. Un import accepté
+utilise exclusivement `--instance-root` de l&#x27;instance explicitement lancée.
+</pre></body></html>

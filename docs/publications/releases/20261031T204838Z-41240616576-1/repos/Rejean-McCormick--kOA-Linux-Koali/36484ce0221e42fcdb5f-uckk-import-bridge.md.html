@@ -1,0 +1,194 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/04-components/uckk-import-bridge.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/04-components/uckk-import-bridge.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 9268be0b3acebd32</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/04-components/uckk-import-bridge.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-COMP-UCKK-IMPORT-001&quot;,
+  &quot;document_class&quot;: &quot;normative_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;component_integration&quot;,
+  &quot;scope&quot;: [
+    &quot;integration:uckk-import&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/integrations/uckk-import.integration.json&quot;,
+    &quot;contracts/components/koa-mediatheque.component.json&quot;,
+    &quot;contracts/components/governance-policy-runtime.component.json&quot;,
+    &quot;contracts/artifact-contracts/shared-mediatheque-frame.schema.json&quot;,
+    &quot;contracts/artifact-contracts/uckk-learning-package.schema.json&quot;,
+    &quot;contracts/artifact-contracts/uckk-import-receipt.schema.json&quot;,
+    &quot;contracts/artifact-contracts/offline-bundle.schema.json&quot;,
+    &quot;02-system/12-koa-mediatheque-system-boundary.md&quot;,
+    &quot;contracts/architecture-patterns.contract.json&quot;,
+    &quot;contracts/artifact-contracts/integration-resilience-policy.schema.json&quot;,
+    &quot;contracts/artifact-contracts/dead-letter-record.schema.json&quot;,
+    &quot;contracts/artifact-contracts/distributed-workflow.schema.json&quot;,
+    &quot;contracts/artifact-contracts/large-payload-reference.schema.json&quot;
+  ],
+  &quot;decision_ids&quot;: [
+    &quot;DEC-UCKK-EXT-001&quot;,
+    &quot;DEC-MEDIATHEQUE-001&quot;,
+    &quot;DEC-DATA-001&quot;,
+    &quot;DEC-GOV-001&quot;,
+    &quot;DEC-OFFLINE-001&quot;,
+    &quot;DEC-RES-001&quot;,
+    &quot;DEC-MSG-001&quot;,
+    &quot;DEC-WF-001&quot;,
+    &quot;DEC-PAYLOAD-001&quot;
+  ],
+  &quot;requirement_ids&quot;: [
+    &quot;REQ-UCKK-IMPORT-001&quot;,
+    &quot;REQ-UCKK-IMPORT-002&quot;,
+    &quot;REQ-UCKK-IMPORT-003&quot;,
+    &quot;REQ-UCKK-IMPORT-004&quot;,
+    &quot;REQ-UCKK-IMPORT-005&quot;,
+    &quot;REQ-UCKK-IMPORT-006&quot;,
+    &quot;REQ-UCKK-IMPORT-007&quot;,
+    &quot;REQ-UCKK-IMPORT-008&quot;,
+    &quot;REQ-UCKK-IMPORT-009&quot;,
+    &quot;REQ-UCKK-IMPORT-010&quot;,
+    &quot;REQ-UCKK-IMPORT-011&quot;,
+    &quot;REQ-UCKK-IMPORT-012&quot;,
+    &quot;REQ-PATTERN-006&quot;,
+    &quot;REQ-PATTERN-007&quot;,
+    &quot;REQ-PATTERN-008&quot;,
+    &quot;REQ-PATTERN-009&quot;,
+    &quot;REQ-PATTERN-010&quot;,
+    &quot;REQ-PATTERN-011&quot;,
+    &quot;REQ-PATTERN-012&quot;,
+    &quot;REQ-PATTERN-013&quot;,
+    &quot;REQ-PATTERN-014&quot;,
+    &quot;REQ-PATTERN-015&quot;,
+    &quot;REQ-PATTERN-016&quot;,
+    &quot;REQ-PATTERN-017&quot;,
+    &quot;REQ-PATTERN-018&quot;,
+    &quot;REQ-PATTERN-019&quot;,
+    &quot;REQ-PATTERN-020&quot;,
+    &quot;REQ-PATTERN-021&quot;,
+    &quot;REQ-PATTERN-022&quot;,
+    &quot;REQ-PATTERN-023&quot;,
+    &quot;REQ-PATTERN-024&quot;,
+    &quot;REQ-PATTERN-025&quot;,
+    &quot;REQ-PATTERN-026&quot;,
+    &quot;REQ-PATTERN-027&quot;,
+    &quot;REQ-PATTERN-028&quot;,
+    &quot;REQ-PATTERN-029&quot;,
+    &quot;REQ-PATTERN-030&quot;
+  ],
+  &quot;lock_ids&quot;: [
+    &quot;LOCK-UCKK-EXT-001&quot;,
+    &quot;LOCK-UCKK-EXT-002&quot;,
+    &quot;LOCK-MEDIATHEQUE-001&quot;,
+    &quot;LOCK-DATA-001&quot;,
+    &quot;LOCK-GOV-001&quot;,
+    &quot;LOCK-OFFLINE-001&quot;,
+    &quot;LOCK-RES-001&quot;,
+    &quot;LOCK-MSG-001&quot;,
+    &quot;LOCK-WF-001&quot;,
+    &quot;LOCK-PAYLOAD-001&quot;
+  ],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [
+    &quot;DOC-SYS-012&quot;,
+    &quot;DOC-COMP-MEDIATHEQUE-001&quot;,
+    &quot;DOC-SYS-034&quot;
+  ],
+  &quot;tags&quot;: [
+    &quot;uckk&quot;,
+    &quot;moodle&quot;,
+    &quot;import&quot;,
+    &quot;offline-learning&quot;,
+    &quot;quarantine&quot;,
+    &quot;mediatheque&quot;,
+    &quot;directional-interchange&quot;,
+    &quot;architecture-patterns&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# UCKK Import Bridge
+
+## 1. Purpose
+
+The UCKK Import Bridge implements `import_from_uckk`: the controlled inbound path from the online UCKK Mediatheque to the private local kOA Mediatheque.
+
+It retrieves or receives a selected course, learning path, instruction collection, manual, or resource graph; places the package in quarantine; validates the source, license, integrity, provenance, completeness, and shared-frame compatibility; and presents the package for explicit local acceptance.
+
+The bridge is not an authority over accepted local records. The kOA Mediatheque owns local acceptance and resulting local identities. Governance Policy Runtime evaluates policy when the active profile, rights, consent, or cultural conditions require it.
+
+## 2. Directional Boundary
+
+```text
+online UCKK Mediatheque
+        |
+        | selected UCKK learning package
+        v
+UCKK Import Bridge
+├── source and endpoint validation
+├── authenticated retrieval or offline-bundle intake
+├── quarantine
+├── manifest, signature, and hash verification
+├── license, restriction, and provenance checks
+├── shared Mediatheque frame mapping validation
+└── import receipt production
+        |
+        | explicit local acceptance candidate
+        v
+private offline kOA Mediatheque
+```
+
+The reverse direction is owned by the separate UCKK Publication Bridge and Publication Gateway workflow. The two queues, packages, receipts, retries, credentials, and authority decisions are not interchangeable.
+
+## 3. Shared Frame
+
+Every transferable resource declares the shared Mediatheque frame version and mapping version. The frame carries compatible identity references, version references, integrity, media description, rights, restrictions, provenance, lifecycle, and mapping evidence.
+
+The frame does not create a shared database, identifier namespace, access-control system, lifecycle, or authority domain. Imported UCKK identifiers remain source references. Accepted content receives separate kOA record and version identities.
+
+## 4. Required Workflow
+
+1. A user or governed workflow explicitly selects an UCKK object and version scope.
+2. The bridge resolves an allowlisted endpoint and declared source identity.
+3. The complete package and required resource graph are retrieved online or received through a supported offline bundle.
+4. The package enters quarantine before any local activation.
+5. The system verifies package completeness, signatures or equivalent source evidence, hashes, license, restrictions, provenance, malware policy, offline-use permission, and frame compatibility.
+6. Any lossy mapping, unresolved right, missing resource, or incompatible runtime requirement blocks acceptance or requires explicit review.
+7. An authorized local actor accepts or rejects the validated candidate.
+8. The kOA Mediatheque creates local identities and preserves UCKK source and version provenance.
+9. The accepted learning material becomes available under the local profile&#x27;s offline consultation capability.
+10. An import receipt records every terminal result.
+
+## 5. Offline Schools and Organizations
+
+A complete validated package can be moved by removable media, local network, or intermittently connected hub. Once accepted, the course, instructions, media, and required offline runtime remain locally available without UCKK connectivity.
+
+Local progress, annotations, organization-specific procedures, adaptations, and private derived material remain local unless separately selected and authorized for outbound publication.
+
+## 6. Update Handling
+
+A later remote version is a new update candidate. It does not overwrite the accepted local copy automatically.
+
+The local workflow compares source version, rights, resource graph, local adaptations, and mapping version before accepting, deferring, or rejecting the update. Source withdrawal is recorded but does not silently delete a locally lawful accepted copy.
+
+## 7. Prohibited Behavior
+
+- importing an entire UCKK catalog without explicit selection;
+- accepting content before quarantine and validation;
+- direct access to UCKK database tables;
+- dropping rights, restrictions, provenance, or unsupported frame fields silently;
+- replacing local identities with UCKK identifiers;
+- remote last-writer-wins overwrite;
+- automatic upload of local progress or adaptations on reconnection;
+- background bidirectional synchronization;
+- treating UCKK metadata as local governance authority.
+
+## 8. Safe Degradation
+
+When UCKK is unavailable, accepted local content remains usable. New discovery, retrieval, and remote update checks are unavailable. Complete offline packages can still be validated when all required trust, license, integrity, and compatibility evidence is present locally. Incomplete or uncertain packages remain quarantined.
+
+## 9. Validation Criteria
+
+Conformance requires evidence for explicit selection, allowlisted source resolution, quarantine-before-acceptance, complete manifest validation, source and signature verification, license enforcement, rights and provenance preservation, frame-version mapping, separate local identity creation, offline bundle intake, update-candidate handling, and absence of implicit synchronization.
+
+## Distributed import resilience
+
+`import_from_uckk` is implemented as a distributed workflow. Retrieval, quarantine, verification, rights evaluation, local acceptance, and terminal receipt are distinct steps. Remote calls use the declared circuit policy. Large package members use verified references where supported. Failed work enters monitored quarantine, and local authority changes only at the explicit acceptance step.
+</pre></body></html>

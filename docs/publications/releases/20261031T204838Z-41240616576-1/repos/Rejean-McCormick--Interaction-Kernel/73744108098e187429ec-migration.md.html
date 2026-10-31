@@ -1,0 +1,14 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Interaction-Kernel · docs/migration.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Interaction-Kernel · docs/migration.md</h1><p class='meta'><small>Rejean-McCormick/Interaction-Kernel · 1d0598456fe8 · SHA-256 d4216a751394c59b</small><br><a href='https://github.com/Rejean-McCormick/Interaction-Kernel/blob/1d0598456fe8203625f9831ec00c32225422631d/docs/migration.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Migration
+
+1. D0 — lock Core/Profile contracts and TCK.
+2. D1 — wrap existing Orgo→Konnaxion bridge under `accountability.impact.publish` without behavior change.
+3. D2 — implement immutable Konnaxion DecisionRecord handoff → Orgo Signal/workflow.
+4. D3 — add ArtifactRef/ExportManifest and source-owned exports.
+5. D4 — **completed:** migrate DaaT/IK from Kristal v5 RC assumptions to Kristal Standard v6.0.0 and Profile v2 portable surfaces.
+6. D4.1 — **completed in this snapshot:** normalize the human name to DaaT (`daat` machine id), narrow DaaT to the IK↔Kristal contract boundary, and pin Kristal `7.0.0-draft.3.1` as an additive design baseline while retaining v6 portable compatibility.
+7. D5 — reuse/upgrade Orgo BuildRecord/ReleaseRecord semantics.
+8. D6 — route Runtime Pack activation through the single deployment activation owner.
+9. D7 — deprecate bespoke paths only after conformance, observability and redrive validation.
+
+The v6 migration changes knowledge semantics, not operational ownership: actionability in a Kristal artifact never bypasses the target system&#x27;s authority/admission contract.
+</pre></body></html>

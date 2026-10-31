@@ -1,0 +1,24 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/10-system/determinism.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/10-system/determinism.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 f246115a5d2677a7</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/10-system/determinism.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Determinism
+
+Determinism is required where kOA produces reproducible artifacts, signatures/digests, idempotent requests or release evidence. It does **not** imply a universal validation-before-compilation gate.
+
+## Kristal v6
+
+For the pinned Kristal version, canonicalization is `kristal.v6:jcs-rfc8785` version `1`.
+
+A deterministic compile can produce a **Working Exchange**. Validation/review and authority recognition are independent, scoped decisions. Reference publication, release or activation may be gated by stricter kOA Profiles.
+
+## Requirements
+
+- pin exact schema/tool/Profile versions used for reproducible outputs;
+- canonicalize and hash exactly as required by the owning contract;
+- preserve input identities and provenance;
+- keep compile, validation, recognition, publication and activation state distinct;
+- never infer epistemic status from a successful digest/signature;
+- use deterministic idempotency fingerprints for cross-system commands where defined by IK;
+- same idempotency key + different fingerprint must be treated as conflict, not replay.
+
+## Reproducibility
+
+A build/release record should contain enough immutable references to reproduce or explain the result: exact Kristal pin, schema-set/canonicalization identity, source refs/digests, Profile/policy refs, output refs and reason codes.
+</pre></body></html>

@@ -1,0 +1,11 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Interaction-Kernel/blob/1d0598456fe8203625f9831ec00c32225422631d/docs/adrs/README.md | commit: 1d0598456fe8203625f9831ec00c32225422631d | SHA-256: 840a540cc42e794913f8a675cba88c3d50964e7f301550f84e06d8d3c483bedd -->
+
+# Accepted architecture decisions
+
+- [ADR-IK-01](ADR-IK-01-runtime-pack-activation-owner.md) — single Runtime Pack activation owner.
+- [ADR-IK-02](ADR-IK-02-kristal-pin.md) — exact Kristal Standard v6 content-digest pin.
+- [ADR-IK-03](ADR-IK-03-decision-record.md) — DecisionRecord canonical Konnaxion handoff.
+- [ADR-IK-04](ADR-IK-04-fingerprint.md) — RFC 8785 JCS + SHA-256 semantic fingerprint.
+- [ADR-IK-05](ADR-IK-05-operational-state-artifact-boundary.md) — operational state remains participant-owned; IK transports interactions and artifact references without becoming a datastore or distributed transaction coordinator.
+- [ADR-IK-06 — Kristal → UCKK publication boundary](ADR-IK-06-kristal-uckk-publication-boundary.md)
+- [ADR-IK-07](ADR-IK-07-daat-kristal-v7-boundary.md) — DaaT naming/boundary and Kristal v7 additive compatibility.

@@ -1,0 +1,27 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Authoring-Kit · docs/25_NETTOYAGE_LOCAL.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Authoring-Kit · docs/25_NETTOYAGE_LOCAL.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Authoring-Kit · 2a20971ca698 · SHA-256 99f85f4c4aa42cfb</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Authoring-Kit/blob/2a20971ca69828a5168c7a086a14accbbb5cee6f/docs/25_NETTOYAGE_LOCAL.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Nettoyage local de l&#x27;ancien snapshot
+
+Dans le snapshot `znapshot_Kristal-Authoring-Kit_10131043.zip`, deux fichiers
+sont des **index générés pour l&#x27;archive**, pas des éléments nécessaires au
+fonctionnement du Kit :
+
+- `SMARTDUMP_INDEX.txt`
+- `SNAPSHOT_INDEX.txt`
+
+La version consolidée n&#x27;expédie plus ces deux index devenus périmés après les
+modifications. Pour retirer leurs anciennes copies sur le **dossier local déjà
+installé**, copiez la nouvelle version dans le dépôt puis double-cliquez
+`Nettoyer_Anciens_Fichiers.pyw` **à la racine**. Python avec `tkinter` est
+nécessaire. Une interface affiche les fichiers présents et leur statut.
+
+**Protection :** aucune suppression automatique ; sélection manuelle, dialogue
+et saisie de `SUPPRIMER` obligatoires. Le nettoyeur ne possède que ces deux
+chemins autorisés à la racine et vérifie les SHA-256 exacts de l&#x27;archive
+précédente. Un fichier manquant, modifié, un dossier, un lien symbolique ou un
+chemin extérieur est ignoré. Aucun fichier canonique, workspace ou exemple
+n&#x27;est ciblé. Il n&#x27;y a aucun déplacement de fichiers métier nécessaire.
+
+Le programme fonctionne exclusivement sur le dossier qui contient le `.pyw` :
+il ne modifie pas d&#x27;autres copies d&#x27;Authoring Kit et ne touche pas GitHub.
+Si vous souhaitez conserver les anciens index, ne lancez simplement pas la
+suppression. Ils ne sont pas chargés par le Kit.
+</pre></body></html>

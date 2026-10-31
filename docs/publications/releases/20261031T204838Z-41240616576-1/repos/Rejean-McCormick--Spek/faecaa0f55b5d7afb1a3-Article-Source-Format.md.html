@@ -1,0 +1,43 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Article-Source-Format.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Article-Source-Format.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 4eb78305f912 · SHA-256 82633311146dd442</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Article-Source-Format' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Article Source Format
+
+The article source is a **derived editorial adapter**, not the canonical Kristal data format. It binds already selected content into Spek slots; it is not a raw Kristal→article inference format.
+
+## Main sections
+
+- `format`: `kristal.layout-article-source/0.1`.
+- `article`: `id`, `title_key`, `subtitle_key`, `abstract_key`.
+- `source`: origin, optional pinned v9 reference, review declarations.
+- `units`: stable identifiers, kinds, realization keys, epistemic statuses, evidence references.
+- `evidence`: ID, realization key, locator and evidence status.
+- `sections`: ordered ID, heading realization key, chosen layout, slot→unit/evidence bindings.
+
+## Minimal binding example
+
+```json
+{
+  &quot;id&quot;: &quot;section.finding&quot;,
+  &quot;layout&quot;: &quot;result-card&quot;,
+  &quot;heading_key&quot;: &quot;heading.finding&quot;,
+  &quot;slots&quot;: {
+    &quot;claim&quot;: &quot;unit.claim&quot;,
+    &quot;conditions&quot;: &quot;unit.scope&quot;,
+    &quot;evidence&quot;: [&quot;evidence.one&quot;],
+    &quot;uncertainty&quot;: &quot;unit.limit&quot;
+  }
+}
+```
+
+These IDs must refer to declared units/evidence of the right kind. All heading/text realization keys need all selected languages. Slots reject missing mandatory members and extra role names. The full working fixture is `examples/article.json`. The optional Wiki extension keeps this source format unchanged and adds an independent Arketype profile binding (for a collection: `&lt;slug&gt;/archetype.json`).
+
+## Evidential obligations
+
+A result card&#x27;s evidence must also appear in its claim&#x27;s evidence references. Argument maps need an evidence-linked premise. An `unknown` or unreviewed status must not be silently promoted to a proved conclusion.
+
+## Source identity
+
+The optional `--state-snapshot` mode compares a pinned state reference and claimed digest to supplied v9 snapshot **metadata**. This is **not** a cryptographic rehash of a Kristal JCS commitment. See [[Epistemic and Security Boundaries]].
+
+## Wiki page composition (optional overlay)
+
+`build-wiki` consumes the same `article.json` and `realizations.json` but requires an explicit `--archetype` and a declared section layout allowed by that profile. Arketype compatibility never bypasses required Spek slots. The output is a **new, private Markdown draft** with a SHA-256 manifest; it does not mutate canonical Kristal state. See [[Wiki Draft Workflow]].
+</pre></body></html>

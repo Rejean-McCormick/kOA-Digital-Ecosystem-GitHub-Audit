@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo-Worlds · docs/Technical-Reference/Worlds/TANDEM_TOUR_ORGO_WORLDS_2026-10-19.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo-Worlds · docs/Technical-Reference/Worlds/TANDEM_TOUR_ORGO_WORLDS_2026-10-19.md</h1><p class='meta'><small>Rejean-McCormick/Orgo-Worlds · c2445db8abf7 · SHA-256 257b4cf4f8aefdf7</small><br><a href='https://github.com/Rejean-McCormick/Orgo-Worlds/blob/c2445db8abf78afcb647f22615ad3b9dd132bde8/docs/Technical-Reference/Worlds/TANDEM_TOUR_ORGO_WORLDS_2026-10-19.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tournée Tandem 1.0 — Orgo_Worlds, dépôt 6/8
+
+## Mission
+Vérifier l&#x27;isolation organization/World et la cohérence release, sans confondre
+ce dépôt standalone avec le moteur opérationnel Orgo.
+
+## Constats vérifiés dans le snapshot du 18 octobre 2026
+1. `contextFromHeaders()` acceptait directement organisation, utilisateur et
+   permissions HTTP, avec `*` par défaut. CORS était ouvert et le lanceur
+   graphique original demandait `0.0.0.0`.
+2. `promote()` et `setMembership()` ne refusaient pas les Worlds archivés.
+3. `runtime()` pouvait présenter une release appartenant à un autre World
+   lorsque l&#x27;état JSON est incohérent, ou activer un World archivé.
+
+## Correctifs livrés
+- Admission **développement local uniquement** (loopback, mode, peer et Origin).
+  Un VPS public est **refusé**, non « autorisé sous réserve ».
+- Lanceur Windows restreint à 127.0.0.1 par défaut.
+- Archive immuable pour promotions/memberships/runtime.
+- Lien `world_id` et statut `current` exigés au runtime.
+- Tests Node sans dépendance réseau, CI et tests TypeScript natifs optionnels.
+
+## Réserves non levées
+- Pas d&#x27;authentification OIDC/JWKS sur le standalone, pas de trusted proxy.
+- Pas d&#x27;audit immuable ni d&#x27;atomicité du store JSON, pas de base PostgreSQL.
+- Pas de tests d&#x27;intégration Orgo/Orgo_Worlds réels.
+- Ni déploiement, ni migration, ni seed, ni mutation de FakePlant.
+
+## Commandes
+- `node scripts/check-worlds.mjs`
+- `node --experimental-strip-types --test scripts/tests/tandem-worlds-security.test.mjs`
+- `npm run test:tandem-runtime` (nécessite les dépendances)
+- `node tools/fakeplant/validate.mjs` (lecture seule)
+
+**Statut:** Correctif local; qualification runtime &amp; intégration VPS en attente.
+</pre></body></html>

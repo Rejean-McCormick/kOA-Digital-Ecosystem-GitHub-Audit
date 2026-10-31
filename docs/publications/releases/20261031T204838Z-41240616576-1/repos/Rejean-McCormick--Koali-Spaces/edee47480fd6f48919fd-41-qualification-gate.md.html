@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/07-verification/41-qualification-gate.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/07-verification/41-qualification-gate.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 43483727e4720d41</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/07-verification/41-qualification-gate.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 41. Qualification gate
+
+La Definition of Done minimale après intégration de la v1.1 :
+
+```text
+pnpm install --frozen-lockfile
+pnpm run check:dependency-lock
+pnpm run validate:surface-spec
+pnpm run typecheck
+pnpm run test
+pnpm run test:runtime
+pnpm run validate:contracts
+pnpm run check:local-assets
+pnpm run build
+runtime package validation
+runtime startup smoke
+```
+
+Puis :
+
+- smoke framed ;
+- smoke immersive ;
+- au moins une application hostée réelle ;
+- test `access=blocked` avec runtime pourtant ready ;
+- test runtime missing/inactive ;
+- test offline/local-only ;
+- test d&#x27;origin/redirect non allowlisté ;
+- test lifecycle prouvant qu&#x27;aucun spawn direct ne vient du renderer ;
+- validation d&#x27;au moins un `ApplicationConformanceProfile` ;
+- Git working tree propre pour la qualification de référence.
+
+`LOCK-KS-SURF-125` — **Le baseline de développement verrouillé doit être enregistré sur un commit propre.**
+</pre></body></html>

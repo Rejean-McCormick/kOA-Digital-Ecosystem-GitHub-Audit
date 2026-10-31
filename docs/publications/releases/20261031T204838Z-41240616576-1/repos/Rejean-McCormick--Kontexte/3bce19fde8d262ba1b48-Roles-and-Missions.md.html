@@ -1,0 +1,61 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontexte · Roles-and-Missions.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontexte · Roles-and-Missions.md</h1><p class='meta'><small>Rejean-McCormick/Kontexte · c37def608be0 · SHA-256 1eedc69f3a683b7a</small><br><a href='https://github.com/Rejean-McCormick/Kontexte/wiki/Roles-and-Missions' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Roles and Missions
+
+Roles give a common activity many possible perspectives. The scenario remains the same problem, but the learner may view it as a **witch, baker, mechanic, scientist, stage manager, photographer, or origami maker**. A role can be chosen for a single task rather than a whole term.
+
+## A role record
+
+Role definitions live under `data/roles/*.json`, in the `kontexte.role/1` format. The records contain localized names and introductions, a theme ID, actions, objects, typical problems and partners.
+
+```json
+{
+  &quot;format&quot;: &quot;kontexte.role/1&quot;,
+  &quot;id&quot;: &quot;sorciere&quot;,
+  &quot;name&quot;: {&quot;fr-CA&quot;: &quot;Sorcière&quot;, &quot;en&quot;: &quot;Witch&quot;},
+  &quot;intro&quot;: {
+    &quot;fr-CA&quot;: &quot;créer des objets imaginaires, enquêter, organiser une fête&quot;,
+    &quot;en&quot;: &quot;You are playing the role of witch in a learning story.&quot;
+  },
+  &quot;theme&quot;: &quot;sorciere&quot;,
+  &quot;actions&quot;: [&quot;...&quot;],
+  &quot;objects&quot;: [&quot;...&quot;],
+  &quot;problems&quot;: [&quot;...&quot;],
+  &quot;partners&quot;: [&quot;...&quot;]
+}
+```
+
+The `...` values above mark an **illustrative abbreviated record**, not a valid file ready for `validate`. Use the complete files and `schemas/role.v1.schema.json` when editing. The theme must be on the renderer&#x27;s allowlist.
+
+## A mission record
+
+Mission files use `kontexte.mission/1` in `data/missions/`. A mission has a fiction, one or more roles, steps with dependencies, distributed information (`fragments`), possible fragment joins (`joins`), private support profiles, and candidate curriculum links.
+
+The detailed pilot `fete-sorciere` uses **10 roles** and **11 described steps**. The repo also includes `sorciere-solo` and nine more skeletal missions. Only the pilot has extensive authored cross-subject connections; outlines should not be described as turnkey lessons.
+
+Important fields:
+
+- `synthetic`: these examples are deliberately fictional.
+- `roles`: roles participating in the scenario, not security principals.
+- `steps[*].depends_on`: intended ordering of steps in the authored design.
+- `steps[*].curriculum_ids`: internal Ekole catalogue IDs to be reviewed.
+- `fragments[*].holder_role`: intended information holder; **not** authentication.
+- `joins[*].unlock_step`: desired consequence after a specified combination.
+- `adaptation`: assisted, standard and extended support descriptions.
+
+## Three different kinds of “ready”
+
+1. **Structurally valid:** JSON and references satisfy the Kontexte validator.
+2. **Pedagogically reviewed:** An educator has checked level, objectives, instructions, support and evaluation.
+3. **Executable and safe:** The Orgo process, accounts, guards, disclosures, teacher approvals and evidence flows work under real security controls.
+
+Current mission files largely meet the first description only. The current Orgo fixture creates an initial Case and preparation Task — **not** the complete set of steps.
+
+## Authoring principles
+
+- Every task should produce a meaningful observable artifact or change in the situation.
+- Put key information in multiple places *only when* cooperation or discovery is an intentional learning mechanism; include a safe fallback if a partner is absent.
+- Use interdisciplinary tasks without claiming every involved subject was mastered.
+- Make difficulty and supports private. Keep the same public role and narrative for different learner needs.
+- Gate real spending, food, movement, media and physical setups behind an authorized educator.
+
+See [Witch Celebration Walkthrough](Witch-Celebration-Walkthrough), [Adaptive Participation](Adaptive-Participation), and [Development and Testing](Development-and-Testing).
+</pre></body></html>

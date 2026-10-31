@@ -1,0 +1,82 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/18-performance-scalability.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/18-performance-scalability.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 2b906ac3decfa469</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/18-performance-scalability.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Performance et scalabilité
+
+## 1. Objectif
+
+Konstellation doit rester utile avec des milliers de Kristals et des corpus de tailles très différentes. La stratégie n&#x27;est pas « tout rendre plus vite », mais **indexer, profiler une fois, paginer et réduire le niveau de détail**.
+
+## 2. Complexité cible
+
+### Chargement
+
+- parsing/validation : O(n) dans la taille de l&#x27;état lu ;
+- index principaux : O(n) ;
+- profil global : O(n + e) ;
+- détection de structures coûteuses : bornée ou calculée paresseusement.
+
+### Interaction
+
+- facettes : indexées ;
+- profile par type : caché ;
+- focus profile : proportionnel au voisinage nécessaire ;
+- projection : bornée par recette.
+
+## 3. LOD et pagination
+
+La cible 1.0 remplace les hard caps ad hoc par une politique commune :
+
+1. `pageSize` pour listes/tables ;
+2. `nodeBudget` / `edgeBudget` pour graphes ;
+3. agrégation quand la densité dépasse un seuil ;
+4. expansion à la demande ;
+5. virtualisation du DOM ;
+6. LOD selon zoom ou niveau sémantique.
+
+## 4. SLOs cibles à benchmarker
+
+Ces valeurs sont des **cibles de qualification**, pas des garanties actuelles :
+
+| Opération | Cible locale chaude |
+|---|---:|
+| bootstrap shell | &lt; 500 ms après service prêt |
+| query/facets courant | p95 &lt; 250 ms sur corpus de référence |
+| plan de navigation local | p95 &lt; 50 ms après indexation |
+| projection bornée | p95 &lt; 200 ms |
+| interaction renderer | 60 fps cible sur pan/zoom courant |
+| changement Lens | retour perceptible &lt; 300 ms hors I/O externe |
+
+Les seuils définitifs doivent être dérivés des benchmarks réels du matériel/support visé.
+
+## 5. Benchmarks obligatoires
+
+Au minimum :
+
+- 10k assertions/records ;
+- 100k ;
+- 1M ;
+- graphes clairsemés ;
+- graphes denses ;
+- fortes cardinalités de facettes ;
+- timeline massive ;
+- DAG profond ;
+- multi-échelle.
+
+## 6. Caches
+
+Les caches doivent être clés par un fingerprint incluant au minimum :
+
+- identité/version du corpus ;
+- Reader Policy ;
+- registre/relations ;
+- Lens si elle affecte le calcul ;
+- scope de profil.
+
+Un changement de fingerprint invalide les entrées dépendantes.
+
+## 7. Pré-calcul
+
+Les Kristals peuvent publier des dérivés utiles (hubs, pathways, indexes) mais Konstellation doit :
+
+- les traiter comme dérivés ;
+- vérifier leur compatibilité/version ;
+- conserver un fallback reconstructible ou clairement signaler la dépendance.
+</pre></body></html>

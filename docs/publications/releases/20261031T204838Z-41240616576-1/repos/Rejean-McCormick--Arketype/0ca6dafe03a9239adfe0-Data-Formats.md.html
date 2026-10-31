@@ -1,0 +1,60 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Arketype · Data-Formats.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Arketype · Data-Formats.md</h1><p class='meta'><small>Rejean-McCormick/Arketype · 92d283605f5b · SHA-256 056531f17be10d8a</small><br><a href='https://github.com/Rejean-McCormick/Arketype/wiki/Data-Formats' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Data Formats and Inventory Relationships
+
+Arketype&#x27;s inventories are JSON files under source control. They provide **descriptive design metadata**, not authoritative domain state. The catalogue HTML is generated from these inputs and from the individual archetype files.
+
+## Data layout
+
+```text
+Arketype/
+├── catalogue.json
+├── archetypes/*.json
+├── inventaires/
+│   ├── archetypes-visuels.json
+│   ├── grammaire-visuelle.json
+│   ├── diagrammes-situes.json
+│   └── profils-usage.json
+├── assemblages/*.json
+├── modeles/&lt;archetype-slug&gt;/
+├── catalogue/index.html
+└── wiki/*.md
+```
+
+| File | Key fields | Owner of meaning |
+| --- | --- | --- |
+| `catalogue.json` | `archetypes[]`, `inventories`, `version` | Library index |
+| `archetypes/*.json` | `id`, `slug`, `family`, `kit_profile`, `integrity_rule`, `template_path`, `visual_pattern` | Candidate archetype definitions |
+| `inventaires/archetypes-visuels.json` | `slug`, `visual_pattern`, `secondary_patterns`, `situational_schema` | Catalogue visual index |
+| `inventaires/grammaire-visuelle.json` | `patterns[]` | Standard visualization vocabulary |
+| `inventaires/diagrammes-situes.json` | `kind`, `slug`, `pattern`, `nodes[]`, `edges[]`, `status` | Noncanonical example drawings |
+| `inventaires/profils-usage.json` | `primary_archetype`, `supporting_archetypes`, `inputs`, `outputs`, `boundaries` | Example application scenarios |
+| `assemblages/*.json` | `primary_archetype`, `components`, `composition_status`, `publication_authorization` | Proposed composition design |
+| `INVENTAIRE.json` | `path`, `sha256`, `size_bytes` | Archive byte inventory, not a logical commitment |
+
+## Example: a noncanonical visual association
+
+```json
+{
+  &quot;visual_pattern&quot;: &quot;matrix&quot;,
+  &quot;secondary_patterns&quot;: [&quot;timeline&quot;],
+  &quot;situational_schema&quot;: &quot;Systems compared across dated operational observations&quot;
+}
+```
+
+This is an **illustrative excerpt**, not a complete validated archetype file. It expresses a presentation choice. The real source data remains in the repository JSON.
+
+## Keeping sources and the HTML aligned
+
+Edit the appropriate JSON file, review the related archetype or use-case profile, run `python arketype.py validate`, then regenerate the HTML with `python arketype.py build-html`. Diagram coordinates and edges in the visual inventory must refer to nodes that exist in that diagram.
+
+An HTML view does **not** automatically refresh when JSON changes and does not gain semantic authority by being published on a website.
+
+## Repository inventory vs. state commitment
+
+`INVENTAIRE.json` describes byte-level files in a distribution. It is not a replacement for source provenance, a pinned external commitment, or a Kristal logical contract. Similarly, the template `build/v9` receipts document local technical generation and do not establish domain truth.
+
+**See also:** [Visual Grammar](Visual-Grammar), [Architecture](Architecture), [Extending Arketype](Extending-Arketype).
+
+## Framework v11 design boundary
+
+Arketype JSON `slug`, `visual_pattern`, diagram nodes and profile labels are **design metadata**, not `KQ` semantic referents or `KP` predicates. New v11 canonical graphs and their multilingual lexical dictionaries are produced outside this catalogue by a compliant authoring tool. Read [[Semantic-Authoring-v11]] and [[diK-and-Dictionaries]].
+</pre></body></html>

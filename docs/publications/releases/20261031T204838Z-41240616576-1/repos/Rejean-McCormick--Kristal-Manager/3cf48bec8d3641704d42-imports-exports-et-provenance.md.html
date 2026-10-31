@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/04-donnees/imports-exports-et-provenance.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/04-donnees/imports-exports-et-provenance.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 23f9ac7fdf0831b1</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/04-donnees/imports-exports-et-provenance.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Imports, exports et traçabilité
+
+## Exports standards cibles
+
+| Export | Contenu | Emplacement | Garanties |
+|---|---|---|---|
+| Résumé utilisateur | inventaire, statuts, priorités, profils | hors `locals` | colonnes documentées, dates/versions |
+| Analyse technique | observations, findings, limitations | hors `locals` | identifiants de runs, portée |
+| Preuves KristalDiag | rapports intégraux, fichiers de niveau, sha256 | dossier de preuve versionné | préserver le format original |
+| Révision taxonomique | propositions ARK/PRF/UNESCO | CSV/JSON séparés | jamais approuvées à l&#x27;import |
+| Maintenance DB | inventaire des index, `integrity_check` | dossier maintenance | pas de secrets ni assertions brutes non demandées |
+
+## Imports autorisés
+
+Rapport Arketype : valider format `arketype.structural-batch/0.1`, `path` et `state_ref`, borne de taille, résultats 127 prévisibles mais non exigés en général. Anciens diagnostics : respecter CSV historique (`Kristal;Profil;Verdict;Rapport...`) et marquer `UNVERIFIED` faute de fingerprint. Rapports Kristalizer : une surface à part, versionnée et non confondue avec le diagnostic indépendant.
+
+## Vérification de provenance
+
+Pour chaque import : conserver `source_filename`, `content_sha256`, `imported_at`, `source_created_at` si déclaré, `report_version`, `adapter_version`, `original_uri`, `verified_digest`, `limitations`. L&#x27;import d&#x27;un ZIP doit vérifier que les chemins internes n&#x27;échappent jamais au dossier destination et doit rejeter les liens symboliques non autorisés.
+
+## Exemple d&#x27;export PowerShell (opérationnel, existant)
+
+```powershell
+cd C:\mycode\Kristal\Kristal-Manager
+python -m kristal_manager.operations_cli etat --root C:\mycode\Kristal\locals
+python -m kristal_manager.operations_cli importer-arketype C:\chemin\RAPPORT_ARKETYPE_STRUCTURE.json
+```
+
+**Ces commandes appartiennent à l&#x27;overlay du 31-10.** Elles ne préjugent pas de la présence du module sur une installation plus ancienne.
+</pre></body></html>

@@ -1,0 +1,24 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/11-decisions/0004-lecture-par-defaut.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/11-decisions/0004-lecture-par-defaut.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 c74f79e6b5d98b77</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/11-decisions/0004-lecture-par-defaut.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR 0004 — Lecture seule par défaut et publication contrôlée
+
+**Date** : 2026-10-31 · **Statut** : PRINCIPE ACTIF.
+
+## Contexte
+
+Les opérations historiques ont déjà impliqué des overlays sur les 127 sources, des changements de fingerprint Discovery et un incident GitHub lié à une base SQLite de 189 Mo. Un gestionnaire de lecture ne doit pas transformer une analyse en modification de production.
+
+## Décision
+
+Le parcours standard n&#x27;écrit jamais dans `locals`, le canon, GitHub ou le registre de décisions approuvées. Les corrections futures sont des plans séparés utilisant le Kit, avec aperçu, sauvegarde, hash, approbation et tests. La publication Git est une fonction avancée opt-in.
+
+## Conséquences
+
+Les utilisateurs voient des propositions au lieu de corrections silencieuses. Les avertissements sémantiques peuvent persister jusqu&#x27;à revue justifiée : c&#x27;est voulu. La protection est mesurable par un diff source avant/après.
+
+## Alternative rejetée
+
+« Réparer automatiquement jusqu&#x27;à 127 PASS » en modifiant les capacités/empreintes, ou activer GitSink pour satisfaire d&#x27;anciens tests.
+
+## Validation
+
+AC-02, AC-14, AC-16 obligatoires; audit de code sur les endroits écrivant à `locals` et tests de subprocess/permission.
+</pre></body></html>

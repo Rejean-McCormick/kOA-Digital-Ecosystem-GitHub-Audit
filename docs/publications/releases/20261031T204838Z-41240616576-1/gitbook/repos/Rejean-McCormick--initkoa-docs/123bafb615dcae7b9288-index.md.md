@@ -1,0 +1,85 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/initkoa-docs/blob/07526773197cf9d7c54eed54988fa56007decbe3/docs/SenTient/index.md | commit: 07526773197cf9d7c54eed54988fa56007decbe3 | SHA-256: c60f85ebd3152f5eff62bb1ff23953c9b7ed91c3e684c5ff2e5f7747d11517d8 -->
+
+# SenTient
+
+**SenTient** is a hybrid entity reconciliation and relation extraction engine built to turn messy, unstructured text into structured knowledge graph candidates for Wikidata/Wikibase-style workflows. Its design goal is to combine **high precision**, **high recall**, and **interactive performance** by splitting the workload across fast tagging, semantic re-ranking, and structured adjudication.
+
+## What it does
+
+SenTient takes raw text, identifies likely entity mentions, uses sentence context to disambiguate them, and returns ranked candidates with explainable scoring. It is designed for short-text and tabular reconciliation workflows where users need both **automation** and **human review**.
+
+At a high level, the pipeline follows a funnel model:
+
+1. **Ingestion & fingerprinting** normalize text and deduplicate repeat inputs.
+2. **Fast tagging** spots surface forms and retrieves initial candidate QIDs.
+3. **Semantic analysis** uses context, property clues, and vector similarity to re-rank ambiguous matches.
+4. **Core adjudication** manages async jobs, tracks state, and exposes results to the UI.
+5. **Hybrid storage** keeps lightweight grid state in memory while offloading heavy vectors and candidate payloads to DuckDB.
+
+## Architecture overview
+
+SenTient is not a monolith. It is a **hybrid orchestration system** that combines three complementary layers:
+
+- **Layer 1 — Speed:** Solr-based FST tagging inspired by OpenTapioca for fast entity spotting.
+- **Layer 2 — Semantics:** A Python Falcon-style NLP service using ElasticSearch and SBERT for contextual disambiguation.
+- **Layer 3 — Structure:** A Java core with OpenRefine heritage for state management, async orchestration, validation, and UI integration.
+
+This structure allows SenTient to stay broad and fast at the top of the funnel while becoming narrower and more precise as evidence accumulates.
+
+## Core components
+
+### 1) Ingestion & fast tagging
+Before any remote call is made, SenTient fingerprints input text locally so repeated variants collapse to the same cache key. It then uses a Solr **TaggerHandler** backed by an in-memory **Finite State Transducer (FST)** to scan text and retrieve candidate entities quickly. This layer is optimized for strict string matching, popularity filtering, and early pruning.
+
+### 2) Semantic disambiguation
+The Python NLP layer determines whether a candidate actually fits the sentence. It removes noise, generates n-grams, looks for likely properties, and computes vector similarity between the surrounding context and candidate descriptions. This is the layer that resolves ambiguity such as whether a mention refers to a place, person, organization, or something else.
+
+### 3) Core orchestration
+The Java core acts as the system backbone. It manages commands, launches long-running reconciliation jobs asynchronously, tracks status, and returns lightweight responses so the UI stays responsive. The frontend polls for progress while results are processed in the background.
+
+### 4) Hybrid memory model
+To avoid pushing heavy AI payloads into the Java heap, SenTient uses a **split-state architecture**:
+
+- **Hot data in RAM:** row IDs, raw values, and cell status for instant filtering and faceting.
+- **Cold data in DuckDB:** vectors, candidate lists, descriptions, and rich scoring telemetry loaded only when needed.
+
+This lets the interface remain fast while still supporting large datasets and richer model output.
+
+## Data model
+
+The core unit of exchange is the **SmartCell**. A SmartCell carries the immutable raw value plus its reconciliation state, consensus score, fingerprint, candidates, and optional NLP context. Status values include `NEW`, `PENDING`, `AMBIGUOUS`, `MATCHED`, and `REVIEW_REQUIRED`.
+
+Candidates are returned as structured objects with a QID, label, description, types, and feature-level telemetry such as popularity, semantic context score, and string-distance diagnostics.
+
+## API & integration
+
+SenTient uses a command-style backend API exposed by the Java core. The main orchestration endpoint runs on **`127.0.0.1:3333`**, while supporting services include Falcon on **`5005`**, Solr on **`8983`**, ElasticSearch on **`9200`**, and Redis on **`6379`**. The frontend consumes JSON and communicates with the backend through command routes such as:
+
+`/command/{module}/{action}`
+
+All external traffic is intended to flow through the Java core rather than directly to Solr, Elastic, or Python services.
+
+## Quality and trust
+
+SenTient includes a dedicated QA layer built around three mechanisms:
+
+- **Unit and integration tests** for implementation correctness.
+- **Scrutinizers** for runtime data validation and anomaly detection.
+- **Benchmark datasets** for measuring precision, recall, F-score, and latency.
+
+This is especially important because SenTient is probabilistic: it aims not just to return answers, but to expose enough evidence for validation and safe export into downstream knowledge systems.
+
+## Project direction
+
+The current roadmap pushes SenTient from a research prototype toward an international, contract-driven platform. The main upgrade themes are stricter schemas, centralized configuration, better service alignment, stronger QA gates, and global-ready UI and deployment practices.
+
+## Suggested reading
+
+- `00_ARCHITECTURE_BLUEPRINT.md` — system overview and funnel architecture
+- `01_INGESTION_LAYER.md` — ingestion, fingerprinting, and FST tagging
+- `02_SEMANTIC_LAYER.md` — Falcon-style NLP and vector scoring
+- `03_CORE_LAYER.md` — Java orchestration and split-state design
+- `04_DATA_DICTIONARY.md` — SmartCell contract and candidate schema
+- `05_WIRING_AND_CONFIG.md` — ports, topology, and filesystem layout
+- `06_API_AND_FRONTEND.md` — frontend/backend integration
+- `07_QA_AND_VALIDATION.md` — validation strategy and benchmark workflow
