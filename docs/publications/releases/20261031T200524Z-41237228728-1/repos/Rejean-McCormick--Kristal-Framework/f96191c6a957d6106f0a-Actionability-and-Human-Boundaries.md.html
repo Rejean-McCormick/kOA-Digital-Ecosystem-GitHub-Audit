@@ -1,0 +1,64 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Actionability-and-Human-Boundaries.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Actionability-and-Human-Boundaries.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 a6f1a07b7d84b8c7</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Actionability-and-Human-Boundaries' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Actionability &amp; Human Boundaries
+
+&gt; **v9 compatibility note:** This page documents the retained v6 portable-state semantics. V9 preserves the contract as a frozen substrate and may wrap/project it through Logical Artifacts without redefining it. See [[Version-Stack-v6-v7-v8-v9]].
+
+Kristal v6 can represent **whether an action is ready for automation or requires a human**, while keeping execution authority outside the knowledge artifact.
+
+## Typical modes
+
+A profile may distinguish modes such as:
+
+- `automatic`;
+- `human_review`;
+- `human_decision`;
+- `manual`;
+- `prohibited`;
+- `insufficient_information`;
+- `not_applicable`.
+
+## The critical invariant
+
+```text
+actionability = automatic
+≠ permission to mutate another system
+```
+
+`automatic` means that, according to the represented knowledge/policy, no human judgment is required before the action path can be attempted.
+
+The target system still decides whether the caller is authorized and whether the request is admissible.
+
+## Operational pattern
+
+```text
+Kristal State
+   ↓ actionability
+routing / orchestration
+   ↓
+explicit owner contract
+   ↓
+authority + admission check
+   ↓
+owner-local mutation
+   ↓
+receipt / observation / decision
+   ↓
+new Kristal evidence/state
+```
+
+## Why this matters
+
+The goal is not to redesign an organization&#x27;s processes. It is to make the existing process explicit enough that deterministic work can be automated with minimal friction.
+
+Humans are then reserved for:
+
+- ambiguity;
+- interpretation;
+- legal/organizational authority;
+- exceptions;
+- negotiation;
+- safety-sensitive judgment;
+- novel cases;
+- policy changes.
+
+A human decision can itself become a traceable decision record and, when appropriate, later be generalized into a new organizational rule. That is how the system improves over time without silently learning rules that nobody approved.
+</pre></body></html>

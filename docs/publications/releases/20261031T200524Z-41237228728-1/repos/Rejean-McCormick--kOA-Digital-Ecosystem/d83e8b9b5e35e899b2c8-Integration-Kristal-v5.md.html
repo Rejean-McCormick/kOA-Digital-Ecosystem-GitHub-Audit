@@ -1,0 +1,56 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Integration-Kristal-v5.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Integration-Kristal-v5.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 1ac2fcb18ed79cc7</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/1-Overview/Integration-Kristal-v5.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Integration — Kristal v5
+
+**Status:** Historical baseline, superseded by [Kristal v6](Integration-Kristal-v6.md).
+
+This page records the retired v5 integration baseline. It is retained for migration/history only and is not the active kOA knowledge boundary. Kristal remains the sole normative authority for Kristal schemas and semantics.
+
+## Historical pin
+
+- version: `5.0.0-rc.3` release-candidate contract baseline;
+- tag: `v5.0.0-rc.3` (immutable release resolution was pending in the supplied v5 owner snapshot);
+- canonicalization: `kristal.v5:jcs-rfc8785`;
+- canonicalization version: `1`;
+- historical schema-set digest used by the then-current Integration Kernel boundary: `sha256:7a94a1e8a91d5c5267b73b7f1e98977faa548324bc937bb491cd08d49fdc8c92`.
+
+The active ecosystem pin is Kristal Standard `6.0.0`; see [Integration — Kristal v6](Integration-Kristal-v6.md).
+
+## Historical core model
+
+Kristal v5 separated:
+
+```text
+artifact existence
+integrity
+assertion status
+certainty
+validation
+recognition
+reader visibility
+publication
+activation
+```
+
+The normative structured input was **Structured Epistemic State**. Claim-IR remained available as an optional extractor proposal profile rather than a universal mandatory stage.
+
+A Structured Epistemic State could compile to a **Working Exchange** before final validation/recognition. A **Reference Exchange** represented a recognized reference artifact under declared authority/scope.
+
+## Runtime Packs
+
+A v5 Runtime Pack declared at minimum its source Exchange reference and `source_artifact_status`. Packs derived from working and reference artifacts were not equivalent.
+
+Reader Policy and Query Contract determined how eligible content was exposed; they did not rewrite the underlying epistemic status. Runtime Packs could include deterministic query-oriented materializations. Under the kOA profile, any table/index/columnar/read-only database representation embedded for performance remained derived, non-authoritative and rebuildable from the referenced Kristal source artifact.
+
+## Operational ownership rule
+
+Orgo, Konnaxion and other products kept their mutable operational state in their own stores. Knowledge compilation started from immutable source-owned exports/snapshots and produced separate Kristal artifacts with provenance. kOA did not require or permit a bidirectional operational-DB↔Kristal synchronization model as the authority boundary.
+
+## kOA profile rule
+
+kOA could apply stricter deployment policies. For example, a production/reference channel could require reference-derived packs before publication or activation. Such a restriction was a kOA/kOA-Linux policy, not a Kristal core rule.
+
+## Historical knowledge-boundary snapshot
+
+At retirement, the v5-era acquisition/projection boundary included Referent Registry `1.0.0`, EncyKlopedia handoff `encyklopedia.corpus-harvest-handoff/1.0.0`, IK `kristal.build.request/1.1.0` / `kristal.artifact.ready/1.1.0`, and UCKK projection `uckk.univers-cite-projection/1.0.0`.
+
+For the active boundary, use IK `2.0.0` Kristal profiles with Kristal Standard `6.0.0`; see the technical [knowledge projection boundary](../2-Technical-Reference/40-integration/knowledge-projection.md).
+</pre></body></html>

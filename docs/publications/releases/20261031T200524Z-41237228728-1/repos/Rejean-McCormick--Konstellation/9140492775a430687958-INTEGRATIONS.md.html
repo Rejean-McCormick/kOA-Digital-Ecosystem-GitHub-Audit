@@ -1,0 +1,69 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/INTEGRATIONS.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/INTEGRATIONS.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 acef83dfc228b9b8</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/INTEGRATIONS.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Intégrations — guide complet
+
+Ce document complète [06-integrations.md](06-integrations.md) avec les règles d&#x27;exploitation.
+
+## 1. Adapter boundary
+
+Chaque intégration produit un objet que le moteur peut lire tout en conservant :
+
+- identité source ;
+- version ;
+- pertes ;
+- policy ;
+- provenance de transformation.
+
+## 2. Runtime Pack
+
+Le lecteur de Runtime Pack doit vérifier :
+
+- manifest ;
+- checksums/signatures configurées ;
+- catalog ;
+- tables ;
+- Reader Policy ;
+- capacités annoncées.
+
+Une capacité externe non disponible doit être signalée, pas simulée.
+
+## 3. HTTP projection
+
+Pour une source distante :
+
+- pagination obligatoire ;
+- timeouts ;
+- taille maximale ;
+- validation de schéma ;
+- identité/fingerprint ;
+- retry limité ;
+- aucune confiance implicite dans le client.
+
+## 4. SemantiK / SA
+
+SA est une intégration distincte de la navigation.
+
+Règles :
+
+- action explicitement demandée ;
+- recompute côté serveur ;
+- CommunicationRequest validée ;
+- CommunicationResult validé ;
+- aucune mutation du Kristal par défaut ;
+- erreurs d&#x27;indisponibilité explicites.
+
+## 5. navigationHints
+
+Les hints sont acceptés seulement après validation contre `contracts/navigation-hints.schema.json` ou une version ultérieure compatible.
+
+Ils sont advisory. En cas de conflit manifeste avec la structure, le moteur peut les plafonner ou les ignorer avec diagnostic.
+
+## 6. Nouvelles intégrations
+
+Avant d&#x27;ajouter un adaptateur :
+
+- démontrer qu&#x27;un adaptateur existant ne suffit pas ;
+- documenter la frontière de confiance ;
+- définir le loss model ;
+- ajouter des fixtures ;
+- ajouter un test de non-fuite policy ;
+- documenter la maintenance/version upstream.
+</pre></body></html>

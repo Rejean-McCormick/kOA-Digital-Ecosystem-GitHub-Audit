@@ -1,0 +1,35 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · docs/reference/CAPABILITY_PROFILE_CONTRACT.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · docs/reference/CAPABILITY_PROFILE_CONTRACT.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · 74b07c42811d · SHA-256 6e1fd285a3b0d9e1</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/blob/74b07c42811dae0c68549d8554c00bc44a04298d/docs/reference/CAPABILITY_PROFILE_CONTRACT.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Capability Profile Contract
+
+Status: **normative reference**
+
+A capability profile is a versioned workload promise. It defines what an application may rely on from a released language/runtime combination.
+
+## Profile identity
+
+Profile identity is `profile_id` + integer `profile_version`, displayed conventionally as `profile-id-N` (for example `orgo-operational-1`).
+
+## Required content
+
+A profile declares:
+
+- required SA↔GF operation IDs;
+- required language-planning/register features;
+- required output block kinds;
+- locale/format features;
+- conformance test suite identity;
+- optional parent profiles.
+
+## Release meaning
+
+`fr + orgo-operational-1 = RELEASED` means the exact active RuntimeSet has immutable passing evidence for every requirement in the profile. It does not mean “French probably works”.
+
+## No partial profile
+
+A profile is indivisible at production runtime. If one required operation is missing, that language/profile pair is not released.
+
+## Profile evolution
+
+- Additive new profile: no impact on existing profiles.
+- New requirements to an existing profile: publish a new profile version.
+- Never silently strengthen `profile-X-1` after release.
+</pre></body></html>

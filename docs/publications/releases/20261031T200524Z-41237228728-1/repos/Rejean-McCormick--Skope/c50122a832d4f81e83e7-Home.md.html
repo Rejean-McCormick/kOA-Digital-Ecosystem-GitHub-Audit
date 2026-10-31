@@ -1,0 +1,51 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Home.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Home.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 351507fbcb0e5dd7</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Home' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Skope Wiki
+
+**Skope 0.15.0-alpha.1** · Offline-first, local Wikidata discovery, scope exploration, QID inventories, full-record extraction, human-reviewed identity reconciliation, and **native Kristal portfolio enrichment**.
+
+&gt; **Status:** standalone prototype / working research tool. Wikidata discovery output is **not** automatically a verified identity, an occurrence record, a statement-level proof, or a publishable Kristal canon.
+
+Skope connects to an **existing, finalized EncyK compact Wikidata SQLite index** without modifying it. You can search entities, define graph traversals as JSON recipes, preview networks and convergence candidates, run explicitly requested disk-backed QID collection jobs, and — provided that a verified dump and previously built random-access files are available — extract original Wikidata entity JSON records. Skope also supports a specialized Catho recognized-authors workflow and non-automatic identity review.
+
+Skope 0.15 adds a **native command-line portfolio workflow**, able to inventory v11 Kristals, discover bounded Wikidata Q/P candidates, acquire verified full statements and produce non-canonical fact proposals. This feature has **no dedicated browser dashboard yet**. See [Portfolio Enrichment](Portfolio-Enrichment) and [Portfolio CLI Reference](Portfolio-CLI-Reference).
+
+## Choose your workflow
+
+| Goal | Start here | What you actually get |
+| --- | --- | --- |
+| Start Skope locally | [Getting Started](Getting-Started) · [Installation](Installation) | Local browser interface on `127.0.0.1:8767` |
+| Understand the components | [Architecture](Architecture) | Data-flow and trust boundaries |
+| Enrich a portfolio of v11 Kristals | [Portfolio Enrichment](Portfolio-Enrichment) · [Portfolio CLI Reference](Portfolio-CLI-Reference) | Read-only inventory, tentative/reviewed identity seeds, verified full-source evidence and noncanonical proposals |
+| Select a Kristal workspace | [Kristal Workspaces](Kristal-Workspaces) | Read-only target context; **no** automatic job |
+| Create or import a topic | [Scope Recipes](Scope-Recipes) · [Scope Catalog](Scope-Catalog) | Validated traversal policy, not data |
+| Explore relationships | [Scope Explorer](Scope-Explorer) · [Geography](Geography) | Bounded, provisional graph preview |
+| Collect larger scopes | [QID Collection](QID-Collection) | Resumable list of identifiers, **not** original JSON |
+| Preserve full records | [Full-Record Extraction](Full-Record-Extraction) | Immutable-style evidence snapshot with original records and hashes |
+| Process Catho authors/works | [Catho Authors Campaign](Catho-Authors-Campaign) | Roster matches, work links, and opt-in extraction |
+| Review identity ambiguity | [Identity Reconciliation](Identity-Reconciliation) · [Batch Identity Review](Batch-Identity-Review) | Explicit, auditable human decisions |
+| Integrate with another system | [Exports and Handoff](Exports-and-Handoff) | Working proposals requiring downstream review |
+| Automate or debug | [API Reference](API-Reference) · [CLI Reference](CLI-Reference) · [Troubleshooting](Troubleshooting) | Loopback-only diagnostic and action interfaces |
+
+## Fundamental distinctions
+
+1. **Compact index:** aggregated edges and labels, not raw Wikidata statements or their reference details.
+2. **Scope preview:** at most 10,000 displayed nodes; a truncated preview does not mean a completed inventory.
+3. **QID collection:** bounded by your explicit root, property filter and depth; geography and external convergence are **not** applied as filters by the mass collector.
+4. **Full extraction:** requires an existing matched dump, verified manifest, existing locator/sidecars and an available random-access reader; it does not scan or reindex the source automatically.
+5. **Identity ranking:** name and context heuristics are suggestions, **not probabilities or documentary identity proofs**.
+6. **Portfolio (CLI):** bounded search candidates, even unique name hits, are *not* independently confirmed Wikidata identities. `A-Kristal` is never auto-selected as a tentative seed.
+7. **Kristal:** a selected workspace is consulted read-only; Skope does not publish to its canon.
+
+## Main documentation
+
+**Portfolio:** [Portfolio Enrichment](Portfolio-Enrichment) · [Portfolio CLI Reference](Portfolio-CLI-Reference) · [Guide FR](Enrichissement-Kristals-FR)
+
+**User guides:** [Installation](Installation) · [Getting Started](Getting-Started) · [User Interface](User-Interface) · [Workflows](Workflows)
+
+**Reference:** [Architecture](Architecture) · [Configuration and Paths](Configuration-and-Paths) · [Data Formats](Data-Formats) · [API Reference](API-Reference) · [CLI Reference](CLI-Reference)
+
+**Quality:** [Safety and Provenance](Safety-and-Provenance) · [Testing and Validation](Testing-and-Validation) · [Troubleshooting](Troubleshooting) · [Known Limitations](Known-Limitations) · [Versioning and Migration](Versioning-and-Migration)
+
+**Language:** [Accueil (français)](Accueil-FR) · [Démarrage rapide (français)](Demarrage-Rapide-FR)
+
+Documentation based on the **0.15.0-alpha.1 source snapshot** (`VERSION`, `skope/api.py`, tests, profiles and release notes). This wiki does not claim that the real Windows data volume has been exercised during its creation.
+</pre></body></html>

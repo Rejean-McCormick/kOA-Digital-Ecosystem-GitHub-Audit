@@ -1,0 +1,41 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/50-operations/pipeline.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/50-operations/pipeline.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 8aca702770f688f6</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/2-Technical-Reference/50-operations/pipeline.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Operations — pipeline coordination
+
+There is no single mandatory ecosystem stage spine. Operators coordinate independent lifecycle transitions according to the active Interaction Kernel Profile, Kristal policy and deployment policy.
+
+## Reference knowledge-build flow
+
+```text
+source/export
+→ Kristal State
+→ compile Working Exchange
+→ review/validation as applicable
+→ authority recognition as applicable
+→ Reference Exchange when recognized
+→ Runtime Pack build as permitted by policy
+→ publication/distribution
+→ deployment verification/activation
+```
+
+## Gating rule
+
+Do **not** implement a universal “validation failed → compilation forbidden” rule. Instead record each transition separately and gate the transition that actually requires the evidence.
+
+Examples:
+
+- a research Profile may allow a working-derived Runtime Pack;
+- a production reference channel may require Reference Exchange + required authority recognition;
+- a deployment may reject activation for compatibility, revocation or trust reasons even when publication succeeded.
+
+## Build evidence
+
+Use Build Record v2 and record:
+
+- exact input/export refs;
+- exact Kristal pin;
+- Interaction Kernel Profile/correlation/idempotency identity where applicable;
+- stage execution results;
+- Working and Reference outputs separately;
+- validation and recognition refs;
+- Runtime Pack source status;
+- publication and activation status separately.
+</pre></body></html>

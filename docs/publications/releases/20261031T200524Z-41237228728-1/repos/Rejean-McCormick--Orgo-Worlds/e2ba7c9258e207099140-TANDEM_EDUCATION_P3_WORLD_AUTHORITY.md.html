@@ -1,0 +1,13 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo-Worlds · docs/TANDEM_EDUCATION_P3_WORLD_AUTHORITY.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo-Worlds · docs/TANDEM_EDUCATION_P3_WORLD_AUTHORITY.md</h1><p class='meta'><small>Rejean-McCormick/Orgo-Worlds · c2445db8abf7 · SHA-256 ceca08635414c2a6</small><br><a href='https://github.com/Rejean-McCormick/Orgo-Worlds/blob/c2445db8abf78afcb647f22615ad3b9dd132bde8/docs/TANDEM_EDUCATION_P3_WORLD_AUTHORITY.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tandem Éducation P3 — vérification des prérequis World
+
+`scripts/tandem-education/authority-prerequisites.mjs` introduit **un contrat interne**, pas une route API.
+
+- Entrée : une demande Akor non fiable (format strict) ET un contexte d&#x27;identité qui devra provenir d&#x27;une authentification Orgo réelle (non raccordée ici).
+- Le troisième argument `reader` est une fonction *fournie par le serveur*, chargée de consulter son état courant. Elle ne doit JAMAIS utiliser `contextFromHeaders` ni accepter une liste de permissions fournie par le client.
+- Conditions vérifiées dans les tests : même tenant, World actif, release courante associée au World, membre actif correspondant à l&#x27;identité fournie par Orgo.
+- La propriété d&#x27;un World ou la qualité de membre ne prouve **pas** la qualité d&#x27;enseignant. Le retour est `SCOPE_CHECKED_NOT_AUTHORIZED` et toutes les permissions d&#x27;exécution restent `false`.
+- Les tests utilisent un lecteur en mémoire : cela ne prouve ni l&#x27;authentification du service, ni la fraîcheur d&#x27;une vraie base Orgo_Worlds.
+- Le service autonome Orgo_Worlds continue de refuser les identités d&#x27;en-têtes en production. Aucune API publique ni raccordement de confiance n&#x27;est ouvert par P3.
+
+Étapes ultérieures : intégrer une identité serveur attestée, une consultation authentifiée du World, une autorité des enseignants et une transaction d&#x27;admission dans Orgo. **Aucun GO-LIVE**.
+</pre></body></html>

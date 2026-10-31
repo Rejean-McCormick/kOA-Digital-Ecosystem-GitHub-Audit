@@ -1,0 +1,38 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · docs/reference/MATHKRISTAL_FORMULA_IR_PROJECTION.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · docs/reference/MATHKRISTAL_FORMULA_IR_PROJECTION.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · 74b07c42811d · SHA-256 895e6228ff217e09</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/blob/74b07c42811dae0c68549d8554c00bc44a04298d/docs/reference/MATHKRISTAL_FORMULA_IR_PROJECTION.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># MathKristal Formula IR Communication Projection
+
+Status: **1.3 alpha contract / candidate**
+
+## Boundary
+
+Contract:
+
+```text
+semantik.mathkristal-formula-ir.communication-projection/1.0
+```
+
+Input mathematics is `mathkristal.formula-ir` version `1.0.0`. Formula IR remains an external MathKristal contract and terminates at the ACL. It is not imported into the SemantiK domain model.
+
+## Required behavior
+
+The ACL MUST:
+
+1. validate Formula IR structure, closure, node references and binding scope;
+2. reject natural-language/surface-form fields inside Formula IR;
+3. require explicit selection of the expression or proposition to articulate;
+4. project formula structure into canonical semantic nodes/statements;
+5. preserve the selected source through statement/obligation `source_refs`;
+6. create exactly one explicit `urn:mathkristal:communication:present-formula` articulation anchor;
+7. preserve the validated Formula IR as request supporting context for the math realizer;
+8. never infer mathematical truth, proof status, communicative force, or obligations from formula shape.
+
+## Modes
+
+- `PURE`: deterministic verbose MathCore-style verbalization.
+- `NATURAL`: controlled Informath NLG variation, only when the RuntimeSet explicitly releases it.
+
+The capability profile and requested mode MUST agree or planning fails.
+
+## Kristal v6
+
+If a MathKristal proposition exists in a Kristal v6 state, the Formula IR projection may be wrapped in `semantik.kristal-v6.communication-projection/1.0`. The selected assertion remains the authority anchor; Formula IR is an articulation representation, not a replacement state.
+</pre></body></html>

@@ -1,0 +1,167 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/02-system/code-and-filesystem-architecture/24-repository-root-and-documentation.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/02-system/code-and-filesystem-architecture/24-repository-root-and-documentation.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 7c5261e402f8326b</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/02-system/code-and-filesystem-architecture/24-repository-root-and-documentation.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-SYS-024&quot;,
+  &quot;document_class&quot;: &quot;normative_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;system&quot;,
+  &quot;scope&quot;: [
+    &quot;global&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/system.contract.json&quot;,
+    &quot;contracts/ai-navigation.contract.json&quot;,
+    &quot;02-system/02-logical-architecture.md&quot;,
+    &quot;02-system/04-component-boundaries.md&quot;,
+    &quot;02-system/07-cross-component-communication.md&quot;,
+    &quot;02-system/19-release-and-artifact-identity.md&quot;,
+    &quot;04-components/04-subsystem-documentation-boundaries.md&quot;,
+    &quot;05-development/00-development-model.md&quot;,
+    &quot;06-lifecycle/02-release-model.md&quot;,
+    &quot;07-security/05-privilege-boundaries.md&quot;,
+    &quot;08-operations/00-operating-model.md&quot;,
+    &quot;contracts/subsystems/koa-spaces.subsystem.json&quot;,
+    &quot;02-system/23-code-and-filesystem-architecture.md&quot;
+  ],
+  &quot;decision_ids&quot;: [],
+  &quot;requirement_ids&quot;: [],
+  &quot;lock_ids&quot;: [
+    &quot;LOCK-CODE-FS-001&quot;,
+    &quot;LOCK-CODE-FS-004&quot;,
+    &quot;LOCK-CODE-FS-009&quot;,
+    &quot;LOCK-CODE-FS-010&quot;
+  ],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [
+    &quot;DOC-SYS-023&quot;,
+    &quot;DOC-GOV-000&quot;
+  ],
+  &quot;tags&quot;: [
+    &quot;repository-root&quot;,
+    &quot;documentation-boundary&quot;,
+    &quot;ci&quot;,
+    &quot;ownership&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# Repository Root and Documentation Files
+
+## 1. Scope
+
+This document freezes all repository-root control files, repository metadata, primary CI entrypoints, license inventory files, and the documentation boundary used by the code architecture.
+
+The complete existing documentation file inventory remains the generated `docs/generated/document-index.json`. Repeating all active documentation filenames here would create a circular architectural dependency and would incorrectly make every editorial addition a code-layout change. The stable `docs/` section roots and the complete files of this architecture series are frozen here.
+
+## 2. Exact Baseline File Inventory
+
+```text
+.editorconfig
+.gitattributes
+.gitignore
+.smartignore
+.pre-commit-config.yaml
+.python-version
+.rustfmt.toml
+Cargo.lock
+Cargo.toml
+CHANGELOG.md
+CONTRIBUTING.md
+NOTICE.md
+README.md
+REUSE.toml
+SECURITY.md
+pyproject.toml
+rust-toolchain.toml
+uv.lock
+LICENSES/README.md
+LICENSES/THIRD_PARTY.md
+.koa/repository.json
+.koa/path-ownership.json
+.koa/dependency-rules.json
+.koa/generated-paths.json
+.koa/runtime-paths.json
+.koa/source-pins.json
+.koa/file-architecture.lock.json
+.koa/workspace.schema.json
+.github/CODEOWNERS
+.github/dependabot.yml
+.github/pull_request_template.md
+.github/ISSUE_TEMPLATE/architecture-change.yml
+.github/ISSUE_TEMPLATE/bug.yml
+.github/ISSUE_TEMPLATE/documentation.yml
+.github/workflows/documentation.yml
+.github/workflows/contracts.yml
+.github/workflows/components.yml
+.github/workflows/system-image.yml
+.github/workflows/offline.yml
+.github/workflows/security.yml
+.github/workflows/release.yml
+docs/README.md
+docs/AI_CONTEXT.md
+docs/CHANGELOG.md
+docs/CONTRIBUTING.md
+docs/02-system/23-code-and-filesystem-architecture.md
+docs/02-system/code-and-filesystem-architecture/24-repository-root-and-documentation.md
+docs/02-system/code-and-filesystem-architecture/25-internal-components-node-trust-governance.md
+docs/02-system/code-and-filesystem-architecture/26-internal-components-data-publication-and-knowledge.md
+docs/02-system/code-and-filesystem-architecture/27-independent-subsystem-integrations.md
+docs/02-system/code-and-filesystem-architecture/28-uckk-external-services-and-transport-interfaces.md
+docs/02-system/code-and-filesystem-architecture/29-host-platform-files.md
+docs/02-system/code-and-filesystem-architecture/30-assembly-profiles-packaging-and-release.md
+docs/02-system/code-and-filesystem-architecture/31-operations-tests-tools-development-and-ci.md
+docs/02-system/code-and-filesystem-architecture/32-installed-runtime-filesystem.md
+docs/02-system/code-and-filesystem-architecture/33-path-ownership-and-change-rules.md
+```
+
+## 3. Stable Documentation Roots
+
+```text
+docs/
+├── 00-governance/
+├── 01-constitution/
+├── 02-system/
+├── 03-profiles/
+├── 04-components/
+├── 05-development/
+├── 06-lifecycle/
+├── 07-security/
+├── 08-operations/
+├── 09-conformance/
+├── 10-adrs/
+├── 11-recipes/
+├── contracts/
+├── finalization-reports/
+├── generated/
+├── schemas/
+├── subsystems/
+└── tools/
+```
+
+No implementation source, runtime state, package payload, subsystem checkout, container build context, or secret may be placed under `docs/`.
+
+## 4. Root File Responsibilities
+
+| File | Responsibility |
+| --- | --- |
+| `README.md` | Human repository entrypoint and current implementation status |
+| `SECURITY.md` | Security reporting and supported release policy |
+| `CONTRIBUTING.md` | Contribution workflow and validation entrypoints |
+| `CHANGELOG.md` | Repository release history |
+| `NOTICE.md` | Attribution and legal notices |
+| `REUSE.toml` | Repository licensing metadata configuration |
+| `pyproject.toml` | Root Python tooling workspace and `koa` developer CLI |
+| `uv.lock` | Reproducible Python tooling dependency lock |
+| `Cargo.toml` | Rust workspace membership for host-privileged code |
+| `Cargo.lock` | Reproducible Rust dependency lock |
+| `rust-toolchain.toml` | Admitted Rust toolchain channel and components |
+| `.pre-commit-config.yaml` | Local deterministic validation hooks |
+
+## 5. `.koa/` Control Files
+
+`file-architecture.lock.json` is a machine-readable projection of this documentation series. It contains path classes and hashes but does not override this normative document. `path-ownership.json` assigns one owner to every structural root. `dependency-rules.json` defines allowed import directions. `generated-paths.json` lists generated roots and manual-edit prohibitions. `runtime-paths.json` maps repository payloads to installed paths. `source-pins.json` aggregates independently versioned source references without replacing the individual integration locks.
+
+## 6. CI Boundary
+
+The workflow files are orchestration only. Reusable logic SHALL be stored under `ci/` or `tools/`, not embedded as large shell programs inside workflow YAML. Release workflows SHALL call the same local commands used by developers and SHALL NOT contain hidden release logic.
+</pre></body></html>

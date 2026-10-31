@@ -1,0 +1,91 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/02-query-model.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/02-query-model.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 a31b0b11b616fe98</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/02-query-model.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># QuerySpec, Lens, Reader Policy et état d&#x27;exploration
+
+## 1. QuerySpec
+
+QuerySpec représente **ce que l&#x27;utilisateur sélectionne**. Il ne contient pas de préférence de rendu.
+
+Principes :
+
+- un type racine ;
+- des critères explicites ;
+- des contraintes existentielles bornées ;
+- un contexte identifiant corpus/policy ;
+- un ordre déterministe ;
+- un curseur opaque pour pagination.
+
+Une recette de navigation ne doit pas être encodée comme un filtre QuerySpec.
+
+## 2. Lens
+
+Une Lens décrit **l&#x27;angle de lecture** :
+
+- type racine ;
+- facettes pertinentes ;
+- pivots ;
+- labels ;
+- priorités ;
+- éventuellement préférences de navigation non autoritatives.
+
+Une Lens ne contient jamais de permission d&#x27;accès et ne remplace jamais Reader Policy.
+
+## 3. Reader Policy
+
+Reader Policy détermine **ce qui est visible**. Elle doit être appliquée avant :
+
+- query ;
+- facettes ;
+- compteurs ;
+- autocomplete ;
+- entity inspector ;
+- evidence/provenance ;
+- navigation plan ;
+- projections spécialisées.
+
+Changer de Lens ne change pas la policy. Changer de policy invalide cursors, caches et projections dépendants du contexte précédent.
+
+## 4. Focus
+
+Le focus est l&#x27;entité ou le sous-ensemble actuellement inspecté. Il peut modifier les affordances locales sans modifier QuerySpec.
+
+Exemple : un Kristal HumanBody peut être globalement `multiScale`, mais une entité de type `pathway` peut faire émerger `sequence + causal + cycle`.
+
+## 5. ExplorationState cible
+
+L&#x27;état d&#x27;exploration doit séparer sélection et navigation :
+
+```json
+{
+  &quot;schemaVersion&quot;: &quot;1.0&quot;,
+  &quot;query&quot;: {},
+  &quot;lensRef&quot;: &quot;systems&quot;,
+  &quot;readerPolicyRef&quot;: &quot;public&quot;,
+  &quot;focus&quot;: {&quot;kind&quot;: &quot;entity&quot;, &quot;id&quot;: &quot;...&quot;},
+  &quot;navigation&quot;: {
+    &quot;mode&quot;: &quot;adaptive&quot;,
+    &quot;recipeId&quot;: &quot;feedback&quot;
+  },
+  &quot;history&quot;: {}
+}
+```
+
+L’implémentation 1.0 utilise `exploration-state` 1.0. Les états 0.2 restent acceptés uniquement par une migration explicite et testée ; ils ne sont jamais réinterprétés silencieusement.
+
+## 6. Mode adaptive et mode pinned
+
+### adaptive
+
+Konstellation peut remplacer la recette courante si elle n&#x27;est plus applicable au nouveau contexte.
+
+### pinned
+
+Le choix utilisateur est conservé tant que la recette reste valide. Si elle devient impossible, l&#x27;UI doit expliquer la raison et proposer un fallback.
+
+## 7. Pivots
+
+Un pivot transforme explicitement la sélection. Il doit :
+
+- partir de la population complète sélectionnée, pas de la page visible ;
+- produire un nouveau QuerySpec ;
+- être visible dans l&#x27;historique ;
+- rester indépendant de la vue active.
+</pre></body></html>

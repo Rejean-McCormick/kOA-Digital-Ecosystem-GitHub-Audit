@@ -1,0 +1,32 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Realizations-and-Languages.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Realizations-and-Languages.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 931abd10aa17 · SHA-256 bd67afbfe6748ff8</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Realizations-and-Languages' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Realizations and Languages
+
+Each used realization key must have **one non-empty entry for every requested language**. A source can use the same unit IDs for all languages, but must not assume that a short expression is automatically accurate in another language.
+
+## Realization shape
+
+```json
+{
+  &quot;format&quot;: &quot;kristal.layout-realizations/0.1&quot;,
+  &quot;entries&quot;: {
+    &quot;unit.claim&quot;: {
+      &quot;en&quot;: {&quot;text&quot;: &quot;A short expression.&quot;, &quot;status&quot;: &quot;fixture&quot;, &quot;provider&quot;: &quot;manual_demo&quot;},
+      &quot;fr&quot;: {&quot;text&quot;: &quot;Un énoncé bref.&quot;, &quot;status&quot;: &quot;fixture&quot;, &quot;provider&quot;: &quot;manual_demo&quot;},
+      &quot;it&quot;: {&quot;text&quot;: &quot;Un enunciato breve.&quot;, &quot;status&quot;: &quot;fixture&quot;, &quot;provider&quot;: &quot;manual_demo&quot;}
+    }
+  }
+}
+```
+
+Entries can declare `fixture`, `reviewed`, or `qualified`. **These are input declarations, not independently authenticated facts.** Qualified entries must include a nonempty `runtime_set_id`; production workflows also require independent language and disclosure approvals.
+
+## Strict no-fallback behavior
+
+- Missing English, French, or Italian entries block the build when that language is requested.
+- Unrecognized languages block compilation (0.1 supports only `en`, `fr`, `it`).
+- The imported historical SemantiK fixture never invents missing translations.
+- Translating label text does **not** change the unit IDs or evidence references.
+
+## Future qualification
+
+An independently verified SemantiK integration should pin the RuntimeSet, preserve request identity, validate terminology, and record signed or otherwise authenticated review outcomes. Spek cannot perform that verification today.
+</pre></body></html>

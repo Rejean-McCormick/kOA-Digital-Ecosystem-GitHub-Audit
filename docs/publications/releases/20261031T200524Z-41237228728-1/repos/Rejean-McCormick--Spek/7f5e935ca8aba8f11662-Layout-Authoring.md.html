@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Layout-Authoring.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Layout-Authoring.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 931abd10aa17 · SHA-256 17e424dd5983a147</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Layout-Authoring' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Layout Authoring
+
+Spek&#x27;s contracts encode **semantics required for a representation**; CSS and format-specific rendering are separate.
+
+## Contract shape
+
+```json
+{
+  &quot;format&quot;: &quot;kristal.editorial-layout/0.1&quot;,
+  &quot;id&quot;: &quot;result-card&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;slots&quot;: {
+    &quot;claim&quot;: {&quot;allowed_kinds&quot;: [&quot;claim&quot;], &quot;min&quot;: 1, &quot;max&quot;: 1}
+  }
+}
+```
+
+This is a deliberately shortened example. A real contract needs its full set of slots, as in `layouts/result-card.json`.
+
+## Safe authoring process
+
+1. Define the reader&#x27;s purpose and the logical flow.
+2. Define required and optional typed slots and cardinality.
+3. Decide how proof, applicability, uncertainty, objections, and provenance are visible.
+4. Add a renderer branch in `spek/render.py` for HTML, TeX, and PDF.
+5. Add label translations in `spek/locale.py`.
+6. Create representative source + realization fixtures and negative tests.
+7. Compare reading order, identity, and omissions across formats and languages.
+
+## Layout versioning
+
+Breaking changes to required slots or meaning should produce a new version. Visual changes that preserve meaning can be evaluated separately. Version IDs in the output manifest permit regression comparisons.
+
+## Current limitation
+
+The JSON layout library is **not yet** a generic interpreter for arbitrary custom designs. Three named renderer implementations are provided. Generalized rendering is planned but not implied.
+</pre></body></html>

@@ -1,0 +1,52 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Workflow-Publish-and-Distribute.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Workflow-Publish-and-Distribute.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 ab1d4528b52d9d7b</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Workflow-Publish-and-Distribute' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Workflow: Publish &amp; Distribute
+
+V9 publication creates immutable logical snapshots and distributes physical representations without confusing the two.
+
+## Publish immutable state
+
+A publisher should first verify:
+
+- Logical Artifact commitments;
+- pinned external references;
+- required validations/recognition policy;
+- materialization bindings;
+- inherited compatibility surfaces.
+
+Then create/publish a new immutable State Snapshot.
+
+## Distribute Exchange separately
+
+A portable Exchange may package the State Snapshot, Materialization Manifests and required blobs.
+
+```text
+EXCHANGE PACKAGE != LOGICAL STATE
+```
+
+Repacking or recompressing an Exchange must not silently create a new logical revision.
+
+## Publish lexical/read artifacts independently
+
+V8 lexical Kristals, indexes and AI bundles can continue to evolve on their own lifecycle when their source commitments are explicit.
+
+## Required lineage for derived material
+
+Include enough information to identify:
+
+- source artifact/state commitment;
+- build/materialization profile;
+- completeness/coverage where partial;
+- lexical stack if rendering was applied;
+- integrity metadata.
+
+## Do not flatten semantic distinctions
+
+Distribution must not turn:
+
+- `unknown` into false;
+- `not_applicable` into zero;
+- partial into complete;
+- missing lexicalization into a guessed label;
+- similarity into equivalence;
+- validation into authority;
+- model output into execution permission.
+</pre></body></html>

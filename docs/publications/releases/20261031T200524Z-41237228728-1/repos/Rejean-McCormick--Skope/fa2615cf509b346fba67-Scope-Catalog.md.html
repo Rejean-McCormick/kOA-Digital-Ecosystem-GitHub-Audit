@@ -1,0 +1,66 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Scope-Catalog.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Scope-Catalog.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 9cee4503e8ab9977</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Scope-Catalog' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Scope catalog and drop-in profiles
+
+Place JSON files directly in the repository&#x27;s `scopes/` directory. The UI refreshes this library on demand (and periodically while visible). **Refreshing is read-only; it never runs a job.** JSON is validated as data, never imported as Python code.
+
+## Supported profile kinds
+
+| Format | Structure | Behavior |
+| --- | --- | --- |
+| Simple recipe | top-level traversal or `{&quot;recipe&quot;: {...}}` | One pass |
+| `skope.scope-campaign/1.0` | `id`, `title`, `passes` | Independently selected passes |
+| `skope.author-works-campaign/1.0` | Catho author/works orchestration | Explicit dedicated start; requires active Catho workspace |
+
+Bundled, valid profiles as observed in this snapshot:
+
+| Profile id | Type | Passes |
+| --- | --- | --- |
+| `botany` | Campaign | 2 |
+| `catho-authors-persons` | Campaign | 7 |
+| `catho-recognised-authors` | Specialized author/works | Dedicated orchestration, no generic passes |
+| `catho` | Campaign | 3 |
+| `economics` | Campaign | 2 |
+
+## Multi-pass example
+
+```json
+{
+  &quot;format&quot;: &quot;skope.scope-campaign/1.0&quot;,
+  &quot;id&quot;: &quot;sample-topic&quot;,
+  &quot;title&quot;: &quot;Sample topic&quot;,
+  &quot;scope_context&quot;: &quot;Example scope, review before use&quot;,
+  &quot;passes&quot;: [{
+    &quot;id&quot;: &quot;base&quot;,
+    &quot;title&quot;: &quot;Base traversal&quot;,
+    &quot;intent&quot;: &quot;Inspect related Wikidata QIDs&quot;,
+    &quot;risk&quot;: &quot;Aggregated edges do not prove source statements&quot;,
+    &quot;recipe&quot;: {
+      &quot;root&quot;: &quot;Q192154&quot;, &quot;direction&quot;: &quot;out&quot;,
+      &quot;allowed_properties&quot;: [&quot;P171&quot;], &quot;default_depth&quot;: 1,
+      &quot;branches&quot;: {}, &quot;max_entities&quot;: 1000,
+      &quot;convergence&quot;: {&quot;threshold_percent&quot;: 10, &quot;min_support&quot;: 2, &quot;extra_depth&quot;: 0, &quot;include&quot;: []},
+      &quot;geography&quot;: {&quot;mode&quot;: &quot;off&quot;}
+    }
+  }],
+  &quot;safety&quot;: {
+    &quot;auto_run&quot;: false, &quot;write_kristal_canon&quot;: false,
+    &quot;write_original_dump&quot;: false, &quot;new_fast_index&quot;: false,
+    &quot;collect_qid_only&quot;: true
+  }
+}
+```
+
+Validate the root/direction semantics for your research before using this illustrative example. `scopes/AI_SCOPE_PROMPT.md` contains the project&#x27;s prompt template for generating new profiles.
+
+## Catalog safety bounds
+
+- Up to **256** `.json` files are scanned; each up to **256 KiB**.
+- At most **32** passes per campaign.
+- Duplicate JSON keys, duplicate profile IDs, symlinked files, bad identifiers and unsafe `safety` flags are rejected.
+- A bad file is isolated as a catalog error, not allowed to take down all valid profiles.
+- Catalog batch passes require one direction, explicit properties, no accepted external convergence and no strict geographic exclusion.
+- `*.template` is not scanned.
+
+**Steps:** save `your-topic.json` → **Refresh profiles** → select profile/pass → **Apply scope settings** → **Calculate scope** → manually decide whether to collect QIDs.
+
+See [Scope Recipes](Scope-Recipes), [Getting Started](Getting-Started).
+</pre></body></html>

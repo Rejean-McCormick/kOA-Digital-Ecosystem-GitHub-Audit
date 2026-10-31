@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Akor · docs/wiki/Mission-Lifecycle.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Akor · docs/wiki/Mission-Lifecycle.md</h1><p class='meta'><small>Rejean-McCormick/Akor · cc86fccc9dd9 · SHA-256 77dd7331c0632dbc</small><br><a href='https://github.com/Rejean-McCormick/Akor/blob/cc86fccc9dd9a73aec937486a7e3cfbc917d0fdb/docs/wiki/Mission-Lifecycle.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Mission Lifecycle
+
+This is the **proposed Akor integration lifecycle**. Orgo owns actual operational transitions. Akor adapts approved intent and presents authorized views.
+
+## Phases
+
+| Phase | Primary actor | Meaning |
+| --- | --- | --- |
+| Draft | Scenario editor / Kontexte | Write mission, roles, story, learning links and optional fragments |
+| Preview | kompose + Akor | Validate references, compile deterministic projections, detect mismatches |
+| Review | Teacher/editor | Verify content, accessibility, target course, dependencies and release rules |
+| Release | Orgo_Worlds and authorized publisher | Pin reviewed WorldRelease and approved content versions |
+| Launch | Teacher → Akor → Orgo | Open the mission through approved server-side contracts |
+| Participate | Children and teachers → Orgo | Receive tasks, cooperate, request help, submit work |
+| Observe | Teacher and Ekole | Monitor activity and capture evidence without public ranking |
+| Pause/recover | Orgo | Suspend, reconnect, reassign/fallback or resume safely |
+| Close | Orgo | Close operational mission state and produce minimal completion receipts |
+| Review learning | Ekole/teacher | Evaluate learning evidence separately from operational completion |
+
+## Important conditions
+
+- **Draft and preview are not authorization.** A passing local test does not publish content to children.
+- **Human approval is not a JSON boolean controlled by a student.** It requires a trusted actor and an auditable action.
+- **A running mission must not drift.** Pin scenario/WorldRelease/contract versions.
+- **Orgo must own operational time and state**, including solo missions; no second local scheduler in Akor or Ekole.
+- **Academic mastery stays in Ekole**, and completion is never sufficient proof on its own.
+
+## Conceptual events (NOT established API event names)
+
+| Event intent | Purpose |
+| --- | --- |
+| `mission_requested` | Teacher requests start of a reviewed mission |
+| `role_projection_available` | Authorized role view can be rendered |
+| `contribution_submitted` | Learner contributed a document, answer or decision |
+| `assistance_requested` | Learner asks for a hint or human support |
+| `group_checkpoint_satisfied` | Orgo verifies a necessary collaboration condition |
+| `mission_paused` / `mission_resumed` | Orgo reports operational suspension and recovery |
+| `mission_closed` | Orgo reports closure |
+| `learning_evidence_recorded` | Ekole records separate educational evidence |
+
+**These labels are documentation placeholders.** Before implementation, map each one to actual reviewed Orgo routes, schemas, permissions and revision/idempotency semantics. See [Integration Contracts](Integration-Contracts).
+</pre></body></html>

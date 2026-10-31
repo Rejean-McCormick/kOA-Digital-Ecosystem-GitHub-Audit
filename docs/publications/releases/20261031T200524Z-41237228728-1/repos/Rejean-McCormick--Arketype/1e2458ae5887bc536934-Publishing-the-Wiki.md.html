@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Arketype · Publishing-the-Wiki.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Arketype · Publishing-the-Wiki.md</h1><p class='meta'><small>Rejean-McCormick/Arketype · 92d283605f5b · SHA-256 2f14a2e0fa135e9d</small><br><a href='https://github.com/Rejean-McCormick/Arketype/wiki/Publishing-the-Wiki' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Publishing the Wiki to GitHub
+
+This Wiki archive contains **GitHub Wiki-ready Markdown pages**, including the `Home.md` entry point and `_Sidebar.md` navigation. The pages are in English. No remote Wiki is created or updated by the archive.
+
+&gt; **GitHub behavior:** A GitHub Wiki is a **separate Git repository**, typically available at `https://github.com/OWNER/REPOSITORY.wiki.git`. Pushing `wiki/` into the main repository does **not** automatically publish it as the website&#x27;s Wiki.
+
+## Manual publishing procedure
+
+1. On the desired GitHub repository, open **Settings** and make sure Wikis are enabled where the feature is supported. Open the **Wiki** tab; create an initial Home page there if GitHub requires one before cloning.
+2. Clone that repository&#x27;s Wiki (replace placeholders with the real owner/repository):
+
+   ```bash
+   git clone https://github.com/OWNER/REPOSITORY.wiki.git arketype-wiki
+   ```
+
+3. Copy the contents of Arketype&#x27;s `wiki/` folder into your local `arketype-wiki/` clone. Keep the page names as supplied, including `Home.md` and `_Sidebar.md`; review any existing pages before replacing them.
+4. Review changes and commit **inside the Wiki clone**:
+
+   ```bash
+   cd arketype-wiki
+   git status
+   git add .
+   git commit -m &quot;Document Arketype library and visual archetypes&quot;
+   git push
+   ```
+
+5. Reload the GitHub Wiki to confirm page navigation and content. If your organization restricts Wiki permissions or the Wiki URL is not available, use GitHub&#x27;s web interface or consult the repository settings.
+
+## Staying in sync
+
+Treat these source pages as the maintained documentation. GitHub does not sync them back automatically. After changing the main Arketype library, update the source Wiki pages, compare the Wiki clone with those files, and publish only after review. Do not put confidential data in public Wiki pages.
+
+**Branding:** `assets/logo-k.svg` in this Wiki is an unchanged copy of the user-supplied SVG in Arketype 1.6.0. It can be linked from `Home.md` without changing the application README. The source distribution uses the same SVG and a derived PNG for the desktop launcher.
+</pre></body></html>

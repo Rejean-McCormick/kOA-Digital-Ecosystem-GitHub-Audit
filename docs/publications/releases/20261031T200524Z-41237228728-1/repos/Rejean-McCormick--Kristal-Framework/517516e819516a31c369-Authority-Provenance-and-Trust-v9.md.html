@@ -1,0 +1,47 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Authority-Provenance-and-Trust-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Authority-Provenance-and-Trust-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 3409c1733c1b687c</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Authority-Provenance-and-Trust-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Authority, Provenance and Trust — v9
+
+V9 introduces more derived and physical artifacts, so authority boundaries must remain explicit.
+
+## Four separate questions
+
+```text
+INTEGRITY != AUTHENTICITY != AUTHORITY != FACTUAL CORRECTNESS
+```
+
+- **Integrity**: do bytes/logical content match a declared digest?
+- **Authenticity**: did a particular key sign an object?
+- **Authority**: is that signer/source recognized for this scope?
+- **Factual correctness**: is the knowledge actually correct?
+
+No one layer automatically proves the others.
+
+## Epistemic provenance
+
+Explains where knowledge came from, what evidence supports it and how it should be interpreted.
+
+## Build provenance
+
+Explains how software produced an artifact:
+
+```text
+source commitments
+transform
+configuration
+policies
+toolchain
+```
+
+A builder does not become an epistemic authority merely by computing an artifact.
+
+## Publication/activation provenance
+
+Publishing or activating a State Snapshot can be recorded independently from the state content itself.
+
+## Composition
+
+```text
+STATE COMPOSITION != AUTHORITY MERGE
+```
+
+This matters in systems such as HospitalOps where commons, practice facts, identity vaults and audit systems deliberately retain separate authority and security domains.
+</pre></body></html>

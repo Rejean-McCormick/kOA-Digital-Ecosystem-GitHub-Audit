@@ -1,0 +1,83 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/IMPORT.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/IMPORT.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 2c05a53944aa7bdf</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/IMPORT.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Import Kristal
+
+## 1. Principe
+
+L&#x27;import crée une **projection de lecture Konstellation**, jamais un nouveau canon.
+
+## 2. Kristal v6 direct
+
+Préférer l&#x27;adaptateur `kristal-state-v6` lorsque la source est v6.
+
+```json
+{
+  &quot;adapter&quot;: &quot;kristal-state-v6&quot;,
+  &quot;state&quot;: &quot;state.json&quot;,
+  &quot;requireIdentity&quot;: true
+}
+```
+
+Le lecteur doit :
+
+- valider le schéma ;
+- vérifier l&#x27;identité si présente ;
+- préserver les metadata v6 nécessaires ;
+- projeter seulement les valeurs sans perte ;
+- déclarer `importRecord.losses` ;
+- ne jamais remplacer l&#x27;identité canonique.
+
+## 3. Kristal-Kollection
+
+Pour une collection contenant plusieurs dossiers `domains/Kristal-*`, utiliser l&#x27;adaptateur
+`kristal-kollection-v1`. Il découvre le `*.kristal-state.json` du domaine sélectionné et active
+un profil de compatibilité v6 **de lecture seulement** :
+
+```json
+{
+  &quot;adapter&quot;: &quot;kristal-kollection-v1&quot;,
+  &quot;directory&quot;: &quot;/chemin/vers/Kristal-Kollection&quot;,
+  &quot;kristal&quot;: &quot;Biology&quot;
+}
+```
+
+Ce profil accepte les variantes observées dans la collection (par exemple
+`content_hash.algorithm`, provenance absente et rôles de records additionnels). Les divergences
+de schéma ou d&#x27;identité sont conservées dans `compatibilityWarnings`; elles ne deviennent jamais
+une validation canonique. Les `assertion_id` dupliqués reçoivent des identifiants locaux uniques
+et sont signalés dans `projectionWarnings`.
+
+Le lecteur reconnaît les deux dispositions rencontrées dans la collection :
+`knowledge-base/corpus/*.kristal-state.json` et `knowledge-base/*.kristal-state.json`.
+
+## 4. Packs normalisés
+
+Un pack normalisé reste utile comme cache/index local. Il doit porter suffisamment de contexte pour savoir :
+
+- d&#x27;où il vient ;
+- quelle version du canon il représente ;
+- quelle policy a été appliquée si pertinente ;
+- quelles pertes ont eu lieu.
+
+## 5. Import ancien SES
+
+L&#x27;import des Structured Epistemic States historiques reste un chemin de compatibilité. Toute conversion vers le modèle local doit être stricte et déclarer les structures non représentées.
+
+## 6. Validation
+
+Avant utilisation :
+
+```bash
+npm run pack:validate -- path/to/pack.json
+```
+
+Pour les imports :
+
+```bash
+npm run pack:import -- source.json mapping.json output.pack.json
+```
+
+## 7. Navigation après import
+
+Une fois le pack chargé, le profiler analyse automatiquement sa structure. Aucune Lens spécifique n&#x27;est obligatoire pour obtenir la navigation générique.
+
+Une Lens ou des `navigationHints` peuvent ensuite améliorer les labels, facettes ou recettes proposées.
+</pre></body></html>

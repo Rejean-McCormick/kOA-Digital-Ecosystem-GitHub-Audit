@@ -1,0 +1,62 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · docs/Technical-Reference/Architecture upgrade(to do)/REF-001_Configuration_Manifest.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · docs/Technical-Reference/Architecture upgrade(to do)/REF-001_Configuration_Manifest.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · 381ab137d087 · SHA-256 063606238ff3bc97</small><br><a href='https://github.com/Rejean-McCormick/Orgo/blob/381ab137d087794ffcb381532c7d2eabcdd60bb5/docs/Technical-Reference/Architecture%20upgrade%28to%20do%29/REF-001_Configuration_Manifest.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&gt; **Status note (2026-09-08): historical design draft.** The canonical target architecture is `../TARGET_ARCHITECTURE.md`. Preserve useful patterns from this draft only where they fit that target. Provider choices, SenTient/Architect role assumptions, Redis/BullMQ queues, BFF/Pub/Sub, concrete timeout values and similar implementation details are **not canonical requirements** unless adopted by a later explicit decision. The current target starts with a modular monolith, persisted Signal intake, selective ACLs, transactional outbox + Orgo worker, and no mandatory broker.
+
+REF-001: Nervous System Configuration ManifestMeta FieldValueStatusDRAFTDate2025-12-17AuthorSenior ArchitectPurposeCentral source of truth for all Env Vars, Constants, and Flags required to run the Nervous System.1. Environment Variables (.env)These variables must be injected into the apps/api and apps/worker containers at runtime. Do not commit values to Git.1.1 AI Service ProvidersCredentials for the external &quot;Brain&quot; components.VariableDescriptionRequired?Example ValueSENTIENT_API_URLEndpoint for the Perception (Input) API.YEShttps://api.sentient.ai/v1/parseSENTIENT_API_KEYSecret key for SenTient.YESsk_live_...ARCHITECT_LLM_PROVIDERThe backend provider for Architect (Output).YESopenaiARCHITECT_API_KEYSecret key for the LLM provider.YESsk_proj_...ARCHITECT_MODEL_IDThe specific model version to use.No (Default: gpt-4-turbo)gpt-4-1106-preview1.2 Infrastructure &amp; QueuesRedis connections for the Bulkhead pattern.VariableDescriptionDefaultREDIS_QUEUE_URLConnection string for BullMQ.redis://localhost:6379QUEUE_CONCURRENCY_INGESTIONMax concurrent email parsers (I/O Bound).50QUEUE_CONCURRENCY_EXPRESSIONMax concurrent LLM generators (Rate-Limit Bound).51.3 Resilience TunablesCircuit Breaker thresholds.VariableDescriptionDefaultCB_AI_TIMEOUT_MSMax time to wait for AI response before failing.8000CB_AI_FAILURE_THRESHOLD% of failures before opening the circuit.50CB_AI_RESET_MSTime to wait before attempting to close circuit.300002. Shared System Constants (Code Alignment)These constants must be defined in a shared library (e.g., packages/config/src/constants.ts) to ensure apps/api (Producer) and apps/worker (Consumer) speak the exact same language.2.1 Queue Names (The &quot;Lanes&quot;)Used by @nestjs/bullmq.TypeScriptexport const QUEUES = {
+  // High Priority: Transactional Emails, Password Resets
+  SYSTEM: &#x27;queue:system&#x27;,
+  
+  // Medium Priority: SenTient Email Ingestion
+  INGESTION: &#x27;queue:ingestion&#x27;,
+  
+  // Low Priority: Architect LLM Generation
+  EXPRESSION: &#x27;queue:expression&#x27;,
+} as const;
+2.2 Event Topics (The &quot;Vocabulary&quot;)Used in the Outbox.eventType column and Pub/Sub routing.TypeScriptexport const EVENTS = {
+  // Domain Events
+  TASK_CREATED: &#x27;domain.task.created&#x27;,
+  CASE_ESCALATED: &#x27;domain.case.escalated&#x27;,
+  SAFETY_INCIDENT: &#x27;domain.safety.incident&#x27;,
+  
+  // System Events
+  DLQ_POISON_PILL: &#x27;system.dlq.poison_pill&#x27;,
+  AI_CIRCUIT_OPEN: &#x27;system.ai.circuit_open&#x27;
+} as const;
+2.3 DLQ Status EnumsUsed in the ParsingDLQ table state machine.TypeScriptexport enum DLQStatus {
+  NEW = &#x27;NEW&#x27;,             // Fresh failure, needs admin review
+  REDRIVE_PENDING = &#x27;PENDING&#x27;, // Admin fixed it, waiting for ingestion
+  REDRIVEN = &#x27;REDRIVEN&#x27;,   // Successfully re-processed
+  IGNORED = &#x27;IGNORED&#x27;      // Admin marked as spam/irrelevant
+}
+3. Feature Flags (LaunchDarkly / DB Flags)These flags allow us to kill specific parts of the Nervous System without redeploying code. Essential for &quot;Incident Playbooks&quot;.Flag KeyTypeDescriptionDefaultenable_nervous_systemBooleanMaster switch. If false, system acts as legacy CRUD app.falseuse_sentient_parserBooleanIf true, route emails to AI. If false, use legacy Regex.falseuse_architect_generationBooleanIf true, generate custom text. If false, use static templates.falselog_ai_promptsBooleanLog full LLM prompts/responses (Caution: PII Risk).false4. Database Alignment (Prisma Schema)This configuration requires specific additions to schema.prisma to work.Extrait de code// 1. For Output Reliability
+model Outbox {
+  id            String   @id @default(uuid())
+  // ... fields as defined in SPEC-002
+  @@map(&quot;outbox&quot;) // Table name alignment
+}
+
+// 2. For Input Reliability
+model ParsingDLQ {
+  id            String   @id @default(uuid())
+  // ... fields as defined in SPEC-001
+  @@map(&quot;parsing_dlq&quot;)
+}
+
+// 3. For Audit/Observability
+model SystemLog {
+  id            String   @id @default(uuid())
+  level         String   // INFO, WARN, ERROR
+  component     String   // &quot;SenTient&quot;, &quot;Architect&quot;
+  message       String
+  metadata      Json?    // Stores token usage, cost, latency
+  createdAt     DateTime @default(now())
+}
+5. Security Redaction Rules (Regex Config)The PII Redaction logic requires these patterns to be consistent across Ingestion and Expression.TypeScript// packages/utils/src/pii-redaction.ts
+export const REDACTION_PATTERNS = {
+  // Matches: 123-456-7890, (123) 456-7890, 123.456.7890
+  PHONE: /(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g,
+  
+  // Matches: standard email format
+  EMAIL: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
+  
+  // Matches: 3 digits, 2 digits, 4 digits (US SSN)
+  SSN: /\d{3}-\d{2}-\d{4}/g
+};</pre></body></html>

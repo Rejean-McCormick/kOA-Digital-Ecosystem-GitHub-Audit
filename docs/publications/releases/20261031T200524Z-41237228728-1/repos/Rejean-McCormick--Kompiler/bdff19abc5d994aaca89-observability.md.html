@@ -1,0 +1,57 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/06-operations/observability.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/06-operations/observability.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 e8aad473a417243b</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/06-operations/observability.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Observability
+
+## Correlation IDs
+
+Every run has a `run_id`. Every operation has its Query Plan `operation_id`. Logs and receipts include both.
+
+## Structured events
+
+Recommended events:
+
+```text
+run.admitted
+run.rejected
+plan.compiled
+operation.started
+operation.cache_hit
+operation.completed
+operation.failed
+operation.truncated
+compiler.started
+compiler.completed
+budget.applied
+pack.emitted
+run.cancelled
+```
+
+## Metrics
+
+Local metrics SHOULD include:
+
+- run count by status;
+- operation count by adapter/status;
+- p50/p95 duration;
+- cache hit ratio;
+- raw vs normalized item count;
+- records removed by exact dedupe;
+- records removed by budget;
+- conflict/gap counts;
+- adapter health failures;
+- source identity failures.
+
+## Logging policy
+
+Default logs SHOULD NOT contain full record payloads. Prefer IDs, counts, hashes, and bounded error summaries. Debug payload logging is opt-in because Kristals may contain sensitive data.
+
+## Diagnostics bundle
+
+`kompiler doctor --bundle` MAY create a redacted diagnostics archive containing:
+
+- runtime version;
+- OS/Python version;
+- installed adapters and versions;
+- capability snapshot metadata;
+- recent error codes;
+- config with secrets removed;
+- selected run receipts without source payloads.
+</pre></body></html>

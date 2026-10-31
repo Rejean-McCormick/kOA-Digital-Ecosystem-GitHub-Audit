@@ -1,0 +1,15 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/20-nodes/malkuth-runtime.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/20-nodes/malkuth-runtime.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 e18a7b924a574f6c</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/2-Technical-Reference/20-nodes/malkuth-runtime.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Malkuth — runtime query and serving role
+
+Malkuth is a conceptual runtime-consumption role, not an ownership grant.
+
+## Responsibilities
+
+- query/serve the active Runtime Pack through its Query Contract;
+- apply Reader Policy;
+- preserve source/validation/recognition/valuation labels;
+- expose deterministic query errors and bounded behavior.
+
+## kOA-Linux mapping
+
+On kOA-Linux, `kristal_runtime` owns the active Runtime Pack record and runtime health. If a privileged host transition is needed, kOA Node Agent performs that narrow operation. Malkuth-like consumers observe/use the active selection; they do not create another activation authority.
+</pre></body></html>

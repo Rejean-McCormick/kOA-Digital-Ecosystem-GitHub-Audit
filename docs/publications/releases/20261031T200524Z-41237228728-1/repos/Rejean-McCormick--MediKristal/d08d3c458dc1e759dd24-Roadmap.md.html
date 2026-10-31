@@ -1,0 +1,137 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal · Roadmap.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal · Roadmap.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal · 93fba2ff54b0 · SHA-256 72a3e3d2016a48f9</small><br><a href='https://github.com/Rejean-McCormick/MediKristal/wiki/Roadmap' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Roadmap
+
+MediKristal should prove **depth of traceability before breadth of coverage**.
+
+## Phase 0 — Documentation and boundaries
+
+- define MediKristal versus Kristal versus kOA-Linux;
+- document source authorities;
+- define working/promoted states;
+- define initial governance roles;
+- document UCKK publication boundary;
+- define multilingual safety assumptions.
+
+## Phase 1 — Core schema
+
+Formalize schemas for:
+
+```text
+source
+concept
+external mapping
+medical assertion
+clinical epistemic state
+protocol
+review event
+Smart Vote reading
+promotion event
+language realization
+Runtime Pack manifest
+publication representation
+```
+
+## Phase 2 — Small Canadian reference domain
+
+Choose one narrow domain and include, where relevant:
+
+```text
+SNOMED CT CA concept
+ICD-11 condition
+LOINC / pCLOCD test
+CCDD / DPD medication
+source-backed guideline rule
+French + English realization
+```
+
+Coverage is not the goal. Traceability is.
+
+## Phase 3 — kOA-Linux authoring environment
+
+Demonstrate the local lifecycle:
+
+```text
+import source
+→ stage
+→ modify working Kristal
+→ validate
+→ review
+→ promote
+→ compile
+→ verify
+→ activate
+```
+
+## Phase 4 — Smart Vote governance pilot
+
+Implement one competence-aware review class with:
+
+- credentialed eligibility;
+- explicit lens definition;
+- reproducible aggregation;
+- dissent preservation;
+- separate promotion authority.
+
+## Phase 5 — Runtime Pack
+
+Build a signed/versioned read-optimized package for local/offline use.
+
+## Phase 6 — Multilingual deterministic realization
+
+Use SemantiK Architect or compatible language artifacts to demonstrate:
+
+```text
+same structured medical meaning
+→ French realization
+→ English realization
+```
+
+without requiring generative AI for canonical output.
+
+## Phase 7 — Query surfaces
+
+Provide access for:
+
+- human reference UI;
+- API/software consumers;
+- AI retrieval.
+
+All three should access the same governed knowledge objects.
+
+## Phase 8 — UCKK publication
+
+Demonstrate:
+
+```text
+promoted MediKristal knowledge
+→ authorized publication transform
+→ UCKK learning/reference object
+→ provenance back to source release
+```
+
+## Phase 9 — Clinical validation
+
+Before any direct clinical use:
+
+- expert medical review;
+- source licensing review;
+- terminology validation;
+- protocol validation;
+- multilingual safety testing;
+- privacy/security review;
+- regulatory assessment;
+- controlled real-world evaluation.
+
+## What not to optimize for yet
+
+Do not treat these as early success metrics:
+
+- number of diseases imported;
+- number of database rows;
+- number of connected AI models;
+- chatbot fluency;
+- number of languages claimed without validation.
+
+A stronger early milestone is:
+
+&gt; **One medical result that can be traced, reproduced, reviewed, translated, updated, rolled back, and safely distributed.**
+</pre></body></html>

@@ -1,0 +1,44 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/03-space-model/03-topbar-widgets.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/03-space-model/03-topbar-widgets.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 d570fb6996fdb037</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/03-space-model/03-topbar-widgets.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Widgets de top bar
+
+**Classe : Contrat + Normatif**
+
+Kinds : `action`, `status`, `counter`, `search`, `menu`, `resume`.
+
+Slots : `primary`, `secondary`, `status`, `overflow`.
+
+## La donnée projetée et l’activation sont séparées
+
+Un widget peut obtenir sa donnée de présentation via un `projection_ref` optionnel et définir indépendamment ce qui se produit lorsque l’utilisateur l’active.
+
+```text
+projection_ref -&gt; source de la donnée de présentation
+activation     -&gt; route / command / none
+```
+
+Exemple :
+
+```json
+{
+  &quot;kind&quot;: &quot;counter&quot;,
+  &quot;projection_ref&quot;: &quot;orgo.attention&quot;,
+  &quot;activation&quot;: {
+    &quot;kind&quot;: &quot;route&quot;,
+    &quot;route_id&quot;: &quot;orgo.tasks&quot;
+  }
+}
+```
+
+`status_provider` n’est plus un type d’activation. L’ownership du provider ne doit jamais être encodé comme un comportement de clic.
+
+Les activations sont :
+
+- `route` — navigation vers une route Koali/owner admise ;
+- `command` — référence vers une frontière de commande owner admise ;
+- `none` — widget d’affichage uniquement.
+
+`counter` et `resume` exigent un `projection_ref` explicite. `status` peut rester statique lorsqu’il est réellement statique ; un status fourni par un provider utilise `projection_ref`.
+
+Un widget reste compact. Il ne doit pas contenir une application complète. Un command widget ne signifie pas que Koali exécute directement une action privilégiée : la référence pointe vers une interface propriétaire admise.
+
+Tant que le `GlobalProjectionRuntime` ne fournit pas la donnée typée, un widget lié à une projection reste absent plutôt que d’afficher une valeur inventée ou trompeuse.
+</pre></body></html>

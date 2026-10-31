@@ -1,0 +1,24 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/90-reference/adr/adr-0012-knowledge-acquisition-projection-boundary.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/90-reference/adr/adr-0012-knowledge-acquisition-projection-boundary.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 da883244ce4e76fd</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/2-Technical-Reference/90-reference/adr/adr-0012-knowledge-acquisition-projection-boundary.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR-0012 — Knowledge acquisition, Kristal canon and consumer projections
+
+- **Status:** Accepted
+- **Date:** 2026-09-28
+
+## Decision
+
+1. EncyKlopedia owns source discovery/acquisition and immutable evidence handoff.
+2. Da’at owns mapping/ACL at the Kristal boundary.
+3. Kristal owns referent identity semantics, assertions, evidence/provenance, validation/recognition and canonical epistemic artifacts.
+4. UCKK/Univers-Cité owns consumer projection choices: scope membership, primary navigation view, derived glossary, Moodle materialization and media-library presentation.
+5. A consumer projection is rebuildable and never becomes the Kristal source of truth.
+6. External identifiers such as Wikidata or Gutenberg do not transfer authority.
+7. Interaction Kernel carries only explicitly adopted versioned boundary profiles; it owns none of the participant states.
+
+## Frozen contracts
+
+- Kristal Standard `6.0.0`; Referent Registry `1.0.0`.
+- EncyKlopedia `encyklopedia.corpus-harvest-handoff/1.0.0`.
+- UCKK `uckk.univers-cite-projection/1.0.0`.
+- IK `kristal.build.request/2.0.0`, `kristal.artifact.ready/2.0.0` and `kristal.revision.request/2.0.0` for the v6 knowledge boundary.
+
+Amended by ADR-0013 for Kristal v6 generalized state roles and the actionability/execution-authority boundary.
+</pre></body></html>

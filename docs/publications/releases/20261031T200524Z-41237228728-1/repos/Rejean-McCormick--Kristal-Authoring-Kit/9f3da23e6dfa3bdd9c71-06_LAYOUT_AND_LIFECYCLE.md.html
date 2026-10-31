@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Authoring-Kit · docs/06_LAYOUT_AND_LIFECYCLE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Authoring-Kit · docs/06_LAYOUT_AND_LIFECYCLE.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Authoring-Kit · 2a20971ca698 · SHA-256 a1dfb4ef8f932847</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Authoring-Kit/blob/2a20971ca69828a5168c7a086a14accbbb5cee6f/docs/06_LAYOUT_AND_LIFECYCLE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 06 — Workspace layout and lifecycle
+
+## 1. A workspace organizes responsibilities, not one domain payload shape
+
+The local layout separates canonical content, sources, projections, build results, releases, runtime materializations, optional AI files, and host configuration.
+
+## 2. Current local workspace skeleton
+
+```text
+kristal.workspace.json
+canon/state.index.json
+canon/domain/                  # owned domain artifacts
+canon/epistemic/               # epistemic layer when applicable
+canon/operations/              # domain operations when applicable
+sources/source-catalog.json
+projections/recipes/
+docs/
+materializations/v9/manifests/
+build/v9/                      # generated, noncanonical
+state/state-snapshot.json      # optional explicit reader export
+release/v9/                    # immutable local release outputs
+hosting/                       # operational v10 host bindings
+ai/ and AI_MANIFEST.json       # optional derived portable reader
+```
+
+## 3. Three separate lifecycles
+
+**Semantic authoring:** edit and validate native content, then `build-v9`. **Local offline release:** `publish-v9`, optionally `activate-v9` to a local channel. **Hosted v10 lifecycle:** separately qualified/authorized sync, immutable release, and optional activation. Neither one authorizes the other.
+
+## 4. Ownership and federation
+
+A parent can refer to a child Kristal by pinned identity and commitment without duplicating its canon. Hosting multiple Kristals in one GitHub collection does not merge their ownership.
+
+## 5. Canon versus build/materialization/runtime
+
+`canon/` owns admitted logical content. Materialization descriptors describe physical representations, including remote or partially available blobs; `build/`, `ai/`, runtime packs, views and collection indexes are derived/operational. A GitHub upload is a transport/exposure decision, not a canonical mutation.
+</pre></body></html>

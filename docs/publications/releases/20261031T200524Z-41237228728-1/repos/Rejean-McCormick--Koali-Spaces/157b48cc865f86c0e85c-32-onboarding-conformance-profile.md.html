@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/05-integrations/32-onboarding-conformance-profile.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/05-integrations/32-onboarding-conformance-profile.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 12fd09de58028db6</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/05-integrations/32-onboarding-conformance-profile.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 32. Application Conformance Profile
+
+Une application complète ne peut pas être onboardée uniquement avec :
+
+```text
+moduleId + URL
+```
+
+Elle doit fournir un `ApplicationConformanceProfile` validé.
+
+Le profil couvre au minimum :
+
+```text
+owner + owner UI boundary
+runtime registration reference
+transport requirements
+embed headers / frame compatibility
+authentication boundary
+initial deep-link behavior
+router ownership
+browser permissions
+storage/service worker constraints
+offline behavior
+health/readiness
+lifecycle owner/broker
+known limitations
+conformance evidence
+```
+
+Le schéma de base est :
+
+```text
+schemas/application-conformance-profile.schema.json
+```
+
+`LOCK-KS-SURF-153` — **Toute `local_module_surface` onboardée pour une baseline de production doit posséder un Application Conformance Profile validé ; une URL fonctionnelle seule ne constitue pas une intégration conforme.**
+</pre></body></html>

@@ -1,0 +1,16 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · docs/Technical-Reference/TANDEM_EDUCATION_P4_SESSION_BOUND_PREVIEW.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · docs/Technical-Reference/TANDEM_EDUCATION_P4_SESSION_BOUND_PREVIEW.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · 381ab137d087 · SHA-256 ea4cefd0f39f1e55</small><br><a href='https://github.com/Rejean-McCormick/Orgo/blob/381ab137d087794ffcb381532c7d2eabcdd60bb5/docs/Technical-Reference/TANDEM_EDUCATION_P4_SESSION_BOUND_PREVIEW.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tandem Éducation P4 — précontrôle lié à une session Orgo
+
+**Portée:** frontière interne en lecture seule, sans route HTTP, sans service déployé, sans migration, sans Case/Task créée. **Désactivé par défaut** (`enabled` absent ou `false`).
+
+- `tools/tandem-education/p4-session-bound-preview.mjs` appelle **l&#x27;API existante** `IdentityService.authenticate(token,{organization})` d&#x27;Orgo, laquelle valide la session et recharge les rôles de l&#x27;utilisateur actif en base. Un jeton système/API est refusé; le droit explicite `education:admit` est exigé (pas un simple joker `*`).
+- Le jeton doit provenir du point d&#x27;entrée authentifié côté serveur, **pas** des données Akor, ni d&#x27;en-têtes de rôle/identité arbitraires.
+- Les trois lecteurs `readWorld`, `readTeacherApproval`, `readParticipantGrants` doivent provenir d&#x27;un module serveur de confiance. **Aucun lecteur de secours**, aucun JSON client utilisé comme preuve. La lecture Worlds ne doit pas utiliser le service HTTP standalone à identités transmises par en-têtes.
+- Le registre de consentement/approbation lié à l&#x27;empreinte exacte de l&#x27;intention et les attributions d&#x27;élèves synthétiques ne sont **pas encore branchés**. `IdentityService.authenticate` est un point réel d&#x27;intégration, mais **aucun câblage Nest runtime ni transaction** n&#x27;a été ajouté. En l&#x27;absence de ces sources, **refus**.
+- La sortie reste celle de P3 : `DRY_RUN_ONLY_NO_RUNTIME_ADMISSION`, et les indicateurs d&#x27;autorisation / publication restent faux, même lorsque des lecteurs en mémoire répondent favorablement.
+
+## Qualification
+
+`node --test tools/tandem-education/p4-session-bound-preview.test.mjs tools/tandem-education/admission-prerequisites.test.mjs tools/tandem-education/review-plan.test.mjs`
+
+Le test simule une instance `IdentityService`; il **ne teste pas** une connexion authentifiée au PostgreSQL réel. Avant le câblage en production : définir un registre d&#x27;approbation enseignant vérifiable, le service interne de lecture World authentifié et les allocations individuelles, puis qualifier les lectures transactionnelles et le refus aux changements d&#x27;état concurrents. Aucune publication vers les enfants n&#x27;est autorisée à cette étape.
+</pre></body></html>

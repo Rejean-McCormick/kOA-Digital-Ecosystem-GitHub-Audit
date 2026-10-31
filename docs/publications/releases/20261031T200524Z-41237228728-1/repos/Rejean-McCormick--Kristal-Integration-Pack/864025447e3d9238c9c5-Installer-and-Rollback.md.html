@@ -1,0 +1,38 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · Installer-and-Rollback.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · Installer-and-Rollback.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 373b97406772fa02</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/Installer-and-Rollback' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Legacy Installer: Preview, Status and Rollback
+
+`tools/install.py` is retained for historical Konstellation overlays. It **must not** be used to force an old bridge onto a newer or already integrated checkout.
+
+## Read-only status
+
+```bash
+python tools/install.py /path/to/Konstellation --status
+```
+
+Inspect `existing_integration`, recorded patch hashes, installed overlay equivalence and `recommendation`. A result of `DO_NOT_REINSTALL_EXISTING_INTEGRATION` means **stop and request owner review**.
+
+## Preview and apply — legacy unmodified host only
+
+```bash
+python tools/install.py /path/to/Konstellation
+# Review the preview and current checkout BEFORE any write.
+python tools/install.py /path/to/Konstellation --apply
+```
+
+`--apply` is a write operation. It is restricted to an independently verified **unmodified** historical Konstellation `1.0.0-rc.2` source. Take a backup and obtain operator authorization first. Do not use it on the already integrated snapshot described in this release.
+
+## Guarded rollback
+
+```bash
+python tools/install.py /path/to/Konstellation --rollback
+```
+
+Rollback uses the recorded backup and refuses to overwrite owner modifications made after installation. A refused rollback is a deliberate safety gate, not a request to delete or rewrite hashes manually.
+
+## Scope limits
+
+- Rollback concerns this historical **source overlay**, not a published Kristal, GitHub release or canonical state.
+- The v11 preflight and reader tools run directly; they do **not** require overlay installation.
+- A source overlay is not host authorization or an application production qualification.
+
+See [[Konstellation-Overlay]], [[Troubleshooting]], and [[Security-and-Trust-Boundaries]].
+</pre></body></html>

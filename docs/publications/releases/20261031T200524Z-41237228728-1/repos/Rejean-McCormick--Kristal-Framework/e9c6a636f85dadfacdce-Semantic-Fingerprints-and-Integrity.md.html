@@ -1,0 +1,41 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Semantic-Fingerprints-and-Integrity.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Semantic-Fingerprints-and-Integrity.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 12f2cde61b231e26</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Semantic-Fingerprints-and-Integrity' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Semantic Fingerprints and Integrity
+
+&gt; **v9 note:** V8 semantic fingerprints remain valid under their profiles. They are not retroactively replaced by v9 Logical Commitments; see [[Identity-and-Commitments-v9]].
+
+
+v8 separates **byte/content identity** from **semantic fingerprinting**.
+
+```text
+SEMANTIC FINGERPRINT != BYTE HASH
+```
+
+## Byte identity
+
+Inherited v6/v7 content hashes continue to identify canonical bytes under their declared canonicalization boundaries. v8 does not change those rules.
+
+## Semantic fingerprint
+
+A semantic fingerprint is an optional derived digest over a versioned semantic projection. It is useful for caching, deduplication and query continuation when irrelevant presentation differences should not change the semantic key.
+
+A fingerprint must declare a profile, for example:
+
+```text
+kristal.semantic-fingerprint/v1
+```
+
+The profile defines included semantic fields, excluded presentation/derived fields, canonical ordering, scalar encoding, hash algorithm and domain separator.
+
+Processors cannot invent local exclusion lists while claiming the same profile.
+
+## Language exclusion
+
+Canonical semantic fingerprint profiles should normally exclude external lexical labels when those labels do not alter meaning. Lexical Kristals have their own content/fingerprint identities.
+
+## Tamper evidence
+
+A local hash chain or Merkle root is not independent proof if the same attacker can rewrite both data and chain head. High-assurance deployments should anchor release/snapshot roots in an independently governed system and define restore/fork reconciliation.
+
+## Authority
+
+A valid digest proves identity/integrity under its profile. It does not prove factual correctness or epistemic authority.
+</pre></body></html>

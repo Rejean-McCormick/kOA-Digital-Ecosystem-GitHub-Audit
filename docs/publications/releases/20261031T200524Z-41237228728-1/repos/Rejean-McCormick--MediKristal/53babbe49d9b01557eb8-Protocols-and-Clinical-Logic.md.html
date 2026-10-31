@@ -1,0 +1,89 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal · Protocols-and-Clinical-Logic.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal · Protocols-and-Clinical-Logic.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal · 93fba2ff54b0 · SHA-256 35de56aa14d47ca8</small><br><a href='https://github.com/Rejean-McCormick/MediKristal/wiki/Protocols-and-Clinical-Logic' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Protocols and Clinical Logic
+
+MediKristal separates **medical knowledge** from **rules that act on patient context**.
+
+## Why protocols are separate
+
+A medical source may establish that a condition is associated with a symptom. A protocol establishes what should happen under defined conditions.
+
+```text
+knowledge assertion
+≠ protocol rule
+```
+
+## Conceptual rule
+
+```json
+{
+  &quot;protocol_id&quot;: &quot;protocol:adult_pneumonia_initial_assessment&quot;,
+  &quot;version&quot;: &quot;1.0&quot;,
+  &quot;applies_to&quot;: {
+    &quot;age_min&quot;: 18,
+    &quot;jurisdiction&quot;: &quot;CA-QC&quot;
+  },
+  &quot;trigger&quot;: {
+    &quot;all&quot;: [
+      {&quot;symptom&quot;: &quot;symptom:fever&quot;},
+      {&quot;symptom&quot;: &quot;symptom:cough&quot;}
+    ]
+  },
+  &quot;then&quot;: [
+    {&quot;consider_test&quot;: &quot;test:oxygen_saturation&quot;},
+    {&quot;consider_test&quot;: &quot;test:chest_xray&quot;}
+  ],
+  &quot;provenance_refs&quot;: [&quot;source:guideline-example&quot;],
+  &quot;status&quot;: &quot;under_review&quot;
+}
+```
+
+## Deterministic does not mean simplistic
+
+MediKristal favors explicit and auditable execution. That can include deterministic rules, thresholds, decision trees, contraindication checks, and validated scoring systems.
+
+Probabilistic medical information can still be represented, but it should remain explicit:
+
+```text
+model identity
+version
+inputs
+calibration / evidence
+output meaning
+applicability
+policy governing use
+```
+
+The goal is not to ban probability. It is to prevent hidden authority.
+
+## Future standards
+
+MediKristal can begin with simple JSON rules, then move toward standard computable representations:
+
+- [Clinical Quality Language (CQL)](https://cql.hl7.org/)
+- [FHIR Clinical Reasoning](https://hl7.org/fhir/clinicalreasoning-module.html)
+- `PlanDefinition`
+- `ActivityDefinition`
+- `Library`
+- `ValueSet`
+
+## Required explanation
+
+A protocol output should expose:
+
+```text
+which rule fired
+which patient facts matched
+which assertions were used
+which source versions supported them
+which warnings or exclusions applied
+which Runtime Pack produced the result
+```
+
+## Safety boundary
+
+MediKristal can support clinical reasoning without collapsing the distinction between information and professional decision.
+
+```text
+validated information / protocol output
+≠ automated final clinical decision
+```
+</pre></body></html>

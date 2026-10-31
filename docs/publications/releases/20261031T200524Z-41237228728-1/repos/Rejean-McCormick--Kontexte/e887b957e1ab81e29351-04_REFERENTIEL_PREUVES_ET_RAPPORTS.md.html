@@ -1,0 +1,110 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontexte · docs/ekole-orgo/04_REFERENTIEL_PREUVES_ET_RAPPORTS.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontexte · docs/ekole-orgo/04_REFERENTIEL_PREUVES_ET_RAPPORTS.md</h1><p class='meta'><small>Rejean-McCormick/Kontexte · da916882f789 · SHA-256 d4076275a66e0d16</small><br><a href='https://github.com/Rejean-McCormick/Kontexte/blob/da916882f789e4ac15d004871396fbd21300fe24/docs/ekole-orgo/04_REFERENTIEL_PREUVES_ET_RAPPORTS.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 04 — Le référentiel québécois comme « array » de couverture et de maîtrise
+
+## Décision principale
+
+**La grille scolaire n&#x27;est plus le plan d&#x27;exécution des activités; elle devient le référentiel de preuve des apprentissages.** Une même action peut porter plusieurs liens curriculaires, mais les liens ont des statuts et des critères spécifiques. Un cursus n&#x27;est pas réputé complété parce qu&#x27;une mission est terminée.
+
+## Deux registres et une projection
+
+1. **CurriculumRegistry** *(design, versionné)* : énoncés vérifiés et localisables du PFEQ / Progressions des apprentissages / Cadres d&#x27;évaluation, références de publication, période d&#x27;application, matière, cycle/niveau, compétences et provenance; décrire la source officielle avec précision ou laisser `official_ref=null`.
+2. **CurriculumMap** *(gouvernance)* : correspondance `mission_step -&gt; objective_id Ekole -&gt; official_ref`, statut `candidate|reviewed|approved|rejected`, raison, auteur/relecteur, date et version de texte. Aucun rapprochement lexical automatique n&#x27;est une preuve d&#x27;équivalence.
+3. **CurriculumReadModel** *(array de lecture par élève)* : agrégation des événements d&#x27;activité et de validation, recalculable et adaptée à la période. Elle affiche, **pour chaque cours et élément du référentiel**, ce qui fut exposé, pratiqué, maîtrisé, validé et transféré.
+
+```text
+          Mission: invitation bilingue + origami + paiement
+              |                     |                |
+          EvidenceLog ---------- CurriculumMap ---- Kristal de cours
+              |                                        |
+       CurriculumReadModel &lt;------------------- Registry versionné
+              |
+          Rapport enseignant / relevé de groupe / rapport agrégé institutionnel
+```
+
+## États séparés (éviter le booléen « appris »)
+
+| Champ | Condition minimale | Autorité |
+| --- | --- | --- |
+| `encountered` | l&#x27;élève a eu accès à une activité pertinente, avec contexte et date | télémétrie minimale ou confirmation humaine; **pas une réussite** |
+| `practiced` | tentative/action réellement faite; tâche identifiée | moteur / observation qualifiée |
+| `demonstrated` | production ou réponse répondant à un critère observable | correcteur exact ou personne |
+| `mastery_level` | argumenté par plusieurs preuves ou une évaluation conforme aux règles; conditions et degré d&#x27;autonomie connus | enseignant/règles institutionnelles validées |
+| `validation_status` | `unreviewed`, `automatic_practice_only`, `teacher_reviewed`, `institutionally_approved`, `withdrawn` | autorité identifiée; la validation technique n&#x27;est pas ministérielle |
+| `transfer` | mobilisation du même apprentissage dans une situation substantiellement nouvelle | comparaison de preuves, revue selon règle |
+
+La compétence a **un historique d&#x27;états et d&#x27;évidences**, pas un booléen permanent. Une maîtrise peut être reconfirmée, révisée ou invalidée; l&#x27;historique est auditable sans garder indéfiniment des données nominatives.
+
+## Forme de l&#x27;« array » de synthèse (exemple fictif)
+
+```json
+{
+  &quot;learner_ref&quot;: &quot;pseudonyme-classe-042&quot;,
+  &quot;school_year&quot;: &quot;2026-2027&quot;,
+  &quot;period&quot;: {&quot;kind&quot;: &quot;ekole_pedagogical_step&quot;, &quot;index&quot;: 2},
+  &quot;curriculum_snapshot&quot;: &quot;curriculum-qc-2026-candidat&quot;,
+  &quot;items&quot;: [
+    {
+      &quot;ekole_course_id&quot;: &quot;qc-pri-fr-021&quot;,
+      &quot;official_ref&quot;: null,
+      &quot;mapping_status&quot;: &quot;candidate&quot;,
+      &quot;encountered&quot;: true,
+      &quot;practiced&quot;: true,
+      &quot;demonstrated&quot;: true,
+      &quot;mastery_level&quot;: &quot;not_determined&quot;,
+      &quot;validation_status&quot;: &quot;teacher_reviewed&quot;,
+      &quot;evidence_refs&quot;: [&quot;evidence-invitation-001&quot;]
+    },
+    {
+      &quot;ekole_course_id&quot;: &quot;qc-pri-ma-008&quot;,
+      &quot;official_ref&quot;: null,
+      &quot;mapping_status&quot;: &quot;candidate&quot;,
+      &quot;encountered&quot;: true,
+      &quot;practiced&quot;: true,
+      &quot;demonstrated&quot;: false,
+      &quot;mastery_level&quot;: &quot;not_determined&quot;,
+      &quot;validation_status&quot;: &quot;automatic_practice_only&quot;,
+      &quot;evidence_refs&quot;: [&quot;evidence-budget-001&quot;]
+    }
+  ]
+}
+```
+
+**Attention :** `official_ref` à `null` interdit tout rapport affirmant la conformité ou la couverture d&#x27;une compétence ministérielle précise. La correspondance à un des 202 cours Ekole ne suffit pas : les statuts de ces cours sont expérimentaux.
+
+## Une preuve avec plusieurs correspondances, mais sans extrapolation
+
+L&#x27;invitation bilingue peut donner :
+- une trace de **français écrit** si l&#x27;on évalue effectivement la structure, les informations, l&#x27;orthographe et le destinataire;
+- une trace d&#x27;**anglais** seulement si un critère observable adéquat a été évalué (la simple présence d&#x27;une traduction copiée ne démontre pas l&#x27;autonomie en anglais);
+- une trace de **coopération** si l&#x27;aide apportée à la personne destinataire est observée selon des critères distincts;
+- aucune preuve automatique d&#x27;arts plastiques si elle n&#x27;a pas composé elle-même l&#x27;affiche.
+
+En situation aménagée, conserver le champ `support` descriptif et confidentiel; ne pas en déduire « non maîtrisé » ou « maîtrisé » mécaniquement. L&#x27;indépendance de l&#x27;élève peut varier selon la compétence évaluée, et non selon son rôle public.
+
+## Journal d&#x27;événements : architecture et audit
+
+- événements append-only, `event_id`, horodatage, `learner_ref`, `mission_run_id`, `step_id`, `artifact_ref`, `criteria_ref`, `context`, `result`, `support`, `assessment_mode`, `validator_ref`, `source_versions`, `privacy_scope`;
+- dédoublonnage par `idempotency_key` et empreinte des valeurs d&#x27;entrée;
+- correction par événement `evidence_corrected` qui pointe sur l&#x27;original, pas écrasement silencieux;
+- un évaluateur de réponses déterministes ne devient pas, par simple renvoi `true`, un jugement officiel;
+- conserver des références vers artefacts sous contrôle d&#x27;accès, plutôt que copier leur texte/leurs photos dans le log;
+- règles d&#x27;archivage, accès/export/suppression et rétention définies par l&#x27;établissement avant collecte réelle.
+
+## Trois vues, trois niveaux d&#x27;accès
+
+### Vue élève
+Progression personnelle intelligible (« j&#x27;ai découvert », « j&#x27;ai essayé », « je peux expliquer »), sans étiquette clinique ou classement humiliant, sans prétendre représenter un bulletin officiel.
+
+### Vue enseignant
+Relevé **par année scolaire, cycle, cours, compétence, période et mission**; filtre `non vu / pratiqué / preuve disponible / à revoir / validé`, outil pour retrouver critère, contexte, aide fournie, version des textes et évaluateur. L&#x27;enseignant peut corriger avec justification, exporter un relevé contrôlé, voir les trous de couverture du référentiel.
+
+### Vue direction/ministère (si autorisé)
+Rapports agrégés : taux de couverture par **référentiel/version**, unités non couvertes, occurrences des modes d&#x27;apprentissage, validité des correspondances, distribution de preuves et limites d&#x27;échantillon. Pas de transmission automatique de photos ou identifiants d&#x27;enfants, pas de hiérarchie publique d&#x27;enfants, ni prétention à un « certificat du ministère ». Transmission externe seulement avec base légale, accords et validations institutionnelles appropriés.
+
+## Périodes à ne pas confondre
+
+Ekole a **4 étapes pédagogiques locales**; la documentation du snapshot distingue **3 étapes officielles de bulletin**. Stocker les deux référentiels comme dimensions indépendantes avec dates d&#x27;établissement, et produire une table de correspondance explicite seulement après configuration et autorisation. Ne jamais convertir « étape pédagogique 4 » en un quatrième bulletin.
+
+## Version du programme et conformité
+
+Associer `source_document_uri`, intitulé, section/pages, version, date d&#x27;application, langue, revue de la transposition et changements de programme. Si une référence est mise à jour, un nouveau mapping est créé; les observations historiques restent attachées à leur version d&#x27;origine. Aucun remplacement silencieux d&#x27;un objectif de 2026 par celui de 2027.
+</pre></body></html>

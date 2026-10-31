@@ -1,0 +1,51 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Ecosystem-Integration.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Ecosystem-Integration.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 aca161f8d35a82c8</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Ecosystem-Integration' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Ecosystem Integration
+
+&gt; **v9 note:** V9 preserves ecosystem authority boundaries while adding pinned state/artifact composition. See [[Federation-and-Coverage-v9]].
+
+
+Kristal v8 participates in larger systems without absorbing their authority.
+
+## General pattern
+
+```text
+source system / acquisition
+        ↓
+canonical evidence / state
+        ↓
+Kristal v6 / Kristall v7
+        ↓
+optional v8 Language + Query layers
+        ↓
+consumer / AI / interaction layer
+        ↓
+owner admission / execution contract
+```
+
+## AI integration
+
+AI clients should preferably use:
+
+```text
+approximate discovery
+   ↓
+semantic identity resolution
+   ↓
+exact KQP query
+   ↓
+AI Context Compiler
+```
+
+rather than treating rendered prose or vector similarity as semantic authority.
+
+## Operational owners
+
+Interaction kernels, workflow systems, Orgo/Konnaxion-like services or other owners remain responsible for admission and execution. Kristal can describe actionability and supply context; it does not acquire execution permission.
+
+## External KOS
+
+Wikidata, UNESCO, MeSH, GBIF, GeoNames and similar systems can be mapped through anti-corruption/KOS adapters. Their identifiers do not replace Kristall semantic identity merely because a mapping exists.
+
+## Projection is not canon
+
+Consumer indexes, UI summaries, query caches, lexicalized views and AI context bundles are rebuildable projections.
+</pre></body></html>

@@ -1,0 +1,39 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · AI-and-External-Integrations.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · AI-and-External-Integrations.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · a014d6b410b4 · SHA-256 4ee1e217fa4ab596</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/wiki/AI-and-External-Integrations' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- Navigational projection. Normative authority remains in the repository docs/ corpus. --&gt;
+
+# AI and External Integrations
+
+&gt; **Authority notice:** This wiki is a readable navigation layer. Source contracts, accepted ADRs, normative documents, and executable validators in the repository remain authoritative.
+
+## Baseline rule
+
+AI is optional, capability-scoped, attributable, and unable to create invisible authority. Core operation remains deterministic and does not require native generative AI.
+
+External outputs remain non-authoritative unless an explicit review and admission process transfers accepted facts into an authoritative owner.
+
+## Declared integrations
+
+| Integration | Type | Role | Authority | Availability | Contract |
+| --- | --- | --- | --- | --- | --- |
+| Ariane Voice | external_voice | Optional voice-input surface for Ariane. | non_authoritative | optional | [contract](../blob/main/docs/contracts/integrations/ariane-voice.integration.json) |
+| ChatGPT | external_ai | Approved candidate metadata and analysis surface. | non_authoritative | optional | [contract](../blob/main/docs/contracts/integrations/chatgpt.integration.json) |
+| Gamma | external_media_service | Optional external presentation surface. | non_authoritative | optional | [contract](../blob/main/docs/contracts/integrations/gamma.integration.json) |
+| Suno | external_media_service | Optional external media-generation surface. | non_authoritative | optional | [contract](../blob/main/docs/contracts/integrations/suno.integration.json) |
+
+## Boundary rules
+
+- explicit user or system authorization;
+- declared capability and data scope;
+- no silent provider substitution;
+- no direct mutation of authoritative state;
+- privacy, consent, disclosure, and cultural-rights controls;
+- bounded failure and safe degradation when the provider is unavailable.
+
+## Sources
+
+- [`docs/02-system/09-ai-boundary.md`](../blob/main/docs/02-system/09-ai-boundary.md)
+- [`docs/02-system/10-external-ai-surfaces.md`](../blob/main/docs/02-system/10-external-ai-surfaces.md)
+- [`docs/02-system/16-external-integrations.md`](../blob/main/docs/02-system/16-external-integrations.md)
+- [`docs/07-security/11-ai-boundaries.md`](../blob/main/docs/07-security/11-ai-boundaries.md)
+- [`docs/07-security/12-external-integration-classification.md`](../blob/main/docs/07-security/12-external-integration-classification.md)
+- [`docs/contracts/integration-types.contract.json`](../blob/main/docs/contracts/integration-types.contract.json)
+</pre></body></html>

@@ -1,0 +1,11 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation-Publisher · docs/VALIDATION_0_2_ALPHA1_FR.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation-Publisher · docs/VALIDATION_0_2_ALPHA1_FR.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation-Publisher · 35528f27d6e1 · SHA-256 3faea8f06b882cf9</small><br><a href='https://github.com/Rejean-McCormick/Konstellation-Publisher/blob/35528f27d6e1445f641e0e677dbe4507a5eacbf4/docs/VALIDATION_0_2_ALPHA1_FR.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Validation prévue : Publisher 0.2.0-alpha.1
+
+- Refus strict des anciens Konstellation 0.5 et des lockfiles incohérents.
+- Tarball source construit par allowlist; aucun rapport, secret, dump ou lien symbolique ne peut entrer dans le paquet.
+- Pack et lenses externes bloqués sans chaîne d&#x27;autorisation.
+- Dockerfile utilise `npm ci`; Compose choisit `public` et son healthcheck interroge la readiness.
+- Vérification SHA-256 des deux archives reçues **avant** toute action distante.
+- Le lancement distant refuse volontairement toutes les opérations, même avec un manifest valide.
+
+Non testés : compilation Docker réelle, réseau, SSH, TLS, Traefik, Windows GUI, charge, coupure électrique, restauration après panne. Pas de qualification de publication réelle.
+</pre></body></html>

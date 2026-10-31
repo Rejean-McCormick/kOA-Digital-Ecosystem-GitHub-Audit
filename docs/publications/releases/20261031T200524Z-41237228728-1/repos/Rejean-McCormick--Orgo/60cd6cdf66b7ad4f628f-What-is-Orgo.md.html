@@ -1,0 +1,63 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · What-is-Orgo.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · What-is-Orgo.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · b89ca31f268c · SHA-256 1398dcfbe5504f72</small><br><a href='https://github.com/Rejean-McCormick/Orgo/wiki/What-is-Orgo' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># What is Orgo?
+
+Orgo is a **multi-tenant workflow and coordination system**.
+
+Its purpose is simple to state: take the many things that happen around an organization and turn the ones that require attention into structured, traceable work.
+
+## The problem Orgo addresses
+
+Organizations receive signals from many places:
+
+- email;
+- forms and APIs;
+- staff or community reports;
+- operational systems;
+- periodic reviews;
+- offline synchronization;
+- timers and recurring checks.
+
+Without a common structure, the result is usually fragmentation: different teams invent different status labels, important context is lost between tools, and recurring problems are hard to see.
+
+Orgo standardizes the operational layer without forcing every domain to become identical.
+
+## One backbone, many domains
+
+Orgo uses the same shared work backbone across domains:
+
+```text
+Organization
+   ├── Cases
+   │    └── Tasks
+   ├── Workflows
+   ├── Labels
+   ├── Profile
+   └── Insights
+```
+
+A maintenance task and an education-support task can therefore share the same basic operational lifecycle while keeping very different domain-specific details.
+
+## Orgo owns workflow state
+
+This is an important boundary.
+
+Orgo is authoritative for things such as:
+
+- whether an Orgo Task is pending, in progress or completed;
+- who is assigned to that Task;
+- which Case groups related work;
+- the routing label attached to the work;
+- escalation and reactivity state;
+- Orgo workflow execution and audit information.
+
+Orgo does **not** become the owner of another system&#x27;s internal state simply because a Task refers to it.
+
+For example, if Orgo coordinates work related to a Konnaxion consultation or a Kristal artifact, the Task can reference that external object while the external system remains authoritative for its own domain.
+
+## A coordination system, not a department-specific app
+
+Orgo is designed to remain useful across different organizational settings. Specialized domain modules can add context for Maintenance, HR, Education and other areas, but they reuse the same core work model.
+
+That is the central design idea:
+
+&gt; **Different domains, shared operational grammar.**
+</pre></body></html>

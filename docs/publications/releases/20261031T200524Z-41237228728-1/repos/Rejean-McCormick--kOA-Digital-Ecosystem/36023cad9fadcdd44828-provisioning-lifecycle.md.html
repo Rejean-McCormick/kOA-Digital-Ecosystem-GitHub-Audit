@@ -1,0 +1,43 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/provisioning-lifecycle.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/provisioning-lifecycle.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 67770525db0a2e16</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/2-Technical-Reference/40-integration/identity-oidc/provisioning-lifecycle.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Provisioning &amp; Identity Lifecycle
+
+**Status:** Normative (kOA)
+
+## 1) Provisioning modes
+
+Applications MAY use pre-provisioning, invitations, approved JIT provisioning, or local account creation. The mode is local policy.
+
+## 2) First federated login
+
+```text
+validate issuer + subject
+-&gt; exact identity lookup
+-&gt; if linked: use existing local account
+-&gt; if not linked: apply local provisioning policy
+```
+
+## 3) Linking existing accounts
+
+Existing accounts MUST NOT be silently linked by email alone.
+
+Acceptable linking requires proof/control such as an authenticated local session, administrator approval, signed invitation, or another controlled migration process.
+
+## 4) Attribute authority
+
+| Attribute | Authority |
+|---|---|
+| issuer / subject | IdP |
+| Orgo role | Orgo |
+| Konnaxion role | Konnaxion |
+| Moodle enrolment/capability | Moodle |
+| display name / email | deployment policy |
+
+## 5) Deactivation
+
+Disabling one local account does not automatically disable or delete accounts in other applications.
+
+IdP deactivation blocks future federated authentication; whether local login remains possible is local policy.
+
+## 6) Audit/history
+
+Identity lifecycle changes MUST preserve required business and audit history. Deletion, anonymization, and retention are governed by application and legal policy rather than federation alone.
+</pre></body></html>

@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/09-securite/modele-menaces.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/09-securite/modele-menaces.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 9ccac31c79256adf</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/09-securite/modele-menaces.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Modèle de menaces et limites de confiance
+
+## Actifs
+
+Canons des 127 Kristals; identités, déclarations d&#x27;état, bases SQLite locales, registres de revue, rapports/proofs, credentials GitHub, exécutable KristalDiag, schémas versionnés, préférences de chemin et commandes.
+
+## Frontières
+
+1. Un Kristal scanné est **une entrée non fiable** pour le lecteur, même créé avec l&#x27;IA.
+2. Un rapport JSON/CSV importé n&#x27;est **pas** une autorisation de modifier canon ou Git.
+3. Le moteur KristalDiag embarqué est une dépendance exécutable à version vérifier.
+4. Le GUI est un orchestrateur, pas un système d&#x27;autorité normative.
+5. GitHub est une destination externe, non impliquée dans l&#x27;observation locale.
+
+## Menaces et contre-mesures
+
+| Menace | Contrôle exigé |
+|---|---|
+| Zip-slip et liens symboliques | normalisation path, refus `..`, liens hors racine et chemins absolus |
+| Shell injection | `subprocess.run(argv, shell=False)` et args allowlistés |
+| Fausse sortie PASS | schéma moteur/target/profile + SHA et fingerprints vérifiés |
+| JSON géant / bombe ZIP | limites de bytes, fichiers, profondeur et temps |
+| Écriture accidentelle dans `locals` | read-only par défaut, répertoire de sortie externe |
+| Secret dans rapport exporté | détection, revue et warning avant export |
+| Ré-exécution au refresh | commandes déclenchées seulement par action utilisateur |
+| Désynchronisation DB / disque | commit atomique, preuves durables et import idempotent |
+| Clé de chemin collision Windows | normalisation prudente, `state_ref` + instance distincts |
+| Dépendance remplacée | manifeste/sha, version pin, tests d&#x27;intégration |
+
+## Audit
+
+Le scanner ne doit pas exécuter un `README`, un `.py`, un `.cmd` ou un script du workspace pour « analyser son contenu ». Le chemin d&#x27;un exécutable externe est configuré par l&#x27;opérateur et contrôlé; pour le parcours officiel, seule la version embarquée autorisée est lancée.
+
+## Limites
+
+Une hash ne prouve pas la vérité d&#x27;une assertion; elle prouve l&#x27;intégrité d&#x27;octets par rapport à une référence. Une comparaison de chemins et empreintes de quelques fichiers n&#x27;atteste pas le canon entier.
+</pre></body></html>

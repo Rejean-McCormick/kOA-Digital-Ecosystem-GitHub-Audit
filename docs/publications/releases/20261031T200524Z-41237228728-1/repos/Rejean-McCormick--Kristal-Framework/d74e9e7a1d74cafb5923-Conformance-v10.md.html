@@ -1,0 +1,29 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Conformance-v10.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Conformance-v10.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 4279ef77a7e3f07e</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Conformance-v10' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Conformance &amp; Qualification — v10
+
+V10 conformance is **capability/profile-based**. A tool may support only some profiles; the optional GitHub host profile is not required for generic `V10-Full`.
+
+| Profile | Core requirement |
+| --- | --- |
+| `V10-Node-Reader` | Validate node, binding, publication and directory structures |
+| `V10-Publisher` | Preserve v9 semantics and exact published state, retain a Publication Record with verifiable bytes |
+| `V10-Directory` | Keep discovery distinct from exact semantic federation |
+| `V10-GitHub-Host` | Node Reader + `kristal.host/github/1.0` profile |
+| `V10-Full` | Inherited `V9-Full` + Node Reader + Publisher + Directory (GitHub optional) |
+
+The draft.3 GitHub read-surface support, **when advertised**, additionally validates read-surface, sync-manifest and collection-index contracts.
+
+## Fail-closed qualification
+
+- Malformed documents yield validation failures, not uncaught processing errors.
+- Unsupported profiles must not be falsely marked verified.
+- Publication resource byte sizes and SHA-256 digests must match, including remote retries.
+- Host qualification, integrity and workflow attestations are **not** factual or epistemic authority.
+
+## Independent examiner
+
+KristalDiag independently verifies v9 commitments and v10 contracts (not by reusing the Framework JS verifier). The supplied KristalDiag README identifies **Framework `10.0.0-draft.2`** as its pinned target; this is **not a verified claim of draft.3 coverage**. Review its lock and actual test results before asserting draft.3 conformance.
+
+See [[Status-v10]], [[Conformance-v9]], [[Security-and-Confidentiality-v10]].
+
+*Normative source: Framework `spec/v10/Conformance.md`; examiner scope: KristalDiag `README.md` and locked resources.*
+</pre></body></html>

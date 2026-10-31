@@ -1,0 +1,1035 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Konductor/blob/f69b57d0208973ee7508490d0dc221986d653b9c/docs/References/Microsoft%20Agent.txt | commit: f69b57d0208973ee7508490d0dc221986d653b9c | SHA-256: cd14d4cf3ac2ea971b041cf9ae9218e105503b9b8d65275150f752395bbd18a7 -->
+
+# FINAL_REPORT_AI — Microsoft Agent Framework Samples
+
+```yaml id="report_meta"
+subject: Microsoft Agent Framework Samples
+source_type: repository_snapshot
+goal: extract_architecture_patterns_and_clever_runtime_tricks_for_building_custom_multiagent_ai
+audience: AI_system / code_generation_agent / architecture_planner
+main_conclusion: >
+  This repository is less about “agents chatting” and more about turning
+  agentic systems into normal software architecture: typed workflows,
+  streaming events, reusable workflow-agents, disposable tool sandboxes,
+  durable session logs, graph export, DevUI, and OpenTelemetry.
+```
+
+---
+
+## 1. Executive verdict
+
+```yaml id="executive_verdict"
+framework_character:
+  - engineering_first
+  - workflow_centric
+  - provider_agnostic
+  - strongly_composable
+  - production_oriented
+
+core_abstraction:
+  agent: model-backed capability
+  executor: typed workflow adapter
+  workflow: executable graph
+  workflow_as_agent: composable higher-order agent
+  streaming_run: evented runtime
+  session_log: durable external memory
+  sandbox: isolated tool execution environment
+
+highest_value_tricks_to_copy:
+  - provider_to_chatclient_to_agent_adapter_chain
+  - workflow_as_agent
+  - typed_executors
+  - object_based_conditional_edges
+  - fan_out_fan_in_barriers
+  - streaming_event_runtime
+  - mermaid_dot_graph_export
+  - brain_hands_session_separation
+  - disposable_sandbox_per_tool_call
+  - durable_append_only_session_log
+  - credential_vault_outside_sandbox
+  - DevUI_and_AGUI_surfaces
+  - OpenTelemetry_observability
+```
+
+The samples show a layered architecture: providers are adapted into chat clients, chat clients become agents, agents are placed in workflows, and workflows can be exposed as reusable agents. The basic workflow sample creates `AIAgent` instances from a chat client, wires them with `WorkflowBuilder`, runs via `InProcessExecution.RunStreamingAsync`, watches `WorkflowEvent`s, and exports Mermaid/DOT graph representations. 
+
+---
+
+## 2. Architecture model for an AI to internalize
+
+```yaml id="maf_architecture_model"
+system_layers:
+  provider_layer:
+    purpose: connect_to_model_backends
+    examples:
+      - GitHub_Models
+      - Azure_OpenAI
+      - Azure_AI_Foundry
+      - Foundry_Local
+
+  agent_layer:
+    purpose: normalize_model_capabilities_as_AIAgent
+    pattern: ProviderClient -> ChatClient -> AIAgent
+
+  executor_layer:
+    purpose: adapt_agents_or_functions_into_workflow_nodes
+    properties:
+      - typed_input
+      - typed_output
+      - message_handler
+      - optional_output_yielding
+
+  workflow_layer:
+    purpose: deterministic_orchestration_graph
+    primitives:
+      - AddEdge
+      - AddFanOutEdge
+      - AddFanInBarrierEdge
+      - conditional_edges
+      - WithOutputFrom
+
+  runtime_layer:
+    purpose: evented_execution
+    primitives:
+      - StreamingRun
+      - TurnToken
+      - WorkflowEvent
+      - WorkflowOutputEvent
+
+  inspection_layer:
+    purpose: debug_and_operate
+    primitives:
+      - Mermaid_export
+      - DOT_export
+      - DevUI
+      - OpenTelemetry
+      - AG_UI
+```
+
+Important design rule:
+
+```yaml id="core_rule"
+rule: agents_are_nodes_not_the_architecture
+meaning: >
+  The workflow graph is the architecture. Agents are capabilities placed inside
+  graph nodes through executors or direct agent nodes.
+```
+
+---
+
+## 3. Clever trick: provider adapter chain
+
+```yaml id="provider_adapter_chain"
+trick: provider_to_agent_normalization
+chain:
+  - provider_client
+  - chat_client
+  - AIAgent
+  - workflow_node
+benefit:
+  - provider_swapping
+  - testability
+  - local_vs_cloud_choice
+  - less_runtime_coupling
+```
+
+In the workflow samples, an OpenAI-compatible client configured for GitHub Models is converted to `IChatClient`, then to `AIAgent`. The result is that model/provider configuration stays separate from workflow orchestration. 
+
+Recommended implementation for your IA:
+
+```python id="provider_adapter_example"
+class ProviderAdapter:
+    def as_chat_client(self) -> ChatClient:
+        ...
+
+class ChatClient:
+    def as_agent(self, name: str, instructions: str) -> "Agent":
+        ...
+
+agent = provider.as_chat_client().as_agent(
+    name="Researcher",
+    instructions="Research and return structured findings."
+)
+```
+
+---
+
+## 4. Clever trick: workflow-as-agent
+
+```yaml id="workflow_as_agent"
+trick: workflow_can_be_wrapped_as_agent
+meaning: >
+  A whole multi-step graph can be exposed through the same interface as a
+  normal model-backed agent.
+why_it_matters:
+  - enables_nested_workflows
+  - enables_higher_order_agents
+  - makes_UI_and_API_layers_simple
+  - turns_complex_pipelines_into_reusable_capabilities
+```
+
+The samples include a workflow built from multiple agents and then exposed as an agent through `workflow.AsAgent(...)` / `AddAsAIAgent(...)` patterns. This is one of the most important architectural tricks because a complex internal system can be used as a single external capability. 
+
+Recommended rule:
+
+```yaml id="workflow_as_agent_rule"
+every_workflow_should_support:
+  - run(input)
+  - stream(input)
+  - as_agent(name, description)
+```
+
+---
+
+## 5. Clever trick: typed executors as adapters
+
+```yaml id="typed_executors"
+trick: executor_wraps_agent_and_enforces_contract
+executor_responsibilities:
+  - receive_typed_input
+  - call_agent_or_function
+  - parse_model_output
+  - validate_schema
+  - return_typed_output
+  - optionally_yield_final_output
+```
+
+The conditional workflow uses typed models like `ContentResult` and `ReviewResult`, plus executors marked with attributes such as `SendsMessage`, `YieldsOutput`, and `MessageHandler`. The review executor calls an agent, deserializes JSON into `ReviewResult`, then returns that structured object to the workflow. 
+
+Recommended implementation:
+
+```python id="typed_executor_pattern"
+class ContentResult(BaseModel):
+    draft_content: str
+
+class ReviewResult(BaseModel):
+    review_result: Literal["Yes", "No"]
+    reason: str
+    draft_content: str
+
+class ContentReviewExecutor(Executor[ContentResult, ReviewResult]):
+    async def handle(self, content: ContentResult) -> ReviewResult:
+        raw = await reviewer_agent.run(content.draft_content)
+        return ReviewResult.model_validate_json(raw.text)
+```
+
+Rule for your IA:
+
+```yaml id="no_raw_text_between_agents"
+machine_to_machine_messages: typed
+human_final_answer: free_text_allowed
+agent_to_agent_raw_text: avoid
+```
+
+---
+
+## 6. Clever trick: object-based routing, not prompt-based routing
+
+```yaml id="object_routing"
+trick: conditional_edges_use_structured_objects
+bad_pattern: route_based_on_free_text
+good_pattern: route_based_on_typed_result
+example:
+  if ReviewResult.result == "Yes": publish
+  if ReviewResult.result == "No": send_for_revision
+```
+
+The conditional workflow routes to `PublishExecutor` or `SendReviewExecutor` using a condition function that checks whether the object is a `ReviewResult` and whether its result equals the expected value. 
+
+Recommended pattern:
+
+```python id="conditional_routing_pattern"
+def route_review(result: ReviewResult) -> str:
+    if result.review_result == "Yes":
+        return "publish"
+    return "revise"
+```
+
+---
+
+## 7. Clever trick: fan-out / fan-in with barrier aggregation
+
+```yaml id="fanout_fanin"
+trick: parallel_specialists_then_barrier_aggregation
+workflow:
+  input: user_message
+  fan_out:
+    - researcher_agent
+    - planner_agent
+  barrier: wait_for_all
+  fan_in: aggregation_executor
+  output: merged_result
+```
+
+The concurrent workflow builds a graph with `AddFanOutEdge(startExecutor, [researcherAgent, plannerAgent])`, then `AddFanInBarrierEdge([researcherAgent, plannerAgent], aggregationExecutor)`, then `WithOutputFrom(aggregationExecutor)`. The run is streamed and events are counted/observed as they arrive. 
+
+Recommended use in your IA:
+
+```yaml id="fanout_use_cases"
+use_fanout_for:
+  - parallel_research
+  - independent_solution_generation
+  - critic_vs_builder
+  - multiple_planning_strategies
+  - tool_vs_model_comparison
+
+fanin_executor_should:
+  - merge
+  - deduplicate
+  - resolve_conflicts
+  - assign_confidence
+  - produce_structured_output
+```
+
+---
+
+## 8. Clever trick: streaming runtime instead of blocking calls
+
+```yaml id="streaming_runtime"
+trick: workflow_execution_as_event_stream
+runtime_objects:
+  - StreamingRun
+  - TurnToken
+  - WorkflowEvent
+  - AgentResponseUpdateEvent
+  - WorkflowOutputEvent
+benefit:
+  - live_debugging
+  - UI_streaming
+  - cancellation
+  - observability
+  - partial_outputs
+  - event_replay
+```
+
+The samples start workflows with `RunStreamingAsync`, send a `TurnToken(emitEvents: true)`, then iterate over `WatchStreamAsync()` to process events. 
+
+Recommended implementation:
+
+```python id="streaming_runtime_pattern"
+run = await workflow.run_streaming(input)
+
+await run.send(TurnToken(emit_events=True))
+
+async for event in run.events():
+    await event_bus.publish(event)
+```
+
+Do not design your IA as only:
+
+```python id="bad_blocking_call"
+result = agent.run(prompt)
+```
+
+Design it as:
+
+```python id="good_streaming_call"
+async for event in workflow.stream(prompt):
+    observe(event)
+```
+
+---
+
+## 9. Clever trick: executable graph exports itself
+
+```yaml id="graph_export"
+trick: runtime_graph_can_export_visual_forms
+formats:
+  - Mermaid
+  - DOT
+  - SVG_or_PNG_via_Graphviz
+uses:
+  - architecture_review
+  - debugging
+  - documentation
+  - regression_tests
+```
+
+The workflow samples export Mermaid with `ToMermaidString()` and DOT with `ToDotString()`, then write `workflow.dot` and show Graphviz commands for generating SVG/PNG. 
+
+Mandatory rule for your IA:
+
+```yaml id="graph_export_rule"
+every_workflow_must_export:
+  - workflow.json
+  - workflow.mmd
+  - workflow.dot
+  - execution_trace.jsonl
+```
+
+---
+
+## 10. Clever trick: brain / hands / session separation
+
+```yaml id="brain_hands_session"
+trick: split_agent_system_into_three_failure_domains
+brain:
+  meaning: model_plus_harness
+  owns:
+    - reasoning
+    - planning
+    - tool_selection
+
+hands:
+  meaning: tools_or_sandboxes_that_execute_work
+  owns:
+    - python_exec
+    - shell_exec
+    - http_fetch
+    - MCP_tools
+    - hosted_tools
+
+session:
+  meaning: durable_append_only_event_log
+  owns:
+    - tool_call_events
+    - tool_result_events
+    - notes
+    - recoverable_history
+```
+
+The managed-agent case explicitly virtualizes three interfaces: Brain, Hands, and Session. It also adds a credential vault so raw tokens are not reachable from the sandbox. 
+
+This is a top-priority pattern to copy.
+
+---
+
+## 11. Clever trick: one generic external-action tool
+
+```yaml id="generic_execute_tool"
+trick: model_has_one_external_action_contract
+tool: execute(name, input_json)
+benefits:
+  - simpler_prompt_contract
+  - tool_system_can_change_underneath
+  - hands_can_be_local_remote_or_MCP
+  - easier_security_boundary
+```
+
+The managed-agent sample defines `execute(name, input_json)` as the model’s single external-action interface. It logs a `tool_call`, executes through the sandbox, logs `tool_result`, and returns failure strings beginning with `ERROR:` so the model can decide whether to retry. 
+
+Recommended implementation:
+
+```python id="generic_execute_pattern"
+async def execute(name: str, input_json: str) -> str:
+    payload = json.loads(input_json)
+    session.emit("tool_call", {"name": name, "input": vault.redact(payload)})
+    result = await sandbox_pool.execute(name, payload)
+    session.emit("tool_result", {"name": name, "output": result[:2000]})
+    return result
+```
+
+---
+
+## 12. Clever trick: disposable sandbox per tool call
+
+```yaml id="disposable_sandbox"
+trick: fresh_sandbox_for_each_execute_call
+principle: do_not_adopt_a_pet
+behavior:
+  - provision_sandbox
+  - execute_allowed_tool
+  - return_result_or_ERROR
+  - retire_sandbox
+benefit:
+  - no_state_leakage
+  - safer_tool_execution
+  - easy_failure_recovery
+  - better_horizontal_scaling
+```
+
+The managed-agent README says every `execute(name, input)` call provisions a fresh sandbox and retires it after one invocation; sandbox failure is returned as `ERROR:` and is recoverable by the brain. 
+
+Recommended implementation:
+
+```python id="sandbox_pattern"
+async def execute_in_fresh_sandbox(tool_name: str, args: dict) -> ToolResult:
+    sandbox = await sandbox_pool.provision(allowed_tools=[tool_name])
+    try:
+        return await sandbox.execute(tool_name, args)
+    finally:
+        await sandbox_pool.retire(sandbox.id)
+```
+
+---
+
+## 13. Clever trick: durable session log is memory, not context window
+
+```yaml id="session_not_context"
+trick: separate_durable_memory_from_active_prompt_context
+durable_memory:
+  type: append_only_JSONL_event_log
+  accessed_by:
+    - get_events(start, end)
+    - wake(session_id)
+    - emit_note(note)
+
+context_window:
+  type: temporary_working_set
+  rule: do_not_store_everything_here
+```
+
+The managed-agent case states that every meaningful event is appended to a JSONL log, and the model re-reads slices with `get_events(start, end)` instead of carrying everything in the active context. If the harness crashes, `SessionStore.wake(session_id)` replays the log. 
+
+The code also exposes `get_events(start, end)` and `emit_note(note)` as tools, encouraging the model to store intermediate findings in the durable session log. 
+
+Recommended rule:
+
+```yaml id="memory_rule"
+memory_source_of_truth: session_event_log
+prompt_context: cache_view
+agent_scratchpad: persist_via_emit_note
+```
+
+---
+
+## 14. Clever trick: prompt describes the real runtime architecture
+
+```yaml id="prompt_runtime_alignment"
+trick: model_instructions_match_runtime_constraints
+instructions_include:
+  - brain_is_decoupled_from_hands
+  - use_execute_for_external_actions
+  - each_execute_uses_fresh_sandbox
+  - durable_memory_is_session_log
+  - use_emit_note
+  - use_get_events
+  - never_ask_for_raw_credentials
+  - ERROR_tool_results_are_recoverable
+```
+
+The managed-agent prompt tells the model exactly how the architecture works: it has one tool `execute(name, input_json)`, fresh disposable sandboxes, a durable session log, logical credential names, and recoverable `ERROR:` outputs. 
+
+This is important because models behave better when the prompt mirrors the real execution environment.
+
+---
+
+## 15. Clever trick: credential vault outside sandbox
+
+```yaml id="credential_vault"
+trick: model_never_sees_raw_secrets
+model_input:
+  credential: logical_name
+vault:
+  injects_real_token_at_tool_runtime
+sandbox:
+  does_not_own_credentials
+logs:
+  redacted
+```
+
+The managed-agent design includes a credential vault so raw tokens are never reachable from the sandbox where generated code runs; the model passes logical credential names and the vault injects real tokens at call time. 
+
+Recommended implementation:
+
+```python id="vault_pattern"
+tool_args = {"credential": "github", "repo": "org/project"}
+
+# runtime resolves:
+token = vault.resolve("github")
+result = tool.run(args=tool_args, secret=token)
+```
+
+Never put raw tokens into prompts, session logs, or sandbox environment variables unless strictly scoped and redacted.
+
+---
+
+## 16. Clever trick: MCP tool discovery with allowlist
+
+```yaml id="mcp_tool_policy"
+trick: dynamic_tool_discovery_plus_explicit_permission
+mcp:
+  discovery: ListToolsAsync / tool listing
+  permission: AllowedTools
+  runtime_binding:
+    - attach_at_agent_creation
+    - attach_temporarily_at_run
+```
+
+The MCP sample creates an `MCPToolDefinition`, adds only `searchmslearn` to `AllowedTools`, then separately creates an MCP client to list available tools from the server. The Python example shows both temporary runtime tool binding and agent-creation-time binding. 
+
+Recommended rule:
+
+```yaml id="mcp_rule"
+do:
+  - discover_tools
+  - apply_allowlist
+  - bind_tools_per_session_or_agent
+do_not:
+  - expose_all_mcp_tools_by_default
+```
+
+---
+
+## 17. Clever trick: hosted tools with artifact capture
+
+```yaml id="hosted_tool_artifacts"
+trick: preserve_tool_artifacts_not_just_text
+capture:
+  - tool_input
+  - tool_output
+  - generated_files
+  - annotations
+  - streamed_response_updates
+```
+
+The samples include hosted code interpreter and vision patterns. The code interpreter sample inspects tool-call content, extracts code input/output, and checks annotations for generated files; the vision sample sends `DataContent` and streams the response through an agent session. 
+
+Recommended rule:
+
+```yaml id="tool_artifact_rule"
+every_tool_call_record:
+  - tool_name
+  - input_redacted
+  - output_summary
+  - raw_artifacts_pointer
+  - generated_file_ids
+  - error
+  - duration_ms
+```
+
+---
+
+## 18. Clever trick: DevUI as first-class debug surface
+
+```yaml id="devui"
+trick: debugging_UI_is_part_of_runtime
+features:
+  - register_agents
+  - register_workflows
+  - expose_OpenAI_compatible_endpoints
+  - map_DevUI
+  - inspect_workflows_in_browser
+```
+
+The DevUI sample says it sets up a web app, creates function tools, registers agents and workflows, maps the DevUI endpoint, and maps a dynamic OpenAI Responses API for Python DevUI compatibility. It also notes that `MapDevUI()` sets up the embedded web interface for testing and debugging. 
+
+Recommended for your IA:
+
+```yaml id="debug_surface"
+devui_must_show:
+  - workflow_graph
+  - current_state
+  - event_stream
+  - agent_messages
+  - tool_calls
+  - artifacts
+  - errors
+  - checkpoints
+```
+
+---
+
+## 19. Clever trick: AG-UI / frontend protocol surface
+
+```yaml id="agui"
+trick: map_agent_or_workflow_to_frontend_protocol
+purpose:
+  - expose_agent_to_UI
+  - support_streaming
+  - support_shared_state
+  - reduce_custom_glue_code
+```
+
+The AG-UI server maps an agent endpoint directly, and the shared-state wrapper pattern separates structured state updates from human-facing explanations. This is useful because frontend state and user explanation should not be the same output channel. 
+
+Recommended design:
+
+```yaml id="ui_state_rule"
+separate_outputs:
+  machine_state_update:
+    format: application_json
+  user_message:
+    format: natural_language
+```
+
+---
+
+## 20. Clever trick: OpenTelemetry from the start
+
+```yaml id="otel"
+trick: observability_attached_to_agent_runtime
+captures:
+  - traces
+  - metrics
+  - logs
+  - agent_interactions
+  - workflow_activity
+  - response_time
+  - prompt_length
+  - conversation_id
+```
+
+The evaluation/tracing materials show OpenTelemetry support for traces, metrics, and logs, with Python `setup_observability()` and .NET `Sdk.CreateTracerProviderBuilder().AddSource("*Microsoft.Agents.AI").AddOtlpExporter(...)`. They also point to Aspire Dashboard, Application Insights, and Grafana dashboards. 
+
+Recommended default:
+
+```yaml id="telemetry_defaults"
+telemetry:
+  enabled: true
+  export: OTLP
+  sensitive_data: false_by_default
+  local_dashboard: supported
+  production_backend:
+    - Application_Insights
+    - Grafana
+    - OTLP_collector
+```
+
+---
+
+## 21. Clever trick: stateless harness per request
+
+```yaml id="stateless_harness"
+trick: no_sticky_sessions
+session_id: routing_key
+request_runtime:
+  - receive_session_id
+  - load_or_wake_session_log
+  - create_stateless_harness
+  - run_one_turn
+  - append_events
+  - shutdown_harness
+benefit:
+  - horizontal_scaling
+  - crash_recovery
+  - serverless_friendly
+```
+
+The managed case documents endpoints for sessions, running a session, reading events, waking a session, and health checks; routing is based on `session_id`, so any host instance can serve any session. 
+
+Recommended API:
+
+```text id="session_api"
+POST /sessions
+POST /sessions/{id}/run
+GET  /sessions/{id}/events
+POST /sessions/{id}/wake
+GET  /health
+```
+
+---
+
+## 22. Clever trick: nested workflow hidden behind executor
+
+```yaml id="nested_workflow_executor"
+trick: replace_simple_node_with_complex_internal_system
+outer_workflow_sees: one_executor
+inside_executor:
+  - planner
+  - researcher
+  - critic
+  - synthesizer
+output_contract: unchanged
+benefit:
+  - upgrade_internal_complexity_without_changing_callers
+  - preserve_workflow_contract
+```
+
+The case samples include advanced pipelines where a node can hide a more complex internal multi-agent/research workflow while returning the same kind of downstream object. This is a powerful refactoring technique: start simple, then replace internals without breaking the outer workflow contract. 
+
+Recommended rule:
+
+```yaml id="nested_rule"
+external_contract_must_stay_stable
+internal_agent_system_can_evolve
+```
+
+---
+
+## 23. Clever trick: deterministic final packager
+
+```yaml id="deterministic_packager"
+trick: final_step_is_not_always_an_agent
+pattern:
+  agents_create_artifacts
+  deterministic_packager_collects_validates_and_outputs
+benefit:
+  - stable_final_schema
+  - less_hallucination
+  - better_artifact_tracking
+  - easier_testing
+```
+
+In the marketing pipeline, the final packaging stage assembles campaign artifacts into a structured final package rather than relying only on a final free-form LLM summary. 
+
+Recommended pattern:
+
+```python id="packager_pattern"
+class PackagingExecutor(Executor[list[Artifact], CampaignPackage]):
+    async def handle(self, artifacts: list[Artifact]) -> CampaignPackage:
+        return CampaignPackage(
+            manifest=build_manifest(artifacts),
+            files=store_artifacts(artifacts),
+            summary=build_summary(artifacts),
+        )
+```
+
+---
+
+# 24. Implementation blueprint for your IA
+
+```yaml id="recommended_architecture"
+MultiAgentAI:
+  providers:
+    purpose: normalize_model_backends
+    components:
+      - OpenAIProvider
+      - AzureProvider
+      - GitHubModelsProvider
+      - LocalProvider
+      - FoundryProvider
+
+  agents:
+    purpose: model_backed_capabilities
+    components:
+      - BaseAgent
+      - ChatAgent
+      - PersistentAgent
+      - WorkflowAgent
+
+  executors:
+    purpose: typed_adapters_between_agents_and_workflows
+    components:
+      - BaseExecutor
+      - AgentExecutor
+      - FunctionExecutor
+      - RouterExecutor
+      - AggregationExecutor
+      - PackagingExecutor
+
+  workflows:
+    purpose: executable_graphs
+    components:
+      - WorkflowBuilder
+      - Edge
+      - ConditionalEdge
+      - FanOutEdge
+      - FanInBarrierEdge
+      - WorkflowGraph
+      - GraphExporter
+
+  runtime:
+    purpose: evented_execution
+    components:
+      - StreamingRun
+      - TurnToken
+      - EventBus
+      - WorkflowEvent
+      - CheckpointStorage
+
+  sessions:
+    purpose: durable_memory_and_recovery
+    components:
+      - SessionStore
+      - AppendOnlyEventLog
+      - WakeSession
+      - ContextWindowView
+
+  tools:
+    purpose: external_actions
+    components:
+      - ExecuteTool
+      - ToolRegistry
+      - MCPClient
+      - HostedCodeInterpreter
+      - FileSearch
+      - WebSearch
+
+  sandbox:
+    purpose: isolated_execution
+    components:
+      - SandboxPool
+      - DisposableSandbox
+      - AllowedToolsPolicy
+      - VaultInjectedSecrets
+
+  observability:
+    purpose: inspectability_and_production_debugging
+    components:
+      - DevUI
+      - AGUIEndpoint
+      - OpenTelemetryExporter
+      - TraceViewer
+      - MetricsStore
+```
+
+---
+
+# 25. AI-oriented rules to implement
+
+```yaml id="rules_for_ai"
+rules:
+  - id: workflow_is_architecture
+    instruction: Use workflow graphs as the system architecture. Do not rely on free-form agent conversation as the architecture.
+
+  - id: agent_is_capability
+    instruction: Treat agents as callable capabilities, not as global controllers.
+
+  - id: executor_is_contract_boundary
+    instruction: Every agent used in a workflow should be wrapped by an executor that validates input and output.
+
+  - id: workflow_can_be_agent
+    instruction: Every workflow should be exposable as an agent for composition.
+
+  - id: machine_messages_are_typed
+    instruction: Use structured objects between nodes. Avoid raw text between agents.
+
+  - id: routing_is_object_based
+    instruction: Branch on validated fields, not on unparsed LLM prose.
+
+  - id: stream_everything
+    instruction: Execution should emit events continuously, not only return final output.
+
+  - id: export_every_graph
+    instruction: Every workflow must export Mermaid, DOT, and JSON representations.
+
+  - id: session_is_memory
+    instruction: Store durable history in an append-only session log. Context window is only a temporary view.
+
+  - id: one_tool_contract
+    instruction: Consider exposing external actions through a single execute(name, input_json) tool.
+
+  - id: disposable_tools
+    instruction: Execute tools in fresh disposable sandboxes when risk or side effects are non-trivial.
+
+  - id: vault_outside_sandbox
+    instruction: Models and sandboxes should receive logical credential names, not raw secrets.
+
+  - id: errors_are_recoverable
+    instruction: Tool failures should become structured, retryable feedback when safe.
+
+  - id: observe_by_default
+    instruction: Add traces, metrics, events, and DevUI early, not after the system becomes complex.
+```
+
+---
+
+# 26. Minimal design to build first
+
+```text id="minimal_ia_design"
+1. ProviderAdapter
+   ProviderClient -> ChatClient -> Agent
+
+2. Agent
+   name, instructions, model, tools
+
+3. Executor
+   typed input -> call agent/function -> typed output
+
+4. WorkflowBuilder
+   add_edge
+   add_switch_edge
+   add_fanout_edge
+   add_fanin_barrier_edge
+   with_output_from
+
+5. StreamingRun
+   send(TurnToken)
+   events()
+
+6. GraphExporter
+   to_mermaid()
+   to_dot()
+   to_json()
+
+7. SessionStore
+   emit_event()
+   get_events()
+   wake()
+
+8. ExecuteTool
+   execute(name, input_json)
+   sandbox + vault + event log
+
+9. DevUI
+   graph + events + state + tool calls
+```
+
+---
+
+# 27. Priority copy list
+
+```yaml id="copy_priority"
+priority_1:
+  name: typed_workflow_graph
+  reason: gives architecture control and prevents agent chaos
+
+priority_2:
+  name: workflow_as_agent
+  reason: enables composition and nested systems
+
+priority_3:
+  name: streaming_event_runtime
+  reason: enables UI, debugging, tracing, cancellation
+
+priority_4:
+  name: typed_executors
+  reason: converts unreliable LLM text into software contracts
+
+priority_5:
+  name: fanout_fanin
+  reason: enables parallel specialist reasoning and aggregation
+
+priority_6:
+  name: object_based_routing
+  reason: prevents fragile natural-language routing
+
+priority_7:
+  name: durable_session_log
+  reason: separates long-term runtime memory from prompt context
+
+priority_8:
+  name: disposable_tool_sandbox
+  reason: reduces side effects, leakage, and persistent compromise
+
+priority_9:
+  name: graph_export
+  reason: makes multi-agent architecture inspectable
+
+priority_10:
+  name: DevUI_and_OpenTelemetry
+  reason: makes production debugging possible
+```
+
+---
+
+# 28. Final conclusion for an AI builder
+
+```yaml id="final_conclusion"
+summary: >
+  Microsoft Agent Framework Samples show a production-oriented way to build
+  multi-agent systems as typed, observable, composable software. The best ideas
+  are not prompts or personas; they are runtime boundaries.
+
+core_takeaway: >
+  Build agents as capabilities, workflows as graphs, executors as typed adapters,
+  tools as isolated hands, sessions as durable memory, and events as the primary
+  runtime output.
+
+recommended_design_sentence: >
+  Your IA should be a typed workflow runtime where every agent is a node, every
+  node has a contract, every run emits events, every workflow exports a graph,
+  every tool call is logged and sandboxed, and every complex workflow can itself
+  become an agent.
+```
+
+Final extraction:
+
+```text id="maf_secret_sauce"
+Provider abstraction
++ Workflow graph
++ Workflow-as-agent
++ Typed executors
++ Object routing
++ Fan-out/Fan-in
++ Streaming events
++ Graph export
++ Brain/Hands/Session separation
++ Disposable sandbox
++ Durable session log
++ Vaulted credentials
++ DevUI / AG-UI
++ OpenTelemetry
+= production-grade multi-agent runtime
+```

@@ -1,0 +1,68 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontainer · Home.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontainer · Home.md</h1><p class='meta'><small>Rejean-McCormick/Kontainer · c9674410bf4a · SHA-256 541285c6652abebf</small><br><a href='https://github.com/Rejean-McCormick/Kontainer/wiki/Home' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kontainer
+
+**Portable, verifiable, optionally encrypted `.kristal` files — with local-first tooling.**
+
+Kontainer is the documentation name used here for the **Kristal Container** engine. The supplied software distribution is **Kristal-Container 1.0.0rc1**, with the Python package `kristal_container` and the CLI `python -m kristal_container`. The product name used in this wiki does **not** imply that the repository, Python package, file extension, or format identifiers have been renamed.
+
+Kontainer turns a selected directory of regular files into **one versioned `.kristal` file**. Its inner archive uses uncompressed ZIP64 STORE; a Kristal-specific outer envelope provides format identification and, when requested, authenticated encryption. The tool packages physical bytes; it does not validate the meaning or authority of a Kristal State.
+
+&gt; **Release status: 1.0.0rc1 (release candidate).** Implementation and local testing are documented, but **no independent cryptographic audit**, production-critical qualification, or normative adoption of the container format by Kristal Framework is claimed. See [Release Status](Release-Status-and-Roadmap).
+
+## Start here
+
+- **[Quick Start](Quick-Start)** — package, verify, open, and recover your first `.kristal` file.
+- **[Installation](Installation)** — supported Python targets, environments, and platform caveats.
+- **[CLI Reference](CLI-Reference)** — commands, flags, and machine-readable results.
+- **[Protection and Access](Protection-and-Access)** — open, password, dual-secret, recipient, signature, and recovery paths.
+- **[Python API](Python-API)** — integrate the local library in your own application.
+- **[File Format](File-Format)** — physical structure and limits of the proposed v1 profile.
+
+## What is implemented?
+
+| Capability | 1.0.0rc1 |
+| --- | --- |
+| Single `.kristal` output; uncompressed inner ZIP64 STORE | Implemented |
+| Optional password protection (Argon2id + authenticated encryption) | Implemented |
+| Password **and** a second 32-byte secret | Implemented; this is **not** a certified hardware factor |
+| Multiple X25519 recipient keys | Implemented |
+| Independent recovery secret | Implemented; alternate path to decryption |
+| Ed25519 manifest signatures and externally supplied trusted keys | Implemented |
+| Full verification before exposing members; encrypted temporary staging | Implemented |
+| Rewrap/rotate access while preserving inner archive bytes | Implemented |
+| Local Kit `read-surface/1.0` integration adapter | Implemented; not an end-to-end Manager integration |
+| Native TPM binding, WebAuthn PRF, managed KMS/Konfid provider | **Not shipped** |
+| Post-quantum key establishment, threshold recovery, offline revocation | **Not shipped** |
+
+Use `python -m kristal_container capabilities` for the machine-readable capability report from your installed build.
+
+## Architecture at a glance
+
+```text
+Kristal folder / authorized Local Kit read surface
+                    |
+                    v
+             select + validate
+                    |
+                    v
+     ZIP64 STORE + manifest + optional signature
+                    |
+                    v
+    .kristal envelope (open or authenticated-encrypted)
+                    |
+                    v
+           verify before reading
+                    |
+                    v
+      application-specific Reader Policy / consumer
+```
+
+**Responsibility boundary:** Kristal Framework owns semantic contracts and Logical Commitments; Kontainer owns the physical container implementation. Neither a successful cryptographic verification nor an Ed25519 signature automatically establishes epistemic validity, reader authorization, or permission to execute content. See [Ecosystem Integration](Ecosystem-Integration).
+
+## Security defaults
+
+The command-line tool does not accept secret values as command arguments. Unprotected archives are **not confidential**. Extracting plaintext requires an explicit flag. Input file names are checked; common development secrets and linked files are rejected by default. No unexpected code, network address, or plugin is selected from an input container.
+
+For production-sensitive use, review the [Security Model](Security-Model), [Key Management and Recovery](Key-Management-and-Recovery), and [Release Status](Release-Status-and-Roadmap) first.
+
+*Source baseline: `Kristal-Container 1.0.0rc1` repository documentation, code, and the supplied kOA Digital Ecosystem snapshot. This wiki is explanatory; the normative physical format contract is proposed in the repository&#x27;s `docs/FORMAT.md`, pending Framework adoption.*
+</pre></body></html>

@@ -1,0 +1,47 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Contract-Evolution-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Contract-Evolution-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 cfdfdd837fe0b1dc</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Contract-Evolution-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Contract Evolution — v9
+
+V9 uses additive evolution and compatibility locks.
+
+```text
+v6 portable substrate      frozen
+v7 semantic identity       frozen
+v8 language/query layer    frozen
+v9 state architecture      additive
+```
+
+## Independent contract versioning
+
+A domain Logical Contract versions independently from the Kristal Standard.
+
+```text
+recipes.procedure-graph/3.0
+→ recipes.procedure-graph/3.1
+```
+
+does not automatically require Kristal v10.
+
+## Change classes
+
+Contracts should distinguish:
+
+- compatible addition;
+- presentation-only change;
+- rename;
+- semantic replacement;
+- split;
+- merge;
+- identity migration;
+- commitment-profile migration.
+
+## Identity migration
+
+Changing what defines “the same logical object” is not a normal schema rename. It must be explicit and traceable from old IDs to new IDs.
+
+## Commitment-profile migration
+
+Changing projection fields, exclusions, collection ordering, domain separator or hash algorithm requires a new profile identifier.
+
+## Compatibility lock
+
+A v9 release can pin inherited normative files and TCK vectors by digest. Compatibility means keeping those surfaces unchanged, not merely keeping similar filenames.
+</pre></body></html>

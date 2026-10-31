@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/24-embed-threat-model.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/24-embed-threat-model.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 a991987f8e28751d</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/04-runtime-and-security/24-embed-threat-model.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 24. Threat model de l&#x27;application hostée
+
+Une application admise peut être correcte, boguée, mal configurée ou compromise. L&#x27;admission ne supprime donc pas la frontière browser/origin.
+
+Principe :
+
+```text
+admitted application
+!=
+trusted as Koali origin
+```
+
+Les catégories à contrôler dans l&#x27;onboarding sont :
+
+```text
+top-level navigation
+window.open / popups
+downloads
+clipboard
+camera
+microphone
+geolocation
+fullscreen
+WebAuthn
+file picker
+drag/drop
+cookies
+localStorage
+IndexedDB
+service workers
+cross-origin redirects
+OAuth/OIDC callbacks
+WebSocket/SSE
+external links
+```
+
+`LOCK-KS-SURF-143` — **L&#x27;admission d&#x27;une application ne la rend pas équivalente à l&#x27;origine de confiance Koali et ne lui accorde aucun accès implicite au parent.**
+
+`LOCK-KS-SURF-144` — **Chaque application hostée doit avoir une politique explicite et minimale pour top-navigation, popups, downloads, browser permissions, storage et service-worker scope ; l&#x27;absence de politique ne signifie pas autorisation.**
+</pre></body></html>

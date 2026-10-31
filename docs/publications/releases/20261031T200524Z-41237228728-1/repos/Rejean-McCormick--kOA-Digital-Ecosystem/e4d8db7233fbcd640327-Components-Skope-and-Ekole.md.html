@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Components-Skope-and-Ekole.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Components-Skope-and-Ekole.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 78ef66de22d63df9</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/1-Overview/Components-Skope-and-Ekole.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Skope &amp; Ékole — nouvelles applications cartographiées
+
+**Status: owner-snapshot reconciliation / proposal; no claim of production integration.**
+
+## Skope
+
+- **Owner:** Skope repository (generic repository `Skope`).
+- **Role:** visually scopes a Wikidata-derived working skeleton for a future Kristal, preserving QIDs/PIDs and source assertions.
+- **Capabilities evidenced:** local Python/SQLite index from supported Wikibase JSON formats, per-branch depth controls, directional/property filters, external convergence candidates with explicit acceptance, offline preview, reproducible *prototype* ZIP export.
+- **Does not own:** EncyKlopedia&#x27;s acquisition authority, Da’at mapping/ACL, Kristal canonical identity/validation, UCKK pedagogical decisions, publishing.
+- **State:** operational local prototype with synthetic fixture; the user clone `D:` format and end-to-end v9/v10 qualification are **not established**.
+
+## Kristal Iroquoiens — working model indépendant
+
+- **Owner :** `Kristal-Iroquoiens-Working`, dépôt distinct de Skope.
+- **Possède :** `Q110654499` en seed éditorial, ses recettes, archives documentaires, axes, mappings candidats, règles de revue culturelle et ses propres zones working/canon.
+- **Relation :** appelle Skope par `--db` + `--recipe` externe. Aucun code Skope copié et aucun couplage entre l’UI générique et la racine iroquoienne.
+- **Statut :** projet non canonique; démonstration synthétique; vraie extraction depuis le clone utilisateur `D:` non établie.
+
+## Ékole
+
+- **Owner:** Ékole repository.
+- **Role:** Québec primary-school authoring/catalogue and learner/teacher projections over 202 Kristal authoring workspaces.
+- **Evidence in supplied snapshot:** 202 workspaces identified as Authoring Kit stubs, derived pedagogical catalogue and graph (252 relations), Core/Élève and Enseignant applications, OpsConsole, local build/preview, Moodle projection **plan** (`moodle-plan`).
+- **Does not own:** Kristal authority or v9/v10 qualification, live Moodle course IDs, global source acquisition, host privileges or publication authority.
+- **State:** documented local applications and checks; **no verified published v10 states**, Moodle write path or qualified Skope→Ékole handoff.
+
+## Local coexistence
+
+| Service | Default | Notes |
+| --- | --- | --- |
+| Ékole Core + Élève | `127.0.0.1:8765` | Portal `/`, learner `/eleve/` |
+| Ékole Enseignant | `127.0.0.1:8766` | Launched from Ékole three-app batch |
+| Ékole OpsConsole | `127.0.0.1:8766` | Alternative/admin launch; **collides with Enseignant** when both use defaults |
+| Skope | `127.0.0.1:8767` | Default in accompanying updated Skope repo; overridable |
+
+The port convention is local documentation, **not** an OIDC/Koali/IK service registration or an assertion that every Ékole interface can run concurrently. Only Ékole can resolve the internal teacher/OpsConsole collision.
+
+See [contracts &amp; evidence](../2-Technical-Reference/40-integration/skope-ekole/index.md) and [app inventory](../inventory/apps-skope-ekole.json).
+</pre></body></html>

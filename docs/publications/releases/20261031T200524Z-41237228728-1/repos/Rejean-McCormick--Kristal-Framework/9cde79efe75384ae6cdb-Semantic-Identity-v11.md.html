@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Semantic-Identity-v11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Semantic-Identity-v11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 af2647f1f10b4259</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Semantic-Identity-v11' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Namespaced semantic identifiers — v11
+
+**Generic name:** *semantic identifier*. For entities/concepts, the precise expression is *semantic referent identifier* (French: **identifiant de référent sémantique**, IRS). A bare **Q** is **not** a generic name: `Q…` is a Wikidata item ID.
+
+| Internal family | Meaning | Typical canonical location |
+|---|---|---|
+| `KQ…` | Entity/concept/referent | Subject and entity-valued object |
+| `KP…` | Property/relation | Predicate and qualifier |
+| `KA…` | Assertion | Independently identified statement |
+| `KS…` | Source/evidence anchor | Source reference |
+
+The actual identity key is `(namespace_id, KQ123)` or `(namespace_id, KP456)`, **not** the number `123` or `456`. `KQ123` in one project and `KQ123` in a different namespace do not automatically designate the same meaning.
+
+### Sample (illustrative, not production allocations)
+
+```json
+{
+  &quot;namespace_id&quot;: &quot;example.org/kristal-demo&quot;,
+  &quot;entities&quot;: [&quot;KQ1001&quot;, &quot;KQ1002&quot;],
+  &quot;properties&quot;: [&quot;KP2001&quot;],
+  &quot;sources&quot;: [&quot;KS4001&quot;],
+  &quot;assertions&quot;: [{
+    &quot;id&quot;: &quot;KA3001&quot;,
+    &quot;subject&quot;: &quot;KQ1001&quot;, &quot;predicate&quot;: &quot;KP2001&quot;,
+    &quot;object&quot;: {&quot;kind&quot;: &quot;entity&quot;, &quot;id&quot;: &quot;KQ1002&quot;},
+    &quot;sources&quot;: [&quot;KS4001&quot;]
+  }]
+}
+```
+
+A real `kristal_semantic_graph` additionally includes `schema_version`, `artifact_type`, `graph_id` and is validated together with a matching `kristal_identity_registry`. The excerpt above is **illustrative, not a complete schema-valid artifact**.
+
+**Typed literals** such as `{&quot;kind&quot;:&quot;literal&quot;,&quot;datatype&quot;:&quot;string&quot;,&quot;value&quot;:&quot;A historical quotation&quot;}` may appear as values; the structural identity fields remain opaque IDs. The issue is never whether text exists anywhere; it is **whether a word is being used to identify semantic meaning**.
+
+See [[Wikidata-Crosswalk-v11]] and [[Dictionary-Management-v11]].
+</pre></body></html>

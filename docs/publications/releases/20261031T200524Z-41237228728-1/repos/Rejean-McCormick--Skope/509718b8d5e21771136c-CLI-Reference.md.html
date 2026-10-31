@@ -1,0 +1,61 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · CLI-Reference.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · CLI-Reference.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 5bbbf02aeaf12566</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/CLI-Reference' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Command-line interface
+
+The entry point is `python -m skope` or the installed `skope` console script. Run commands from the repository root to use relative fixture/profile paths correctly.
+
+## Syntax
+
+```text
+python -m skope serve   [--db FILE] [--host HOST] [--port PORT]
+                         [--kristal DIR] [--recipe FILE] [--guidance FILE]
+python -m skope meta    [--db FILE]
+python -m skope preview [--db FILE] --recipe FILE
+python -m skope export  [--db FILE] --recipe FILE --out ZIP
+                         [--scope-key KEY] [--guidance FILE]
+```
+
+- `--db` defaults to `SKOPE_DB`, if set, otherwise the built-in Windows `D:` index path.
+- `serve` defaults to loopback host `127.0.0.1` and port `8767`.
+- `--kristal` is optional initial context; the UI can activate a workspace later.
+- `--guidance` loads an optional Arketype guidance document for proposal export/startup.
+- `preview` prints JSON; it requires the configured root to exist in the connected index.
+- `export` writes a ZIP **working proposal** or **large-scope plan**, not an automatically approved canonical import.
+
+## Examples
+
+```powershell
+python -m skope meta --db &#x27;D:\EncyKlopedia\30_working\wikidata\wikidata.compact.sqlite&#x27;
+
+python -m skope serve --db &#x27;D:\EncyKlopedia\30_working\wikidata\wikidata.compact.sqlite&#x27; --port 8767
+
+python -m skope preview --db &#x27;D:\EncyKlopedia\30_working\wikidata\wikidata.compact.sqlite&#x27; --recipe &#x27;fixtures/demo.recipe.json&#x27;
+
+python -m skope export --db &#x27;D:\EncyKlopedia\30_working\wikidata\wikidata.compact.sqlite&#x27; --recipe &#x27;fixtures/demo.recipe.json&#x27; --out &#x27;working-proposal.zip&#x27;
+```
+
+## Native portfolio commands (0.15.0-alpha.1)
+
+```text
+python -m skope portfolio inventory       --input ZIP_OR_DIR --work DIR
+python -m skope portfolio prepare         --input ZIP_OR_DIR --work DIR --db INDEX --review-out CSV
+python -m skope portfolio status          --work DIR
+python -m skope portfolio discover        --work DIR --db INDEX
+python -m skope portfolio suggest-draft   --work DIR
+python -m skope portfolio review-csv      --work DIR --out CSV
+python -m skope portfolio approve-review  --work DIR --csv CSV
+python -m skope portfolio export-seeds    --work DIR --out DIR
+python -m skope portfolio acquire         --work DIR --db INDEX --profile ID --out DIR
+python -m skope portfolio propose         --work DIR --evidence DIR --out JSONL
+```
+
+The first two steps require the existing finalized compact index for discovery; verified *raw* acquisition requires the full dump, profile and random-access reader. The CSV and unverified draft seeds are not diK approvals. Full option tables, Windows examples and trust boundaries are in [Portfolio CLI Reference](Portfolio-CLI-Reference).
+
+## Launcher differences
+
+For v11 batch preparation there is also `Run_Portfolio_Prepare.cmd`; it creates `portfolio-work/` and `review-candidates.csv` but does not extract full source or modify any Kristal.
+
+The included `Start_Skope.cmd` chooses `%LOCALAPPDATA%\Programs\Python\Python312\python.exe`, passes a fixed `--db` (overriding `SKOPE_DB`) and prints the local UI URL. It checks whether `indexed_bzip2` imports; a failure warns the user that full-record extraction is blocked but does not necessarily prevent indexed exploration.
+
+No standalone CLI command in this version builds the global SQLite index, creates dump-sidecar locators, confirms identities without review, or writes a Kristal canon.
+
+See [Installation](Installation) and [API Reference](API-Reference).
+</pre></body></html>

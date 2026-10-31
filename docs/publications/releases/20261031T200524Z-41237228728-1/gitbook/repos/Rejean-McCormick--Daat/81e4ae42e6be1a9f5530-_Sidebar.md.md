@@ -1,0 +1,36 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Daat/wiki/_Sidebar | commit: 210088db6d91800f3bb5b1889012982e1c23728e | SHA-256: 4dc608a29765c68e2c3090d63b3d1080d2c7d7231063782ac1c9ffe5cd186685 -->
+
+**DaaT**
+
+- [Home](Home.md)
+- [Document status](00-DOCUMENT-STATUS.md)
+- [Upstream evidence](01-SOURCE-BASELINE.md)
+- [Vision & invariants](02-VISION-AND-INVARIANTS.md)
+- [Architecture](03-ARCHITECTURE.md)
+- [Contracts & versions](04-CONTRACTS-AND-VERSIONS.md)
+- [Security](05-ADMISSION-AND-SECURITY.md)
+- [Mapping profiles](06-MAPPING-PROFILES.md)
+- [Alignment metrics](07-ALIGNMENT-METRICS.md)
+- [Runtime](08-RUNTIME-AND-LIFECYCLE.md)
+- [Conformance / TCK](09-CONFORMANCE-AND-TESTS.md)
+- [Developer guide](10-EXTERNAL-DEVELOPER-GUIDE.md)
+- [Implementation plan](11-IMPLEMENTATION-PLAN.md)
+- [Operations](12-OPERATIONS.md)
+- [Scenarios](13-REFERENCE-SCENARIOS.md)
+- [Open decisions](14-OPEN-DECISIONS.md)
+- [AI build backlog](15-AI-BUILD-BACKLOG.md)
+- [Glossary](16-GLOSSARY.md)
+- [Cross-repo changes](17-INTER-REPOSITORY-CHANGE-MATRIX.md)
+- [External walkthrough](18-WALKTHROUGH-EXTERNAL-INTEGRATION.md)
+- [French vision](00-French-Vision.md)
+- [AI coding instructions](AGENTS.md)
+- [ADR DaaT purpose](ADR-0001-DAAT-PURPOSE.md)
+- [ADR measurement](ADR-0002-ALIGNMENT-MEASUREMENT.md)
+- [ADR IK governance](ADR-0003-IK-PROFILE-GOVERNANCE.md)
+
+- [Code Implementation Status](19-IMPLEMENTATION-STATUS.md)
+
+- [Security boundary v0.3](20-SECURITY-BOUNDARY)
+- [Konfid alignment](21-KONFID-CONTRACT-ALIGNMENT)
+- [External mapping guide](22-EXTERNAL-MAPPING-GUIDE)
+- [Threat model](23-THREAT-AND-TRUST-MATRIX)

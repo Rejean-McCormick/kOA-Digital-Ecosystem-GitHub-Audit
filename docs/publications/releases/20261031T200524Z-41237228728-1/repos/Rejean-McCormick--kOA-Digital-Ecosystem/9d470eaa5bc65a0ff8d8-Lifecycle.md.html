@@ -1,0 +1,72 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Lifecycle.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Lifecycle.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 ed825273cf010774</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/1-Overview/Lifecycle.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Lifecycle
+
+kOA coordinates several independent lifecycles.
+
+## Cross-system interaction
+
+Where Interaction Kernel is adopted:
+
+```text
+sender-owned state
+→ explicit versioned Profile
+→ receiver authentication/authorization/admission
+→ receiver-owned mutation/read
+→ Receipt / Event / QueryResult
+→ reconciliation
+```
+
+## Konnaxion decision → Orgo work
+
+```text
+Konnaxion deliberation/readings
+→ finalized DecisionRecord
+→ governance.decision.execute/1.0.0
+→ Orgo Signal / WorkflowVersion / Case / Tasks
+→ accountability.impact.publish/1.0.0 when applicable
+→ Konnaxion impact/accountability state
+```
+
+## Knowledge acquisition → canon → projection
+
+```text
+source/provider discovery
+→ EncyKlopedia acquisition evidence + referent candidates
+→ encyklopedia.corpus-harvest-handoff/1.0.0
+→ Da’at mapping / ACL
+→ Kristal Referent Registry + Kristal State
+→ Working Exchange
+→ validation / authority recognition as applicable
+→ Reference Exchange when recognized
+→ Runtime Pack and/or UCKK consumer projection
+```
+
+Acquisition, validation/recognition and consumer projection are separate lifecycles.
+
+## kOA-Linux release and Runtime Pack lifecycle
+
+```text
+Runtime Pack candidate
+→ knowledge release channel
+→ Release Set compatibility
+→ kristal_runtime verification/compatibility
+→ activation eligibility
+→ active-state transition
+→ activation receipt / runtime health
+→ rollback + last-valid restore when required
+```
+
+kOA Node Agent is used only for the privileged host-facing transition required by profile/contract.
+
+## Koali Space lifecycle
+
+```text
+Space definition
+→ application/module admission
+→ runtime registration/readiness
+→ Space activation
+→ surface resolution/rendering
+→ rollback/deactivation
+```
+
+Koali Space activation is presentation lifecycle state and is not Runtime Pack activation.
+</pre></body></html>

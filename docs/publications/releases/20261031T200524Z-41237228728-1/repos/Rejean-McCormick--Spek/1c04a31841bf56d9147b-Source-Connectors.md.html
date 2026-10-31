@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Source-Connectors.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Source-Connectors.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 931abd10aa17 · SHA-256 e101e2c1f3bfee54</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Source-Connectors' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Source Connectors
+
+Spek supports three paths:
+
+- Native Spek article source JSON, no bridge required.
+- Konstellation&#x27;s reader-scoped `ResultSet 0.2` exported by `/api/query` and pinned to a bridge mapping.
+- A generic `spek.exchange/0.1` export produced by any other Kristal or third-party system.
+
+A bridge validates complete exports, confirms dataset/reader-policy refs against an explicit mapping, checks assertion payload hashes, and records external identifiers in Source Explorer. It does **not** validate scientific content or determine whether a sentence correctly paraphrases an external assertion.
+
+## Try Konstellation&#x27;s synthetic export
+
+```powershell
+python -m spek bridge-import --adapter konstellation --input examples/bridge/konstellation-resultset.json --template examples/article.json --mapping examples/bridge/konstellation-mapping.json --out bridge-article.json
+python -m spek build --source bridge-article.json --out dist-bridge
+python -m spek verify-site dist-bridge
+```
+
+For real Konstellation data, `bridge-fetch-konstellation` supports an explicitly supplied QuerySpec, base URL and environment-sourced bearer token. This is an opt-in network step; **live interoperability has not yet been validated with a running Konstellation server**.
+
+## Try another source
+
+```powershell
+python -m spek bridge-import --adapter exchange --input examples/bridge/external-system-exchange.json --template examples/article.json --mapping examples/bridge/external-system-mapping.json --out another-source.json
+```
+
+The example links use reserved demonstration domains; configure actual upstream deep-link routes in your mapping. No adapter modifies upstream data. Public website exposure requires separate authorization.
+
+See `docs/STANDALONE_AND_CONNECTORS.md` for the contract, security assumptions and export JSON example.
+
+## Educational adapters (v0.5)
+
+`import-educational --adapter ekole|kompose` is a separate, curated projection importer. It never calls upstream school services or bypasses access controls; see [[Ekole Integration]] and [[Kompose Integration]].
+</pre></body></html>

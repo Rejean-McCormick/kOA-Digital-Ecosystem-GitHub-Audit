@@ -1,0 +1,39 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Capsule-Manager · README_FINALISATION_TANDEM_IK_FAKEPLANT_V2.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Capsule-Manager · README_FINALISATION_TANDEM_IK_FAKEPLANT_V2.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Capsule-Manager · a137f3c1ab5e · SHA-256 e9c449f0387fa19f</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Capsule-Manager/blob/a137f3c1ab5e7a79887074560b11a2a6b0a70518/README_FINALISATION_TANDEM_IK_FAKEPLANT_V2.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Finalisation du premier tandem IK FakePlant — preuves croisées V2
+
+**Installer à la racine :** `C:\mycode\Konnaxion\Konnaxion_Capsule_Manager`. L&#x27;archive ajoute trois outils dans `tools\tandem_ik`, deux lanceurs, des tests de validation; elle **remplace seulement** le lanceur `STATUT_TANDEM_IK_E2E_FAKEPLANT.cmd` (pour éliminer l&#x27;ancien faux négatif). Elle **ne remplace pas** le lanceur d&#x27;écriture `TEST_TANDEM_IK_E2E_FAKEPLANT.cmd` : **ne le relance pas**.
+
+## Exécution (double-clic ou PowerShell 7)
+
+```powershell
+cd C:\mycode\Konnaxion\Konnaxion_Capsule_Manager
+.\FINALISER_TANDEM_IK_FAKEPLANT.cmd
+```
+
+Ce lanceur ne nécessite aucune phrase à retaper. Il interroge **en lecture seule** :
+
+- **Neon / Konnaxion** sous scope World 58, release 132 : décision 1 publiée, émission unique, acceptée, envoyée au bon tenant et au bon World. Le contrôle est historique : **aucun jeton valide n&#x27;est nécessaire** pour lire les résultats après son expiration.
+- **Orgo Docker / PostgreSQL** en transaction `SET TRANSACTION READ ONLY` : le Signal `konnaxion:decision:1:r1`, l&#x27;unique dossier et sa tâche, une instance du workflow V2 `completed`, les trois actions attendues et **une opération `publish_impact` SUCCEEDED** avec reçu `succeeded`.
+- **Neon / table d&#x27;entrée publique IK** (hors scope World) : l&#x27;impact publié, avec correspondance exacte sur la référence externe **identifiant du Signal**, le dossier, la corrélation UUID de l&#x27;opération, son identifiant et sa clé d&#x27;idempotence. Ceci corrige la fausse recherche précédente `decision:1`. Le `operation_id` Konnaxion est dérivé par `uuid5(NAMESPACE_URL, &#x27;interaction-kernel:&#x27;+operation.id)` et est vérifié exactement.
+
+Chaque partie doit avoir **exactement un** enregistrement pertinent. Si une correspondance manque ou est ambiguë, le programme refuse `complete=true`.
+
+### Fichier final
+
+`C:\mycode\Konnaxion\Tandem_Local\fakeplant-IK-E2E-LIVE.LOCAL.json`
+
+La première exécution réussie remplace le rapport V1 (qui disait `complete:false`) par un **V2** contenant `complete:true`, `konnaxion.impact_count=1`, l&#x27;opération d&#x27;impact dans `orgo.impact_operations`, les preuves croisées et les décomptes anti-doublons. **Le rapport V1 original est conservé une fois** à :
+
+`C:\mycode\Konnaxion\Tandem_Local\fakeplant-IK-E2E-LIVE.ORIGINAL.LOCAL.json`
+
+La substitution du rapport utilise `File.Replace` **avec un vrai chemin de sauvegarde** (évite le bug antérieur du `$null`). Une nouvelle exécution refait les requêtes lecture seule, valide les mêmes identifiants et ne réécrit pas un V2 identique. Si un V2 existant diverge, elle échoue sans écraser.
+
+**Écritures autorisées : uniquement le rapport JSON local et sa sauvegarde.** Aucune modification Neon ou Orgo, aucun POST IK, aucune migration, aucune création de compte, aucune réémission de décision, aucun changement de jeton ou de workflow.
+
+## Portée de la conclusion
+
+Ce rapport termine **le test technique synthétique FakePlant**. Il ne constitue **pas** un audit ACL humaines, SSO, sécurité production, déploiement de tous les Universes, ni GO LIVE. La conformité des identités simulées et des routes existantes ne prouve pas une session SSO commune.
+
+## Vérification de l&#x27;archive
+
+Le JavaScript a fait l&#x27;objet de vérification de syntaxe et de 12 tests de preuve valides/invalides. Le Python a passé la compilation et 4 simulations de correspondance Neon. **L&#x27;exécution PowerShell 7 et la consultation des bases sur Windows doivent encore être confirmées localement.** Ne fournir en retour que la sortie du lanceur et le booléen `complete` ; aucun secret, `.env` ou jeton n&#x27;est requis.
+</pre></body></html>

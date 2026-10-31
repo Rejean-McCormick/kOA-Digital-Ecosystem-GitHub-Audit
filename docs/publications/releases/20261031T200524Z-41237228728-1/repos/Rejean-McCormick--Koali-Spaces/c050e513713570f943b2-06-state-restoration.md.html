@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/04-shell/06-state-restoration.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/04-shell/06-state-restoration.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 98b9b5880c67e06b</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/04-shell/06-state-restoration.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Restauration d’état de navigation
+
+**Classe : Normatif**
+
+L’état de présentation Koali qui modifie l’intention de restauration doit être adressable sans devenir un état métier owner.
+
+## Sélection de surface produit
+
+Le paramètre réservé Koali est :
+
+```text
+ks_surface
+```
+
+Exemple :
+
+```text
+/apps/orgo/cases/123?ks_surface=my_work
+```
+
+Règles :
+
+- `ks_surface` est une métadonnée de présentation possédée par Koali ;
+- le chemin owner reste possédé par l’owner ;
+- la surface demandée est filtrée par les surface profiles admis et les capabilities ;
+- une surface inconnue, invalide ou devenue non admise retombe de façon déterministe vers la surface par défaut admise ;
+- lorsque plusieurs surfaces sont admises, Koali canonicalise l’URL vers la surface effectivement résolue ;
+- lorsqu’une seule surface est admise, une ancienne métadonnée `ks_surface` est retirée ;
+- refresh, back/forward et bookmark restaurent donc l’intention de présentation ;
+- cet état n’accorde aucune capability et ne contourne aucun runtime registry ;
+- Koali n’invente pas d’état de query owner.
+
+Koali peut séparément mémoriser le dernier module, la dernière route sûre par module, l’expansion de sidebar, le mode d’affichage lorsqu’une policy de persistance est acceptée, la langue et les préférences utilisateur de présentation. Toute restauration reste conditionnelle à l’admission et à la disponibilité présentes.
+
+Ne jamais restaurer une action en cours comme si elle avait réussi.
+</pre></body></html>

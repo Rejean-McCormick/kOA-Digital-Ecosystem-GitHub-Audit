@@ -1,0 +1,54 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/00-overview/principles.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/00-overview/principles.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 dd290decd087593d</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/00-overview/principles.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Engineering Principles
+
+## 1. Compile context, do not dump data
+
+A Context Pack is a compiled artifact. Query outputs from multiple Kristals/Kristall surfaces are normalized into a common record shape, deduplicated context-locally, linked, ranked, and budgeted while preserving provenance.
+
+## 2. Capabilities before queries
+
+Agents MUST query only operations advertised through `kompiler.capabilities`. Unknown targets, operations, parameters, or semantic dimensions fail closed.
+
+## 3. Semantic requests, implementation-local execution
+
+An untrusted request says:
+
+```json
+{&quot;target&quot;:&quot;HumanBody&quot;,&quot;operation&quot;:&quot;mechanisms&quot;,&quot;params&quot;:{&quot;topic&quot;:&quot;PM2.5&quot;}}
+```
+
+It does not say:
+
+```json
+{&quot;shell&quot;:&quot;python tools/query.py ...&quot;}
+```
+
+Adapters own the mapping to CLI, library calls, indexed files, SQL, or another trusted local mechanism.
+
+## 4. Preserve epistemic distinctions
+
+Integrity, assertion status, valuation, validation, authority recognition, reader/view policy, actionability, and truth are not interchangeable. Kompiler MUST NOT flatten them.
+
+## 5. Local-first
+
+The reference runtime executes locally and treats remote access as optional adapter behavior. A network connection is not required by the core protocol.
+
+## 6. Fail closed
+
+Unsupported semantics MUST be rejected or surfaced as limitations. Kompiler MUST NOT silently coerce unknown value semantics, unsupported joins, invalid reader policies, or unknown operations.
+
+## 7. Provenance survives compilation
+
+Every normalized or derived item SHOULD carry enough lineage to identify its source Kristal, source state/artifact, adapter, operation, and upstream record identifiers.
+
+## 8. Context is budgeted
+
+The objective is not maximum recall at any cost. The objective is maximum useful, diverse, interpretable context within an explicit budget.
+
+## 9. Transport is replaceable
+
+Clipboard today and a direct agent integration tomorrow MUST use the same logical contracts.
+
+## 10. Human boundaries remain explicit
+
+Kompiler may report actionability. It never converts actionability into permission to mutate another system.
+</pre></body></html>

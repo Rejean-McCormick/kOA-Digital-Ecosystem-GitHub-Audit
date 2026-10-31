@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Kristal-Workspaces.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Kristal-Workspaces.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 fc05e5424b40c9e5</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Kristal-Workspaces' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kristal workspaces (read-only targets)
+
+A **Kristal** is a separately managed workspace. Skope discovers and selects it as *context*; it does not change the workspace canon or activate downstream publishing.
+
+## Select a workspace
+
+1. Open **00 · Active Kristal**, click **Refresh Kristals**.
+2. Choose a discovered workspace and click **Activate selected**.
+3. For a workspace outside the discovery root, use **Add folder &amp; activate** with the absolute folder path.
+4. For generic Wikidata exploration, you may select **none**.
+
+Detection scans immediate child folders under `C:\mycode\Kristal\locals` (or `KRISTAL_LOCALS_ROOT`), not an arbitrary recursive directory tree. A valid folder contains a non-symlink `kristal.workspace.json` manifest with a recognized `kristal.local-workspace/` format and valid slug.
+
+## What selection changes
+
+- The current research context and proposal target metadata.
+- Whether a target-bound scope profile is appropriate for your research.
+- Which Catho roster can be consulted when starting the specialized author/works workflow.
+- Local selection persistence in the **gitignored** `config/kristals.local.json`.
+
+It does **not** launch a scope pass, an author campaign, a dump scan, a new fast index, or a canonical import. Running author campaigns capture the selected folder **at start**; switching the active UI selection cannot silently retarget an existing worker.
+
+## Portfolio work is different from activating one workspace
+
+Skope 0.15.0-alpha.1 can read **v11 archives or directory portfolios** using `python -m skope portfolio inventory/prepare`. This creates an isolated working SQLite state containing scoped `(namespace_id, KQ/KP)` identities and curated labels. It does not require clicking **Activate selected** 104 times, and it does not change any source Kristal. The portfolio function is **CLI only**. See [Portfolio Enrichment](Portfolio-Enrichment).
+
+## Related API
+
+- `GET /api/kristals` — discovered list and active selection.
+- `POST /api/kristals/select` with `{&quot;id&quot;:&quot;&lt;discovered-id&gt;&quot;}` — change active target; send `{&quot;id&quot;:null}` to clear.
+- `POST /api/kristals/add` with `{&quot;path&quot;:&quot;&lt;absolute-workspace-folder&gt;&quot;}` — validate and register a manual folder.
+
+Never mistake a scope&#x27;s `target_slug` for permission to modify its target. See [Safety and Provenance](Safety-and-Provenance) and [Catho Authors Campaign](Catho-Authors-Campaign).
+</pre></body></html>

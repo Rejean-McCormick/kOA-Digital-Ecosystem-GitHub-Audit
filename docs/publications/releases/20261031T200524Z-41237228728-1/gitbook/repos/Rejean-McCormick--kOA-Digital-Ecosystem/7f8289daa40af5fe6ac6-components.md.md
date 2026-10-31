@@ -1,0 +1,59 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/2-Technical-Reference/10-system/components.md | commit: 4ed4b8928665ebd723b68f8b3f2cb2f196d6374f | SHA-256: 381c40860a1581b598fbda3354c3ec864882f2c479fac6a0f488815c441ac630 -->
+
+# Systems and boundary components
+
+This page is an ecosystem-level ownership map. Owner repositories remain authoritative for internal behavior.
+
+## Konnaxion
+Owns civic/public state and finalized DecisionRecords.
+
+## Orgo
+Owns workflow/operational work and durable IntegrationOperations.
+
+## EncyKlopedia
+Owns source discovery/acquisition, provider resolution, lossless evidence/provenance and the immutable corpus-harvest handoff. Referent candidates are not validated Kristal claims.
+
+## Da’at
+Owns the mapping/ACL boundary between ecosystem/IK-facing payloads and Kristal-native contracts. It does not own source operational state or Kristal authority semantics.
+
+## Kristal
+Owns Referent Registry semantics, Kristal State, typed valuations/coordinates/applicability, validation/recognition, Reader Policy, record-role/actionability semantics and derived runtime projections.
+
+## UCKK / Univers-Cité
+Owns consumer projection choices, Moodle/campus state, derived glossary/media presentation and local institutional decisions. Its projection is rebuildable from pinned Kristal artifacts and is not the epistemic canon.
+
+## kOA-Linux
+Owns platform profiles, trust/policy/resources, artifact admission, release-channel and Release Set contracts.
+
+## `kristal_runtime`
+Native kOA-Linux component owning local Runtime Pack verification/compatibility, active Runtime Pack state, activation/rollback receipts and runtime health.
+
+## kOA Node Agent
+Native kOA-Linux component for narrow authorized node-local lifecycle, activation/recovery and privileged host operations.
+
+## Koali Spaces
+Optional presentation/composition subsystem owning shell/routing/Space lifecycle/admitted application surfaces. It does not own participant business or epistemic state.
+
+## Interaction Kernel
+Distributed cross-system Profile/protocol layer where explicitly adopted. It owns no participant state.
+
+## SemantiK Architect
+Owns communication planning/realization, lexical orchestration, the SA↔GF bridge contract and RuntimeSet/capability/conformance semantics.
+
+## SemantiK Runtime Orchestrator
+Coordinates GF Wordbench artifacts, SemantiK Architect gates, optional diagnostics, transactional RuntimeSet promotion/rollback and activation. It owns sequencing/integrity transfer only.
+
+## SenTient
+Retains candidate extraction/resolution/reconciliation responsibilities. Candidate output does not become reference recognition merely because it was resolved.
+
+## No global control plane
+
+No system automatically controls every ecosystem transition. Each lifecycle stays with its declared owner.
+
+## Additional application owners (October 2026 snapshots)
+
+### Skope
+Owns a local Wikidata subgraph selection recipe and working artifacts only. No canonical Kristal validation/promotion or EncyKlopedia source custody. [Boundary](../40-integration/skope-ekole/index.md).
+
+### Ékole
+Owns its 202 educational authoring workspaces, catalogues, local portals and candidate Moodle plans. Site projections are derived. No v9/v10 qualified Kristal release or live Moodle sync is established by the snapshot. [Boundary](../40-integration/skope-ekole/index.md).

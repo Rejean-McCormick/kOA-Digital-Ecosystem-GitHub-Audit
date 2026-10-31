@@ -1,0 +1,61 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kristal-public · docs/C3_HANDOFF.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kristal-public · docs/C3_HANDOFF.md</h1><p class='meta'><small>Rejean-McCormick/kristal-public · 9a017c89e5fa · SHA-256 bff0ab3a8752e8cc</small><br><a href='https://github.com/Rejean-McCormick/kristal-public/blob/9a017c89e5fabb6d21f2a97fbe2f55cebd5cb2fd/docs/C3_HANDOFF.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># C3 — `kristal-public` handoff to C0 / C1 / C2 / C4
+
+**Status: IMPLEMENTED AND LOCALLY TESTED AS A SEALED STAGING PATCH; NOT LIVE; PUBLICATION STILL BLOCKED.**
+
+## Source observations (2026-10-08)
+
+- Input: `Code_snapshot_kristal-public.zip`, `kristal-public.zip`, `Code_snapshot_Kristal-Framework(6).zip`, `Kristal-Zoology.zip`.
+- Existing `.github/workflows/kristal-publish.yml` accepts `state_file` and originally defaults to `state/state-snapshot.json`. That root file is a **memberless genesis** state, not Zoology. Legacy workflow grants `contents:write`, creates releases and makes artifact attestation `continue-on-error:true`.
+- Existing `.github/workflows/kristal-qualify.yml` verifies node and host binding but does not check the Zoology state, the hosted read surface or index; its successful receipt therefore **does not** establish collection qualification.
+- `kristals/zoology/state/state-snapshot.json` exists and contains one member with state commitment `sha256:2503493eed8b2515107f9c32eed48286845f5468838ad3ae7b4a8f66a65f2ac8`.
+- `kristals/index.json`, `kristals/zoology/.kristal/sync-manifest.json` and the complete `AI_START_HERE.md` read surface are absent.
+- The existing framework pin in workflows is `Rejean-McCormick/KristalV10@27c0c7db3d79a4597c1c964fe8281fa35b5f858a`; its remote `reference/js/src/cli.mjs` lacks the newer `verify-hosted-collection-v10` command available in the supplied Framework draft.3.1 snapshot. **C1/C2 must agree on the approved new pin** before upgrading it. C3 therefore includes its own conservative standard-library integrity preflight and keeps the original pin for the existing node/bundle commands.
+- Original `.kristal/bootstrap-state.json` tracked workflow hashes that already differ from the supplied snapshot&#x27;s actual workflow bytes, **before** this patch. Its ownership belongs to Bootstrap C2. C3 intentionally does not rewrite those managed hashes and flags drift for C2.
+
+## Changes in this patch (relative to the repository root)
+
+```text
+README.md                              updated
+.github/workflows/kristal-qualify.yml   replaced: strict structural audit; no misleading PASS receipt
+.github/workflows/kristal-publish.yml   replaced: explicit slug, local bundle verification, NO release write
+scripts?                               none
+tools/c3_collection.py                 new: scan, build-index, validate-index, candidate
+tests/test_c3_collection.py            new: safe fixtures and negative tests
+docs/C3_HANDOFF.md                     new: this coordination report
+```
+
+The `tools/c3_collection.py` preflight is **not a new normative manifest schema**. It reproduces the field/digest conventions of Manager and Bootstrap for the C3 hosting boundary. Where a provenance materialization is external (`materialization_object_count &gt; 0`), it fails closed until C1/C2 establish native validation. It rejects symlinks, unexpected files, missing manifests, collisions, stale hashes, wrong v9 state references, missing index, unsupported scope and a missing AI entrypoint.
+
+## Tests / evidence
+
+Run from root:
+
+```bash
+python3 -m unittest discover -s tests -p &#x27;test_c3_collection.py&#x27; -v
+python3 tools/c3_collection.py --repo . scan
+```
+
+The second command fails on the current source **by design**, because it lacks `kristals/index.json`. A local synthetic hosted-surface fixture passes validation and tests mutations. No GitHub Actions runs, public pushes or releases are claimed by this work.
+
+## Required handshakes
+
+1. **C1:** determine the exact canonical v10 GitHub read surface, independent qualification evidence and Framework release/commit pin. Preservation of Zoology&#x27;s v6/v9 commitments is non-negotiable.
+2. **C2:** specify an authenticated, revocable and scope-limited initial-publication authorization receipt bound to slug, destination, file paths and exact content. Every subsequent revision must have independent C1 qualification at the same digest/commit. No trust based on self-declared JSON present in the public candidate tree.
+3. **C3:** after C1/C2 agreement, implement the missing trusted verifier in an isolated pre-public build pipeline, apply qualification and authorization before any public push/PR, and only then re-enable an immutable GitHub release operation. Do not grant `contents:write` to an unverified event. Retire/synchronize Bootstrap-managed workflow hashes with C2.
+4. **C4:** agree on an authenticated post-release signal containing repository, slug, release/tag, source commit, state commitment, and manifest digests. This signal must not be inferred from a simple push. C4 should rebuild on verified publication and keep the last good site on failure.
+
+## C0 status
+
+- Implemented: safer workflow scaffolding, structural preflight, test suite, offline index-generator, documentation.
+- Not established: real hosted Zoology surface/index; C1 independent qualification; C2 initial approval/trusted verifier; public push protections; post-publication event; immutable Zoology release; C4/Light integration.
+- User-facing initial publication authorization for Zoology has **not been granted**. A general policy to automate qualified future revisions is not the same as approval to expose Zoology now.
+- **Do not drop this patch directly into the public repo until C0/C2 approves the workflow-management transition.** It replaces workflows tracked by Bootstrap and makes an incomplete collection&#x27;s CI fail closed. It is ready for local review, testing and an integration PR that contains code only.
+
+## 2026-10-12 offline hardening update — local-only
+
+The English repo package now includes a read-only `tools/repository_audit.py` report, an isolated `c3-regression-tests.yml` fixture job and adversarial verifier checks in `tests/test_c3_hardening.py`. `tools/c3_collection.py` rejects ambiguous duplicate JSON keys, duplicate member artifact IDs, incorrect member logical-commitment profiles, non-object safety policy, and unrecognized collection-root files. None of these changes supplies the missing Zoology surface, a qualified collection index, or authentic C1/C2 approvals.
+
+**Managed workflow files and `.kristal/bootstrap-state.json` were intentionally left byte-for-byte unchanged** from the supplied snapshot. All five recorded Bootstrap fingerprints were already drifted. The old Framework pin also remains unchanged until its owner verifies and ratifies an immutable replacement. See [Framework Pin Review](FRAMEWORK_PIN_REVIEW.md), [Staging Intake](STAGING_INTAKE.md), and [Release Gates](RELEASE_GATES.md).
+
+The separate regression workflow is explicitly **not** independent qualification. Because no complete `kristals/index.json` exists, the collection integrity workflow remains fail-closed; it should not be disabled or made to pass by creating a placeholder index. No remote code push, public synchronization, release, or activation is claimed in this handoff.
+</pre></body></html>

@@ -1,0 +1,494 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/3-Layer-Model/LAYER_TEMPLATE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/3-Layer-Model/LAYER_TEMPLATE.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 c326e65cc270f12e</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/3-Layer-Model/LAYER_TEMPLATE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Layer Template
+
+**File:** `docs/3-Layer-Model/LAYER_TEMPLATE.md`  
+**Status:** Template  
+**Normative for kOA:** NO  
+**External normative references:** None  
+
+---
+
+## Purpose
+
+This template defines the standard structure for all files in:
+
+```text
+docs/3-Layer-Model/layers/
+```
+
+Each layer file explains one functional layer of the broader kOA architecture.
+
+The layer model is a **conceptual orientation model**. It does not redefine technical contracts, node responsibilities, schemas, Kristal artifact formats, canonicalization rules, validation gates, or operational runbooks.
+
+Technical and normative system behavior remains defined in the kOA Digital Ecosystem technical documentation and its pinned dependencies.
+
+---
+
+## Layer File Naming
+
+Layer files should use the following pattern:
+
+```text
+XX_short_layer_name.md
+```
+
+Examples:
+
+```text
+00_separation_of_functions.md
+04_structured_knowledge.md
+08_execution.md
+13_deployment_translation.md
+```
+
+Use:
+
+* two-digit numeric prefix;
+* lowercase;
+* underscores;
+* short descriptive name;
+* no spaces;
+* no accents;
+* no punctuation except underscores and hyphens if needed.
+
+---
+
+## Standard Layer File Structure
+
+Use the following structure for every layer file.
+
+````markdown
+# Layer XX — Layer Name
+
+**File:** `docs/3-Layer-Model/layers/XX_layer_name.md`  
+**Status:** Conceptual layer definition  
+**Normative for kOA:** NO  
+**External normative references:** None  
+
+---
+
+## 1. One-Sentence Definition
+
+A short, reusable definition of the layer.
+
+Example:
+
+&gt; Structured Knowledge is the layer where raw contributions become reusable, verifiable knowledge artifacts.
+
+---
+
+## 2. Core Function
+
+Explain what this layer does in the kOA architecture.
+
+This section should answer:
+
+- What transformation happens here?
+- What does this layer make possible?
+- Why does this layer need to exist separately?
+
+---
+
+## 3. Core Question
+
+State the key question this layer answers.
+
+Example:
+
+&gt; What do we know clearly enough to preserve, compare, reuse, or act on?
+
+---
+
+## 4. Position in the Stack
+
+Explain where this layer sits in the broader flow.
+
+```text
+Previous layer → This layer → Next layer
+```
+
+Example:
+
+```text
+Provenance / ingestion → Structured knowledge → Validation / canon
+```
+
+---
+
+## 5. Inputs
+
+List what enters this layer.
+
+Examples:
+
+* source material;
+* participant contributions;
+* documents;
+* claims;
+* context;
+* observations;
+* decisions from previous layers;
+* feedback from later layers.
+
+---
+
+## 6. Outputs
+
+List what this layer produces.
+
+Examples:
+
+* structured artifacts;
+* validated references;
+* decision records;
+* tasks;
+* memory records;
+* learning objects;
+* interface-ready outputs.
+
+---
+
+## 7. Internal kOA Components
+
+List the kOA-specific concepts, modules, roles, or artifacts related to this layer.
+
+Examples:
+
+* Kristal;
+* Orgo;
+* ethiKos;
+* EkoH;
+* Smart Vote;
+* Konnaxion;
+* UCKK;
+* King Klown;
+* Inquisiteur;
+* Assemblées;
+* Archives.
+
+Only include components that are directly relevant to the layer.
+
+---
+
+## 8. External Vocabulary
+
+Translate the layer into language used outside kOA.
+
+Examples:
+
+* semantic interoperability;
+* provenance;
+* knowledge object;
+* deliberative democracy;
+* decision support;
+* workflow management;
+* institutional memory;
+* systems literacy;
+* narrative change;
+* deployment strategy.
+
+This section helps outside readers understand the layer without needing to know the full kOA vocabulary.
+
+---
+
+## 9. Comparable Frameworks or Standards
+
+Mention external frameworks, standards, or fields that partially overlap with this layer.
+
+Examples:
+
+* OODA Loop;
+* Viable System Model;
+* FAIR Principles;
+* W3C PROV;
+* Verifiable Credentials;
+* IAP2 Public Participation;
+* Collective Impact;
+* Competency-Based Education;
+* Responsible AI;
+* workflow / case management;
+* organizational learning.
+
+Do not overclaim equivalence. Use language such as:
+
+&gt; This layer is comparable to...
+
+or:
+
+&gt; This layer partially overlaps with...
+
+---
+
+## 10. Failure Mode if Absent
+
+Explain what breaks if this layer does not exist.
+
+Examples:
+
+* meaning remains ambiguous;
+* sources cannot be trusted;
+* knowledge is lost in feeds or documents;
+* deliberation becomes noise;
+* decisions become opaque;
+* action is not followed through;
+* lessons are forgotten;
+* the system becomes dependent on a central authority;
+* the architecture becomes too complex to adopt.
+
+---
+
+## 11. Boundary Rules
+
+Define what this layer does **not** do.
+
+This prevents layer confusion.
+
+Examples:
+
+* This layer does not decide truth.
+* This layer does not execute tasks.
+* This layer does not replace human judgment.
+* This layer does not redefine Kristal contracts.
+* This layer does not create new facts.
+* This layer does not act as a source of institutional legitimacy by itself.
+
+---
+
+## 12. Relationship to Other Layers
+
+Explain key relationships with adjacent and non-adjacent layers.
+
+Use short bullets.
+
+Example:
+
+* Receives provenance-aware material from Layer 03.
+* Produces structured artifacts for Layer 05.
+* Feeds memory updates into Layer 09.
+* Is surfaced through Layer 11 interfaces.
+* May be explained publicly through Layer 12 narrative adoption.
+
+---
+
+## 13. Example
+
+Provide one concrete example of this layer in use.
+
+Keep it short.
+
+Example:
+
+&gt; A public consultation produces many comments, documents, and claims. This layer turns selected claims into structured knowledge artifacts with sources, uncertainty, provenance, and reuse conditions.
+
+---
+
+## 14. Partner-Relevant Translation
+
+Explain how this layer can be described to external partners.
+
+Examples:
+
+For civic tech partners:
+
+&gt; This layer helps transform public input into traceable decision material.
+
+For education partners:
+
+&gt; This layer helps learners produce evidence of understanding and competence.
+
+For data governance partners:
+
+&gt; This layer extends data governance into knowledge governance.
+
+---
+
+## 15. Minimal Definition for Index
+
+One compact sentence to reuse in `LAYER_INDEX.md`.
+
+Example:
+
+&gt; Structured Knowledge turns sources, claims, evidence, and context into reusable knowledge artifacts.
+
+---
+
+## 16. Open Questions
+
+List unresolved issues.
+
+Examples:
+
+* What examples should be documented?
+* Which external vocabulary is most appropriate?
+* What should be validated in a pilot?
+* Which internal components need clearer boundaries?
+* What belongs in technical documentation instead of the layer model?
+
+---
+
+## 17. Change Notes
+
+Track important updates.
+
+```text
+YYYY-MM-DD — Initial draft.
+```
+
+````
+
+---
+
+## Authoring Rules
+
+When creating a layer file:
+
+1. Keep the layer definition conceptual.
+2. Do not duplicate technical contracts from the Digital Ecosystem docs.
+3. Do not duplicate Kristal schemas, fields, canonicalization rules, or artifact contracts.
+4. Do not turn layer files into pitch documents.
+5. Do not add partner strategy unless it clarifies external vocabulary.
+6. Keep examples short and concrete.
+7. Clearly state what the layer does and does not do.
+8. Preserve separation between conceptual architecture and technical implementation.
+9. Use kOA internal terms, but always provide external vocabulary.
+10. Prefer clarity over completeness.
+
+---
+
+## Recommended Layer File List
+
+```text
+docs/3-Layer-Model/layers/00_separation_of_functions.md
+docs/3-Layer-Model/layers/01_orientation_mandate.md
+docs/3-Layer-Model/layers/02_semantics_meaning.md
+docs/3-Layer-Model/layers/03_provenance_ingestion.md
+docs/3-Layer-Model/layers/04_structured_knowledge.md
+docs/3-Layer-Model/layers/05_validation_canon.md
+docs/3-Layer-Model/layers/06_deliberation.md
+docs/3-Layer-Model/layers/07_decision_legitimacy.md
+docs/3-Layer-Model/layers/08_execution.md
+docs/3-Layer-Model/layers/09_memory_learning.md
+docs/3-Layer-Model/layers/10_resilience_autonomy.md
+docs/3-Layer-Model/layers/11_learning_interface.md
+docs/3-Layer-Model/layers/12_narrative_adoption.md
+docs/3-Layer-Model/layers/13_deployment_translation.md
+```
+
+---
+
+## Compact Blank Template
+
+Use this when drafting a new layer quickly.
+
+````markdown
+# Layer XX — Layer Name
+
+**File:** `docs/3-Layer-Model/layers/XX_layer_name.md`  
+**Status:** Conceptual layer definition  
+**Normative for kOA:** NO  
+**External normative references:** None  
+
+---
+
+## 1. One-Sentence Definition
+
+&gt; ...
+
+---
+
+## 2. Core Function
+
+...
+
+---
+
+## 3. Core Question
+
+&gt; ...
+
+---
+
+## 4. Position in the Stack
+
+```text
+Previous layer → This layer → Next layer
+```
+
+---
+
+## 5. Inputs
+
+* ...
+
+---
+
+## 6. Outputs
+
+* ...
+
+---
+
+## 7. Internal kOA Components
+
+* ...
+
+---
+
+## 8. External Vocabulary
+
+* ...
+
+---
+
+## 9. Comparable Frameworks or Standards
+
+* ...
+
+---
+
+## 10. Failure Mode if Absent
+
+...
+
+---
+
+## 11. Boundary Rules
+
+This layer does not:
+
+* ...
+
+---
+
+## 12. Relationship to Other Layers
+
+* ...
+
+---
+
+## 13. Example
+
+...
+
+---
+
+## 14. Partner-Relevant Translation
+
+...
+
+---
+
+## 15. Minimal Definition for Index
+
+&gt; ...
+
+---
+
+## 16. Open Questions
+
+* ...
+
+---
+
+
+````
+</pre></body></html>

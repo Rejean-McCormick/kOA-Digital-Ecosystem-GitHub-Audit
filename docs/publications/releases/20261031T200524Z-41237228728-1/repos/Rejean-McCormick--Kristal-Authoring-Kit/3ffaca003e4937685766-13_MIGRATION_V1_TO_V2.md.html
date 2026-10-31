@@ -1,0 +1,20 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Authoring-Kit · docs/13_MIGRATION_V1_TO_V2.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Authoring-Kit · docs/13_MIGRATION_V1_TO_V2.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Authoring-Kit · 2a20971ca698 · SHA-256 d3ead1b9a0844fb1</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Authoring-Kit/blob/2a20971ca69828a5168c7a086a14accbbb5cee6f/docs/13_MIGRATION_V1_TO_V2.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 13 — Workspace migration and compatibility audit
+
+The established migration command is `python tools/kristal.py migrate-v10 PATH`. It accepts legacy local v1/v2 workspaces and handles v3/v3.1 envelope migration according to the existing implementation. It is **not** the proper first step on the owner&#x27;s only copy.
+
+## Legacy envelopes
+
+- **v1 → v2:** adds `state_ref` and v9 target; converts the legacy State Index to structured Logical Artifact entries. Unresolved legacy contracts are explicitly marked with the placeholder `Local Kristal.legacy-json-artifact/1.0` and a migration note; no factual contract is inferred.
+- **v2/v3 → 3.2:** upgrades the workspace envelope to `kristal.local-workspace/3.2.0`, declares optional target `kristal.hosting/10.0`, and adds `hosting/` and `build/v10/` organization. The existing canonical index, canonical payload and v9 Logical/State Commitments are not meant to change.
+- **3.2.2/3.2.3 tools → candidate 3.2.5-rc.1:** the file tool and local layout are versioned independently. Do not replace embedded tools in the original 126 workspaces en masse. Stage a separate copy, record file digests, run check/inspect/build-v9, and compare independently.
+
+## Required migration gate
+
+```bash
+python scripts/audit_workspace_migration.py --before ../Original --after ../Staging
+```
+
+The audit is **read-only**. It compares canonical file membership/bytes, `state_ref` and any available v9 State Snapshot commitments. An absent snapshot is `NOT_FULLY_QUALIFIED`, **not** evidence of equality. Any canonical drift or commitment difference is `BLOCKED` and needs a separate domain migration decision. Preserve the original workspace for rollback.
+
+No target GitHub repository, grant, host binding or publication is inferred during migration. Run `configure-github` only when the owner has deliberately chosen a real repository and a verified Framework commit SHA.
+</pre></body></html>

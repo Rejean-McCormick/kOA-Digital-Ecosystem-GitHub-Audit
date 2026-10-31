@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/security-conformance.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/security-conformance.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 02cf8dff8355dd44</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/2-Technical-Reference/40-integration/identity-oidc/security-conformance.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Identity Security &amp; Conformance
+
+**Status:** Normative (kOA)
+
+## 1) Security invariants
+
+Implementations MUST protect against identity mis-linking, token theft/replay, issuer confusion, audience confusion, privilege escalation, stale memberships, shared service credentials, and PII leakage.
+
+## 2) Secret handling
+
+Passwords, access tokens, refresh tokens, client secrets, and recovery credentials MUST NOT be stored in Git, demo scenarios, or ordinary logs.
+
+## 3) Minimum conformance tests
+
+- same `(issuer, subject)` resolves the same local account;
+- changed email does not create a second identity;
+- same email with a different subject does not silently merge;
+- wrong issuer does not match;
+- wrong audience is rejected;
+- revoked local role remains revoked after successful SSO;
+- each application authorizes locally;
+- IdP outage leaves documented local recovery available;
+- changing one application&#x27;s local password does not alter another application&#x27;s password;
+- synthetic personas do not get login credentials by default;
+- service credentials are distinct from human sessions.
+
+## 4) Privacy
+
+Federation is not permission to join all user data across applications. Cross-system data sharing remains subject to purpose limitation, local ownership, minimization, and explicit integration contracts.
+</pre></body></html>

@@ -1,0 +1,75 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/kristal-v4/pinned-dependency.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/kristal-v4/pinned-dependency.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 4ed4b8928665 · SHA-256 3f9af06c068d2b9a</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/4ed4b8928665ebd723b68f8b3f2cb2f196d6374f/docs/2-Technical-Reference/40-integration/kristal-v4/pinned-dependency.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&gt; **HISTORICAL — Kristal v4 integration is superseded by `../kristal-v5/`. Retained only for migration/history.**
+
+# Kristal v4 — Pinned Dependency
+
+## Purpose
+
+This section defines how the kOA Digital Ecosystem **depends on Kristal v4** without duplicating Kristal’s normative contracts (schemas, canonicalization rules, signing targets, and artifact definitions).
+
+kOA MUST treat Kristal as an **external normative source** for Kristal-owned artifacts. Local copies of Kristal schemas or “illustrative manifests” are not permitted unless they are vendored verbatim from the pinned version and clearly labeled as such.
+
+## Pin policy (normative)
+
+kOA MUST pin Kristal v4 by **one** of these mechanisms:
+
+1. **Git submodule** (preferred)
+2. **Vendored subtree** at an immutable commit hash
+3. **Artifact registry** download pinned by digest (if your build system supports it)
+
+A floating reference (e.g., `main`, `latest`, unpinned tags) is not allowed.
+
+## What is pinned
+
+The pin MUST include:
+
+- Kristal specification docs (the normative text)
+- Kristal schemas (the executable contracts)
+- Conformance tests (if provided) or the schema set necessary to run kOA conformance tests
+
+Recommended repo layout (example):
+
+- `vendor/kristal/`  (submodule or subtree)
+  - `02-schemas/`
+  - `03-artifacts/` (if present)
+  - `04-protocols/` (if present)
+  - `CHANGELOG.md` / `VERSION` / release notes (if present)
+
+## Required metadata in kOA
+
+kOA MUST record the Kristal pin in:
+
+- `docs/2-Technical-Reference/40-integration/kristal-v4/index.md` (human-readable)
+- `docs/2-Technical-Reference/40-integration/kristal-v4/contract-pointers.md` (normative links)
+- Build/Release records (machine-verifiable)
+
+At minimum, record:
+
+- `kristal_version` (semantic version or release label)
+- `kristal_commit` (full commit hash) or `kristal_digest` (registry digest)
+- `kristal_schema_set_id` (optional: hash of the schema directory contents)
+
+## Contract references
+
+All kOA documentation MUST reference Kristal-owned artifacts via the pinned path, for example:
+
+- `vendor/kristal/02-schemas/exchange-manifest.schema.json`
+- `vendor/kristal/02-schemas/runtime-pack-manifest.schema.json`
+
+kOA docs must not restate field lists from these schemas.
+
+## Upgrade policy
+
+Upgrading the Kristal pin MUST:
+
+- be done as a single explicit change (one PR/change set)
+- include a compatibility review against kOA’s conformance checks
+- update `docs/2-Technical-Reference/40-integration/kristal-v4/legacy-compat.md` if any behavior changes are required
+- be recorded in an ADR under `docs/2-Technical-Reference/90-reference/adr/`
+
+## Enforcement (recommended)
+
+kOA SHOULD add a CI check that fails if:
+
+- Kristal schemas are duplicated under `docs/` outside the `vendor/kristal/` pin
+- any kOA doc includes a Kristal manifest “example” that does not match the pinned schema set
+- unpinned Kristal references appear in build scripts or docs</pre></body></html>

@@ -1,0 +1,29 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/03-modele/observations-et-verdicts.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/03-modele/observations-et-verdicts.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 bb527054769e3af5</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/03-modele/observations-et-verdicts.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Modèle des observations, verdicts et fraîcheur
+
+## Trois axes qui ne doivent jamais se mélanger
+
+1. **Processus** : `QUEUED`, `RUNNING`, `DONE`, `ERROR`, `TIMEOUT`, `CANCELLED`, `NOT_EXECUTED`.
+2. **Verdict moteur** : `PASS`, `WARN`, `FAIL`, `BLOCKED`, `SKIP`, `NOT_APPLICABLE`, `UNDETERMINED`; sémantique dépend du `profile`.
+3. **Fraîcheur** : `CURRENT`, `STALE`, `UNVERIFIED`, `UNKNOWN` (v1 livré présente `CURRENT` / `STALE_OR_UNVERIFIED`).
+
+Une interface doit afficher par exemple « **FAIL (V9-State-Reader), actuel, 31 oct.** » et non seulement « FAIL ». `NOT_RUN` est un état d&#x27;absence d&#x27;exécution, pas un verdict de conformité.
+
+## Quand déclarer CURRENT ?
+
+- La preuve contient un fingerprint d&#x27;entrée **avec portée connue**.
+- La cible existe, le même fingerprint est recalculé sur les mêmes entrées, la vérification est terminée et aucun changement pendant run n&#x27;a été détecté.
+- Le profile et les contrats à la source du verdict n&#x27;ont pas changé de version sans invalidation.
+- Un ancien rapport importé sans fingerprint reste `UNVERIFIED`, jamais `PASS CURRENT`.
+
+## Cas spéciaux
+
+Un `PASS` signifie « tous les contrôles requis par ce profil ont réussi sur le périmètre observé », non « toutes les assertions sont correctes ». `BLOCKED` peut indiquer une précondition ou preuve manquante. `NOT_APPLICABLE` doit inclure un motif et proposer le bon profil. `ERROR` du processus n&#x27;implique pas `FAIL` du Kristal.
+
+## Projection d&#x27;affichage
+
+La fiche expose : dernier verdict actuel par profil; état de processus; date; nombre de findings; preuves; dernière exécution même périmée; action « diagnostiquer à nouveau ». L&#x27;historique complet n&#x27;est jamais supprimé lors d&#x27;un scan.
+
+## Protocole de transition cible
+
+`not_run → queued → running → completed | failed_to_execute | cancelled`, puis une **évaluation indépendante** de fraîcheur. Une modification de source provoque `CURRENT → STALE` sans modifier le verdict historique enregistré.
+</pre></body></html>

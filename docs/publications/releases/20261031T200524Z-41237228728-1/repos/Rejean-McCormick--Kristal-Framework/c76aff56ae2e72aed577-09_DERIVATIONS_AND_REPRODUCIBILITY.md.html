@@ -1,0 +1,158 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · docs/09_DERIVATIONS_AND_REPRODUCIBILITY.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · docs/09_DERIVATIONS_AND_REPRODUCIBILITY.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · 68ba4c8ca9ff · SHA-256 0ba50f2508c735be</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/blob/68ba4c8ca9fff5f410d005fc6142b8c018716eb7/docs/09_DERIVATIONS_AND_REPRODUCIBILITY.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Derivations and reproducibility
+
+## 1. Purpose
+
+Kristal has long required deterministic, declared builds for reproducible artifacts. V9 makes that build causality machine-readable through a Derivation Graph.
+
+A derivation is not a knowledge claim. It is a record of computation.
+
+## 2. Derivation model
+
+Conceptually:
+
+```text
+declared inputs
+      +
+transform identity
+      +
+parameters
+      +
+toolchain/environment contract
+      ↓
+outputs
+```
+
+The draft contract identifier is:
+
+```text
+kristal.derivation/9.0
+```
+
+## 3. Example
+
+```json
+{
+  &quot;contract&quot;: &quot;kristal.derivation/9.0&quot;,
+  &quot;transform&quot;: {
+    &quot;id&quot;: &quot;pokemon.normalize-learnsets&quot;,
+    &quot;version&quot;: &quot;2.1&quot;,
+    &quot;digest&quot;: &quot;sha256:...&quot;
+  },
+  &quot;inputs&quot;: [
+    {
+      &quot;artifact_id&quot;: &quot;src:pokeapi:pokemon_moves&quot;,
+      &quot;logical_commitment&quot;: &quot;sha256:...&quot;
+    }
+  ],
+  &quot;parameters&quot;: {
+    &quot;normalization_profile&quot;: &quot;pokemon.learnsets/1&quot;
+  },
+  &quot;outputs&quot;: [
+    {
+      &quot;artifact_id&quot;: &quot;urn:kristal:pokemon:learnsets&quot;,
+      &quot;logical_commitment&quot;: &quot;sha256:...&quot;
+    }
+  ],
+  &quot;determinism&quot;: {
+    &quot;claimed&quot;: true
+  }
+}
+```
+
+The draft machine contract is `schemas/v9/kristal-derivation.schema.json`; fields may still evolve before the release candidate.
+
+## 4. Exact-input rule
+
+A deterministic derivation must declare every input that can affect its output, or eliminate that source of variability.
+
+Typical inputs include:
+
+- source snapshots;
+- schemas;
+- transformation code/version;
+- policies;
+- configuration;
+- locale when relevant;
+- random seeds;
+- compiler/tool versions where output depends on them;
+- external data dependencies.
+
+A build that reads undeclared mutable network state cannot claim strong deterministic reproducibility.
+
+## 5. Environment discipline
+
+Not every operating-system detail belongs in the logical derivation identity. The goal is to capture variables that can affect output.
+
+Implementations should avoid contaminating derived artifacts with irrelevant:
+
+```text
+absolute local paths
+wall-clock timestamps
+machine-specific temporary directories
+unordered filesystem traversal
+unstable process IDs
+```
+
+unless those values are intentionally part of the output contract.
+
+## 6. Derivation graph
+
+Artifacts and transformations form a directed build graph.
+
+```text
+PokeAPI snapshot
+      ↓ normalize
+canonical learnset relation
+      ↓ project
+logical artifact
+      ↓ materialize
+exchange segments
+      ↓ index
+runtime index
+```
+
+A change should invalidate only descendants whose declared inputs or logical outputs are affected.
+
+## 7. Logical change pruning
+
+An implementation may rebuild a node and discover that its logical commitment is unchanged.
+
+It may then stop downstream invalidation:
+
+```text
+source bytes changed
+      ↓
+rebuild logical artifact
+      ↓
+logical commitment unchanged
+      ↓
+no logical downstream rebuild required
+```
+
+This is an optimization, not a normative requirement for correctness.
+
+## 8. Rebuild claims
+
+A materialization or runtime profile may promise one of several reproducibility levels, for example:
+
+```text
+logical-reproducible
+byte-reproducible
+best-effort
+non-deterministic-derived
+```
+
+The profile must not claim byte reproducibility if compression timestamps or backend-specific ordering remain uncontrolled.
+
+## 9. Build receipts
+
+Deployments may retain signed build receipts containing:
+
+- derivation record;
+- exact input commitments;
+- output commitments/digests;
+- validator results;
+- execution environment evidence.
+
+A build receipt supports audit but remains distinct from the logical state unless a contract explicitly includes it.
+</pre></body></html>

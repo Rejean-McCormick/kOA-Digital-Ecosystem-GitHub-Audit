@@ -1,0 +1,128 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Capsule-Manager · README_LOT1C_VPS_RELEASE_ADMISSION_V1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Capsule-Manager · README_LOT1C_VPS_RELEASE_ADMISSION_V1.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Capsule-Manager · a137f3c1ab5e · SHA-256 f6f2f171d7ceef7d</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Capsule-Manager/blob/a137f3c1ab5e7a79887074560b11a2a6b0a70518/README_LOT1C_VPS_RELEASE_ADMISSION_V1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Lot 1C — admission de release VPS Linux / Docker / Capsule Agent (V1)
+
+## Périmètre réel de ce correctif
+
+Ce lot modifie **le code local du dépôt `Konnaxion_Capsule_Manager` seulement**.
+Il n&#x27;installe pas KonnaxionDiag sur Linux, ne pousse rien sur un VPS, ne signe
+aucune release, ne lance pas Docker et ne modifie aucune base ni aucun tenant.
+Il complète le **Lot 1A** et consomme le vérificateur **KonnaxionDiag 4.2.5** du **Lot 1B**.
+
+### Ce que l&#x27;Agent fait lorsqu&#x27;une admission est requise
+
+Pour `instance.start`, après le Security Gate et le chargement local des images,
+**avant** `docker compose down`, les migrations et `docker compose up`, l&#x27;Agent :
+
+1. Lit une politique d&#x27;admission **propre à l&#x27;Agent**, non fournie par la requête HTTP :
+   `/etc/konnaxion/release-admission/&lt;instance-id&gt;.json`.
+2. Mesure le Git commit/tree d&#x27;une arborescence propre, les octets du manifeste
+   de capsule, les composants `runtime_pack`, `policy_bundle`, `infra_manifest`,
+   `sbom`, `provenance` et les identités Docker des images du Compose effectif.
+3. Exige `image: registre/produit@sha256:&lt;digest&gt;` pour chaque service et interdit
+   les constructions `build` du Compose de production. Les identifiants sont
+   obtenus au moyen de `docker image inspect` (pas de la requête utilisateur).
+4. Reconstruit `identity` et son SHA-256 canonique et vérifie son égalité exacte
+   avec le ReleaseSet. Toute absence ou différence bloque le démarrage.
+5. Appelle la **vraie fonction** `assurance.pep.verify_activation_admission()`
+   de KonnaxionDiag 4.2.5 avec la clé publique de l&#x27;autorité approuvée,
+   l&#x27;empreinte mesurée et la version de politique imposée par l&#x27;Agent.
+6. Exécute `docker compose up --no-build` uniquement si admis.
+
+Les appels `backup.test_restore` destinés à un profil public sont **bloqués**
+provisoirement : cette opération démarre elle aussi des conteneurs et doit
+bénéficier d&#x27;une admission propre à sa cible isolée.
+
+### Conditions de déclenchement
+
+L&#x27;admission est obligatoire pour le réseau d&#x27;instance `public_vps`,
+`public_temporary`, `KX_PUBLIC_MODE_ENABLED`, ou un Agent qui a un mode public.
+Sur un Agent final, imposer en plus, dans la configuration **système de son
+service Linux** (non dans une requête API) :
+
+```
+KX_RELEASE_ACTIVATION_MODE=enforce
+```
+
+Ce mode s&#x27;applique même si l&#x27;instance a un profil réseau privé. Toute autre
+valeur explicite est rejetée. Le profil FakePlant `local_only` sans mode
+`enforce` conserve les contrôles du Lot 1A sans réclamer de ReleaseSet de
+production : son E2E technique n&#x27;est pas rejoué par cette mise à jour.
+
+### Exemple structurel de politique d&#x27;admission Linux
+
+**Ce fichier est un modèle de documentation, pas une politique à activer** :
+les chemins, les artefacts et les clés doivent exister et être préparés par
+l&#x27;opérateur et par le Builder / la chaîne de release approuvée.
+
+```json
+{
+  &quot;schema&quot;: &quot;koa.agent.release-admission.v1&quot;,
+  &quot;instance_id&quot;: &quot;instance-prod&quot;,
+  &quot;policy_version&quot;: &quot;konnaxion-security-policy-v1&quot;,
+  &quot;deployment_root&quot;: &quot;/opt/konnaxion/releases/&lt;RELEASE_ID&gt;&quot;,
+  &quot;source_marker&quot;: &quot;source/README.md&quot;,
+  &quot;capsule_manifest&quot;: &quot;capsule/manifest.json&quot;,
+  &quot;release_set&quot;: &quot;release-set.json&quot;,
+  &quot;verdict&quot;: &quot;release-verdict.json&quot;,
+  &quot;signature&quot;: &quot;release-verdict.sig&quot;,
+  &quot;trusted_public_keys&quot;: [&quot;/etc/konnaxion/trust/kdiag-release.pub&quot;]
+}
+```
+
+Le répertoire et le fichier sous `/etc/konnaxion/release-admission` doivent
+appartenir à root ou à l&#x27;utilisateur de service de confiance, et ne pas être
+modifiables par le groupe/autres. Les clés publiques doivent être protégées.
+Les clés **privées** de signature restent hors du VPS et de Capsule Manager.
+Installer KonnaxionDiag 4.2.5 dans le Python du **Capsule Agent Linux**.
+
+Les fichiers du ReleaseSet doivent être réellement présents au même emplacement
+relatif que dans `component_files`, et les digests du manifeste et des images
+signés doivent correspondre aux octets/IDs mesurés. Les builds actuels qui
+utilisent des tags Docker mutables, n&#x27;embarquent pas les composants complets
+ou ne correspondent pas à cette représentation sont **volontairement bloqués**.
+Il reste à adapter/qualifier le Builder, le staging d&#x27;une release candidate,
+les chemins complets de déploiement composite, et les tests sur VPS.
+
+### Limites et barrières non franchies
+
+- Lot 1C validé **dans les tests sur copie du code**, pas sur l&#x27;Agent du VPS.
+- L&#x27;Agent de production n&#x27;est pas actualisé. Les vraies clés et preuves ne sont
+  pas provisionnées et aucune admission de production n&#x27;est constatée.
+- L&#x27;admission de `instance.start` ne qualifie pas `instance.restore`,
+  `instance.rollback`, la migration d&#x27;un runtime composite Konnaxion+Orgo ou
+  la résistance à toute évolution du cycle de vie. Ces chemins restent des
+  barrières de qualification avant GO LIVE.
+- `ReleaseSet` complet, images digest-pinned et provenance doivent être
+  préparés **par les dépôts propriétaires**, pas inventés à partir de
+  métadonnées remises par le Manager.
+
+## Installation locale sur Windows / PS7
+
+Extraire le ZIP **à la racine réelle** :
+
+`C:\mycode\Konnaxion\Konnaxion_Capsule_Manager`
+
+Puis :
+
+```powershell
+cd &#x27;C:\mycode\Konnaxion\Konnaxion_Capsule_Manager&#x27;
+.\PREVIEW_LOT1C_RELEASE_ADMISSION.cmd
+.\INSTALL_LOT1C_RELEASE_ADMISSION.cmd
+.\VERIFY_LOT1C_RELEASE_ADMISSION.cmd
+```
+
+Pour revenir exactement au code antérieur si le dépôt n&#x27;a pas été modifié
+entre-temps : `ROLLBACK_LOT1C_RELEASE_ADMISSION.cmd`.
+
+L&#x27;installateur vérifie les SHA-256 du snapshot **22 h 56**, teste sur une copie
+isolée, sauvegarde chaque fichier remplacé, réutilise l&#x27;installation si elle
+est déjà conforme et refuse tout contenu inattendu. Les sauvegardes et les
+journaux sont conservés dans `Tandem_Local/lot1c_release_admission` à côté du dépôt.
+
+## État du programme global
+
+**Lot 1A :** validé sur ton Windows (40 tests).
+**Lot 1B :** validé sur ton Windows (71 tests).
+**C0 VPS :** validé sur ton Windows (19 tests).
+**Lot 1C code local :** à installer chez toi, testé sur le snapshot fourni.
+**Admission et Agent VPS :** non qualifiés à ce jour.
+</pre></body></html>

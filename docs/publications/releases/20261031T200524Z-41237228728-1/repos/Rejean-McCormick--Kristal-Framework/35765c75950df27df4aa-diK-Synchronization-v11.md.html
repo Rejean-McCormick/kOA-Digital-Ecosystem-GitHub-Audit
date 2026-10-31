@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · diK-Synchronization-v11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · diK-Synchronization-v11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 09eebc1b6cc20e2d</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/diK-Synchronization-v11' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># diK — synchronisation Wikidata et évolution des identifiants
+
+Ce guide décrit les **capacités connues de diK 1.0.0-alpha.7**, application externe au Framework draft.4. Elles sont **non normatives** : `schemas/v11` et le canon Kristal KQ/KP ne changent pas avec un import.
+
+## Sources, vérification, reprise
+
+- `dik sync fetch` : acquisition explicite d&#x27;un dump HTTPS officiel et tentative de reprise `Range` / `If-Range`; pas de récupération réseau implicite pendant la résolution de dictionnaires.
+- `dik sync import-mirror` : import seulement quand une empreinte SHA-256 amont est fournie et vérifiée indépendamment du manifeste téléchargé.
+- `dik sync import-large` : import en flux depuis un dump local JSON/JSONL, gzip/bzip2; checkpoints SQLite et sortie immuable. Le flux compressé doit être **rejoué** depuis le début jusqu&#x27;au checkpoint (pas de seek arbitraire).
+- `dik sync diff` : différences lexicales entre snapshots conservés, sans effacer les couches locales révisées.
+- `dik sync evolution` et `extract-redirects` : rapports de redirections externes et collisions à revoir, sans modifier les KQ/KP; l&#x27;adaptateur API ciblé n&#x27;est pas un moteur exhaustif d&#x27;import des redirects.
+
+## Une absence n&#x27;est pas une suppression sémantique
+
+Un QID manquant, une langue non traduite ou une redirection ne signifie pas qu&#x27;un concept Kristal doive être supprimé, fusionné ou renuméroté. Les correspondances `accepted + exactMatch` exigent des preuves et une revue. Les homonymes dans 300+ langues ne sont pas une identité.
+
+## Performance et limites
+
+L&#x27;index SQLite du chemin `import-large` est **dérivé** et réparable, pas le dépôt canonique. La mémoire utilisée pour les identités déjà approuvées dans le crosswalk reste proportionnelle au nombre de correspondances chargées; le dump complet Wikidata et les 300 langues réellement peuplées ne sont **pas** qualifiés industriellement. Le benchmarking synthétique diK ne vaut pas une preuve de débit sur un miroir massif.
+
+**Guide de promotion :** [[diK-Authoring-Exchange-v11]]. **Versions et limites :** [[Status-v11]].
+</pre></body></html>

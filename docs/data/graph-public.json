@@ -1,0 +1,570 @@
+{
+  "format": "koa.graph.public.v1",
+  "owner_repository": "Rejean-McCormick/kOA-Digital-Ecosystem",
+  "owner_commit": "4ed4b8928665ebd723b68f8b3f2cb2f196d6374f",
+  "graph_sha256": "7e5529fe336d1c329223d05f4986f72d5d0a51cb6b47ea8ddcc99476cc2c737a",
+  "inventory_sha256": "772cefca4fbe8b61a14e662124482a0f38c1190a4bcf9f1283817e9c97d55c54",
+  "source_date": "2026-10-31",
+  "reference_count": 49,
+  "candidate_count": 2,
+  "repositories": [
+    {
+      "repo": "Rejean-McCormick/Akor",
+      "name": "Akor",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Arketype",
+      "name": "Arketype",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Daat",
+      "name": "Daat",
+      "admission": "reference",
+      "role": "Mapping / ACL",
+      "group": "knowledge",
+      "node_id": "daat"
+    },
+    {
+      "repo": "Rejean-McCormick/Ekole",
+      "name": "Ekole",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Ekole-Pastorale",
+      "name": "Ekole-Pastorale",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/EncyKlopedia",
+      "name": "EncyKlopedia",
+      "admission": "reference",
+      "role": "Source acquisition",
+      "group": "knowledge",
+      "node_id": "encyklopedia"
+    },
+    {
+      "repo": "Rejean-McCormick/HomePage-initkoa.org",
+      "name": "HomePage-initkoa.org",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/initkoa-docs",
+      "name": "initkoa-docs",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Interaction-Kernel",
+      "name": "Interaction-Kernel",
+      "admission": "reference",
+      "role": "Versioned envelopes",
+      "group": "protocol",
+      "node_id": "ik"
+    },
+    {
+      "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+      "name": "kOA-Digital-Ecosystem",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/kOA-Linux-Koali",
+      "name": "kOA-Linux-Koali",
+      "admission": "reference",
+      "role": "Platform admission",
+      "group": "platform",
+      "node_id": "linux"
+    },
+    {
+      "repo": "Rejean-McCormick/Koali-Control-Panel",
+      "name": "Koali-Control-Panel",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Koali-Scenario-Mosaic",
+      "name": "Koali-Scenario-Mosaic",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Koali-Spaces",
+      "name": "Koali-Spaces",
+      "admission": "reference",
+      "role": "Presentation / shell",
+      "group": "platform",
+      "node_id": "spaces"
+    },
+    {
+      "repo": "Rejean-McCormick/Kompiler",
+      "name": "Kompiler",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Kompose",
+      "name": "Kompose",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Konductor",
+      "name": "Konductor",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Konfid",
+      "name": "Konfid",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Konnaxion",
+      "name": "Konnaxion",
+      "admission": "reference",
+      "role": "Civic decisions",
+      "group": "civic",
+      "node_id": "konnaxion"
+    },
+    {
+      "repo": "Rejean-McCormick/Konnaxion-Capsule-Manager",
+      "name": "Konnaxion-Capsule-Manager",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Konnaxion-Worlds",
+      "name": "Konnaxion-Worlds",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/KonnaxionDiag",
+      "name": "KonnaxionDiag",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Konstellation",
+      "name": "Konstellation",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Konstellation-Light",
+      "name": "Konstellation-Light",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Konstellation-Publisher",
+      "name": "Konstellation-Publisher",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Kontainer",
+      "name": "Kontainer",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Kontexte",
+      "name": "Kontexte",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Kristal-Authoring-Kit",
+      "name": "Kristal-Authoring-Kit",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Kristal-Framework",
+      "name": "Kristal-Framework",
+      "admission": "reference",
+      "role": "Epistemic authority",
+      "group": "knowledge",
+      "node_id": "kristal"
+    },
+    {
+      "repo": "Rejean-McCormick/Kristal-Integration-Pack",
+      "name": "Kristal-Integration-Pack",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Kristal-Manager",
+      "name": "Kristal-Manager",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/kristal-public",
+      "name": "kristal-public",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/KristalDiag",
+      "name": "KristalDiag",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/LevelUpDiag-kOA-Linux",
+      "name": "LevelUpDiag-kOA-Linux",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/LevelUpDiag-Orgo",
+      "name": "LevelUpDiag-Orgo",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/LevelUpDiag_SemantiK-Architect",
+      "name": "LevelUpDiag_SemantiK-Architect",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Mediatheque",
+      "name": "Mediatheque",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Mediatheque-blank",
+      "name": "Mediatheque-blank",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/MediKristal",
+      "name": "MediKristal",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/MediKristal-LevelUpDiag-",
+      "name": "MediKristal-LevelUpDiag-",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Orgo",
+      "name": "Orgo",
+      "admission": "reference",
+      "role": "Governed work",
+      "group": "civic",
+      "node_id": "orgo"
+    },
+    {
+      "repo": "Rejean-McCormick/Orgo-Worlds",
+      "name": "Orgo-Worlds",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/SemantiK-Architect",
+      "name": "SemantiK-Architect",
+      "admission": "reference",
+      "role": "Language realization",
+      "group": "language",
+      "node_id": "architect"
+    },
+    {
+      "repo": "Rejean-McCormick/SemantiK_Runtime_Orchestrator",
+      "name": "SemantiK_Runtime_Orchestrator",
+      "admission": "reference",
+      "role": "RuntimeSet sequencing",
+      "group": "language",
+      "node_id": "orchestrator"
+    },
+    {
+      "repo": "Rejean-McCormick/SenTient",
+      "name": "SenTient",
+      "admission": "reference",
+      "role": "Candidate resolution",
+      "group": "knowledge",
+      "node_id": "sentient"
+    },
+    {
+      "repo": "Rejean-McCormick/Skope",
+      "name": "Skope",
+      "admission": "reference",
+      "role": "Local scope / recipe",
+      "group": "knowledge",
+      "node_id": "skope"
+    },
+    {
+      "repo": "Rejean-McCormick/Spek",
+      "name": "Spek",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/UCKK-Assets",
+      "name": "UCKK-Assets",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/UCKK-Ops-Console",
+      "name": "UCKK-Ops-Console",
+      "admission": "reference",
+      "role": "Not mapped in this registry",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Kolor",
+      "name": "Kolor",
+      "admission": "discovered_not_admitted",
+      "role": "Discovered repository; authority to qualify",
+      "group": "other",
+      "node_id": null
+    },
+    {
+      "repo": "Rejean-McCormick/Karacter",
+      "name": "Karacter",
+      "admission": "discovered_not_admitted",
+      "role": "Discovered repository; authority to qualify",
+      "group": "other",
+      "node_id": null
+    }
+  ],
+  "systems": [
+    {
+      "id": "konnaxion",
+      "label": "Konnaxion",
+      "repo": "Rejean-McCormick/Konnaxion",
+      "role": "Civic decisions",
+      "group": "civic",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "orgo",
+      "label": "Orgo",
+      "repo": "Rejean-McCormick/Orgo",
+      "role": "Governed work",
+      "group": "civic",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "encyklopedia",
+      "label": "EncyKlopedia",
+      "repo": "Rejean-McCormick/EncyKlopedia",
+      "role": "Source acquisition",
+      "group": "knowledge",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "daat",
+      "label": "Da’at",
+      "repo": "Rejean-McCormick/Daat",
+      "role": "Mapping / ACL",
+      "group": "knowledge",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "kristal",
+      "label": "Kristal",
+      "repo": "Rejean-McCormick/Kristal-Framework",
+      "role": "Epistemic authority",
+      "group": "knowledge",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "linux",
+      "label": "kOA-Linux",
+      "repo": "Rejean-McCormick/kOA-Linux-Koali",
+      "role": "Platform admission",
+      "group": "platform",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "spaces",
+      "label": "Koali Spaces",
+      "repo": "Rejean-McCormick/Koali-Spaces",
+      "role": "Presentation / shell",
+      "group": "platform",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "ik",
+      "label": "Interaction Kernel",
+      "repo": "Rejean-McCormick/Interaction-Kernel",
+      "role": "Versioned envelopes",
+      "group": "protocol",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "architect",
+      "label": "SemantiK Architect",
+      "repo": "Rejean-McCormick/SemantiK-Architect",
+      "role": "Language realization",
+      "group": "language",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "orchestrator",
+      "label": "Runtime Orchestrator",
+      "repo": "Rejean-McCormick/SemantiK_Runtime_Orchestrator",
+      "role": "RuntimeSet sequencing",
+      "group": "language",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "sentient",
+      "label": "SenTient",
+      "repo": "Rejean-McCormick/SenTient",
+      "role": "Candidate resolution",
+      "group": "knowledge",
+      "evidence_state": "documented_responsibility"
+    },
+    {
+      "id": "skope",
+      "label": "Skope",
+      "repo": "Rejean-McCormick/Skope",
+      "role": "Local scope / recipe",
+      "group": "knowledge",
+      "evidence_state": "documented_responsibility"
+    }
+  ],
+  "links": [
+    {
+      "from": "konnaxion",
+      "to": "orgo",
+      "label": "Decision profile / governed handoff",
+      "status": "documented",
+      "verification": "not_certified"
+    },
+    {
+      "from": "orgo",
+      "to": "daat",
+      "label": "Immutable exports, as needed",
+      "status": "documented",
+      "verification": "not_certified"
+    },
+    {
+      "from": "encyklopedia",
+      "to": "daat",
+      "label": "Evidence / candidate handoff",
+      "status": "documented",
+      "verification": "not_certified"
+    },
+    {
+      "from": "daat",
+      "to": "kristal",
+      "label": "Kristal-native contract",
+      "status": "documented",
+      "verification": "not_certified"
+    },
+    {
+      "from": "kristal",
+      "to": "linux",
+      "label": "Runtime Pack / platform admission",
+      "status": "documented",
+      "verification": "not_certified"
+    },
+    {
+      "from": "architect",
+      "to": "orchestrator",
+      "label": "Owner-preserving release sequencing",
+      "status": "documented",
+      "verification": "not_certified"
+    },
+    {
+      "from": "skope",
+      "to": "encyklopedia",
+      "label": "Candidate handoff; not qualified",
+      "status": "proposed",
+      "verification": "not_certified"
+    }
+  ],
+  "notice": "Architecture and discovery only; no repository or integration certification"
+}

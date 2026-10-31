@@ -1,0 +1,18 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Interaction-Kernel · docs/upgrades/orgo.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Interaction-Kernel · docs/upgrades/orgo.md</h1><p class='meta'><small>Rejean-McCormick/Interaction-Kernel · 1d0598456fe8 · SHA-256 b9748f6e754c3851</small><br><a href='https://github.com/Rejean-McCormick/Interaction-Kernel/blob/1d0598456fe8203625f9831ec00c32225422631d/docs/upgrades/orgo.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Orgo upgrade
+
+Reuse existing infrastructure rather than duplicating it:
+
+- `IntegrationOperation` → IK semantic operation projection;
+- `OutboxMessage/OutboxWorker` → IK-Reliable delivery implementation;
+- inbound `governance.decision.execute` → idempotent Signal → published WorkflowVersion → Case/Tasks;
+- `ArtifactLink` projection only, not artifact ownership;
+- `OrgoExport v1` as a source-owned snapshot/export boundary;
+- Kristal adapter routes through DaaT;
+- reuse/upgrade existing kOA BuildRecord/ReleaseRecord contracts.
+
+Orgo remains authoritative for its mutable operational state. IK/DaaT/Kristal integration MUST NOT require direct mutation of Orgo&#x27;s database by another participant or a distributed commit spanning Orgo and Kristal. Cross-boundary effects use the existing durable outbox, idempotency and reconciliation model.
+
+Reference mapping: [`adapters/orgo-typescript/`](../../adapters/orgo-typescript/).
+
+See [ADR-IK-05](../adrs/ADR-IK-05-operational-state-artifact-boundary.md).
+</pre></body></html>

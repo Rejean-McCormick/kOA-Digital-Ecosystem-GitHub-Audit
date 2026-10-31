@@ -1,0 +1,58 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · docs/06-moteur-regles-sans-ia.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · docs/06-moteur-regles-sans-ia.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · a5a2d855584d · SHA-256 cc52940dec6437c3</small><br><a href='https://github.com/Rejean-McCormick/Kompose/blob/a5a2d855584d55d7ee5553207cb2e2b95d9c823d/docs/06-moteur-regles-sans-ia.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 06 — Moteur documentaire et moteur d&#x27;événements (sans IA)
+
+## Principe
+
+Le lecteur du Kristal est **déterministe** : ni LLM, ni modèle conversationnel, ni interpolation libre des faits. Chaque question est sélectionnée depuis une taxonomie et résolue par un identifiant, avec validation de l&#x27;accès.
+
+```mermaid
+sequenceDiagram
+  participant El as Élève
+  participant UI as KOMPOSE UI
+  participant AC as Contrôle d&#x27;accès
+  participant R as Lecteur déterministe
+  participant DB as Contenu validé
+  El-&gt;&gt;UI: Sélectionne thème + question
+  UI-&gt;&gt;AC: Demande avec session + Kristal
+  AC--&gt;&gt;UI: Autorisé / refusé
+  alt autorisé
+    UI-&gt;&gt;R: crystal_id + topic_id + question_id
+    R-&gt;&gt;DB: Cherche réponse publiée et versionnée
+    DB--&gt;&gt;R: Texte + sources + limites
+    R--&gt;&gt;UI: Réponse documentaire exacte
+  else refusé
+    UI--&gt;&gt;El: Indication neutre / parcours alternatif
+  end
+```
+
+## Pipeline cible
+
+1. **Autoriser** la séance, l&#x27;identité pseudonyme, le droit de lire, le contexte de mission.
+2. **Résoudre** un identifiant de question parmi ceux publiés pour cette version.
+3. **Retourner** `answer`, `source_refs`, `limitations`, `version` exactement enregistrés.
+4. **Journaliser** la consultation sans conserver le contenu de réponses personnelles ou des déductions intimes.
+5. **Émettre** au besoin `kristal.question_consultee` (événement minimal), déclenchant des prompts scénarisés idempotents.
+
+## Modèle de prompt
+
+`PromptDefinition` contient : événement déclencheur, conditions simples, cible (`demandeur`, `gardien`, `enseignant`, `groupe`), texte rédigé, identifiant de déduplication, dates/état de mission et action proposée. Aucun message personnalisé sur la base de scores privés ou d&#x27;aversions entre enfants.
+
+Exemples de déclencheurs :
+- `session.roles_publies` → « Découvre ta première mission »;
+- `kristal.garde_attribuee` → « Tu veilles sur cet indice; accompagne les chercheurs »;
+- `kristal.acces_demande` → « Une personne cherche l&#x27;archive »;
+- `kristal.acces_accorde` → « Le lecteur documentaire est disponible »;
+- `kristal.question_consultee` → « Compare cette preuve à une autre source »;
+- `mission.validee` → « La prochaine étape est ouverte ».
+
+## Questions non couvertes
+
+Si l&#x27;interface permet ultérieurement une saisie textuelle, elle peut uniquement faire une recherche **locale déterministe** sur des libellés prédéfinis, afficher une suggestion de question, puis exiger une **sélection explicite**; aucun texte libre ne doit être envoyé à un modèle génératif. Le périmètre de référence se limite aux choix prédéfinis.
+
+## Sécurité des événements
+
+Déduplication (`event_id` + `prompt_id`), reprise sur incident, version du contenu épinglée, horodatages serveur, ordre causal si nécessaire. Sur changement de garde, invalider les jetons concernés sans révoquer rétroactivement les consultations déjà autorisées.
+
+## Code démonstrateur
+
+`src/kompose/reader.py` montre la résolution exacte; `src/kompose/events.py` montre la sélection déterministe de prompts. Ce **n&#x27;est pas** un service HTTP sécurisé : la validation des droits est spécifiée dans les contrats et doit être implémentée par KOMPOSE.
+</pre></body></html>

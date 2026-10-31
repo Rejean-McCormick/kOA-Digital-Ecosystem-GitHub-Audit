@@ -1,0 +1,57 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/15-authentification-sso.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/15-authentification-sso.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 added9fc023faa5d</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/04-runtime-and-security/15-authentification-sso.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 15. Authentification et SSO
+
+Présenter une application ne signifie pas devenir son système d&#x27;identité.
+
+Modes conceptuels possibles :
+
+```text
+owner_managed_session
+explicit_oidc_sso
+explicit_lti_launch
+explicit_integration_token_exchange
+```
+
+Ce sont des **modes d&#x27;intégration**, pas des fonctionnalités automatiques du renderer.
+
+`LOCK-KS-SURF-056` — **Le renderer ne fabrique pas de SSO.**
+
+`LOCK-KS-SURF-057` — **OIDC, LTI ou tout token exchange exige un contrat d&#x27;intégration séparé.**
+
+`LOCK-KS-SURF-058` — **Une session Koali ne doit pas être supposée équivalente à une session Konnaxion, Orgo, UCKK, SemantiK Architect ou autre.**
+
+`ADR-KS-SURF-0001` — **La stratégie SSO commune retenue est `koa-common-oidc-v1`.**
+
+---
+## Profil commun `koa-common-oidc-v1`
+
+Le profil ferme la décision globale de SSO sans déplacer l&#x27;autorité des applications.
+
+```text
+Common OIDC IdP
+    ↓
+kOA Identity &amp; Trust
+    ↓
+Koali shell identity/session context
+
+Application owner
+    ↓
+same OIDC issuer + subject
+    ↓
+owner-local account
+    ↓
+owner-local authorization
+```
+
+Invariants :
+
+- la clé fédérée est le couple exact `issuer + subject (sub)`;
+- l&#x27;email et le display name ne sont jamais des clés de liaison silencieuse;
+- Koali Spaces ne possède pas la base utilisateur Konnaxion, Orgo ou UCKK-Moodle;
+- Koali Spaces ne transmet pas son cookie/session comme credential propriétaire;
+- `authProfileRef = &quot;koa-common-oidc-v1&quot;` signifie compatibilité avec le profil commun, pas partage de session applicative;
+- chaque application conserve son login local/recovery quand son contrat standalone l&#x27;exige;
+- les identités machine/service utilisent un contrat distinct du SSO humain;
+- l&#x27;autorisation reste toujours owner-local.
+
+Le parcours navigateur peut être silencieux lorsque l&#x27;IdP possède déjà une session, mais chaque application établit sa propre session locale après validation OIDC.
+</pre></body></html>

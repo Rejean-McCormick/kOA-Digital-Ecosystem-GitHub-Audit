@@ -1,0 +1,72 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Ekole-Pastorale · Architecture.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Ekole-Pastorale · Architecture.md</h1><p class='meta'><small>Rejean-McCormick/Ekole-Pastorale · 7c73b3852cf8 · SHA-256 7cfbd63a3e320783</small><br><a href='https://github.com/Rejean-McCormick/Ekole-Pastorale/wiki/Architecture' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture
+
+## Design rule
+
+**Ekole Core is a standalone, neutral learning engine.** It must not contain Catholic-specific logic, saints, miracles, or local curriculum rules. The same Core can consume `ekole-quebec` or `ecole-pastorale` as separate content packs.
+
+```text
+                        Content repositories
+
+  ekole-quebec/                         ecole-pastorale/
+  (separate school)                     (Catholic school)
+                                       ┌───────────────────────┐
+  Independent content                   │ 32 ARK-20 Kristals    │
+                                       │ 1 ARK-21 witness      │
+                                       │ Catho legacy bridge   │
+                                       └───────────┬───────────┘
+                                                   │
+                                      validate / derive
+                                                   │
+                                       ┌───────────▼───────────┐
+                                       │ pack.json + cours/    │
+                                       │ publications/eleve/   │
+                                       └───────────┬───────────┘
+                                                   │
+                        select a content pack      │
+                                   ┌───────────────▼─────┐
+                                   │      ekole/         │
+                                   │ neutral Ekole Core  │
+                                   └─────────────────────┘
+```
+
+## Responsibilities
+
+| Layer | Owns | Must not own |
+| --- | --- | --- |
+| **Ekole Core** (`../ekole`) | Web servers, course loading, navigation, general student/teacher features | Catholic doctrine or site-specific curriculum |
+| **Pastorale Kristal sources** (`kristals/`) | Canonical learning units, objectives, teaching sequence, assessments, namespace-scoped semantics | Other Kristals&#x27; primary historical sources |
+| **Witness Kristals** (`kristals-temoins/`) | Sources and structured testimony about saints or witnesses | Automatic recognition of miracles, doctrinal authority |
+| **Federation** (`federation/`) | Pinned documentary references and candidate links | Unreviewed v11 identity equivalences |
+| **Ekole projection** (root `pack.json`, `cours/`, etc.) | Runnable, derived views for Core | Canonical source edits |
+
+## Data flow
+
+1. Write and review the **canonical learning-unit JSON** of one Kristal.
+2. Validate its v11 graph, local workspace, and content quality.
+3. Rebuild the v9 logical state commitment if canonical content has changed.
+4. Run `outils/projeter_ekole.py` to regenerate the Core-facing files.
+5. Verify the pack with `demarrer_pastorale.py --verifier`.
+6. Open the school locally for testing.
+
+## Two branches, no forced dependencies
+
+The projector checks that a course prerequisite remains within its own branch. A mixed **pathway** may include materials from both branches, but no module in the message branch requires a learner to complete the miracles branch first.
+
+Both branches are Catholic. Separation is an instructional design boundary, not a claim that religious teachings and miracles are doctrinally unrelated.
+
+## Teacher and learner projections
+
+- `cours/` contains the **teacher-oriented** generated JSON, including assessment fields and lesson guidance.
+- `publications/eleve/` contains **learner-oriented** generated JSON; it omits private teacher rubrics and safeguarding notes.
+- Learner views remain local demonstrations and explicitly indicate that publication is **not authorized**.
+
+## Useful entry points
+
+- `pack.json`: `ekole.content-pack/0.1` manifest.
+- `demarrer_pastorale.py`: sibling-Core launcher.
+- `outils/projeter_ekole.py`: strict content compiler/projector.
+- `contracts/`: editorial schemas, **not** upstream v11 standards.
+- `provenance-derivation.json`: generated provenance record.
+
+Next: [Kristal Framework v11](Kristal-Framework-v11.md) and [Authoring and Projection](Authoring-and-Projection.md).
+</pre></body></html>

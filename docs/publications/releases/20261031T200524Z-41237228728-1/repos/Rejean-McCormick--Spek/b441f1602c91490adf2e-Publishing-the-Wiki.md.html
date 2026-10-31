@@ -1,0 +1,24 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Publishing-the-Wiki.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Publishing-the-Wiki.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 931abd10aa17 · SHA-256 34b4ba57176fc386</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Publishing-the-Wiki' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Publishing the Wiki
+
+The English wiki source is stored in the main project as `wiki/*.md`, but GitHub&#x27;s live wiki is a separate repository such as `OWNER/Spek.wiki.git`.
+
+## Initialize
+
+1. Create/push the main Spek repository.
+2. Enable **Wikis** in the repository settings.
+3. Create an initial `Home` page in the GitHub Wiki UI so its separate Git repository exists.
+4. Ensure that you have wiki write permission.
+
+## Preview and sync
+
+```bash
+./scripts/sync-wiki.sh OWNER/Spek         # local diff only
+./scripts/sync-wiki.sh OWNER/Spek --push  # explicit remote push
+```
+
+The script clones the current wiki, copies local Markdown pages without deleting unknown remote pages, commits changes and (only with `--push`) pushes to the wiki&#x27;s default branch.
+
+Do not use the wiki as a place for unpublished, confidential scientific data. Keep updates reviewed in the main repo first.
+
+GitHub reference: &lt;https://docs.github.com/en/communities/documenting-your-project-with-wikis/adding-or-editing-wiki-pages&gt;.
+</pre></body></html>

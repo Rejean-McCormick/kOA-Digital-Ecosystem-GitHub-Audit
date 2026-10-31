@@ -1,0 +1,44 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · Korum.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · Korum.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 62c3bb451bac · SHA-256 0ede27c038b633eb</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/wiki/Korum' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Korum — Structured Deliberation
+
+Korum is the logical structured-deliberation capability inside the ethiKos domain. It is implemented primarily in `konnaxion.ethikos`; it is not a separate source-of-truth database.
+
+## Current source state
+
+- `EthikosTopic` — deliberation topic;
+- `EthikosStance` — user&#x27;s topic-level stance;
+- `EthikosArgument` — argument/reply node;
+- `ArgumentSource` — evidence/source material attached to an argument;
+- `ArgumentImpactVote` — argument-level impact evaluation;
+- `ArgumentSuggestion` — proposed contribution/change;
+- `DiscussionParticipantRole` — participant role;
+- `DiscussionVisibilitySetting` — visibility policy.
+
+## Important separations
+
+```text
+ArgumentImpactVote ≠ EthikosStance
+EthikosStance ≠ Smart Vote reading
+EthikosArgument ≠ Orgo Task
+EthikosTopic ≠ Orgo Case
+```
+
+Topic stance and argument impact represent different participation semantics.
+
+## API ownership
+
+The current API is under the ethiKos boundary (`/api/ethikos/*`) with compatibility UI-facing aliases under `/api/deliberate/*` where present. Those aliases do not create another owner.
+
+## UI
+
+The main current deliberation surface is under:
+
+```text
+/ethikos/deliberate/*
+```
+
+including topic views, guidelines and elite/read-only variants.
+
+## Smart Vote relationship
+
+Korum source state can be an input to a Smart Vote reading. Smart Vote reads the source and returns a separate reading; it does not rewrite `EthikosStance` or the argument graph.
+</pre></body></html>

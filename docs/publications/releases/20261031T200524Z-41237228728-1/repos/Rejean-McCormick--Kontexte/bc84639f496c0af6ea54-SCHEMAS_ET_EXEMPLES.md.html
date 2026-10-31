@@ -1,0 +1,20 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontexte · docs/ekole-orgo/annexes/SCHEMAS_ET_EXEMPLES.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontexte · docs/ekole-orgo/annexes/SCHEMAS_ET_EXEMPLES.md</h1><p class='meta'><small>Rejean-McCormick/Kontexte · da916882f789 · SHA-256 896f328d26cdaf5b</small><br><a href='https://github.com/Rejean-McCormick/Kontexte/blob/da916882f789e4ac15d004871396fbd21300fe24/docs/ekole-orgo/annexes/SCHEMAS_ET_EXEMPLES.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Annexe — contrats proposés et exemples
+
+Ces contrats sont de **nouvelles propositions de design**, pas des composants actifs de l&#x27;Ekole actuel ni des opérations autorisées dans Orgo. Tous les exemples sont fictifs.
+
+| Contrat | Ce qu&#x27;il décrit |
+| --- | --- |
+| `EKOLE_ROLE_FRAME_V1.schema.json` | identité et actions d&#x27;un rôle pédagogique, présentation neutre possible |
+| `EKOLE_MISSION_FRAME_V1.schema.json` | scénario, étapes et fragments, liens Ekole candidats |
+| `EKOLE_LEARNING_EVENT_V1.schema.json` | trace pseudonymisée d&#x27;activité ou de validation |
+| `EKOLE_CURRICULUM_MAP_V1.schema.json` | correspondance révisable Ekole/mission/référentiel officiel |
+
+Les fichiers `exemples/*.json` correspondent à ces quatre schémas. **Aucune référence officielle n&#x27;est fabriquée**; les identifiants `qc-pri-*` sont vérifiés contre le catalogue du snapshot.
+
+## Valider les annexes après copie à la racine Ekole
+
+```powershell
+py -3 -m pip install jsonschema
+py -3 -c &quot;import json,pathlib,jsonschema; p=pathlib.Path(&#x27;docs/UPGRADE_MISSIONS_INTERDISCIPLINAIRES_V1/annexes&#x27;); t=[(&#x27;EKOLE_ROLE_FRAME_V1&#x27;,&#x27;role_sorciere&#x27;),(&#x27;EKOLE_MISSION_FRAME_V1&#x27;,&#x27;mission_fete_sorciere&#x27;),(&#x27;EKOLE_LEARNING_EVENT_V1&#x27;,&#x27;evidence_invitation&#x27;),(&#x27;EKOLE_CURRICULUM_MAP_V1&#x27;,&#x27;curriculum_map_fete&#x27;)]; [jsonschema.validate(json.loads((p/&#x27;exemples&#x27;/(b+&#x27;.json&#x27;)).read_text(encoding=&#x27;utf-8&#x27;)),json.loads((p/&#x27;schemas&#x27;/(a+&#x27;.schema.json&#x27;)).read_text(encoding=&#x27;utf-8&#x27;))) for a,b in t]; print(&#x27;JSON valides; revue pedagogique encore requise&#x27;)&quot;
+```
+</pre></body></html>

@@ -1,0 +1,79 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Akor · Integration-Contracts.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Akor · Integration-Contracts.md</h1><p class='meta'><small>Rejean-McCormick/Akor · d512ae7fb7f4 · SHA-256 fdb60ce7b7ee5767</small><br><a href='https://github.com/Rejean-McCormick/Akor/wiki/Integration-Contracts' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Integration Contracts
+
+**Status: contract-design guide, not a published Akor HTTP API.** Names and JSON sketches below are **proposals**. Implementations must first check actual versions, routes, ownership and permission models in all neighboring repositories.
+
+## Inputs that exist in the supplied sources
+
+| Source | Artifact or contract | Use |
+| --- | --- | --- |
+| Kontexte | `kontexte.mission/1` | Role/step/fragment/join intentions |
+| kompose | `kompose.kontexte-preview/1` | Deterministic, safe, non-dispatchable preview |
+| Orgo | `orgo.scenario.v1` | Controlled scenario injector format |
+| Orgo_Worlds | World/WorldRelease docs | Versioned release context and memberships |
+| Ekole | v3/v4 publication separation | Course content/teacher access/learning evidence boundary |
+
+**Source snapshot:** six archives dated October 17, 2026, as listed in [Project Status](Project-Status).
+
+kompose&#x27;s preview schema explicitly requires `preview_only=true`, `dispatch_allowed=false`, `canonical_runtime=&quot;orgo&quot;`, and marks joins as `orgo_not_implemented`. A preview must not be silently reinterpreted as an authorization to start a session.
+
+## Required contract families (proposed)
+
+### A. Reviewed mission manifest
+
+Record stable content references, source hashes, approved objective mapping, review decision, WorldRelease and the compatible Orgo workflow version.
+
+```json
+{
+  &quot;contract&quot;: &quot;akor.review-manifest/0-DRAFT&quot;,
+  &quot;scenario&quot;: {&quot;id&quot;: &quot;boulangerie&quot;, &quot;source_version&quot;: &quot;0.1.0&quot;},
+  &quot;reviewed_variant&quot;: &quot;boulangerie-multiplication-DRAFT&quot;,
+  &quot;curriculum&quot;: {&quot;course_id&quot;: &quot;qc-pri-ma-008&quot;, &quot;status&quot;: &quot;PENDING_HUMAN_REVIEW&quot;},
+  &quot;world_release_ref&quot;: null,
+  &quot;orgo_workflow_ref&quot;: null,
+  &quot;launch_eligible&quot;: false
+}
+```
+
+This is an **illustrative non-operational record**, not an accepted payload for Orgo or Ekole. It deliberately cannot launch anything.
+
+### B. Trusted launch request
+
+Akor&#x27;s server-side adapter must receive trusted teacher identity and session context, inspect approved content and permissions, and invoke only a reviewed Orgo contract. Define tenant/world/group scopes, expected revision, expiration, correlation ID and idempotency key. **Do not invent endpoint paths and assume they exist.**
+
+### C. Learner-safe projection
+
+The response should include only a learner&#x27;s permitted task, role vocabulary, currently released information, allowed actions, accessible supports and a state revision. It must exclude:
+
+- other groups&#x27; records;
+- unreleased fragments and answers;
+- teacher-only constraints and private review notes;
+- raw Orgo service credentials;
+- information about a peer&#x27;s health, supports or scores.
+
+### D. Contribution submission
+
+Treat every submission as a **command**, not an assumed success. Verify identity, authority, mission/session binding, expected revision, payload size/type and idempotency. A valid receipt means that a contribution was recorded, not automatically evaluated.
+
+### E. Learning evidence reference
+
+Use a minimal pseudonymous reference to connect an operational event to an Ekole-owned artifact where authorized. Include source version, objective, conditions, time and review status. The **full pupil work and interpretation** should stay in its educational owner.
+
+### F. Failure and recovery
+
+Return a clear outcome for unauthorized, stale state, unavailable partner, paused session, service outage, invalid revision and duplicate submission. Never fall back to local mission progression without explicit architecture approval.
+
+## Compatibility and evolution
+
+- Record schema versions and rejected unknown/unsafe payloads.
+- Use a per-repo adapter and contract tests, rather than copying internal database types across products.
+- Pin WorldRelease and mission revisions for active sessions.
+- Support idempotent retries at both transport and business-operation boundaries.
+- Avoid exposing sensitive payloads in logs or generated reports.
+- Document which errors are retryable, which need human intervention, and which are forbidden.
+
+## Orgo Scenario Injector boundary
+
+Orgo&#x27;s existing injector defaults to **dry-run** and supports `validate` / `plan`. `--apply` is mutating and requires an explicitly authorized, isolated test environment. It does not accept arbitrary HTTP routes or raw SQL. Current bakery fixtures validate a **preparation case and task**, not a complete collaborative classroom workflow.
+
+See [Architecture and Ownership](Architecture-and-Ownership), [Information Sharing and Joins](Information-Sharing-and-Joins), and [Testing and Acceptance](Testing-and-Acceptance).
+</pre></body></html>
