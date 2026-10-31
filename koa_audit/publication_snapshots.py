@@ -21,6 +21,7 @@ from typing import Callable
 from urllib.parse import quote
 
 from .graph_public import compile_public_graph
+from .focus_graph import compile_focused_paths
 
 REPO_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 RELEASE_RE = re.compile(r"^[0-9]{8}T[0-9]{6}Z(?:-[0-9]+(?:-[0-9]+)?)?$")
@@ -40,6 +41,7 @@ class Capture:
     notes: list[str] = field(default_factory=list)
     graph_registry_text: str | None = None
     graph_inventory_text: str | None = None
+    graph_focus_text: str | None = None
 
 
 def _run(args: list[str], *, timeout: int = 180) -> str:
@@ -147,6 +149,11 @@ def capture_public_repository(repo: str) -> Capture:
                         raise ValueError("Unsafe graph source file")
                 captured.graph_registry_text = registry_file.read_text(encoding="utf-8")
                 captured.graph_inventory_text = inventory_file.read_text(encoding="utf-8")
+                focus_file = root / "docs/inventory/graph-focus.v1.json"
+                if focus_file.is_file():
+                    if focus_file.is_symlink() or focus_file.stat().st_size > 512_000:
+                        raise ValueError("Unsafe focused graph source file")
+                    captured.graph_focus_text = focus_file.read_text(encoding="utf-8")
         wikidir = tmp / "wiki"
         try:
             _run(["git", "clone", "--quiet", "--depth", "1", f"https://github.com/{repo}.wiki.git", str(wikidir)], timeout=90)
@@ -294,6 +301,7 @@ def _publish_from_captures(docs: Path, selection: list[str], mode: str,
     current = {r["repo"]: dict(r) for r in previous["repos"]}
     new_successes = 0
     compiled_graph = None
+    compiled_focus = None
     target.mkdir(parents=True)
     try:
         for repo in selection:
@@ -325,6 +333,13 @@ def _publish_from_captures(docs: Path, selection: list[str], mode: str,
                     else:
                         # Do not fabricate a graph if owner data was not available.
                         capture.notes.append("Owner graph registry not found; previous public graph unchanged")
+                    if capture.graph_focus_text and capture.graph_inventory_text:
+                        # Focused paths have their own explicit owner schema and provenance.
+                        compiled_focus = compile_focused_paths(capture.graph_focus_text,
+                                                               capture.graph_inventory_text,
+                                                               capture.revision)
+                    else:
+                        capture.notes.append("Owner focused paths not found; previous public paths unchanged")
                 current[repo] = {"repo":repo, "status":"captured", "revision":capture.revision,
                                  "wiki_revision":capture.wiki_revision, "captured_at":published_at,
                                  "documents":docs_list, "note":"; ".join(capture.notes)}
@@ -389,6 +404,25 @@ def _publish_from_captures(docs: Path, selection: list[str], mode: str,
                 if existing.get("format") == "koa.graph.public.v1":
                     manifest["owner_graph_commit"] = existing["owner_commit"]
                     manifest["owner_graph_path"] = None  # retained, not copied
+        # Paths and their evidence are published from the same pinned owner commit.
+        # Selected-only releases freeze the previously approved graph unchanged.
+        focus_file = docs / "data" / "focus-paths.json"
+        if compiled_focus is not None:
+            focus_body = json.dumps(compiled_focus, ensure_ascii=False, indent=2) + "\n"
+            focus_file.parent.mkdir(parents=True, exist_ok=True)
+            focus_file.write_text(focus_body, encoding="utf-8")
+        elif focus_file.is_file():
+            current_focus = json.loads(focus_file.read_text(encoding="utf-8"))
+            if current_focus.get("format") != "koa.graph.focus.public.v1":
+                raise ValueError("Existing focused graph has an unexpected format")
+            focus_body = focus_file.read_text(encoding="utf-8")
+        else:
+            focus_body = None
+        if focus_body is not None:
+            (target / "focus-paths.json").write_text(focus_body, encoding="utf-8")
+            resolved_focus = json.loads(focus_body)
+            manifest["owner_focus_commit"] = resolved_focus["owner_commit"]
+            manifest["owner_focus_path"] = f"releases/{publication_id}/focus-paths.json"
         (target/"manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
         (target/"index.html").write_text(_generate_index(manifest, "../../"), encoding="utf-8")
         index = docs/"publications"/"index.html"
@@ -437,6 +471,25 @@ def rollback(docs: Path, publication_id: str, now: str) -> dict:
             page = PurePosixPath(document["page"])
             if ".." in page.parts or not (docs/"publications"/Path(*page.parts)).is_file():
                 raise RuntimeError("Archived release has missing or unsafe document pages")
+    # Restore the focused graph associated with this archived release, never
+    # silently display a newer graph under an older publication pointer.
+    focus_target = docs / "data" / "focus-paths.json"
+    focus_rel = manifest.get("owner_focus_path")
+    if focus_rel:
+        part = PurePosixPath(focus_rel)
+        if (".." in part.parts or not part.parts or part.parts[0] != "releases"
+                or part.parts[1] != publication_id):
+            raise RuntimeError("Invalid archived focus graph reference")
+        frozen = docs / "publications" / Path(*part.parts)
+        if not frozen.is_file() or frozen.is_symlink():
+            raise RuntimeError("Missing frozen focused graph")
+        payload = json.loads(frozen.read_text(encoding="utf-8"))
+        if payload.get("format") != "koa.graph.focus.public.v1":
+            raise RuntimeError("Invalid archived focused graph")
+        focus_target.parent.mkdir(parents=True, exist_ok=True)
+        focus_target.write_bytes(frozen.read_bytes())
+    else:
+        focus_target.unlink(missing_ok=True)
     (docs/"publications"/"index.html").write_text(_generate_index(manifest, ""), encoding="utf-8")
     pointer = {"release_id":publication_id, "published_at":now, "snapshot_published_at":manifest["published_at"], "rollback":True}
     (docs/"data"/"publication-current.json").write_text(json.dumps(pointer, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")

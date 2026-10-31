@@ -57,10 +57,12 @@ jobs:
         run: |
           python -m unittest discover -s tests -p 'test_publication_snapshots.py' -v
           python -m unittest discover -s tests -p 'test_graph_public.py' -v
+          python -m unittest discover -s tests -p 'test_focus_graph.py' -v
           test -s docs/publications/index.html
           test -s docs/data/publication-current.json
           extras=()
           if [ -f docs/data/graph-public.json ]; then extras+=(docs/data/graph-public.json); fi
+          if [ -f docs/data/focus-paths.json ]; then extras+=(docs/data/focus-paths.json); fi
           tar -czf koa-graph-publication-candidate.tar.gz docs/publications docs/data/publication-current.json "${extras[@]}"
       - name: Save candidate for review and repeatable publication
         uses: actions/upload-artifact@v4
@@ -100,11 +102,18 @@ jobs:
           from pathlib import Path
           file = Path('docs/data/publication-current.json')
           data = json.loads(file.read_text(encoding='utf-8'))
+          # During rollback, a release predating focused paths must not inherit
+          # a newer, unrelated graph from the checked-out main branch.
+          manifest_file = Path('docs/publications/releases') / data['release_id'] / 'manifest.json'
+          manifest = json.loads(manifest_file.read_text(encoding='utf-8'))
+          if not manifest.get('owner_focus_path'):
+              Path('docs/data/focus-paths.json').unlink(missing_ok=True)
           data['deployed_at'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
           file.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PYCODE
           git add docs/publications docs/data/publication-current.json
           if [ -f docs/data/graph-public.json ]; then git add docs/data/graph-public.json; fi
+          if [ -f docs/data/focus-paths.json ] || git ls-files --error-unmatch docs/data/focus-paths.json >/dev/null 2>&1; then git add -A -- docs/data/focus-paths.json; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'docs: publish frozen kOA Graph snapshot (${{ inputs.mode }})'

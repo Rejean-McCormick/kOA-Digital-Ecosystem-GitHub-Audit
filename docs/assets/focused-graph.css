@@ -1,0 +1,56 @@
+/* kOA Graph · focused paths. Uses existing dark dashboard tokens; no third-party library. */
+.focus-graph{padding:18px 0 23px;margin-bottom:22px;border-bottom:1px solid #305a50;color:#e9f8f2}
+.focus-topline{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.focus-eyebrow{font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:#9acdc1}
+.focus-heading h3{font-size:25px;margin:5px 0;letter-spacing:-.04em}
+.focus-heading p{font-size:12px;color:#b6d1c8;max-width:730px;margin:0 0 12px;line-height:1.6}
+.focus-provenance{font-size:11px;padding:11px 13px;background:#152f2a;border:1px solid #3d655b;border-radius:10px;color:#b9d8cf;overflow-wrap:anywhere}
+.focus-provenance a{margin-left:10px}
+.focus-route-chooser{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:19px 0 14px}
+.focus-route-chooser .focus-eyebrow{width:100%;margin-bottom:2px}
+.focus-route-button{border:1px solid #3f7367;border-radius:11px;background:#16382f;color:#d4ede4;font-weight:700;padding:11px 15px;text-align:left;font-size:12px;max-width:100%}
+.focus-route-button.active,.focus-route-button:hover{background:#2c7769;border-color:#74c4b5;color:white}
+.focus-actions{display:flex;align-items:center;gap:14px;margin:0 0 12px;flex-wrap:wrap}
+.focus-actions button{font-size:11px;color:#bde8dc;background:#183b33;border:1px solid #3f796d;border-radius:8px;padding:7px 12px}
+.focus-actions p{font-size:11px;color:#9abdb1;margin:0}
+.focus-scroll{overflow-x:auto;padding:12px;background:radial-gradient(ellipse at 50% 42%,#173b33,#0b1e1a 85%);border:1px solid #356659;border-radius:15px;scrollbar-color:#4c8275 #123229}
+.focus-board{min-width:max(900px,calc(var(--focus-cols) * 190px));padding:8px 4px 18px}
+.focus-spine,.focus-branches{display:grid;grid-template-columns:repeat(var(--focus-cols),minmax(0,1fr));gap:11px}
+.focus-branches{align-items:stretch;min-height:38px}
+.focus-branches-above{padding-bottom:25px}
+.focus-branches-below{padding-top:25px}
+.focus-branch-cell{display:flex;flex-direction:column;align-items:stretch;gap:8px;position:relative;min-width:0}
+.focus-branches-above .focus-branch-cell:has(.focus-branch):after{content:'';position:absolute;bottom:-25px;left:50%;width:0;height:24px;border-left:1px dashed #7aa89b}
+.focus-branches-below .focus-branch-cell:has(.focus-branch):before{content:'';position:absolute;top:-25px;left:50%;width:0;height:24px;border-left:1px dashed #7aa89b}
+.focus-branch{padding:10px 10px 11px;min-height:75px;border-radius:10px;border:1px solid #4e7168;background:#15312c;text-align:left;color:#e8f7f1;display:flex;flex-direction:column;gap:5px;width:100%;align-items:flex-start;position:relative}
+.focus-branch:focus-visible,.focus-spine-node:focus-visible,.focus-spine-edge:focus-visible,.focus-route-button:focus-visible{outline:3px solid #e8d293;outline-offset:2px}
+.focus-branch:hover,.focus-branch[aria-pressed=true]{border-color:#92dfc8;background:#205146;box-shadow:0 0 0 1px #8acfbd44}
+.focus-branch strong{font-size:11px;line-height:1.35}.focus-branch small{font-size:10px;line-height:1.35;color:#b3cfc5}
+.focus-spine-cell{position:relative;min-width:0;display:flex;align-items:stretch}
+.focus-spine-node{min-height:115px;width:100%;border:1px solid #60ae9c;border-radius:13px;background:linear-gradient(160deg,#286d5b,#13382e);padding:16px 10px 13px;color:#fff;text-align:left;display:flex;flex-direction:column;gap:8px;align-items:flex-start;position:relative;box-shadow:0 13px 24px #0003}
+.focus-spine-node:hover,.focus-spine-node[aria-pressed=true]{border-color:#b8ffe8;background:linear-gradient(160deg,#367f6d,#215143);box-shadow:0 0 0 2px #80ccb477,0 13px 26px #0004}
+.focus-spine-index{font-size:10px;font-weight:800;color:#b7e6d4;letter-spacing:.13em}
+.focus-spine-node strong{font-size:13px;line-height:1.3}.focus-spine-node small{font-size:10px;line-height:1.4;color:#c7e5d9}
+.focus-spine-edge{position:absolute;top:42%;left:calc(100% + 3px);width:calc(11px + 28px);z-index:4;transform:translate(-50%,-45%);border:0;background:#143c33;color:#bcf0da;border-radius:9px;padding:5px 4px;text-align:center;cursor:pointer}
+.focus-spine-edge:hover,.focus-spine-edge[aria-pressed=true]{background:#398a76;color:white}
+.focus-spine-edge .focus-arrow{font-size:20px;display:block;line-height:1.1}
+.focus-spine-edge small{display:none;position:absolute;left:50%;top:100%;width:190px;transform:translateX(-50%);background:#08251f;color:#e0faef;border:1px solid #6aa492;border-radius:8px;padding:8px;font-size:10px;word-break:break-word;z-index:5}
+.focus-spine-edge:hover small,.focus-spine-edge:focus-visible small{display:block}
+.focus-status{display:inline-flex;width:max-content;max-width:100%;align-items:center;font-size:9px!important;font-weight:750;letter-spacing:.015em;line-height:1.35!important;padding:4px 8px;border:1px solid #54766d;border-radius:99px;color:#d4ece3;background:#24493e}
+.focus-status.focus-qualified_local{border-color:#51b59a;background:#164d3b;color:#b0f6cd}
+.focus-status.focus-implemented_owner{border-color:#6c9cd0;background:#1a3f5c;color:#cee8ff}
+.focus-status.focus-documentated,.focus-status.focus-documented{border-color:#658e84;background:#21443d;color:#cde8df}
+.focus-status.focus-candidate{border-color:#c19d68;background:#57402b;color:#ffe2b0}
+.focus-status.focus-optional{border-color:#766c9f;background:#322d4d;color:#ded4ff}
+.focus-legend{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0;color:#aecdc3}
+.focus-detail{background:linear-gradient(155deg,#173c34,#102922);border:1px solid #3e6e62;border-radius:13px;margin-top:16px;padding:18px;min-height:155px;overflow-wrap:anywhere}
+.focus-detail-heading h3{font-size:19px;margin:5px 0 8px}
+.focus-detail>p{font-size:12px;color:#cce1d8;max-width:900px;line-height:1.6;margin:9px 0}
+.focus-detail h4{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#87caba;margin:15px 0 4px}
+.focus-detail code{display:block;color:#d8f5e6;font-size:11px;white-space:normal;overflow-wrap:anywhere;margin:5px 0}
+.focus-source-link{display:inline-block;color:#b4ffe2;font-size:12px;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.focus-detail .focus-caution{font-size:11px;color:#aac7bb}
+.focus-legacy{margin-top:18px;border-top:1px solid #31574b;padding-top:16px}
+.focus-legacy>summary{font-weight:750;color:#b7dacf;cursor:pointer;padding:10px 5px;font-size:12px}
+.focus-legacy[open]>summary{margin-bottom:16px}
+@media(max-width:670px){.focus-route-button{width:100%}.focus-board{min-width:900px}.focus-heading h3{font-size:21px}.focus-graph{padding-top:7px}}
