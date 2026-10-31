@@ -48,3 +48,16 @@ GitBook offre Git Sync avec une branche GitHub; Git Sync est bidirectionnel. Le 
 - Les versions sont conservées dans le dépôt; leur taille cumulée doit être surveillée.
 - Les versions antérieures survivent aux nouvelles publications **tant qu'elles ne sont pas supprimées du Git**. Les protections de branche et revues sont recommandées.
 - Chaque publication reprend aussi le code et les JSON du site présents dans `docs/` à l'instant du workflow; les dépôts applicatifs ne sont jamais modifiés.
+
+## Graphe architecturé / Source-owned public graph (v1)
+
+La description architecturale de kOA Graph provient de `kOA-Digital-Ecosystem/docs/inventory/graph-registry.v1.json`. Le collecteur ne la lit que lors d'une **publication explicite** incluant le dépôt `kOA-Digital-Ecosystem`. Les deux sources `graph-registry.v1.json` et `repositories.json` sont extraites du **même commit Git**. Le modèle public figé se trouve dans `docs/data/graph-public.json` et dans l'archive de cette version.
+
+- **49 dépôts de référence** : statut d'inventaire conservé, sans en déduire une qualification technique.
+- **Kolor et Karacter** : dépôts supplémentaires connus, mais `discovered_not_admitted` tant que leur rôle n'est pas formellement établi.
+- **12 systèmes / 7 passages** : rôles et liens du modèle documentaire déjà connus; les relations ne sont pas des intégrations qualifiées.
+- `mode=selected` sans le dépôt architectural conserve le dernier graphe public approuvé.
+- `mode=republish` change uniquement la présentation, sans nouvelle collecte.
+- Le portail Pages affiche les applications et les documents de la version figée. L'outil Windows conserve seul les preuves et décisions privées.
+
+**Note :** le manifeste de documentation et le graphe public sont des sorties distinctes de la même publication. Pour mettre à jour une responsabilité architecturale, réviser d'abord le dépôt `kOA-Digital-Ecosystem`, puis publier dans GitHub Audit.

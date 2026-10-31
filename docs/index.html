@@ -15,6 +15,9 @@
 .koa-pages-help-panel li{margin-bottom:7px}
 .koa-pages-help-panel p{margin:8px 0 0;color:#a9ccc0}
 @media(max-width:740px){.koa-pages-entry{flex-wrap:wrap}.koa-pages-help-panel{right:-70px}}
+html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{display:none}
+.koa-public-docs-notice{margin:0 0 20px;padding:12px 16px;border:1px solid #3a7364;border-radius:12px;background:#14392f;color:#e1f5eb;line-height:1.6}
+.koa-public-docs-notice a{color:#a5f3d6;text-decoration:underline}
 </style></head>
 <body>
 <div class="layout">
@@ -43,7 +46,7 @@
           <li>Règle <code>preview_only</code> sur <code>true</code> pour vérifier, ou <code>false</code> pour publier.</li>
           <li>Clique sur <b>Run workflow</b>, puis vérifie les coches vertes des jobs.</li>
         </ol>
-        <p>Le mode <code>republish</code> (sans nouvelle collecte) n’apparaîtra qu’après installation du workflow qui le prend en charge.</p>
+        <p>Le mode <code>republish</code> met à jour la présentation sans recollecter les dépôts.</p>
       </div>
       <div class="en">
         <strong>Publish through GitHub Actions</strong>
@@ -53,7 +56,7 @@
           <li>Set <code>preview_only</code> to <code>true</code> to preview, or <code>false</code> to publish.</li>
           <li>Click <b>Run workflow</b>, then check that the jobs succeed.</li>
         </ol>
-        <p><code>republish</code> (no new collection) is available only after installing a workflow version that supports it.</p>
+        <p><code>republish</code> updates the presentation without recollecting repositories.</p>
       </div>
     </div>
   </details>
@@ -106,6 +109,10 @@
       </section>
       <section class="explorer section" data-workspace="applications" id="apps" hidden>
         <div class="heading"><div><div class="eyebrow">PARCOURS PAR APPLICATION</div><h2>Les applications et leurs dossiers.</h2><p>Choisis une application : profil mesuré, jalons et relations Kristal restent dans sa fiche. <a href="#cartographie" id="show-map-link">Voir le graphe des responsabilités ↗</a></p></div><div class="results-label" id="result-count">49 applications</div></div>
+        <aside class="koa-public-docs-notice" id="koa-public-docs-notice" hidden>
+          <span class="fr">La <strong>documentation publique figée</strong> est accessible pour les dépôts de la dernière publication. <a href="publications/index.html">Parcourir les documents datés</a>. Les validations locales restent privées.</span>
+          <span class="en">The latest release includes <strong>frozen public documentation</strong>. <a href="publications/index.html">Browse dated documents</a>. Local validation evidence remains private.</span>
+        </aside>
         <div class="explorer-grid">
           <div class="directory"><div class="search-wrap"><label for="search">Rechercher une application</label><input id="search" type="search" placeholder="Ex. Konnaxion, Orgo, Kristal…" autocomplete="off"></div><div class="filters" id="group-filters" role="group" aria-label="Filtrer les applications"></div><div class="repo-list" id="repo-list" aria-label="Liste des applications"></div></div>
           <aside class="detail" id="detail" aria-live="polite"><div class="detail-placeholder">Sélectionne une application sur le graphe ou dans la liste pour afficher son dossier.</div></aside>
@@ -120,5 +127,13 @@
     <footer><span>kOA Digital Ecosystem · Centre de pilotage</span><span>49 dépôts · 5 jalons indépendants · rapports d'ingénierie vérifiables</span></footer>
   </div>
 </div>
+<script>
+if (location.hostname.toLowerCase().endsWith('.github.io')) {
+  document.addEventListener('DOMContentLoaded',()=>{
+    const notice=document.getElementById('koa-public-docs-notice');
+    if(notice)notice.hidden=false;
+  },{once:true});
+}
+</script>
 <script defer src="assets/i18n.js"></script><script defer src="assets/atlas.js"></script><script>fetch('data/publication-current.json').then(r=>r.ok?r.json():null).then(x=>{if(x){document.getElementById('publication-stamp').textContent='UTC '+(x.deployed_at||x.published_at);}}).catch(()=>{});</script>
 </body></html>

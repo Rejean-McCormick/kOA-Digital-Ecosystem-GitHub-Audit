@@ -1,6 +1,14 @@
 (() => {
   'use strict';
   const en = {
+  "Documentation": "Documentation",
+  "README et documentation": "README and documentation",
+  "Wiki GitHub": "GitHub Wiki",
+  "Dépôt repéré · responsabilité à qualifier": "Discovered repository · responsibility to assess",
+  "Aucune publication documentaire figée disponible pour ce dépôt.": "No frozen documentation publication is available for this repository.",
+  "Aucun document capturé pour cette version.": "No captured documents for this release.",
+  "Aucune copie admissible.": "No eligible archived copy.",
+  "↗ Publication datée": "↗ Dated publication",
   "Publications": "Publications",
   "Centre de pilotage · Publications documentaires": "Command Center · Documentation releases",
   "Chargement de la publication": "Loading publication",

@@ -9,14 +9,18 @@
     architect:[37,88],orchestrator:[59,88],sentient:[59,13],skope:[12,37]
   };
   let atlas=null, localAudit=null, qualification=null, kristal=null, privateCampaigns=null, privateReview=null, activeRepo=null, activeGroup='all', searchText='', detailTab='overview', mapMode='contracts', mapTouched=false;
+  let publishedDocs=null, publicGraph=null;
   let validationBoard=null, validationRepo=null, validationCategory='Fonctionnalités', validationSearch='', validationFilter='all';
   // One workspace per user intent (UX-01/05/15/16). Keep older anchors working.
   let workspace='validations', mapExpanded=false;
   function workspaceForHash(hash){
     if(hash==='#cartographie')return 'applications';
     if(hash==='#apps')return 'applications';
+    if(hash==='#validations')return 'validations';
     if(hash==='#historique-campagnes'||hash==='#qualification')return 'campagnes';
-    return 'validations';
+    // Public GitHub Pages is a documentary directory, NOT the local private validation board.
+    // Keep the current Windows dashboard default and explicit hashes unchanged.
+    return location.hostname.toLowerCase().endsWith('.github.io') ? 'applications' : 'validations';
   }
   function setWorkspace(mode, anchor=''){
     workspace=['validations','applications','campagnes'].includes(mode)?mode:'validations';
@@ -502,7 +506,7 @@
     const holder=$('repo-list');holder.replaceChildren();
     const matching=atlas.repositories.filter(r=>(activeGroup==='all'||r.group===activeGroup) &&
       (r.name.toLocaleLowerCase().includes(searchText)||r.role.toLocaleLowerCase().includes(searchText)));
-    $('result-count').textContent=`${matching.length} / ${atlas.total} applications`;
+    $('result-count').textContent=`${matching.length} / ${atlas.total} dépôts`;
     if(!matching.length){holder.append(el('div','empty','Aucune application ne correspond au filtre.'));return;}
     for(const r of matching){
       const btn=el('button','repo-entry'+(activeRepo===r.repo?' active':''));btn.type='button';
@@ -531,12 +535,34 @@
   function metricCell(title,value){const d=el('div','small-stat');d.append(el('strong','',value),el('span','',title));return d;}
   function detailTabs(){
     const tabs=el('div','detail-tabs');
-    for(const [id,label] of [['overview','Aperçu'],['report','Ingénierie'],['stages','Qualification'],['kristal','Kristal (local)']]){
+    const options=[['overview','Aperçu'],['docs','Documentation'],['report','Ingénierie'],['stages','Qualification'],['kristal','Kristal (local)']];
+    for(const [id,label] of options){
       const b=el('button',''+(detailTab===id?'active':''),label);b.type='button';b.addEventListener('click',()=>{detailTab=id;renderDetail();});tabs.append(b);
     }
     return tabs;
   }
   function statusBadge(status){return el('strong','state-pill'+(status==='Étayé par preuve'?' evidence':status==='À documenter'?' pending':status==='Non applicable'?' na':''),status);}
+  function renderFrozenDocuments(section,repo){
+    const entry=publishedDocs?.repos?.find(x=>x.repo===repo);
+    if(!entry){section.append(el('p','profile-copy','Aucune publication documentaire figée disponible pour ce dépôt.'));return;}
+    section.append(el('p','profile-copy',`Copie datée : ${entry.captured_at||'—'} · commit ${(entry.revision||'—').slice(0,12)} · statut ${entry.status}. Ces documents ne constituent pas une certification.`));
+    const documents=Array.isArray(entry.documents)?entry.documents:[];
+    if(!documents.length){section.append(el('p','profile-copy','Aucun document capturé pour cette version.'));return;}
+    for(const [kind,label] of [['repo','README et documentation'],['wiki','Wiki GitHub']]){
+      const docs=documents.filter(d=>d.kind===kind);
+      if(!docs.length)continue;
+      const group=el('details','spec-evidence');group.open=kind==='repo';
+      group.append(el('summary','',`${label} · ${docs.length}`));
+      const list=el('div','published-document-links');
+      for(const d of docs){
+        if(typeof d.page!=='string'||!/^releases\/[A-Za-z0-9-]+\/repos\/[A-Za-z0-9_.-]+--[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\.html$/.test(d.page))continue;
+        list.append(link('publications/'+d.page,d.path,'secondary-link'));
+      }
+      if(!list.childElementCount)list.append(el('p','','Aucune copie admissible.'));
+      group.append(list);section.append(group);
+    }
+    if(publishedDocs.release_id)section.append(el('p','profile-copy','Publication : '+publishedDocs.release_id));
+  }
   function renderDetail(){
     const holder=$('detail');holder.replaceChildren();const r=repoByName(activeRepo);
     if(!r){holder.append(el('div','detail-placeholder','Choisis une application dans le graphe ou la liste.'));return;}
@@ -555,10 +581,12 @@
       actions.append(link('/local/campaigns/'+cid+'/app/'+encodeURIComponent(r.slug),
                    '↗ Fiche figée · dernière campagne','secondary-link'));
     }
+    if(publishedDocs?.repos?.some(x=>x.repo===r.repo))actions.append(link('publications/index.html','↗ Publication datée','secondary-link'));
     holder.append(actions,detailTabs());
     const section=el('div');
     const m=r.engineering;
-    if(detailTab==='overview'){
+    if(detailTab==='docs'){renderFrozenDocuments(section,r.repo);}
+    else if(detailTab==='overview'){
       const grid=el('div','detail-grid');
       grid.append(metricCell('Profil mesuré',m?'Disponible':'Non fourni'),metricCell('Fichiers actifs',m?count(m.counts.active_files):'—'),metricCell('Lignes source de production',m?count(m.counts.production_nonblank_lines):'—'));
       section.append(grid);
@@ -598,7 +626,7 @@
   async function refresh(){
     $('load-status').textContent='Chargement…';
     try{
-      const [newAtlas, audit, local, source, campaignSummary, reviewSummary, board, candidates]=await Promise.all([
+      const [newAtlas, audit, local, source, campaignSummary, reviewSummary, board, candidates, graph, publishedPointer]=await Promise.all([
         getJSON('data/ecosystem.json?at='+Date.now()),
         getJSON('data/dashboard.json?at='+Date.now(),true),
         getJSON('data/local-qualification.json?at='+Date.now(),true),
@@ -607,10 +635,35 @@
         getJSON('/api/review/summary?at='+Date.now(),true),
         getJSON('/api/validation/board?at='+Date.now(),true),
         getJSON('data/documentation-candidates.json?at='+Date.now(),true),
+        getJSON('data/graph-public.json?at='+Date.now(),true),
+        getJSON('data/publication-current.json?at='+Date.now(),true),
       ]);
       if(newAtlas.format!=='koa_ecosystem.atlas.v1'||!Array.isArray(newAtlas.repositories)||newAtlas.repositories.length!==49){throw new Error('Inventaire invalide');}
       validationBoard=board?.format==='koa.validation_board.private.v1'&&board.local_only?board:null;
       atlas=newAtlas;localAudit=audit;qualification=local?.format==='koa_qualification.public_status.v1'?local:null;
+      publicGraph=graph?.format==='koa.graph.public.v1'?graph:null;
+      if(publicGraph && location.hostname.toLowerCase().endsWith('.github.io')){
+        // The 49-reference inventory remains separate from discovered repositories.
+        // Source graph was pinned to the owner's Git SHA when the release was built.
+        const known=new Set(atlas.repositories.map(x=>x.repo));
+        for(const candidate of publicGraph.repositories||[]){
+          if(candidate.admission!=='discovered_not_admitted'||known.has(candidate.repo))continue;
+          atlas.repositories.push({repo:candidate.repo,name:candidate.name,slug:candidate.name,
+            role:'Dépôt repéré · responsabilité à qualifier',group:'other',node_id:null,
+            report:null,engineering:null,has_local_profile:false,admission:candidate.admission});
+          known.add(candidate.repo);
+        }
+        atlas.total=atlas.repositories.length;
+        if(publicGraph.systems?.length && publicGraph.links?.length){
+          atlas.systems=publicGraph.systems;
+          atlas.links=publicGraph.links;
+        }
+      }
+      publishedDocs=null;
+      if(publishedPointer?.release_id && /^[0-9]{8}T[0-9]{6}Z(?:-[0-9]+(?:-[0-9]+)?)?$/.test(publishedPointer.release_id)){
+        const manifest=await getJSON('publications/releases/'+publishedPointer.release_id+'/manifest.json',true);
+        if(manifest?.release_id===publishedPointer.release_id && Array.isArray(manifest.repos))publishedDocs=manifest;
+      }
       renderDocumentationCandidates(candidates);
       privateCampaigns = campaignSummary?.format==='koa_certification.latest_summary.v1'?campaignSummary:null;
       privateReview = reviewSummary?.format==='koa.evidence_review.summary.v1'?reviewSummary:null;

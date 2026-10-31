@@ -20,6 +20,8 @@ import tempfile
 from typing import Callable
 from urllib.parse import quote
 
+from .graph_public import compile_public_graph
+
 REPO_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 RELEASE_RE = re.compile(r"^[0-9]{8}T[0-9]{6}Z(?:-[0-9]+(?:-[0-9]+)?)?$")
 DOC_EXT = {".md", ".mdx", ".markdown", ".rst", ".txt", ".adoc"}
@@ -36,6 +38,8 @@ class Capture:
     wiki_revision: str | None = None
     wiki: dict[str, str] = field(default_factory=dict)
     notes: list[str] = field(default_factory=list)
+    graph_registry_text: str | None = None
+    graph_inventory_text: str | None = None
 
 
 def _run(args: list[str], *, timeout: int = 180) -> str:
@@ -134,6 +138,15 @@ def capture_public_repository(repo: str) -> Capture:
         revision = _run(["git", "-C", str(root), "rev-parse", "HEAD"])
         documents, notes = _collect_tree(root, wiki=False)
         captured = Capture(repo=repo, revision=revision, documents=documents, notes=notes)
+        if repo == "Rejean-McCormick/kOA-Digital-Ecosystem":
+            registry_file = root / "docs/inventory/graph-registry.v1.json"
+            inventory_file = root / "docs/inventory/repositories.json"
+            if registry_file.is_file() and inventory_file.is_file():
+                for f in (registry_file, inventory_file):
+                    if f.is_symlink() or f.stat().st_size > 512_000:
+                        raise ValueError("Unsafe graph source file")
+                captured.graph_registry_text = registry_file.read_text(encoding="utf-8")
+                captured.graph_inventory_text = inventory_file.read_text(encoding="utf-8")
         wikidir = tmp / "wiki"
         try:
             _run(["git", "clone", "--quiet", "--depth", "1", f"https://github.com/{repo}.wiki.git", str(wikidir)], timeout=90)
@@ -280,6 +293,7 @@ def _publish_from_captures(docs: Path, selection: list[str], mode: str,
     previous = _load_previous(docs)
     current = {r["repo"]: dict(r) for r in previous["repos"]}
     new_successes = 0
+    compiled_graph = None
     target.mkdir(parents=True)
     try:
         for repo in selection:
@@ -302,6 +316,15 @@ def _publish_from_captures(docs: Path, selection: list[str], mode: str,
                         gitbook_file = target / "gitbook" / Path(page).with_suffix(".md")
                         gitbook_file.parent.mkdir(parents=True, exist_ok=True)
                         gitbook_file.write_text(f"<!-- Frozen source: {source} | commit: {rev or capture.revision} | SHA-256: {sha} -->\n\n" + text, encoding="utf-8")
+                if repo == "Rejean-McCormick/kOA-Digital-Ecosystem":
+                    if capture.graph_registry_text and capture.graph_inventory_text:
+                        # Both files are read from the exact same immutable repository SHA.
+                        compiled_graph = compile_public_graph(capture.graph_registry_text,
+                                                              capture.graph_inventory_text,
+                                                              capture.revision)
+                    else:
+                        # Do not fabricate a graph if owner data was not available.
+                        capture.notes.append("Owner graph registry not found; previous public graph unchanged")
                 current[repo] = {"repo":repo, "status":"captured", "revision":capture.revision,
                                  "wiki_revision":capture.wiki_revision, "captured_at":published_at,
                                  "documents":docs_list, "note":"; ".join(capture.notes)}
@@ -349,6 +372,23 @@ def _publish_from_captures(docs: Path, selection: list[str], mode: str,
                     raise RuntimeError("Invalid archived page reference")
                 if not (docs/"publications"/Path(*page.parts)).is_file():
                     raise RuntimeError(f"Missing frozen document page: {page}")
+        if compiled_graph is not None:
+            # A dated architecture graph is separate from documentary and test evidence.
+            graph_body = json.dumps(compiled_graph, ensure_ascii=False, indent=2) + "\n"
+            (target/"graph-public.json").write_text(graph_body, encoding="utf-8")
+            graph_path = docs/"data"/"graph-public.json"
+            graph_path.parent.mkdir(parents=True, exist_ok=True)
+            graph_path.write_text(graph_body, encoding="utf-8")
+            manifest["owner_graph_commit"] = compiled_graph["owner_commit"]
+            manifest["owner_graph_path"] = f"releases/{publication_id}/graph-public.json"
+        else:
+            # Selected publication leaves the last approved graph untouched.
+            existing_graph = docs/"data"/"graph-public.json"
+            if existing_graph.is_file():
+                existing = json.loads(existing_graph.read_text(encoding="utf-8"))
+                if existing.get("format") == "koa.graph.public.v1":
+                    manifest["owner_graph_commit"] = existing["owner_commit"]
+                    manifest["owner_graph_path"] = None  # retained, not copied
         (target/"manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
         (target/"index.html").write_text(_generate_index(manifest, "../../"), encoding="utf-8")
         index = docs/"publications"/"index.html"

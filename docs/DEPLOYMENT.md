@@ -13,3 +13,9 @@ Sans rapport récent, le bouton utilise l'historique agrégé intégré. Les don
 Le sélecteur **FR / EN** est inclus dans `docs/index.html` et `docs/observations.html`, sans build ni GitBook. Voir [le guide de publication](PUBLISH_FR_EN.md) pour les réglages Pages et la protection des données privées.
 
 The **FR / EN** language switch is included in the two public UI pages. Existing `.github/workflows/dashboard-pages.yml` publishes `docs/` directly. No GitBook or additional hosting is required.
+
+## Graphe source et interface unifiée (mise à jour 2026-10-31)
+
+Pour publier le graphe de composants, appliquer d'abord `docs/inventory/graph-registry.v1.json` dans **kOA-Digital-Ecosystem**, puis mettre à jour le code de **GitHub Audit**. Lancer `mode=all` une première fois pour figer ce registre source avec la documentation; utiliser ensuite `mode=selected` pour actualiser certains dépôts, ou `mode=republish` pour mettre à jour uniquement la présentation.
+
+Sur GitHub Pages, l'onglet Applications est la page d'accueil; chaque fiche peut ouvrir les documents **copiés à la date de publication**. L'application Windows conserve seule l'audit privé.
