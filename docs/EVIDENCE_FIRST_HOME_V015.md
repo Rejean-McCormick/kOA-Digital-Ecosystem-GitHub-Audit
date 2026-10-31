@@ -23,3 +23,5 @@ A green tick for a test must identify **which check passed**. A completed CI wor
 ### Traceability of the historic CI extraction
 
 The original user-supplied observation is `audit(2).json` (generated 2026-10-28). The application contains a sanitized, private, checksum-pinned extraction `private_evidence/KOA-CI-OBSERVATIONS-2026-10-28.json`. It is not a live GitHub feed; its historical assertions never change when repositories evolve.
+
+> v0.21: authenticated expert documentary review results appear automatically in the dashboard without requiring a manual approval click. The original review scope and source documents remain unchanged.

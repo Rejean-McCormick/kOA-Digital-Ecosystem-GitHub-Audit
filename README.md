@@ -5,7 +5,7 @@
 
   **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.20.0 · 47 source-attributed functional spec sheets, dated evidence and an unchanged validation baseline**
+  **Version 0.21.0 · Automatic evidence recognition, simplified validation labels and 47 functional spec sheets**
 </div>
 
 ## v0.20.0 — Corrected source attribution and searchable file structure
@@ -52,7 +52,7 @@ The local dashboard uses **evidenced stages / 245** as the primary qualification
 
 ## Owner-requested documentary adjudication — v0.14.0
 
-The owner explicitly requested that the app **record actual, source-reviewed conclusions** rather than ask the owner to evaluate all 245 slots by hand. On first launch, a strictly source-checked, 2026-10-30 review merges **10 source-supported, scope-restricted conclusions** and **235 cases `À documenter`** into the private local qualification registry. Existing entries always win; any existing registry is backed up before a one-time atomic merge. It is idempotent. All supporting original documents can be opened in the private review viewer. No live GitHub HEAD, source scan, test execution, or universal certification is inferred.
+The owner explicitly requested **automatic recognition of source-reviewed conclusions**, without manual approval of the same evidence. On first launch, a strictly source-checked, 2026-10-30 review merges **10 source-supported, scope-restricted conclusions** and **235 cases `À documenter`** into the private local qualification registry. Existing entries always win; any existing registry is backed up before a one-time atomic merge. It is idempotent. All supporting original documents can be opened in the private review viewer. No live GitHub HEAD, source scan, test execution, or universal certification is inferred.
 
 Eight of the supported cases are four narrow stages **for each of Konnaxion and Orgo**, derived from the **same** historical local E2E on 2026-09-21 for only `governance.decision.execute/1.0.0` and `accountability.impact.publish/1.0.0`. Two additional **specified-only** cases concern the frozen historical EncyKlopedia v6 and Da’at v6 boundaries. No production case is supported, and none of the original documents establish owner clone SHAs. These are historical documented capabilities, not whole-application maturity grades.
 
@@ -323,3 +323,7 @@ is missing, the bundled kOA map and Engineering Profiles still work.
 ## Private historical evidence review (v0.13.0)
 
 The Windows launcher adds **Revue des 245**, a private, source-linked review of five qualification stages for each of the 49 official repositories. The owner-provided historical evidence is bundled under `private_evidence/` (Git-ignored, never published to GitHub Pages). The review exposes original documents, SHA-256 provenance, explicit limitations, and a **prepare-only** qualification workflow. **No review suggestion automatically becomes an evidenced claim.** A manually accepted reference is captured, with the original private review archive, in the *next* dated campaign. See [`docs/HISTORICAL_EVIDENCE_REVIEW.md`](docs/HISTORICAL_EVIDENCE_REVIEW.md).
+
+## v0.21.0 — Automatic validations and simplified labels
+
+The local dashboard automatically recognises the ten verified documentary stage conclusions from the authenticated review, even if they are not present in the private user registry. This is a **read-only presentation overlay**, not a mutation of archived campaigns or the user's existing decisions. Already verified JUnit suites receive the short badge `✓ Validé`; source-observed functionality receives `Présent dans le code`, and checks without a test result receive `À vérifier`. No manual click is needed for any verified result. See [Automatic validation rules](docs/VALIDATIONS_AUTOMATIQUES_V021.md).

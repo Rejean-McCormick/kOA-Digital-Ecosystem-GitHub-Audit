@@ -52,7 +52,7 @@ class SourceStructureReviewTests(unittest.TestCase):
         self.assertEqual(board['targeted_unit_tests_passed']+board['additional_isolated_test_passes'],172)
         self.assertEqual(board['source_structure_repositories'],47)
         self.assertGreater(board['source_structure_files_classified'],4000)
-        self.assertEqual(board['source_checked_documentary_jalons'],0)
+        self.assertEqual(board['source_checked_documentary_jalons'],10)
 
     def test_modified_structure_file_fails_closed(self):
         with tempfile.TemporaryDirectory() as t:

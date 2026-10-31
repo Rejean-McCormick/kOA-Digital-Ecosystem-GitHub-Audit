@@ -53,7 +53,7 @@ class SmartDump35Tests(unittest.TestCase):
         self.assertEqual(b['targeted_unit_tests_passed'],45)
         self.assertEqual(b['additional_isolated_test_passes'],127)
         self.assertEqual(b['security_controls_test_verified'],0)
-        self.assertEqual(b['source_checked_documentary_jalons'],0)
+        self.assertEqual(b['source_checked_documentary_jalons'],10)
         for repo in b['repositories']:
             self.assertFalse(repo['security_test_passes'])
 

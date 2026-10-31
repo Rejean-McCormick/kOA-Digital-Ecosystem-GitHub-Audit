@@ -77,6 +77,13 @@ class _NoConsolePreviewHandler(http.server.SimpleHTTPRequestHandler):
                                 and entries[stage].get("status") in allowed else "Non évalué")
                         for stage in qualification.STAGE_IDS
                     }
+                # Source-reviewed evidence already validated by the bundled
+                # documentary review is recognised automatically in the VIEW.
+                # Do not change the user's private registry or any old campaign.
+                from koa_audit import evidence_adjudication
+                for finding in evidence_adjudication.load(ROOT)["cases"]:
+                    if finding["status"] == "Étayé par preuve":
+                        result[finding["repository"]][finding["stage"]] = "Étayé par preuve"
                 payload = json.dumps({"format": "koa_qualification.public_status.v1", "repositories": result},
                                      ensure_ascii=False).encode("utf-8")
                 kind = "application/json; charset=utf-8"
@@ -1004,7 +1011,7 @@ class AuditLauncher:
         """Review 245 sourced historical cases; NEVER turn suggestions into claims."""
         from koa_audit import evidence_review
         ttk.Label(tab, text="Revue des preuves historiques · 245 dossiers", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(tab, text="49 dépôts × 5 jalons. Les sources historiques sont consultables; aucune qualification n'est validée automatiquement.",
+        ttk.Label(tab, text="49 dépôts × 5 jalons. Les conclusions vérifiées sont reconnues automatiquement; les sources historiques restent consultables.",
                   style="Muted.TLabel", wraplength=980).pack(anchor="w", pady=(2, 6))
         ttk.Label(tab, textvariable=self.review_summary, style="Muted.TLabel", wraplength=960).pack(fill="x", pady=(0, 6))
         toolbar=ttk.Frame(tab)
@@ -1040,7 +1047,7 @@ class AuditLauncher:
         buttons.pack(fill='x',pady=(3,8))
         ttk.Button(buttons,text="Voir ce jalon et ses sources",command=self._review_open_stage).pack(side='left',padx=(0,8))
         ttk.Button(buttons,text="Ouvrir la source sélectionnée",command=self._review_open_source).pack(side='left',padx=(0,8))
-        ttk.Button(buttons,text="Voir / ajuster la qualification",style='Primary.TButton',
+        ttk.Button(buttons,text="Voir la qualification",style='Primary.TButton',
                    command=self._review_prepare).pack(side='left')
         self.review_details=ScrolledText(right,height=6,wrap='word',font=('Segoe UI',10),background='white',foreground=NAVY)
         self.review_details.pack(fill='both',expand=True)

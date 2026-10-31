@@ -15,7 +15,7 @@ class ValidationBoardTests(unittest.TestCase):
             root=Path(directory)
             board=validation_board.build(ROOT, root/'q.json', root/'p.json')
         self.assertEqual(board['official_repositories'],49)
-        self.assertEqual(board['source_checked_documentary_jalons'],0)
+        self.assertEqual(board['source_checked_documentary_jalons'],10)
         self.assertEqual(board['security_controls_test_verified'],0)
         self.assertEqual(len(board['repositories']),49)
         for item in board['repositories']:
@@ -23,7 +23,7 @@ class ValidationBoardTests(unittest.TestCase):
                 ['Tests','Sécurité','Architecture','Implémentation','Intégration','Production'])
             self.assertEqual(next(c for c in item['categories'] if c['label']=='Sécurité')['practice_count'],53)
             self.assertEqual(next(c for c in item['categories'] if c['label']=='Architecture')['practice_count'],33)
-            self.assertEqual(item['verified_stages'],0)
+            self.assertEqual(item['verified_stages'],{'Daat':1,'EncyKlopedia':1,'Konnaxion':4,'Orgo':4}.get(item['slug'],0))
 
     def test_reviewed_sources_only_return_ten_bounded_documentary_checks(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -68,9 +68,15 @@ class ValidationBoardTests(unittest.TestCase):
                 'Étayé par preuve','Essai local déclaré sans source originale hashée','Périmètre fictif',q)
             board=validation_board.build(ROOT,q,p)
         k=next(x for x in board['repositories'] if x['slug']=='Konnaxion')
-        self.assertFalse(k['source_verified_test'])
-        self.assertEqual(k['verified_stages'],0)
-        self.assertEqual(board['source_checked_documentary_jalons'],0)
+        self.assertTrue(k['source_verified_test'])
+        self.assertEqual(k['verified_stages'],4)
+        # The local claim is *not* treated as evidence. The authenticated historical
+        # review is independent and its original source remains authoritative.
+        stage=next(s for cat in k['categories'] for s in cat['stages'] if s['id']=='qualified')
+        self.assertEqual(stage['local_status'],'Étayé par preuve')
+        self.assertNotIn('fictif',stage['scope'])
+        self.assertEqual(stage['display'],'✓ Validé')
+        self.assertEqual(board['source_checked_documentary_jalons'],10)
 
     def test_historical_ci_success_only_at_same_observed_sha(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -91,8 +97,9 @@ class ValidationBoardTests(unittest.TestCase):
             board=validation_board.build(ROOT,root/'q.json',root/'p.json')
         enc=next(x for x in board['repositories'] if x['slug']=='EncyKlopedia')
         self.assertTrue(enc['historical_ci']['success_observed'])
-        self.assertEqual(enc['verified_stages'],0)
+        self.assertEqual(enc['verified_stages'],1)
         self.assertFalse(enc['source_verified_test'])
+        self.assertEqual(next(s for cat in enc['categories'] for s in cat['stages'] if s['id']=='specified')['display'],'✓ Validé')
 
     def test_local_only_api_and_layout(self):
         launcher=(ROOT/'kOA_GitHub_Audit_Launcher.pyw').read_text(encoding='utf-8')

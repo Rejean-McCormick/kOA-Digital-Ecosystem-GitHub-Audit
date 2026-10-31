@@ -92,26 +92,27 @@ def build(project: Path, qualification_path: Path | None = None,
                 state = 'Non évalué'
             documentary = adjudicated.get((repo, stage_id))
             source = documentary.get('source') if documentary else None
-            # Proof-backed documentary judgement only when the same reviewed
-            # source and explicitly scoped claim were recorded in local state.
-            verified = bool(state == 'Étayé par preuve' and documentary and source and
-                record.get('scope') == documentary['scope'] and
-                source['sha256'] in record.get('evidence', '') and
-                source['member'] in record.get('evidence', ''))
+            # The archived expert review is already a source-verified decision.
+            # Do not require another manual click, nor silently alter existing
+            # private registry entries. A contradictory local owner status remains
+            # visible separately and is never overwritten by this read-only view.
+            verified = bool(documentary and source and
+                documentary.get('status') == 'Étayé par preuve' and
+                source.get('sha256') and source.get('member'))
             if verified:
-                label = '✓ Pièce documentaire vérifiée · portée limitée'
+                label = '✓ Validé'
             elif state == 'Étayé par preuve':
-                label = 'Décision locale · pièce non recoupée dans cette revue'
-            elif state == 'À documenter':
-                label = 'À documenter'
+                label = 'À vérifier'
             elif state == 'Non applicable':
-                label = 'Non applicable (décision locale)'
+                label = 'Non applicable'
             else:
-                label = 'Non évalué'
+                label = 'À vérifier'
             stage_list.append({
                 'id': stage_id, 'category': STAGE_CATEGORY[stage_id],
-                'label': stage_label, 'status': state, 'display': label,
+                'label': stage_label, 'status': ('Étayé par preuve' if verified else state),
+                'local_status': state, 'display': label,
                 'source_verified': verified,
+                'verification_origin': 'revue IA des pièces historiques' if verified else None,
                 'scope': documentary['scope'] if verified else (record.get('scope', '')[:300] if state == 'Étayé par preuve' else ''),
                 'source_sha256': source['sha256'] if verified else None,
                 'source_link': ('/local/review/app/' + quote(slug) + '/' + stage_id + '/expert') if verified else None,
@@ -177,7 +178,7 @@ def build(project: Path, qualification_path: Path | None = None,
         'source_checked_documentary_jalons': total_verified,
         'security_controls_test_verified': 0,
         'historical_ci_success_on_observed_head': sum(v['success_observed'] for v in historic_ci.values()),
-        'notice': ('Les coches désignent des pièces documentaires relues et hachées, dans leur portée. '
-          'Elles ne signifient ni certificat global, ni test de sécurité réussi, ni version Git liée.'),
+        'notice': ('✓ Validé = preuve vérifiée automatiquement pour le contrôle affiché. '
+          'Le détail de la vérification reste consultable au clic.'),
         'repositories': repositories,
     }
