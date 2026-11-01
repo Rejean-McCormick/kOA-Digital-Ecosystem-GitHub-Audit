@@ -1,0 +1,18 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/90-reference/adr/adr-0004-architect-split.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/90-reference/adr/adr-0004-architect-split.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 a37fd868031e0b91</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/90-reference/adr/adr-0004-architect-split.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR-0004: Architect Strategy / Render split
+
+- **Status:** Accepted; v5 semantics were amended by ADR-0008 and the active v6 knowledge interpretation is governed by ADR-0013
+
+## Decision
+
+Keep planning/strategy and rendering as separable responsibilities. Both consume material according to an explicit Reader Policy/Profile and preserve the source artifact&#x27;s declared status/valuation/authority semantics.
+
+Neither role may assign Kristal validation or authority recognition, mutate authoritative Kristal state by side effect, or manufacture factual claims through presentation.
+
+## Historical v5 amendment
+
+The earlier assumption that Architect consumed only “canonical truth after validation + compilation” was superseded. Kristal v5 permitted Reader Policies that exposed Working, disputed or lower-certainty material with labels. Strict production surfaces could still choose reference-only policies.
+
+## Active v6 amendment
+
+Under Kristal Standard `6.0.0`, Architect/SA surfaces preserve `kristal_state` semantics including typed `valuations[]`, `coordinates`, `applicability`, `record_role`, `actionability`, provenance/evidence, validation/recognition and `artifact_status`. Reader or rendering policy may filter or present these semantics but does not transfer authority or execution rights.
+</pre></body></html>

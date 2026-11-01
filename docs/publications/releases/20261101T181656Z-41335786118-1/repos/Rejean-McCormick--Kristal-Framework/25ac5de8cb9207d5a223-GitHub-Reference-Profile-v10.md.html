@@ -1,0 +1,45 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · GitHub-Reference-Profile-v10.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · GitHub-Reference-Profile-v10.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 09aed634dc1dac82</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/GitHub-Reference-Profile-v10' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># GitHub Reference Host Profile — v10
+
+**Optional profile:** `kristal.host/github/1.0`. The Framework&#x27;s v10 semantic commitments do **not** depend on GitHub.
+
+| Kristal concept | Reference GitHub surface |
+| --- | --- |
+| account integration | public `.github` integration repo |
+| node host / collection | repository |
+| proposed change | pull request |
+| qualification | GitHub Actions / checks with bound receipt |
+| immutable publication | verified Release and assets |
+| materialization distribution | GitHub Release assets and/or GHCR (host policy) |
+| activation surface | deployment / environment or equivalent pointer |
+| discovery | dedicated directory node/repo |
+
+## Recommended network topology
+
+```text
+account
+├── .github                 (public integration)
+├── private root directory (authoritative all-node discovery)
+├── collection-public      (one or more public Kristals)
+└── collection-private     (confidential Kristals)
+```
+
+A collection repo can hold **many** Kristals; use repository boundaries for lifecycle, permissions, cost and ownership, not as a forced 1:1 mapping to semantic artifacts.
+
+## Bootstrap-managed node
+
+```text
+.kristal/node.json
+.kristal/bindings/github.json
+.kristal/capabilities.json
+.kristal/bootstrap-state.json   # managed operational fingerprints
+.github/workflows/...           # qualify, publication, collection ingest
+```
+
+Bootstrap&#x27;s managed workflows pin their Framework checkout and external Actions to full commit SHAs. Qualification is read-only and bound to a candidate commit. Publication verifies local and downloaded bytes before finalizing an immutable Release. A required Environment is enforced only if explicitly configured as `required`; best-effort is not the same guarantee.
+
+GitHub&#x27;s plan-dependent features must degrade explicitly and must not alter v9 semantics. Public-node workflows need a readable Framework reference without embedding reusable secrets.
+
+See [[Workflow-GitHub-v10]], [[GitHub-Read-Surfaces-v10]], [[Security-and-Confidentiality-v10]].
+
+*Normative profile source: Framework `spec/v10/GitHub-Reference-Profile.md` and `profiles/github/schemas/`.*
+</pre></body></html>

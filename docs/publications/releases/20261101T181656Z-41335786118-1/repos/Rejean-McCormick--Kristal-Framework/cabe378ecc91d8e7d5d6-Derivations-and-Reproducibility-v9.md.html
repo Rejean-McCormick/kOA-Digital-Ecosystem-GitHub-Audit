@@ -1,0 +1,51 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Derivations-and-Reproducibility-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Derivations-and-Reproducibility-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 5a03b5a4ffabb032</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Derivations-and-Reproducibility-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Derivations and Reproducibility
+
+A v9 **Derivation** records how an artifact was computationally produced.
+
+```text
+inputs
++ transform
++ parameters
++ toolchain/policies
+→ outputs
+```
+
+This is build lineage, not epistemic authority.
+
+```text
+EPISTEMIC PROVENANCE != BUILD PROVENANCE
+```
+
+## Exact-input rule
+
+A deterministic derivation must declare every input that can affect output, or eliminate that variability.
+
+Typical inputs include:
+
+- source snapshot/commitment;
+- schemas;
+- transform version;
+- configuration;
+- policy;
+- random seed;
+- locale when relevant;
+- external datasets.
+
+A strong deterministic build must not read unpinned mutable network state.
+
+## Change pruning
+
+An implementation may rebuild an artifact after source bytes change and discover that the resulting logical commitment is unchanged.
+
+```text
+source bytes changed
+      ↓
+recompute
+      ↓
+same logical commitment
+      ↓
+no logical downstream invalidation required
+```
+
+This is an optimization; the normative requirement is that declared commitments remain correct.
+</pre></body></html>

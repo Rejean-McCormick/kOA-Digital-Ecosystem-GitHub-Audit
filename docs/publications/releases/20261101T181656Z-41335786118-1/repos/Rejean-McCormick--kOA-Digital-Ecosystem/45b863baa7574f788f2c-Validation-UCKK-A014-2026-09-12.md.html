@@ -1,0 +1,218 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · Validation-UCKK-A014-2026-09-12.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · Validation-UCKK-A014-2026-09-12.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · dd52671208ae · SHA-256 5642654c7866c9ef</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/wiki/Validation-UCKK-A014-2026-09-12' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># UCKK A014 validation snapshot — 2026-09-12
+
+**Status:** J30 outbound publication is **PASS**. The scenario is paused before J90 because the inbound authority path must be corrected and validated as **Konnaxion/eThikos → Orgo direct**, with UCKK optional.
+
+This page is a restart checkpoint for the A014 vertical slice. It records only the state needed to resume safely; secrets and passwords are intentionally omitted.
+
+---
+
+## Architecture correction
+
+The earlier A014 documentation treated a published UCKK Assembly decision as the canonical trigger for Orgo. That is no longer the target architecture.
+
+The corrected ownership model is:
+
+```text
+Konnaxion / eThikos
+  owns deliberation + decision
+        ↓ direct governed handoff
+Orgo
+  owns Signal + workflow + Case + Tasks
+        ↓ governed publication
+Konnaxion
+  owns impact / observation record
+
+UCKK = optional publication / diffusion surface
+```
+
+UCKK is **not required** between Konnaxion and Orgo and does not become the authority over a Konnaxion/eThikos decision.
+
+The existing identifiers below remain useful as historical/demo evidence for the already-executed A014 run. They must not be mistaken for the canonical authority model of the corrected inbound flow.
+
+---
+
+## Existing scenario identity
+
+```text
+demo_id          uckk-pedagogy-pilot-a014
+assembly         UCKK-A014
+motion           UCKK-M014
+decision         UCKK-D009
+archive          UCKK-ARCH-A014-D009
+workflow         uckk_pedagogy_pilot
+correlation      corr.uckk.A014.D009
+case external    uckk:assembly:A014:decision:D009:v1
+```
+
+A new Konnaxion-owned decision identity for the corrected direct inbound contract is **not defined by this snapshot** and must be taken from the implementation rather than invented here.
+
+---
+
+## Scenario checkpoints
+
+| Checkpoint | State | Notes |
+|---|---|---|
+| T-14 | PASS | pre-decision setup validated in the existing demo |
+| T-7 | PASS | pre-decision setup validated in the existing demo |
+| T0-pre | PASS (legacy path) | proved no Case before the then-configured trigger |
+| T0-post | PASS technically / SUPERSEDED architecturally | Signal/Case/Tasks mechanics worked, but the UCKK-centered authority trigger must be replaced by direct Konnaxion/eThikos → Orgo |
+| J3 | PASS | synthetic checkpoint validated |
+| J30 | **PASS** | Orgo → Konnaxion publication reached terminal `SUCCEEDED`; exactly one Impact verified |
+| J90 | HOLD | do not continue until the corrected direct inbound authority path is implemented and validated |
+| R1 | HOLD | follows the corrected J90/reconsideration path |
+
+---
+
+## J30 Orgo operation — completed
+
+The existing Day-30 operation was correctly reused; J30 was **not recreated**.
+
+```text
+IntegrationOperation ID  6b8c5523-096e-4fc0-b6a9-be644240b497
+provider                 konnaxion
+operation                publish
+final status             SUCCEEDED
+idempotency              uckk:A014:impact:J30:v1
+correlation              corr.uckk.A014.D009
+```
+
+The operation had previously failed with `PROVIDER_UNCONFIGURED` and its associated outbox delivery had exhausted retries. After the provider was made healthy, the existing delivery was redriven through the canonical Orgo API path and transitioned:
+
+```text
+FAILED → RUNNING → SUCCEEDED
+```
+
+No raw SQL repair and no second J30 business request were used.
+
+---
+
+## Konnaxion Impact verification — completed
+
+Konnaxion provider runtime:
+
+```text
+World        uckk-a014
+Release      r1
+Bridge port  8011
+HTTP publish 200 OK
+```
+
+Verified Impact:
+
+```text
+count               1
+impact id           1
+external_reference  impact:UCKK-A014:day30:v1
+status              published
+checkpoint          day_30
+demo_id             uckk-pedagogy-pilot-a014
+correlation_id      corr.uckk.A014.D009
+receipt.status      succeeded
+synthetic           true
+epistemic_status    synthetic_demo_fixture
+```
+
+The provider-side lookup returned **exactly one** record. This validates the required duplicate-suppression behavior for the recovered J30 publication.
+
+Synthetic observation summary associated with the fixture:
+
+```text
+workload imbalance reports           6
+peer rubric clarification requests   2
+policy changes                        0
+```
+
+The payload is operational observation only. It does not itself authorize a policy change.
+
+---
+
+## Runtime evidence confirmed
+
+### Orgo
+
+- PostgreSQL test database reachable on the established local test runtime.
+- API health returned `alive` on port `4000`.
+- Application login for the E2E account succeeded with the correct application credential.
+- Bridge-enabled worker was active.
+- Canonical redrive endpoint accepted the existing dead delivery.
+- IntegrationOperation reached terminal `SUCCEEDED` in approximately four seconds after redrive.
+
+The database credential and application credential are distinct; neither is stored in this wiki.
+
+### Konnaxion
+
+- World `uckk-a014` was CURRENT on release `r1`.
+- Provider health returned HTTP 200 under the bridge manager.
+- Publish request returned HTTP 200.
+- Impact lookup returned HTTP 200 and `count = 1`.
+- Final receipt status was `succeeded`.
+
+---
+
+## What J30 proves
+
+J30 proves the **Orgo → Konnaxion** governed external-effect path end to end:
+
+```text
+Orgo IntegrationOperation
+  + transactional outbox
+        ↓
+worker
+        ↓
+Konnaxion authenticated provider
+        ↓
+Konnaxion-owned World/Release mutation
+        ↓
+final succeeded receipt
+```
+
+It also proves that canonical redrive can recover a previously dead/unconfigured delivery without duplicating the provider-owned business effect.
+
+J30 does **not** prove the corrected inbound decision path.
+
+---
+
+## Required work before J90
+
+1. Define the Konnaxion/eThikos-owned decision contract and its stable source identity.
+2. Implement the **direct Konnaxion/eThikos → Orgo** adapter/handoff.
+3. Ensure the handoff does not require UCKK to relay or authorize the decision.
+4. Validate exactly one Orgo Signal/business consequence for one stable Konnaxion decision identity.
+5. Replay the same handoff and verify idempotency.
+6. Verify a conflicting normalized payload fails explicitly rather than silently mutating the original consequence.
+7. Update the A014 T0 path and documentation to use the corrected authority model.
+8. Only then resume J90 and R1.
+
+---
+
+## Completion gates
+
+### Outbound gate — PASS
+
+```text
+Orgo IntegrationOperation = SUCCEEDED
+AND
+Konnaxion Impact count = exactly 1
+AND
+receipt.status = succeeded
+```
+
+### Inbound gate — NOT YET VALIDATED
+
+```text
+Konnaxion/eThikos decision authority
+AND
+direct handoff to Orgo
+AND
+exactly one Orgo business consequence
+AND
+idempotent replay
+AND
+UCKK not required as intermediary
+```
+
+See also:
+
+- [Status — 2026-09-12](Status-2026-09-12)
+- [Integration — Orgo ↔ Konnaxion](Integration-Orgo-Konnaxion)
+</pre></body></html>

@@ -1,0 +1,54 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Getting-Started.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Getting-Started.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 4eb78305f912 · SHA-256 a765134ae27c5873</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Getting-Started' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Getting Started
+
+## Requirements
+
+- Python 3.10 or newer.
+- Local checkout of the Spek repository.
+- ReportLab for PDF (`pip install -r requirements.txt`). No network is required when building after dependencies are installed.
+- Optional XeLaTeX to typeset the emitted `.tex` files into PDFs with a TeX toolchain.
+
+## First run
+
+```bash
+python -m pip install -r requirements.txt
+python -m unittest discover -s tests -v
+python -m spek check
+python -m spek build --out dist --formats html,pdf,tex
+python -m spek verify-site dist
+python -m http.server 8000 --directory dist
+```
+
+Open &lt;http://localhost:8000/&gt;. Use the language links to see English, French, and Italian presentations of the same semantic units.
+
+## Your first article
+
+1. Copy `examples/article.json` and `examples/realizations.json` to your working directory.
+2. Give the derived article a unique ID, then define semantic units, evidence and typed section/slot bindings.
+3. Supply a short reviewed expression for every referenced realization key and required language.
+4. Run `check` with `--source`, `--realizations`, and `--layouts`.
+5. Build to a fresh output directory, inspect, verify hashes, and conduct human review.
+
+```bash
+python -m spek check --source article.json --realizations realizations.json --layouts layouts
+python -m spek build --source article.json --realizations realizations.json \
+  --layouts layouts --languages en,fr,it --formats html,tex,pdf --out dist
+```
+
+Use [[Layout Catalog]] and [[Article Source Format]] for field-level details. A demonstration build is not publication clearance.
+
+## Try the educational preview (v0.5)
+
+On Windows: `scripts\demo-education.bat`. Elsewhere see [[Ekole Integration]] and [[Kompose Integration]]. All content is fictional and remains local preview only.
+
+## Optional: draft a Kristal Wiki page with Arketype layouts
+
+The following commands require the separate **Spek Wiki/Arketype integration overlay**; they are not included in a clean Spek 0.5 checkout. From the Spek repository:
+
+```powershell
+python -m spek list-wiki-templates
+python -m spek build-wiki --source examples/article.json --realizations examples/realizations.json --archetype composition-hybride --slug spek-demo --language fr --out C:\private\spek-wiki-demo --demonstration
+python -m spek verify-wiki C:\private\spek-wiki-demo
+```
+
+The resulting files are **private, non-publishable demonstration pages**. Real Kristals require a validated `--state-snapshot`, a consistent SemantiK realization bundle and external publication approval. See [[Wiki Draft Workflow]].
+</pre></body></html>

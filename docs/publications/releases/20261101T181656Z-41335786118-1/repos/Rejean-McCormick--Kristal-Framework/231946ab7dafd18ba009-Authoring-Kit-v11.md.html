@@ -1,0 +1,38 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Authoring-Kit-v11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Authoring-Kit-v11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 a8e2455770b19eb7</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Authoring-Kit-v11' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Authoring Kit 4.0.0-draft.3 — producteur de Kristal v11
+
+**Profil compatible :** Framework `11.0.0-draft.4` avec contrats sémantiques stricts v11 restés compatibles avec `draft.3`. L&#x27;Authoring Kit draft.3 conserve son **pin** contre les sources `11.0.0-draft.3` tant qu&#x27;il n&#x27;a pas été indépendamment requaliﬁé sur ce nouveau snapshot.
+
+## Rôles
+
+L&#x27;Authoring Kit crée les graphes et registres canoniques; diK produit des catalogues/dictionnaires, mesures et propositions. Le Framework vérifie les contrats. Les identifiants Q/P de Wikidata ne deviennent jamais des KQ/KP canoniques. Voir [[diK-Authoring-Exchange-v11]].
+
+## Parcours v11 strict
+
+```bash
+python tools/kristal.py check-v11 ./My-Kristal
+python tools/kristal.py coverage-v11 ./My-Kristal --locales fr,en,fr-CA
+python tools/kristal.py check ./My-Kristal
+python tools/kristal.py build-v9 ./My-Kristal
+```
+
+Ces commandes viennent du dépôt **Authoring Kit**, pas du Framework ou de diK. L&#x27;activation du profil v11 se fait explicitement via `enable-v11`, sur un projet pourvu des artefacts nécessaires. Les anciens Kristals v9/v10 restent valides sous leurs propres contrats.
+
+## Import d&#x27;un catalogue diK
+
+```bash
+python tools/kristal.py import-dik-catalog ./My-Kristal \
+  --catalog /immutable/dik/output/catalog.json \
+  --revision wd-review-001 --register \
+  --artifact-id urn:project:dik:wd-review-001 \
+  --contract-id project.v11.lexical-catalog
+python tools/kristal.py select-v11-catalog ./My-Kristal \
+  --catalog canon/domain/v11/dictionaries/dik-revisions/wd-review-001/catalog.json
+python tools/kristal.py check-v11 ./My-Kristal
+```
+
+Un catalogue ne devient pas actif parce qu&#x27;il vient de diK. Le Kit ajoute une nouvelle révision avec contrôle des hashes et du namespace, en conservant les corrections curatées existantes. `recover-v11` propose `status`, `finish`, `rollback` sous conditions ; les pannes système physiques ne sont pas encore totalement qualifiées.
+
+## Limites
+
+Pas de traduction automatique de tous les héritages, pas d&#x27;authentification cryptographique des réviseurs et pas de démonstration de reprise multi-processus après panne de courant. Le Kit ne résout pas de façon implicite les conflits de lexiques. Voir [[Legacy-Migration-v11]] et [[Conformance-and-Ecosystem-v11]].
+</pre></body></html>

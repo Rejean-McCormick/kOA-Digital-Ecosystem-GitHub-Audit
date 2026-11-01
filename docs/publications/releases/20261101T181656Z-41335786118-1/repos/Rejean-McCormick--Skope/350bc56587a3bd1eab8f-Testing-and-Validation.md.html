@@ -1,0 +1,52 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Testing-and-Validation.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Testing-and-Validation.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 cb455ce281545017</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Testing-and-Validation' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Testing and validation
+
+## Reproducing the Python suite
+
+```bash
+python -m pip install -e &#x27;.[test]&#x27;
+python -m pytest tests -q
+```
+
+For the source archive of **Skope 0.15.0-alpha.1**, the release validation reports **129 passed** in the analysis environment. This covers fixture-based index querying, scope/campaign validation, server behavior, author workflows, reconciliation transactions and extraction simulation. This includes **11 native portfolio tests**, plus the 118 inherited tests. The test result must **not** be misrepresented as exercising the real data volume or a complete long-running production extraction.
+
+## JavaScript validation
+
+```bash
+node --check skope/static/app.js
+# Repeat node --check for each skope/static/*.js
+node tests/test_workspace_ui_0142.cjs
+```
+
+All **11** `skope/static/*.js` files passed `node --check` in the analysis environment; `tests/test_workspace_ui_0142.cjs` also passed.
+
+**Separate graph simulation:** `tests/test_density_dom.cjs` requires `jsdom` and `@napi-rs/canvas`. In the analysis environment this test **could not start because `jsdom` was not installed**. Do not count it as passed. It is a DOM/Canvas simulation, not a complete Windows GUI validation.
+
+## New portfolio validation (0.15.0-alpha.1)
+
+The release notes document a **read-only inventory** of the supplied 104-Kristal batch: 104 projects, 6,945 curated French terms (6,566 KQ; 379 KP) from 23 projects. Tests simulate indexed search and Skope fast-locator acquisition; they check resuming from intact SHA-256 chunks, rejection of corruption, scoped mapping decisions and preservation of full Wikidata statements. They **do not** constitute a completed real-world acquisition from the operator&#x27;s `D:` dump.
+
+The existing `tests/test_workspace_ui_0142.cjs` is reported passing. `tests/test_density_dom.cjs` was **not successfully executed**, due to optional dependencies. See [Portfolio Enrichment](Portfolio-Enrichment).
+
+## What is still unverified
+
+- Access to the original multi-gigabyte index and dump on `D:`.
+- Real locator/sidecar compatibility, backend throughput and free-space behavior.
+- Full end-to-end Windows browser UX for large campaigns and data extraction.
+- Live source-specific results for the Catho unresolved roster or Botany selection.
+- Any online documentary source verification (not implemented by Skope).
+
+## Release-specific notes
+
+The archive&#x27;s `VALIDATION_0_15_0_ALPHA1.md` documents 129 Python tests, the first-pass read-only inventory, and mock-based acquisition. Historical `VALIDATION_0_14_4.md` remains as a historical report. Neither constitutes an actual source retrieval from the operator&#x27;s production Wikidata dump.
+
+## Useful checks before release
+
+1. `python -m pytest tests -q` and JavaScript syntax checks.
+2. `GET /api/config` should report `server_release: &quot;0.15.0-alpha.1&quot;`.
+3. `GET /api/scope-profiles/catalog` should show five bundled valid profiles without errors.
+4. `GET /api/meta` should confirm a finalized, compatible index.
+5. `GET /api/diagnostics/reader` should show the actual server interpreter and source/locator situation.
+6. On a **copy/test environment**, exercise controlled pause/resume and reviewed-CSV refusal paths before a production run.
+
+See [Troubleshooting](Troubleshooting) and [Versioning and Migration](Versioning-and-Migration).
+</pre></body></html>

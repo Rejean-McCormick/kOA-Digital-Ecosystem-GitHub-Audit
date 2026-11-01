@@ -1,0 +1,87 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Artifact-Validation-Report.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Artifact-Validation-Report.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 41fa53318a5e8d4d</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Artifact-Validation-Report' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Artifact: Validation Report
+
+&gt; **Legacy compatibility surface:** this page describes the historical v5-era Validation Report contract. Kristal v9 does not promote this historical schema to its semantic core. For the inherited v9 semantic-state architecture see [[Artifacts]], [[Exchange-and-Runtime-v9]], [[State-Snapshots-v9]] and [[Federation-and-Coverage-v9]]; for the v10 hosted network see [[Architecture-v10]].
+
+A **Validation Report** records a applicability enveloped validation decision and the findings behind it.
+
+It does not turn a claim into universal truth. It records what was evaluated, by whom or by which validator, under which policy, for which applicability envelope, with which result.
+
+---
+
+## What it can validate
+
+A Validation Report may target:
+
+- an assertion;
+- a Kristal State;
+- an Exchange;
+- a shard;
+- a Federation Manifest;
+- a Runtime Pack;
+- a dataset;
+- a reader policy;
+- a validation policy;
+- an authority channel.
+
+---
+
+## What it records
+
+At a high level, it records:
+
+- target artifact or assertion;
+- target level;
+- applicability envelope;
+- issuer authority channel;
+- validation policy reference;
+- validation status;
+- valuation level;
+- `validated_as` classification;
+- findings;
+- evidence and provenance references;
+- authority recognition references;
+- warnings and errors;
+- signatures when applicable.
+
+---
+
+## Common validation statuses
+
+- `not_evaluated`
+- `in_review`
+- `validated`
+- `conditionally_validated`
+- `disputed`
+- `rejected`
+- `revoked`
+
+---
+
+## Why it matters
+
+Validation Reports make it possible to show readers:
+
+- validated as what;
+- by whom;
+- under which policy;
+- for which applicability envelope;
+- with what valuation;
+- with what evidence;
+- with what limitations.
+
+---
+
+## Relationship to other artifacts
+
+- Exchanges and Shards may reference Validation Reports.
+- Federation Manifests may require Validation Reports for included shards.
+- Reader Policies may expose only assertions with matching validation status.
+- Runtime Packs must preserve validation labels when materializing indexes.
+
+---
+
+## Technical details
+
+- Schema: `kristal-docs-v5/02-schemas/validation-report.schema.json`
+- Example: `kristal-docs-v5/10-examples/validation-report.example.json`
+</pre></body></html>

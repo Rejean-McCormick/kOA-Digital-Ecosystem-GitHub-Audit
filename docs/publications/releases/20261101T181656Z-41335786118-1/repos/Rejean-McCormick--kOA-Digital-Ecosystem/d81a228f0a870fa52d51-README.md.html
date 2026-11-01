@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/kristal-v10-alignment/README.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/kristal-v10-alignment/README.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 7f95dc000c449834</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/40-integration/kristal-v10-alignment/README.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kristal v10 — Cross-repository harmonization (C0)
+
+**Last coordination review:** 2026-10-12 · **Status:** plan and source-snapshot assessment, **not production qualification**.
+
+This section tracks ownership, interface contracts, evidence, blockers, and approved human decisions for the transition to the Kristal **v10 hosted network**. kOA Digital Ecosystem is **C0 coordination only**: the owning repositories implement and qualify their own contracts. No document here authorizes a GitHub write or changes a canonical Kristal.
+
+## Read first
+
+- [Architecture and authority](architecture.md) — product boundaries and the two distinct knowledge lanes.
+- [Contract and version matrix](contracts-and-versions.md) — producers, consumers, schema IDs and unresolved pins.
+- [Workstream registry](workstreams.json) — machine-readable proposed changes, owner, dependencies, gate and evidence status.
+- [Readiness and verification](readiness.md) — actual snapshot findings and acceptance criteria.
+- [Decision ledger](decisions.md) — user decisions, non-decisions and owner approvals still required.
+
+## Two lanes remain separate
+
+**Frozen historical projection lane:** Kristal Standard 6.0.0 / IK v2 / `encyklopedia.corpus-harvest-handoff/1.0.0` / UCKK projection. It remains pinned in `../knowledge-projection-contract-set.json`, and must not be silently overwritten.
+
+**Newer hosted-network lane:** v9 owns the logical semantic state and commitments; v10 (`10.0.0-draft.3.1` in provided snapshots) adds hosting, bindings, discovery, and controlled publication. GitHub is a *host profile*, not a new logical identity and not a source of factual authority.
+
+## Navigation decision
+
+**Konstellation is the user-facing navigator across Kristals and within a selected Kristal.** Manager is the authoritative operational *inventory of actual instances* and read-surface synchronization owner; Arketype is the non-normative *library of archetypes and structural patterns*. Konstellation can consume both through explicit read-only interfaces. GitHub collections show only accessible hosted surfaces; an absent public index does not erase local knowledge.
+
+## What this document does not do
+
+This section does not change the Framework, Kit, Manager, Bootstrap, public/private collections, domain knowledge, source data, repository visibility or a publication grant. An approval to automate qualified revisions after a first scoped authorization **is not** the authorization of any particular Kristal or file set.
+
+**Source status:** based on code snapshots and coordination records. Current remote HEAD, ACLs, owner signatures, receipt verification and cross-repository deployment have not been established by these documents.
+</pre></body></html>

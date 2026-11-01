@@ -1,0 +1,32 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal · docs/10-treatment.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal · docs/10-treatment.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal · ed1ed01cc8a7 · SHA-256 224823b32709f414</small><br><a href='https://github.com/Rejean-McCormick/MediKristal/blob/ed1ed01cc8a71c4464087c31db80bc20b9eb58e6/docs/10-treatment.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 10 — Options thérapeutiques
+
+## Périmètre
+
+Médicaments, mesures non médicamenteuses, procédures, orientation, surveillance et soins de soutien. Le système sépare `TreatmentOption`, décision, prescription, dispensation et administration. Une proposition n&#x27;est pas un traitement administré. Les systèmes cliniques ou pharmacies restent propriétaires de leurs actes exécutés.
+
+## Modèle
+
+Une option porte indication, objectif, population, bénéfices/risques sourcés, statut, protocole, alternative, disponibilité pertinente et surveillance. Pour un médicament : substance(s), produit éventuel, forme, voie, concentration, unité et dépendances terminologiques. Les détails de dose et de durée sont fournis uniquement par un module de calcul qualifié avec source et entrées ; ce dossier n&#x27;en fixe aucun.
+
+## Contrôles requis
+
+Vérifier identité, allergies documentées et niveau d&#x27;incertitude, traitements actifs y compris automédication déclarée, doublons de substance/classe selon règle, interactions, fonctions organiques nécessaires, grossesse/allaitement lorsque pertinents, âge/poids, indication et informations manquantes. Les contrôles sont eux-mêmes versionnés. Une donnée requise inconnue produit `needs_information` et empêche la présentation de compatibilité confirmée.
+
+Une base de produits autorisés n&#x27;est pas une base exhaustive d&#x27;interactions ; CCDD/RxNorm ne remplacent pas la sélection de preuves thérapeutiques. Les paramètres fournis par un service payant gardent leur provenance et conditions ; une panne ne produit pas « aucune interaction ».
+
+## Probabilité et décision
+
+L&#x27;utilité d&#x27;un traitement dépend de ses effets attendus selon les états possibles, pas uniquement de la maladie la mieux classée. L&#x27;évaluation thérapeutique lit les probabilités applicables mais conserve les limites. Si aucun modèle de décision adéquat n&#x27;existe, présenter les options documentées sans classement numérique fallacieux.
+
+## Exécution
+
+La commande de prescription exige politique et acteur habilités, vérifications récentes, confirmation du destinataire et idempotence. Le canal patient affiche informations et propositions dans le périmètre admis ; il ne peut activer une prescription institutionnelle. Les suggestions expérimentales ne sont pas routées comme ordres. Les actions autorisées par protocole doivent déclarer exactement leur périmètre et conditions d&#x27;arrêt.
+
+## Suivi
+
+Le plan relie traitement choisi, surveillance, contrôles attendus et réévaluation. Les effets rapportés sont de nouvelles observations ; ils ne deviennent pas automatiquement preuve causale ni données d&#x27;apprentissage. Les événements indésirables et décisions d&#x27;arrêt sont conservés avec responsabilités de suivi. Une révision de connaissance peut signaler les plans actifs impactés.
+
+## Tests
+
+Concentration vs dose totale ; unité incompatible ; médicament combiné avec doublon d&#x27;ingrédient ; allergie inconnue ; interaction non couverte ; modèle hors population ; résultat rénal corrigé ; fournisseur d&#x27;interactions indisponible ; changement de traitement entre calcul et validation. Toutes les fixtures emploient des substances fictives ; aucune posologie réelle dans le corpus technique livré.
+</pre></body></html>

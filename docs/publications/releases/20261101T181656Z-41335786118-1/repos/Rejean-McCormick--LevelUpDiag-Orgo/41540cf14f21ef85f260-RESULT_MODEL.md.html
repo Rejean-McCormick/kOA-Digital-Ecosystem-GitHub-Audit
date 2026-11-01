@@ -1,0 +1,43 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/LevelUpDiag-Orgo · docs/RESULT_MODEL.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/LevelUpDiag-Orgo · docs/RESULT_MODEL.md</h1><p class='meta'><small>Rejean-McCormick/LevelUpDiag-Orgo · 79d495e63783 · SHA-256 952a83377096fb35</small><br><a href='https://github.com/Rejean-McCormick/LevelUpDiag-Orgo/blob/79d495e637838784a1e137a7cf83722354f020f2/docs/RESULT_MODEL.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Result and campaign model
+
+Each level writes:
+
+```text
+.levelupdiag/runs/&lt;run-id&gt;/levels/&lt;level-id&gt;/result.json
+```
+
+A campaign writes:
+
+```text
+.levelupdiag/runs/&lt;run-id&gt;/summary.json
+.levelupdiag/runs/&lt;run-id&gt;/summary.txt
+```
+
+`latest/` contains convenience copies and does not replace history.
+
+Campaign aggregation rules:
+
+1. diagnostics/config errors cannot become target success;
+2. any executed target `FAIL` makes the campaign `FAIL`;
+3. required `SKIP`, `BLOCKED`, `PARTIAL`, or `INFRA_ERROR` makes evidence incomplete (`BLOCKED`);
+4. equivalent statuses on optional levels degrade to `WARN`;
+5. `WARN` remains accepted but visible;
+6. missing results are never final evidence.
+
+A level&#x27;s `required` flag affects completeness, not whether an observed `FAIL` matters. An optional level that actually executes and finds a target failure is still a failure.
+
+## Tournée Tandem 7/8 — Vérification de l&#x27;intégrité (2026-10-19)
+
+Les nouvelles campagnes enregistrent `evidence_integrity` dans le `summary.json`
+**du run** avec le SHA-256 exact de chaque `levels/&lt;id&gt;/result.json`.
+`verify-run` relit tous les rapports, reconstitue le verdict, vérifie cible,
+run_id, nombres et `target_protection`, et refuse toute preuve manquante ou altérée.
+Une preuve d&#x27;intégrité **n&#x27;est pas** une attestation signée.
+
+Utiliser `python levelupdiag.py verify-run &lt;runs/run-id/summary.json&gt;` puis
+épingler le `Summary SHA-256` dans un registre indépendant. Le contrôle
+`--expected-summary-sha256` valide cette ancre lors de la relecture.
+Les copies sous `latest/` et les anciennes preuves sans `evidence_integrity`
+ne sont pas acceptées comme nouvelles preuves qualifiées.
+Voir `docs/TANDEM_TOUR_LEVELUPDIAG_EVIDENCE_2026-10-19.md`.
+</pre></body></html>

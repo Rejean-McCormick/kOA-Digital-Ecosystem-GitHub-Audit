@@ -1,0 +1,43 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · Perspectives-and-Renderers.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · Perspectives-and-Renderers.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 01bfc9126e06 · SHA-256 edf90e4ef3328f80</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/wiki/Perspectives-and-Renderers' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Perspectives, Lenses, Plans, and Renderers
+
+## What does each component do?
+
+- **Perspective:** the kind of object to explore; the choice can be informed by the open corpus.
+- **QuerySpec:** describes a selection and its filters.
+- **Lens:** defines a reading angle compatible with the selected kind, without changing assertions.
+- **Reader Policy:** determines which information is visible.
+- **Navigation Affordances:** structural hints about useful paths and representations.
+- **NavigationPlan:** recommended views with reasons and limitations.
+- **Projection DTO:** bounded, derived data prepared for a renderer.
+- **Renderer Registry:** controlled set of available visualizations.
+
+## Representation families
+
+| View | Justified use |
+| --- | --- |
+| List / table | General browsing, catalogs, filters |
+| Constellation / graph | Relationships actually declared among entities |
+| Timeline / lineage | Explicit dates, states, or transmissions |
+| Tree | Hierarchical organization when present in the data |
+| DAG / dependencies | Declared prerequisites or chains of evidence |
+| Flow / states | Processes and conditional transitions |
+| Causal loops | **Explicitly** represented causality and feedback |
+| Matrix | Comparing dimensions or measurements |
+| Traceability | Sources, assertions, and provenance |
+| Multiscale | Connected layers and memberships |
+| Spatial | Location only when coordinates/places are available |
+
+A Kristal may support several views. There is **no requirement to produce a visually spectacular view**. Fallback lists or tables are appropriate when the data does not justify a specialized renderer.
+
+## Readable relationships and technical facets
+
+Konstellation&#x27;s current French semantic-display patch changes **presentation**, not graph semantics. Known predicates such as `P138` receive readable French labels, unknown property codes remain visibly unresolved, and routine `v9:node_kind` information is de-emphasized in the constellation. Facets with no values are normally hidden unless the user has an active filter. The original relation identifier must remain available to readers inspecting provenance.
+
+These are **current heuristics**, not a guarantee that every rendered edge names a domain entity instead of a metadata property. Consult [[Semantic Labels and Localization|Semantic-Labels-and-Localization]] and [[Astrolabe and Search|Astrolabe-and-Search]].
+
+## Security and performance constraints
+
+Renderers must be selected from the controlled registry. External `navigationHints` cannot execute JavaScript, inject an arbitrary component, or expand permissions. Projections may be truncated; respect `truncated`, `nextCursor`, and resource budgets.
+
+Detailed sources: `docs/03-navigation.md`, `docs/15-adaptive-navigation.md`, `docs/17-renderer-registry.md`, `contracts/navigation-plan.schema.json`, `contracts/navigation-projection.schema.json`.
+</pre></body></html>

@@ -1,0 +1,13 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/LOCAL_SELECTOR_2026-10-16.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/LOCAL_SELECTOR_2026-10-16.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 8c880e3878c2bdd4</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/LOCAL_SELECTOR_2026-10-16.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konstellation — démarrage neutre / choix local (prototype)
+
+- **Un seul lanceur à la racine :** `Konstellation.cmd`.
+- Aucun Kristal choisi à l&#x27;ouverture, pas de retour implicite à Théophile ni à `active-reader.json`.
+- `config/local-catalog.json` définit explicitement la racine locale `C:/mycode/Kristal/locals` et une recette de lecture dérivée optionnelle pour Catho.
+- L&#x27;interface « Mes Kristals » liste seulement les **sous-dossiers immédiats** présentant `kristal.workspace.json`; les dossiers non pris en charge restent indisponibles.
+- Le catalogue est une **fonction locale privée** (loopback). Aucune découverte sur internet ou qualification C1/C2 n&#x27;est supposée.
+- Au clic « Ouvrir dans l&#x27;explorateur », le serveur relit et vérifie la structure de l&#x27;état et, s&#x27;il y a lieu, les empreintes déclarées par le lecteur local.
+- Un lecteur générique non spécialisé présente la structure v9 conservée sous le Framework v10; il ne promet pas une projection sémantique spécifique à tous les Kristals.
+- `tools/legacy-root/` contient des copies historiques des anciens lanceurs et outils, **non nécessaires pour démarrer Konstellation**. Pour les anciens scripts de maintenance, rétablir leur environnement original avant utilisation.
+- `tools/maintenance/Ranger_anciens_lanceurs.cmd` peut déplacer les anciens fichiers de la racine vers une sauvegarde, après confirmation explicite. Ne touche ni aux Kristals, ni à `config`, ni aux fichiers du projet.
+- Les tests unitaires du sélecteur et les contrôles de structure passent dans le conteneur; le navigateur Windows et le build Astro complet ne sont pas vérifiés ici, faute de dépendances npm installées.
+</pre></body></html>

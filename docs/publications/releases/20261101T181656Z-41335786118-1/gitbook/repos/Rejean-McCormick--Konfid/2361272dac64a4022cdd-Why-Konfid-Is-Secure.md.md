@@ -1,0 +1,178 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Konfid/wiki/Why-Konfid-Is-Secure | commit: e707adff40a4b9a660647bec302236caf6d6edf6 | SHA-256: 4a757c524fab6f9498575332a5bf43a7fe62382da2cc0a74e65df041ef362fc3 -->
+
+# Why Konfid Is Secure
+
+## The simple answer
+
+**Because security is not entrusted to a single component, and because sensitive data is not unnecessarily centralized.**
+
+Konfid combines:
+
+- Zero Trust;
+- least privilege;
+- scope-bounded permissions;
+- strong authentication;
+- separation of duties;
+- progressive containment;
+- multi-person approvals for critical operations;
+- bounded privileged commands;
+- independent audit;
+- data minimization;
+- fail-closed behavior for critical paths.
+
+## 1. Konfid does not become a vault containing all data
+
+Konfid is a control plane. Applications remain the owners of their data.
+
+```text
+Konnaxion: business record
+        │
+        └─> Konfid: "P123 requests READ on HR.RECORD in ABC"
+
+Orgo: case / workflow
+        │
+        └─> Konfid: "P450 approved APR-33"
+```
+
+This architecture avoids unnecessarily concentrating raw content in a new central system.
+
+## 2. Being logged in does not automatically grant permissions
+
+Authentication answers: **who are you?**
+
+Authorization then answers: **what may you do, to what, here and now?**
+
+A valid Google login therefore does not, by itself, grant the right to export data, change a policy, or trigger a shutdown.
+
+## 3. Email is not used as a security identity
+
+Konfid prefers a stable identifier such as:
+
+```text
+issuer + subject
+```
+
+An address change, shared address, or role mailbox does not silently transform one identity into another.
+
+## 4. Permissions are bounded
+
+Permissions may depend on:
+
+- principal;
+- action;
+- resource class;
+- tenant;
+- organization;
+- project;
+- role;
+- delegation;
+- session assurance;
+- current risk;
+- requested volume;
+- duration.
+
+A `READ` permission does not automatically imply `EXPORT`, and access to one organization does not imply access to another.
+
+## 5. The owning application retains local control
+
+A central `ALLOW` decision is not necessarily the end of the control process.
+
+```text
+final access = Konfid allows
+               AND local application allows
+```
+
+This double validation limits the blast radius of a central error or compromise.
+
+## 6. Overwatch does not have a root button
+
+Overwatch produces `RiskSignal` objects.
+
+It does not directly possess the authority to execute a destructive operation.
+
+```text
+signal
+  ↓
+policy
+  ↓
+response decision
+  ↓
+approval if required
+  ↓
+bounded enforcement
+```
+
+A false positive therefore does not automatically become a shutdown.
+
+## 7. Containment is progressive
+
+```text
+observe
+→ step-up authentication
+→ rate limit
+→ revoke session
+→ suspend grant
+→ suspend account
+→ isolate service
+→ freeze tenant
+→ emergency shutdown
+```
+
+Konfid favors the smallest response capable of containing the risk.
+
+## 8. Critical actions have multiple safeguards
+
+Depending on policy, an operation may require:
+
+- recent passkey/MFA;
+- multiple approvers;
+- distinct humans;
+- requester ≠ approver;
+- justification;
+- expiration;
+- exact scope;
+- revalidation immediately before execution;
+- final receipt;
+- audit.
+
+## 9. Privileged agents are limited
+
+An agent does not expose an arbitrary shell as a normal capability.
+
+It accepts a small allowlist of operations such as:
+
+- revoke a session;
+- suspend a grant;
+- isolate a service;
+- apply a known security state.
+
+Each command is bound to a target, scope, decision, and expiration.
+
+## 10. Evidence is separated from action
+
+The system that executes an action should not be the sole authority over the history of that action.
+
+Critical events are therefore sent to a separate audit authority with the information required to reconstruct the decision without copying all business content.
+
+## 11. Resilience is treated as a security property
+
+Konfid provides for:
+
+- idempotence;
+- transactional outbox;
+- leases/fencing for workers;
+- bounded retries;
+- dead-letter handling;
+- circuit breakers;
+- bulkheads;
+- receipts;
+- reconciliation;
+- explicit degraded modes.
+
+An analytics overload must not remove the ability to deny or revoke critical access.
+
+## Central invariant
+
+> **No single component should be able to authenticate, authorize, approve, execute, and erase the evidence of a critical action on its own.**
+
+This separation — combined with data minimization — is Konfid's primary architectural defense.

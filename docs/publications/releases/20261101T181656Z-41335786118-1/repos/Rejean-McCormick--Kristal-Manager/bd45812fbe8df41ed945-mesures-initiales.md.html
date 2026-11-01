@@ -1,0 +1,21 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/01-audit/mesures-initiales.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/01-audit/mesures-initiales.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 b1c1f61b2bf41407</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/01-audit/mesures-initiales.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Mesures initiales et protocole de comparaison
+
+## État rapporté au 31 octobre 2026
+
+- 127 Kristals, 0 bloqueur Manager, 16 avertissements de contenu natif limité, 111 « à examiner ».
+- 111 graphes/états compris et 16 contrats natifs reconnus, 0 erreur de lecteur.
+- Arketype structurel : 28×`3/3`, 49×`2/3`, 14×`1/3`, 33×`0/3`, 3 indéterminés.
+- Ensemble de 14 revues historiques locales et 127 déclarations Arketype détectées par le scanner structurel.
+- Suite ciblée du dernier overlay : 54 réussites dans un environnement graphique virtuel; suite historique complète non verte.
+- Un ancien batch `V9-State-Reader` a produit 88 PASS/31 FAIL/7 WARN/1 BLOCKED **avant certaines corrections**; il ne doit pas servir de baseline courante sans nouveau run.
+
+## Collecte reproductible à prévoir (CIBLE)
+
+Pour chaque build, capturer : commit du Manager, commit/snapshot KristalDiag, version des contrats, OS, Python/Tk/PS7, manifeste des 127 workspaces (chemin normalisé + `state_ref` + hash de l&#x27;état d&#x27;entrée), nombre de diagnostics par profil, erreurs, temps total, p50/p95, mémoire de pointe, taille du catalogue, nombre de `CURRENT`/`STALE`, nombre de données proposées/approuvées.
+
+**Ne pas comparer** 127 verdicts V9 et 127 verdicts de profil auto-adaptatif comme s&#x27;ils couvraient la même règle. Comparer par (`engine_version`, `profile`, `scope`, `source_fingerprint`).
+
+## Critère d&#x27;amélioration
+
+Passer de « plusieurs écrans et CSV divergents » à un parcours où chaque résultat possède un identifiant de run et une fiche commune; les 127 scans doivent demeurer `LOCAL_CHECKS_PASSED` si les sources n&#x27;ont pas changé; aucune réussite artificielle. Les seuils de performance exacts seront fixés après mesure Windows, pas inventés ici.
+</pre></body></html>

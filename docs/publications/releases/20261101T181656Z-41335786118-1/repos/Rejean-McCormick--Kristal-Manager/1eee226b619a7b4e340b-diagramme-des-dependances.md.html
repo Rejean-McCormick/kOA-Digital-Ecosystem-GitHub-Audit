@@ -1,0 +1,25 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/02-architecture/diagramme-des-dependances.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/02-architecture/diagramme-des-dependances.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 d5d842e9c0144545</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/02-architecture/diagramme-des-dependances.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Dépendances, versions et frontière d&#x27;indépendance
+
+## Observé dans les archives
+
+- Manager : application Python/Tk, modules `kristal_manager/`, `tools/KristalDiag/` empaqueté, scripts de lancement Windows, outils de catalogue/rapport.
+- KristalDiag : projet Python indépendant `kristaldiag/` et contrats embarqués sous `contracts/`/`resources/` ; `pyproject.toml` demande Python 3.11+ et `jsonschema&gt;=4.20`.
+- Manager alpha historique : `pyproject.toml` indique Python 3.11+, `cryptography` optionnel pour la voie publique; les fonctionnalités récentes possèdent aussi la dépendance `jsonschema` via Diag.
+- Toolkits Arketype et Authoring Kit : sources et dictionnaires séparés, non équivalents à une librairie d&#x27;UI.
+
+## Politique cible de vendoring
+
+Choisir **une seule** politique de distribution pour chaque moteur : (A) dépendance versionnée avec hash; (B) snapshot embarqué sous `tools/` avec `VERSION`, licence, manifeste SHA-256 et tests du bridge. Le code embarqué ne devient pas, par simple copie, un module interne de Manager : le moteur conserve son protocole CLI, ses contrats, ses tests de conformance et son cycle de release.
+
+## Versions croisées
+
+Conserver une matrice `manager_version` × `diag_version` × `framework_contract_pin` × `kit_version`, avec statut `tested`, `unsupported`, `unknown`. Le snapshot KristalDiag examiné cible **Framework 10.0.0-draft.3.1**; aucune conformité v11 complète ne peut être déduite.
+
+## Gestion de la compatibilité
+
+Une évolution de CLI Diag provoque un test de contrat et un bump explicite de l&#x27;adaptateur; ne pas introspecter ou invoquer arbitrairement des profils par chaînes construites depuis un workspace. Le protocole autorisé est allowlisté côté Manager, versionné et capturé dans chaque run.
+
+## Contrôle CI proposé
+
+Tests d&#x27;import sans Tk; tests de subprocess non-shell; snapshot de rapport, compatibilité du schéma; analyse des chemins `tools/` et des contrats; comparaison de hashes du vendor; test de smoke Windows avec les prérequis réellement distribués.
+</pre></body></html>

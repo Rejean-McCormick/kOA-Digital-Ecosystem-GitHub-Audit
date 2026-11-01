@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · Verification-and-Release.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · Verification-and-Release.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 2ba78b542c482c98</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/Verification-and-Release' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Verifying and Releasing the Integration Pack
+
+## Verify the source distribution
+
+From the extracted Pack repository root:
+
+```bash
+python tools/verify_manifest.py
+python -m unittest discover -s tests -p &#x27;test_*.py&#x27; -v
+node --test tests/*.test.mjs
+```
+
+`MANIFEST.sha256.json` is the Pack&#x27;s source integrity manifest. SHA-256 confirms the bytes measured by the manifest but **does not independently certify the publisher or the upstream provenance** of referenced external Framework/Wikidata data.
+
+When testing v11, supply the **exact** Framework checkout; `v11_integration.py` explicitly rejects changed pinned files. Set `KRISTAL_FRAMEWORK_ROOT` and `KRISTAL_AUTHORING_KIT_ROOT` for integrated tests where applicable.
+
+## CI
+
+The Pack&#x27;s `.github/workflows/ci.yml` installs Python 3.13 and Node 24, runs Python and Node checks, compiles selected Python files, and verifies the repository manifest. It contains **no publishing or deployment step**. Without the external checkouts, the workflow operates in unit-only mode.
+
+## Wiki publishing (manual)
+
+This documentation archive is formatted for a GitHub Wiki (one `Page-Title.md` per page, with `Home.md`, `_Sidebar.md`, and `_Footer.md`). To publish it:
+
+1. Obtain permissions for the **correct GitHub repository&#x27;s Wiki**.
+2. Clone its `&lt;repository&gt;.wiki.git` repository, back it up and review differences against these files.
+3. Copy these Markdown pages into that wiki checkout, commit with an appropriate reviewed message and push through your normal repository policy.
+4. Open the GitHub Wiki and verify navigation, rendering and page permissions.
+
+**No GitHub push has been performed by this wiki creation.** Publishing documentation must not be mistaken for deploying the Integration Pack or activating a Kristal.
+
+See [[Qualification-and-Testing]] and [[Security-and-Trust-Boundaries]].
+</pre></body></html>

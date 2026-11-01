@@ -1,0 +1,18 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/30-artifacts/release-record.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/30-artifacts/release-record.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 b44743934f009120</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/30-artifacts/release-record.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Release Record v2 — deprecated compatibility projection
+
+**Status:** Deprecated for authoritative release state.
+
+The current kOA-Linux platform contract already defines **Release Set** as the artifact that binds compatible versions across independent release channels.
+
+Digital Ecosystem must therefore not create a competing release authority.
+
+If a legacy Release Record is retained for analytics, audit or migration, it MUST:
+
+- identify itself as a non-authoritative projection;
+- reference the authoritative `release_set_id`;
+- reference owner-component activation/publication receipts;
+- avoid inventing a second activation state;
+- preserve the independent status of Kristal compile/validation/recognition and platform activation.
+
+The former `schemas/release-record.schema.json` remains compatibility-only and should not be used for new authoritative writes.
+</pre></body></html>

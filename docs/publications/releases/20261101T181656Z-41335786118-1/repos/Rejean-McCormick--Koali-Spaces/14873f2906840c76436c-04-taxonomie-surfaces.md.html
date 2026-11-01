@@ -1,0 +1,62 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/04-taxonomie-surfaces.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/04-taxonomie-surfaces.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 c44de33519999ec0</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/01-core-architecture/04-taxonomie-surfaces.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 4. Taxonomie canonique des surfaces
+
+La Surface Layer utilise exactement trois catégories de rendu de premier niveau.
+
+```ts
+type SurfaceKind =
+  | &quot;local_shell_page&quot;
+  | &quot;registered_component_surface&quot;
+  | &quot;local_module_surface&quot;;
+```
+
+## 4.1 `local_shell_page`
+
+Page appartenant réellement à Koali Spaces.
+
+Exemples actuels ou attendus :
+
+- Home ;
+- Search ;
+- Tasks ;
+- Health ;
+- Offline ;
+- Settings.
+
+Le contenu et l&#x27;UI appartiennent à Koali Spaces.
+
+## 4.2 `registered_component_surface`
+
+Surface locale rendue par un composant explicitement enregistré et admis dans le runtime Koali.
+
+Cas typiques :
+
+- lecteur d&#x27;artefacts ;
+- panneau de statut ;
+- explorateur de Runtime Pack ;
+- vue de documentation ;
+- widget opérateur local ;
+- surface de contenu qui ne possède pas une application Web autonome.
+
+Cette surface MUST être identifiée par une clé de composant fermée. Elle MUST NOT charger un composant arbitraire par nom de fichier fourni dans un manifest.
+
+## 4.3 `local_module_surface`
+
+Application complète ou frontend propriétaire rendu dans la surface principale Koali.
+
+Cas typiques :
+
+- Konnaxion ;
+- Orgo ;
+- UCKK-Moodle ;
+- SemantiK Architect ;
+- Konnaxion Capsule Manager ;
+- Kristal Farms lorsqu&#x27;un runtime correspondant est présent.
+
+`LOCK-KS-SURF-012` — **La taxonomie de premier niveau est fermée à ces trois valeurs pour v1.** Ajouter un quatrième type exige un ADR.
+
+`LOCK-KS-SURF-013` — **Un `local_module_surface` représente une application propriétaire, pas un ensemble de composants Koali.**
+
+`LOCK-KS-SURF-014` — **Un `registered_component_surface` ne peut pas devenir un chargeur de code distant ou arbitraire.**
+
+---
+</pre></body></html>

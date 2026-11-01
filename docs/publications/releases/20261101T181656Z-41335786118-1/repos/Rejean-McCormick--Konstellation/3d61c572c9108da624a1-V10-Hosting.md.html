@@ -1,0 +1,25 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · V10-Hosting.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · V10-Hosting.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 01bfc9126e06 · SHA-256 7a234254028b55ca</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/wiki/V10-Hosting' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kristal v10: Discovery and Hosting
+
+## What v10 introduces
+
+Framework v10 **draft.3.2** extends the v9 model with a hosted-network architecture: node manifests, host bindings, read surfaces, collection indexes, and publication artifacts. The first hosting profile is `kristal.host/github/1.0`.
+
+It does not automatically rewrite v9 logical commitments. A repository&#x27;s Git SHA-1/SHA-256 identifier is not interchangeable with a State Commitment.
+
+## Local and hosted reading are different paths
+
+| Local | Hosted |
+| --- | --- |
+| Explicitly selected workspace directory | Indexes and references from a published/hosted collection |
+| `kristal-local-catalog-v10` → `kristal-local-v10` | `kristal-v10` / GitHub adapters |
+| Checks on files read from disk | Index and hosted-surface checks under the applicable profile |
+| May use a configured local derived graph | Hosting view may be **technical only** |
+
+Clicking **Open in Explorer** does **not** trigger automatic publication. Konstellation must not push the corpus or fabricate C1/C2/C3 evidence.
+
+## Privacy boundary
+
+Preparing a copy for public GitHub, even as a “temporary” synchronization, may expose private data as soon as it is transferred. The publication chain requires external authorizations and qualifications; `ready` on a read surface is not enough.
+
+References: Konstellation `docs/30-kristal-v10-github.md`, Framework `docs/28_V10_ECOSYSTEM_ALIGNMENT.md`, and `profiles/github/`.
+</pre></body></html>

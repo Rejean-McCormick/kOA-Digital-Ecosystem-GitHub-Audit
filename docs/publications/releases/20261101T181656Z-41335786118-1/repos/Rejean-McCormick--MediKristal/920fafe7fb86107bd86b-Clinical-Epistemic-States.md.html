@@ -1,0 +1,76 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal · Clinical-Epistemic-States.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal · Clinical-Epistemic-States.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal · 93fba2ff54b0 · SHA-256 bf9eed65f5df7271</small><br><a href='https://github.com/Rejean-McCormick/MediKristal/wiki/Clinical-Epistemic-States' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Clinical Epistemic States
+
+A core MediKristal object is the **Clinical Epistemic State**: a representation of medical knowledge together with its provenance, scope, uncertainty, review state, and governance history.
+
+## Three separate questions
+
+```text
+Does this claim exist in the system?
+
+Is it usable for a defined purpose?
+
+Has it been promoted for a defined trust surface?
+```
+
+These are not equivalent.
+
+## Proposed lifecycle
+
+```text
+draft
+  ↓
+under_review
+  ↓
+working_accepted / disputed
+  ↓
+promoted for defined scope
+  ↓
+superseded or revoked when necessary
+```
+
+Disputed content may remain represented without being promoted.
+
+## Scope belongs to the claim
+
+Medical assertions often depend on:
+
+- jurisdiction;
+- population;
+- age range;
+- pregnancy applicability;
+- care setting;
+- product availability;
+- guideline version;
+- effective date;
+- review/expiration date.
+
+Therefore “promoted” should never silently mean “universally true forever.”
+
+## Provenance chain
+
+```text
+MediKristal assertion
+        ↓ supported_by
+Guideline / terminology / government data / protocol
+        ↓
+source version + date + jurisdiction + original identifier
+```
+
+## Historical fidelity
+
+When medical knowledge changes, the new version should not rewrite history.
+
+A system must be able to reconstruct:
+
+&gt; **Why did this node or application produce this result on that date?**
+
+That requires retaining the prior source versions, promoted state, protocol version, Runtime Pack identity, and relevant policy.
+
+## Compile versus promote
+
+```text
+compile ≠ approve
+```
+
+A proposed mapping, translation, or protocol can be compiled and tested before it is accepted for a clinical trust surface.
+</pre></body></html>

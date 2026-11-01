@@ -1,0 +1,26 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · Integration-Orgo-Konnaxion.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · Integration-Orgo-Konnaxion.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · dd52671208ae · SHA-256 7ae280dce4e1dd7b</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/wiki/Integration-Orgo-Konnaxion' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Integration — Orgo ↔ Konnaxion
+
+The target direct protocol between Konnaxion and Orgo is the **Interaction Kernel (IK)**.
+
+## Konnaxion → Orgo
+
+A finalized Konnaxion DecisionRecord may be handed to Orgo through:
+
+`governance.decision.execute/1.0.0`
+
+The DecisionRecord remains Konnaxion-owned. Publication does not by itself imply execution; the Profile and governance authority context express execution intent.
+
+## Orgo → Konnaxion
+
+Operational impact/accountability publication maps to:
+
+`accountability.impact.publish/1.0.0`
+
+Orgo uses its IntegrationOperation/outbox reliability mechanisms. Konnaxion remains owner of Konnaxion persistence and authorizes its own state transition.
+
+## Implementation status
+
+Historical Orgo→Konnaxion bridge evidence exists, but current Konnaxion canonical documentation does not claim the full external adapter set as active/conformant. The direct finalized DecisionRecord→Orgo path remains migration/conformance work.
+
+See [Interaction Kernel](Integration-Interaction-Kernel) and [Status](Status).
+</pre></body></html>

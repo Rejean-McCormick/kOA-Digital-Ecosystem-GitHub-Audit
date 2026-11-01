@@ -1,0 +1,43 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/02-architecture/architecture-cible.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/02-architecture/architecture-cible.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 7c423c522ed64d14</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/02-architecture/architecture-cible.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture cible — monolithe modulaire local
+
+**CIBLE** : un exécutable/application locale, des modules isolés, un catalogue opérationnel persistant et un unique orchestrateur. Pas de microservices, broker, backend Web ou synchronisation continue pour 127 répertoires locaux.
+
+```mermaid
+flowchart TB
+  UI[GUI / CLI / Batch] --&gt; APP[Application services / Use cases]
+  APP --&gt; PORT[Ports : Inventory, Analyzer, Examiner, Classifier, Store]
+  PORT --&gt; INV[Scanner &amp; Discovery]
+  PORT --&gt; AN[Catalogue &amp; Triage]
+  PORT --&gt; DIAG[Adaptateur KristalDiag]
+  PORT --&gt; ARK[Adaptateur Arketype / UNESCO / PRF]
+  INV --&gt; SOURCES[Kristals locaux — canons faisant autorité]
+  AN --&gt; SOURCES
+  DIAG --&gt; SOURCES
+  ARK --&gt; SOURCES
+  APP --&gt; OPS[SQLite opérationnel : observations, runs, état]
+  AN --&gt; CONTENT[SQLite de contenu dérivé]
+  DIAG --&gt; EVID[Preuves immuables de run]
+  UI --&gt; OPS
+```
+
+## Modules et responsabilités
+
+1. `domain/` : identités, observations, profil, résultats, machine à états, politiques de fraîcheur — pur Python, sans Tk ni SQL.
+2. `application/` : commandes `scan`, `analyze`, `diagnose`, `import`, `export`, `propose_classification`, `approve`; orchestration, transactions et autorisations.
+3. `adapters/inventory/` : découverte de workspace, état, fichiers source.
+4. `adapters/catalog/` : contenu KQ/KP et indexation, sans revendiquer autorité.
+5. `adapters/diagnostics/` : bridge subprocess vers KristalDiag indépendant, puis normalisation de résultats.
+6. `adapters/classification/` : Arketype, PRF, UNESCO, règles et sources candidates.
+7. `adapters/persistence/` : projection SQLite et migration, interfaces de recherche.
+8. `presentation/gui/`, `presentation/cli/` : visualisation et commandes; aucune logique métier cachée.
+
+## Règle de dépendance
+
+`presentation → application → domain`; les adaptateurs implémentent des ports définis côté application/domain; **aucune dépendance Tk/SQL dans le domaine**. Les imports du moteur KristalDiag ne franchissent pas le port d&#x27;examen; l&#x27;exécution se fait dans un processus isolé.
+
+## Principes d&#x27;exploitation
+
+Single process pour Manager, subprocess contrôlé pour Diag, SQLite local, WAL si environnement compatible et migration safe. Les sorties sont hors `locals` et peuvent être reconstruites. Une panne du catalogue ne détruit ni les Kristals ni les preuves de diagnostic.
+
+Voir [frontières](frontieres-et-ports.md), [modèle central](../04-donnees/stockage-sqlite.md), [séquences](sequences-et-cas-limites.md) et [ADR 0001](../11-decisions/0001-monolithe-modulaire.md).
+</pre></body></html>

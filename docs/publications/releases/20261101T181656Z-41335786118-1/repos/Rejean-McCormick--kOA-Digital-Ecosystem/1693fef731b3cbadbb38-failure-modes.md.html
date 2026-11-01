@@ -1,0 +1,21 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/10-system/failure-modes.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/10-system/failure-modes.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 0a557a329ed40955</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/10-system/failure-modes.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Failure modes
+
+Failure handling follows the owner and transition that failed.
+
+## Integration delivery
+Timeouts, duplicate delivery, idempotency conflicts and reconciliation drift are protocol/delivery failures, not automatically domain failures.
+
+## Kristal compilation / validation / recognition
+Compile, validation/review and authority recognition remain distinct. Failed or unfinished validation can block later policy transitions without erasing a Working Exchange that was validly compiled.
+
+## kOA-Linux release compatibility
+Release Set/channel incompatibility blocks the affected release/activation transition and preserves the previous valid state.
+
+## Runtime Pack verification/activation
+`kristal_runtime` can reject a candidate for schema, identity, digest, provenance, trust, compatibility, release-channel or downgrade/substitution reasons. Activation/rollback failure preserves/restores the last valid runtime state according to its contract.
+
+If a privileged node-local transition fails, kOA Node Agent reports that operation separately; it does not create a competing Runtime Pack active state.
+
+## Koali Spaces
+Space admission/readiness/rendering failures degrade presentation/application composition only. They must not be reported as Runtime Pack activation failures unless the underlying owner runtime actually failed.
+</pre></body></html>

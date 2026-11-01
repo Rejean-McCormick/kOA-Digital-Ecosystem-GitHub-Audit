@@ -1,0 +1,26 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/kristal-public/blob/9a017c89e5fabb6d21f2a97fbe2f55cebd5cb2fd/docs/IMMUTABLE_RELEASE_PLAN.md | commit: 9a017c89e5fabb6d21f2a97fbe2f55cebd5cb2fd | SHA-256: 2e28b9da1e1bc5735c6f8738137e0bebcf00b42c2717bb6539ed3922907335a7 -->
+
+# Immutable C3 publication — implementation and qualification plan
+
+**Not implemented in this update.** Signing/verification of local C1/C2 receipts is an independent prerequisite; passing those local checks is **not** a publishing permission.
+
+## C3 release contract to ratify with C0/C1/C2
+
+- Exact approved Git commit and repository identity; no branch-tip alias at verification time.
+- Exactly one target slug with a manifest-bound `state_ref`, v9 logical commitment, canonical C3 `index_digest` and `surface_digest`.
+- Exact content archive SHA-256, length and allowlisted paths; no additional files, no symlinks, no secrets, no external materialization without explicit validation.
+- Trusted C1 qualification and C2 authorization receipts with exact scope, current revocation state, license/privacy approval and the intended destination already approved **before** any public write.
+- Creation in trusted private runner only, isolated from repository-controlled candidate scripts; GitHub tags locked/protected, release asset hash independently checked after upload.
+- Signed and timestamped immutable publication receipt binding tag, tag object/commit, artifact SHA-256 and origin commit; no overwrite/upsert or silent tag move.
+- C4 read-only intake checks issuer, commit, hash and immutable receipt, maintains last good public release, and rejects revocations or mismatched assets.
+- Separate activation switch and rollback of **consumer pointers**; the historical release is not deleted or rewritten to simulate rollback.
+
+## Qualification tests still required
+
+- Reject unsigned/revoked/mismatched C1 or C2.
+- Reject content or membership drift after approval; pending approval cannot apply to a different Git commit or index.
+- Reject direct public pushes that bypass the externally controlled staging gate.
+- Reject tag re-pointing, release overwrite, missing/invalid attestation, wrong artifact bytes and authorization after first public exposure.
+- Simulate upload interruption, publish/verify interruption, consumer failure and revoked activation. Verify no unauthorized public bytes became visible and the prior consumer pointer is preserved.
+
+No GitHub release, tag, file push, or public access change is performed by this repository package. The existing managed workflows remain sealed pending owner-approved reconciliation.

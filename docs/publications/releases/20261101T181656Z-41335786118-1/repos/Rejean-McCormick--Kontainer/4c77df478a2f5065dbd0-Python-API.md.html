@@ -1,0 +1,98 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontainer · Python-API.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontainer · Python-API.md</h1><p class='meta'><small>Rejean-McCormick/Kontainer · c9674410bf4a · SHA-256 8c09e61419ef49ff</small><br><a href='https://github.com/Rejean-McCormick/Kontainer/wiki/Python-API' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Python API
+
+The distribution exposes the local `kristal_container` Python package. The code samples below reflect the **1.0.0rc1** surface; use the repository&#x27;s `docs/API.md` for details and error contracts.
+
+## Create and inspect an encrypted container
+
+```python
+from getpass import getpass
+from pathlib import Path
+from kristal_container import Container, Credentials, Protection, pack
+
+phrase = getpass(&quot;New container passphrase: &quot;)
+pack(
+    Path(&quot;my-folder&quot;),
+    Path(&quot;my-data.kristal&quot;),
+    protection=Protection(password=phrase),
+)
+
+with Container(
+    Path(&quot;my-data.kristal&quot;),
+    credentials=Credentials(password=phrase),
+    require_encrypted=True,
+) as reader:
+    print(reader.report)
+    for member in reader.list():
+        print(member[&quot;path&quot;], member[&quot;size&quot;])
+```
+
+Never log, serialize, or put user secrets in shell arguments. The library keeps readers and credentials separate and does not install any global daemon.
+
+## Creation options
+
+```python
+pack(
+    source,
+    destination,
+    protection=Protection(),
+    selected=None,
+    signing_key=None,
+    allow_sensitive=False,
+    overwrite=False,
+    limits=Limits(),
+    expected_members=None,
+)
+```
+
+`selected` is a tuple of **exact relative files**. `None` inventories recursively; `()` creates a package with no user members. `signing_key` is a 32-byte Ed25519 seed supplied by the application. `expected_members` can bind the physical bytes to a separately obtained validated selection and is used by the Local Kit adapter.
+
+`Protection(password=None, factor=None, factor_provider=None, recipients=(), recovery=None)` supports distinct optional access paths. Binary factor and recovery secrets are 32 bytes. A normal password-factor slot needs both secrets; separate recovery/recipient slots allow independent opening.
+
+## Reading and exporting
+
+```python
+from kristal_container import Container, Credentials
+
+with Container(&quot;my-data.kristal&quot;, credentials=Credentials(password=phrase)) as reader:
+    entries = reader.list()
+    # For small members only: reader.read(&quot;state/snapshot.json&quot;)
+    with open(&quot;verified-snapshot.json&quot;, &quot;xb&quot;) as output:
+        reader.copy_to(&quot;state/snapshot.json&quot;, output)
+```
+
+The application **must** decide whether a plaintext export is authorized and whether its destination is safe. `read()` has a default 16 MiB limit; `copy_to()` streams larger files in chunks. `extract(new_directory)` exports all members into a destination that must not exist. No per-member ACL is enforced by the container library.
+
+Constructor policies include `trusted_signers`, `require_signature`, `require_encrypted`, `expected_sha256`, and `limits`. A signature reported as `valid-untrusted` is not approved; an `expected_sha256` must come from a trusted source external to the container.
+
+## Useful methods
+
+| Method | Role |
+| --- | --- |
+| `reader.list()` | Verified file metadata |
+| `reader.read(relative_path)` | Small member as bytes |
+| `reader.copy_to(relative_path, binary_stream)` | Chunked member export |
+| `reader.extract(new_directory)` | Explicit plaintext directory extraction |
+| `reader.rewrap(destination, protection=..., overwrite=False, allow_plaintext=False)` | Fresh outer protection, identical inner ZIP |
+| `reader.close()` | Close reader and encrypted temporary spool |
+| `inspect_header(path)` | **Unverified** public header only |
+
+Expected exceptions derive from `ContainerError` and have stable `code` fields such as `invalid-format`, `integrity-failed`, `access-denied`, `policy-denied`, `limit-exceeded`, and `unsupported-profile`.
+
+## Integration adapter
+
+```python
+from pathlib import Path
+from kristal_container import Protection
+from kristal_container.integration import pack_read_surface
+
+# projection is obtained from the authorized Local Kit caller.
+pack_read_surface(
+    Path(&quot;workspace&quot;),
+    Path(&quot;reading.kristal&quot;),
+    projection,
+    protection=Protection(password=phrase),
+)
+```
+
+The adapter requires a ready, error-free `read-surface/1.0` projection, copies **only** the enumerated bytes, and checks sizes and digests. It does **not** run a build, download external objects, or revalidate Kristal State semantics. See [Ecosystem Integration](Ecosystem-Integration).
+</pre></body></html>

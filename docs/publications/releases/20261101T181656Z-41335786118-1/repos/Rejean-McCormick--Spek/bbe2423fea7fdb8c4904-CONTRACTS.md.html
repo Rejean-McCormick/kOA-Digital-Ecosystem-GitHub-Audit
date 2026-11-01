@@ -1,0 +1,56 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · docs/CONTRACTS.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · docs/CONTRACTS.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 1a9116cb6d7c · SHA-256 10db11ad4b51c772</small><br><a href='https://github.com/Rejean-McCormick/Spek/blob/1a9116cb6d7cfe0eabd4dfbae5e10c4173152d14/docs/CONTRACTS.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Contracts: illustrative examples (not upstream Framework schemas)
+
+The `kristal.layout-*` namespaces below are **local experimental editorial contracts**, not released Framework or SemantiK specifications.
+
+## Source (`kristal.layout-article-source/0.1`)
+
+```json
+{
+  &quot;format&quot;:&quot;kristal.layout-article-source/0.1&quot;,
+  &quot;article&quot;:{&quot;id&quot;:&quot;article-id&quot;,&quot;title_key&quot;:&quot;title&quot;,&quot;subtitle_key&quot;:&quot;subtitle&quot;,&quot;abstract_key&quot;:&quot;abstract&quot;},
+  &quot;source&quot;:{&quot;origin&quot;:&quot;illustrative_fixture&quot;,&quot;state_ref&quot;:null,&quot;state_commitment&quot;:null,&quot;artifact_refs&quot;:[]},
+  &quot;units&quot;:[{&quot;id&quot;:&quot;claim.id&quot;,&quot;kind&quot;:&quot;claim&quot;,&quot;realization_key&quot;:&quot;claim.id&quot;,&quot;epistemic_status&quot;:&quot;design_proposal&quot;,&quot;evidence_refs&quot;:[&quot;e.1&quot;]}],
+  &quot;evidence&quot;:[{&quot;id&quot;:&quot;e.1&quot;,&quot;realization_key&quot;:&quot;e.1&quot;,&quot;status&quot;:&quot;local_artifact&quot;,&quot;locator&quot;:&quot;path/to/reference&quot;}],
+  &quot;sections&quot;:[{&quot;id&quot;:&quot;result&quot;,&quot;layout&quot;:&quot;result-card&quot;,&quot;heading_key&quot;:&quot;section-heading&quot;,&quot;slots&quot;:{&quot;claim&quot;:&quot;claim.id&quot;,&quot;conditions&quot;:&quot;scope.id&quot;,&quot;evidence&quot;:[&quot;e.1&quot;],&quot;uncertainty&quot;:&quot;qualifier.id&quot;}}]
+}
+```
+
+Missing slot IDs in the sketch must be defined under `units[]` in an actual valid source.
+
+For `origin:kristal_v9`, `source.state_ref` and `source.state_commitment` must equal those in a separately supplied `kristal_state_snapshot`; each `artifact_refs[]` must be in its members. These are **reference-level checks only**. `scientific_review:approved`, `disclosure:approved`, and `language_review: {&quot;fr&quot;:&quot;approved&quot;,&quot;en&quot;:&quot;approved&quot;,&quot;it&quot;:&quot;approved&quot;}` are additionally required for a production candidate. They are self-asserted claims until checked by outside authority.
+
+## Realizations (`kristal.layout-realizations/0.1`)
+
+```json
+{
+  &quot;format&quot;:&quot;kristal.layout-realizations/0.1&quot;,
+  &quot;entries&quot;: {
+    &quot;claim.id&quot;: {
+      &quot;fr&quot;: {&quot;text&quot;:&quot;Énoncé court.&quot;, &quot;status&quot;:&quot;fixture&quot;, &quot;provider&quot;:&quot;manual_demo_fixture&quot;},
+      &quot;en&quot;: {&quot;text&quot;:&quot;Short sentence.&quot;, &quot;status&quot;:&quot;fixture&quot;, &quot;provider&quot;:&quot;manual_demo_fixture&quot;},
+      &quot;it&quot;: {&quot;text&quot;:&quot;Frase breve.&quot;, &quot;status&quot;:&quot;fixture&quot;, &quot;provider&quot;:&quot;manual_demo_fixture&quot;}
+    }
+  }
+}
+```
+
+`status` values: `fixture`, `reviewed`, `qualified`. Qualified entries require `runtime_set_id`; no actual RuntimeSet signature, coverage certificate, or grammar verification is currently implemented. All used keys require all selected languages. Reviewer marks are not a proof of equivalence.
+
+## Layout contracts (`kristal.editorial-layout/0.1`)
+
+Each `slots` entry has `allowed_kinds[]`, `min`, and `max`. A missing required slot blocks compilation. Changing an existing layout&#x27;s slot semantics requires a new layout version. A registry/version discipline is recommended for growth beyond this prototype.
+
+| Layout | Required slots | Optional |
+| --- | --- | --- |
+| `result-card` | claim, conditions, evidence (1–4), uncertainty | implications (0–2) |
+| `argument-map` | thesis, premises (1–4), inference, objection, conclusion | none |
+| `comparison` | topic, criterion (1–2), approach_a, approach_b, synthesis, limitations | none |
+
+## Build (`kristal.layout-build-manifest/0.1`)
+
+`manifest.json` inventories every output relative path and byte digest. It includes the source/realization/layout fingerprints, generated languages, versions, and explicit `built_not_published_not_activated` lifecycle status. `mode: production_candidate` does not imply publication authorization. Run `verify-site` before transport and after checkout to detect unauthorized alterations.
+
+## Spek v0.5 educational extension
+
+Spek now also supports curated, read-only Ekole/Kompose **public/demo excerpts** using `spek.educational-projection/1`. Five versioned educational layout contracts are independent of the source adapter. See [Educational Layouts](EDUCATIONAL_LAYOUTS.md), [Educational Connectors](EDUCATIONAL_CONNECTORS.md), and [Educational Privacy](EDUCATIONAL_PRIVACY.md). Spek neither orchestrates missions nor certifies curricula nor authorizes restricted static publication.
+</pre></body></html>

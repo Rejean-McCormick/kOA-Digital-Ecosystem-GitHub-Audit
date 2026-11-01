@@ -1,0 +1,108 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Mediatheque · docs/19_kristal_local_source_library.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Mediatheque · docs/19_kristal_local_source_library.md</h1><p class='meta'><small>Rejean-McCormick/Mediatheque · 21e8d732e669 · SHA-256 45de2a06ca6bb193</small><br><a href='https://github.com/Rejean-McCormick/Mediatheque/blob/21e8d732e6690ab15ced87179eb5b152386fe716/docs/19_kristal_local_source_library.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 19 — Adaptateur des anciennes sources locales Kristal
+
+## Statut
+
+Ce composant est désormais un **adaptateur de migration/compatibilité**. Il ne définit plus l&#x27;autorité source de la Médiathèque.
+
+Le modèle canonique en schéma v4 est consumer-neutral :
+
+```text
+source_consumer_registry
+source_registry
+source_bindings
+source_snapshots
+source_representations
+source_import_log
+        │
+        ▼
+library_rows
+```
+
+Les tables historiques `kristal_sources`, `kristal_source_links`, `kristal_source_snapshots`, `kristal_source_representations` et `kristal_source_import_log` sont conservées pour migration et inspection d&#x27;anciennes bases. Les nouvelles écritures passent par `source_*`.
+
+## Import d&#x27;une ancienne external-source-library
+
+Le format historique reste accepté :
+
+```text
+Kristal/external-source-library/source-store.json
+        │
+        ▼
+KoaKristalSources.py
+        │
+        ▼
+source_consumer_registry
+  consumer_system = kristal
+  consumer_instance = &lt;kristal_id&gt;
+        │
+        ├── source_bindings
+        │      external_source_id = &lt;ancien source_id&gt;
+        │
+        └── source_registry
+                └── source_snapshots
+                        └── source_representations
+                                └── library_rows.version_uuid
+```
+
+Le `source_id` d&#x27;un Kristal est donc un **binding externe**, pas l&#x27;identité physique de la source.
+
+## Stockage
+
+Les nouveaux imports écrivent dans :
+
+```text
+02_STORAGE/source_files/
+```
+
+Le filearea historique :
+
+```text
+02_STORAGE/kristal_source_files/
+```
+
+reste valide pour les lignes déjà existantes. Aucun déplacement destructif d&#x27;octets n&#x27;est imposé.
+
+## Déduplication
+
+La déduplication physique repose sur le SHA-256 calculé localement dans `library_rows`. Deux Kristals — ou demain EncyK et un Kristal — peuvent donc référer les mêmes octets sans dupliquer le fichier.
+
+## Commandes compatibles
+
+```powershell
+python 05_TOOLS/KoaKristalSources.py discover --root D:\Kristals --include-candidates
+python 05_TOOLS/KoaKristalSources.py plan --store D:\...\external-source-library\source-store.json
+python 05_TOOLS/KoaKristalSources.py init --db D:\KOA_MEDIATHEQUE\01_DB\koa_mediatheque.sqlite
+python 05_TOOLS/KoaKristalSources.py import-store `
+  --db D:\KOA_MEDIATHEQUE\01_DB\koa_mediatheque.sqlite `
+  --storage-root D:\KOA_MEDIATHEQUE\02_STORAGE `
+  --store D:\...\external-source-library\source-store.json
+python 05_TOOLS/KoaKristalSources.py verify --db D:\KOA_MEDIATHEQUE\01_DB\koa_mediatheque.sqlite
+```
+
+Les commandes gardent leur nom pour compatibilité, mais leur destination est le catalogue générique.
+
+## Bindings vers Kristal
+
+La Médiathèque peut toujours exporter des pointeurs :
+
+```text
+koa-media://version/&lt;version_uuid&gt;
+```
+
+Le manifest conserve le `source_id` attendu par le Kristal, mais les octets restent sous autorité Médiathèque.
+
+## GUI
+
+La page **Sources** affiche désormais tous les consommateurs et permet de filtrer par `consumer_system` / `consumer_instance`. Kristal n&#x27;est qu&#x27;un consommateur possible parmi d&#x27;autres.
+
+## Règle d&#x27;autorité
+
+```text
+Médiathèque  = source_uuid / snapshot_uuid / version_uuid / SHA-256 / octets
+Kristal      = identité et relations sémantiques
+EncyK        = découverte / acquisition / extraction / handoff
+DaaT         = admission / mapping de contrat vers Kristal
+```
+
+Ces identités sont reliables mais non substituables.
+</pre></body></html>

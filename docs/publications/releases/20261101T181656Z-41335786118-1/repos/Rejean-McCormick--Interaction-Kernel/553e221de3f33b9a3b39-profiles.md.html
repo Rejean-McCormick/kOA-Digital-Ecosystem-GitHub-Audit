@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Interaction-Kernel · docs/profiles.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Interaction-Kernel · docs/profiles.md</h1><p class='meta'><small>Rejean-McCormick/Interaction-Kernel · 1d0598456fe8 · SHA-256 8dbc13b73b057214</small><br><a href='https://github.com/Rejean-McCormick/Interaction-Kernel/blob/1d0598456fe8203625f9831ec00c32225422631d/docs/profiles.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Profiles
+
+Profiles carry use-case semantics. They pin payload schemas and define class, allowed participants, authority requirements, artifact requirements, reliability requirements and response expectations.
+
+Implemented Profiles:
+
+- `governance.decision.execute/1.0.0`
+- `accountability.impact.publish/1.0.0`
+- `operational.reconsideration.recommended/1.0.0`
+- `kristal.build.request/2.0.0` — DaaT-mediated portable Kristal `6.0.0` build request
+- `kristal.artifact.ready/2.0.0` — Kristal v6 artifact event
+- `kristal.revision.request/2.0.0`
+- `knowledge.distribution.request/1.0.0`
+- `kristal.publication.request/1.0.0` — publish an immutable Kristal publication bundle to UCKK
+- `kristal.publication.available/1.0.0` — UCKK publication outcome event
+- `kristal.publication.revoke.request/1.0.0` — revoke a UCKK projection without deleting Kristal provenance
+- `kristal.publication.revoked/1.0.0` — UCKK revocation outcome event
+
+The active profile registry selects the Kristal `2.0.0` build/artifact/revision surfaces. These remain portable v6 surfaces even though IK is aligned to the additive Kristal/Kristall `7.0.0-draft.3.1` design baseline. New direct v7 meta-artifact transport requires a new explicit Profile. The older `1.0.0` build/artifact/revision directories are retained only as legacy compatibility/history. The Kristal→UCKK publication profiles are a separate active `1.0.0` family.
+
+See [`contracts/profiles/`](../contracts/profiles/).
+</pre></body></html>

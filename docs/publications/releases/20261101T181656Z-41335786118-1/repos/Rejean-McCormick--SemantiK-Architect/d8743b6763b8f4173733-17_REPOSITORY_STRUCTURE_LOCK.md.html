@@ -1,0 +1,76 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · docs/17_REPOSITORY_STRUCTURE_LOCK.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · docs/17_REPOSITORY_STRUCTURE_LOCK.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · 74b07c42811d · SHA-256 87012f1998470b7e</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/blob/74b07c42811dae0c68549d8554c00bc44a04298d/docs/17_REPOSITORY_STRUCTURE_LOCK.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Repository Structure Lock
+
+Status: **LOCKED / normative direction**
+
+```text
+semantik-architect/
+├── README.md
+├── pyproject.toml
+├── src/semantik_architect/
+│   ├── domain/
+│   │   ├── semantics/
+│   │   │   ├── graph.py
+│   │   │   ├── nodes.py
+│   │   │   ├── statements.py
+│   │   │   ├── obligations.py
+│   │   │   └── references.py
+│   │   ├── communication/
+│   │   │   ├── context.py
+│   │   │   ├── constraints.py
+│   │   │   ├── request.py
+│   │   │   ├── communication_plan.py
+│   │   │   └── result.py
+│   │   ├── language/
+│   │   │   ├── language_plan.py
+│   │   │   ├── realization_unit.py
+│   │   │   ├── capabilities.py
+│   │   │   └── lexical.py
+│   │   └── errors.py
+│   ├── application/
+│   │   ├── ports/
+│   │   │   ├── lexical_knowledge.py
+│   │   │   ├── lexical_binding.py
+│   │   │   ├── realizer.py
+│   │   │   ├── runtime_catalog.py
+│   │   │   ├── capabilities.py
+│   │   │   ├── locale_data.py
+│   │   │   └── telemetry.py
+│   │   ├── planning/
+│   │   │   ├── communication_planner.py
+│   │   │   └── language_planner.py
+│   │   ├── validation/
+│   │   │   ├── request_validation.py
+│   │   │   └── coverage.py
+│   │   └── use_cases/
+│   │       ├── render_communication.py
+│   │       ├── validate_request.py
+│   │       ├── list_capabilities.py
+│   │       └── validate_runtime.py
+│   ├── adapters/
+│   │   ├── inbound/{http,cli,python_sdk}/
+│   │   ├── ecosystem/{kristal,orgo,ethikos,keen_konnect,abstract_wiki_optional}/
+│   │   ├── lexical/{local_wikidata,local_lexicon,gf_lexicon}/
+│   │   ├── realization/gf/
+│   │   ├── runtime/filesystem/
+│   │   ├── locale/
+│   │   └── output/{json,markdown,plain_text}/
+│   ├── bootstrap/
+│   └── observability/
+├── schemas/
+├── tests/{unit,architecture,contract,integration,conformance,golden,property,failure_paths}/
+├── docs/{adr,reference}/
+└── runtime/README.md
+```
+
+## Import rules
+
+- `domain` imports only standard library and explicitly approved domain-safe utility packages.
+- `application` imports domain + port abstractions only.
+- adapters may import third-party frameworks and application/domain contracts.
+- `adapters/ecosystem/*` do not import one another.
+- PGF import exists only under `adapters/realization/gf`.
+- HTTP framework imports exist only under inbound HTTP adapter/bootstrap.
+- no compatibility package, family grammar engine or safe-mode package exists.
+
+CI MUST enforce these boundaries with architecture/import tests.
+</pre></body></html>

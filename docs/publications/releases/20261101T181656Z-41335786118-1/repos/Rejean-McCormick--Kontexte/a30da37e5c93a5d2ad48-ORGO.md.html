@@ -1,0 +1,35 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontexte · docs/ORGO.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontexte · docs/ORGO.md</h1><p class='meta'><small>Rejean-McCormick/Kontexte · da916882f789 · SHA-256 422bd148931f7a4b</small><br><a href='https://github.com/Rejean-McCormick/Kontexte/blob/da916882f789e4ac15d004871396fbd21300fe24/docs/ORGO.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Orgo : intégration vérifiée et travaux nécessaires
+
+Snapshot utilisé : `znapshot_Orgo_10112135.zip`, `znapshot_Orgo_Worlds_10112135.zip` (fournis dans la conversation). Les fichiers de ces dépôts ne sont **pas vendus ni incorporés dans ce dépôt**.
+
+## Ce qui marche aujourd&#x27;hui
+
+1. `kontexte orgo-fixture fete-sorciere --out sortie.scenario.json`
+2. Depuis le dépôt Orgo fourni : `node tools/scenario-injector/cli.mjs validate /chemin/sortie.scenario.json`
+3. `node tools/scenario-injector/cli.mjs plan /chemin/sortie.scenario.json`
+4. **Seulement dans un environnement Orgo de test** : `inject ... --apply` selon README Orgo et avec autorisation préalable.
+
+La fixture produit un `Case` et une Task **de préparation**. Elle ne prépublie ni les fragments d&#x27;information, ni les missions enfantines, ni les photographies. Aucune API externe n&#x27;est appelée à la génération.
+
+Le `OrgoAPI` de `src/kontexte/orgo_http.py` fournit en code des lectures des Tasks/Cases et un changement d&#x27;état explicite, avec révision, authentification bearer serveur et clé d&#x27;idempotence. Il n&#x27;est pas exposé au navigateur et refuse les hôtes distants par défaut.
+
+## Ce qui manque pour « grand orchestrateur » en classe
+
+- Réception de `MissionFrame` comme une **publication de WorkflowVersion ou Process** après compilation et revue; graphe de dépendances dynamique non compilé ici.
+- Ciblage sûr d&#x27;un fragment à une personne selon une décision prise et autorisée par Orgo (à qui / quand / pour quelle version); jeton de capability signé / identité scolaire résolue / expiration.
+- Jointure A+B après communication réelle d&#x27;informations, preuve du partage, idempotence et repli si partenaire absent.
+- Sélecteur d&#x27;aide pédagogique sans exposition des paramètres médicaux ni duplication d&#x27;algorithme de progression.
+- Webhooks d&#x27;accomplissement vers un service Ekole de preuves signé et auditable; un `Task COMPLETED` n&#x27;est pas une preuve de maîtrise.
+- Mécanismes génériques de compensation, retard, annulation et retour pour missions solo ou collectives.
+- Vérification d&#x27;accès à la session/salle, identité de l&#x27;élève, permissions du professeur; intégration à Orgo_Worlds pour les releases.
+
+**Ces fonctions doivent être développées dans Orgo comme primitives générales, pas copiées comme un moteur de quêtes Kontexte.** Il serait trompeur de déclarer la plateforme prête pour une classe multiutilisateur avant leur réalisation.
+
+## Sûreté simulation
+
+`synthetic: true` et `epistemic_status: synthetic_demo_fixture` sont systématiques. Ne pas connecter les simulations à des envois de messages externes, paiements, déplacements autonomes d&#x27;enfants, partage public, publication d&#x27;images ni déclencheurs organisationnels réels.
+
+## API Orgo observée
+
+Le snapshot contient notamment `/api/v3/tasks`, `/api/v3/cases`, `/api/v3/signals`, `/api/v3/workflows` et le patch `tasks/:id/status` avec `revision`. Les contrats diffèrent selon les versions; revalider lors de chaque mise à niveau.
+</pre></body></html>

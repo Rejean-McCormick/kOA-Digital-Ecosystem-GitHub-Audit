@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/11-astrolabe.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/11-astrolabe.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 52e9a4325bdf6e37</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/11-astrolabe.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Astrolabe dans l&#x27;architecture finale
+
+Astrolabe est une **surface d&#x27;entrée et de suggestion**, pas le moteur sémantique de Konstellation.
+
+## Rôle cible
+
+Astrolabe peut :
+
+- proposer des entrées de navigation ;
+- suggérer des entités/types/recettes pertinentes ;
+- refléter la terminologie du Kristal courant ;
+- utiliser le NavigationPlan pour ordonner des suggestions.
+
+Il ne doit pas :
+
+- contenir des hypothèses catholiques/bibliques en dur dans son comportement générique ;
+- créer de faits ;
+- modifier QuerySpec sans action explicite ;
+- contourner Lens ou Reader Policy.
+
+## Configuration de domaine
+
+Les entrées propres à Catho/Théophile/Biblical Graph sont des exemples/configurations de corpus. Elles ne doivent s&#x27;activer que lorsque le corpus ou la Lens correspondante est chargé.
+
+## Adaptation
+
+Un Astrolabe générique peut utiliser :
+
+- types dominants ;
+- labels ;
+- hubs calculés/déclarés ;
+- recettes recommandées ;
+- historique utilisateur local.
+
+Le choix reste une suggestion, jamais une mutation silencieuse.
+</pre></body></html>

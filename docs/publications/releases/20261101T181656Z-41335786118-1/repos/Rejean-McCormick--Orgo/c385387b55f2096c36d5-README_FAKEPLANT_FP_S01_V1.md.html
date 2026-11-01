@@ -1,0 +1,32 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · README_FAKEPLANT_FP_S01_V1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · README_FAKEPLANT_FP_S01_V1.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · 381ab137d087 · SHA-256 dff9e373a4a6aa1e</small><br><a href='https://github.com/Rejean-McCormick/Orgo/blob/381ab137d087794ffcb381532c7d2eabcdd60bb5/README_FAKEPLANT_FP_S01_V1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Premier test Orgo FakePlant — FP-S01
+
+Installer ce ZIP à la racine de `C:\mycode\Orgo\Orgo`.
+
+## 1. Aperçu (aucune écriture PostgreSQL)
+
+```powershell
+cd C:\mycode\Orgo\Orgo
+.\PREVIEW_FAKEPLANT_FP_S01.cmd
+```
+
+Le contrôle refuse de poursuivre si : le JSON FP-S01 a changé depuis le snapshot audité, le scénario comporte plus de deux opérations, le tenant UUID diverge, les 900 personas ne sont pas désactivés, l&#x27;API/jeton est refusé ou les permissions dépassent `work:read,work:write`.
+
+**L&#x27;aperçu authentifie réellement le jeton en GET**, sans l&#x27;afficher ni l&#x27;enregistrer en clair. Il ne crée rien.
+
+## 2. Premier test persistant — seulement après aperçu réussi
+
+Vérifier qu&#x27;une sauvegarde récente de la base Orgo existe. Exécuter volontairement le lanceur distinct, **sans confirmation à retaper** :
+
+```powershell
+cd C:\mycode\Orgo\Orgo
+.\TEST_FAKEPLANT_FP_S01.cmd
+```
+
+Ce second lanceur refait les garde-fous, puis utilise le jeton DPAPI existant pour créer un dossier + une tâche synthétiques via l&#x27;API Orgo `/api/v3`, uniquement dans le contexte Bearer FakePlant. Le jeton n&#x27;est jamais affiché ni écrit dans le rapport; il est transmis temporairement à Node par variable d&#x27;environnement de processus.
+
+Il **refuse si le tenant possède déjà des dossiers ou des tâches**. Si la seconde opération échoue après la première, la première peut subsister; aucune annulation magique n&#x27;est prétendue. Dans ce cas, **ne pas relancer automatiquement** : diagnostiquer les données. L&#x27;injecteur utilise des clés d&#x27;idempotence.
+
+Rapport local : `C:\mycode\Konnaxion\Tandem_Local\fakeplant-FP-S01.import-report.LOCAL.json`.
+
+Ce test ne valide ni les connexions SSO humaines, ni l&#x27;Interaction Kernel entre applications, ni le déploiement tandem. Le jeton existant expire après 24 h (heure indiquée lors de sa création).
+</pre></body></html>

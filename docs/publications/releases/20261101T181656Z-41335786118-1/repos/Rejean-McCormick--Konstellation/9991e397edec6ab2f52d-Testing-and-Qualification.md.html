@@ -1,0 +1,55 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · Testing-and-Qualification.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · Testing-and-Qualification.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 01bfc9126e06 · SHA-256 8a58f4abf2903af5</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/wiki/Testing-and-Qualification' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Testing, Validation, and Qualification
+
+## Available repository checks
+
+With a compatible Node.js installation and installed dependencies:
+
+```powershell
+npm test
+npm run test:ui
+npm run build
+npm run test:e2e:smoke
+npm run test:e2e
+npm run check:svelte-structure
+npm run check:frontend-security
+npm run release:preflight
+npm run release:check
+```
+
+E2E commands require the appropriate Playwright browser installations and dependencies. The full pipeline is a **qualification condition**; the existence of scripts in `package.json` does not prove they passed on a user&#x27;s computer.
+
+## Essential neutral-selector regressions
+
+- Starting without an active Kristal does not automatically open Théophile or Catho.
+- The catalog lists only authorized immediate subdirectories.
+- An incompatible entry appears unavailable and cannot be opened.
+- Malicious names, symbolic links, and paths outside the root are rejected.
+- Switching Kristals resets queries and rebuilds an authorized context.
+- A Manager export never expands read permissions.
+- `stale` Discovery is not presented as canon validation.
+- Relationships remain schema-compliant with more than 10 source types.
+- The interface remains usable on the supported Node/Windows version.
+
+## Validation inherited from previous patches
+
+Targeted unit tests were run while preparing earlier archives, including the local selector, Catho reader, and relationship partitioning. Snapshot documentation records these results, **but no complete Windows/Playwright build was reproduced for this documentation edition**. The wiki therefore makes no claim of release 1.0 certification or cross-repository conformance.
+
+## October 17 semantic-display patch: documented evidence
+
+The accompanying local change report (`RAPPORT_Konstellation_presentation_semantique_FR_2026-10-17.md`) records:
+
+| Check | Reported outcome |
+| --- | --- |
+| Targeted reader and display tests | **15/15 passed** |
+| Svelte structural check | 19 files, no findings |
+| Frontend security check | 24 files, no findings |
+| Documentation links | 75 documents / 81 links, no findings |
+| Catho derived graph | 4,527 entities, 13,217 assertions, 50 relation definitions |
+| Catho `P138` presentation | 2 edges labelled **« Nommé d’après »** |
+
+These results are **recorded test evidence from that patch**, not new executions performed by this wiki update. **A full Astro/Svelte build and Windows-browser E2E test were not executed in that report.** Regression tests should include `aquin` versus `Joaquín`, duplicate-title diversity without identity merging, raw-code fallback, facet visibility, and preservation of original predicates and provenance.
+
+## Releasing 1.0
+
+Do not tag `1.0.0` until the reproducible lockfile, contracts, tests, build evidence, E2E, benchmarks, security checks, and release manifest satisfy the documented gates. See `docs/25-release-1.0.md`, `docs/VALIDATION-v1.0-RC.md`, and `docs/IMPLEMENTATION.md`.
+</pre></body></html>

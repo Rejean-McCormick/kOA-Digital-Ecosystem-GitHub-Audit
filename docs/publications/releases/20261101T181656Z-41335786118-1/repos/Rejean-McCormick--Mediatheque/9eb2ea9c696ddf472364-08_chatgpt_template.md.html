@@ -1,0 +1,102 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Mediatheque · docs/08_chatgpt_template.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Mediatheque · docs/08_chatgpt_template.md</h1><p class='meta'><small>Rejean-McCormick/Mediatheque · 21e8d732e669 · SHA-256 452457367bca178b</small><br><a href='https://github.com/Rejean-McCormick/Mediatheque/blob/21e8d732e6690ab15ced87179eb5b152386fe716/docs/08_chatgpt_template.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 08 — ChatGPT Template
+
+**Project:** Médiathèque kOA  
+**Technical name:** `koa-mediatheque`  
+**Status:** AI-only final target specification  
+**Audience:** AI coding conversations only  
+**Rule:** All implementation conversations must start from `01_alignment_variables.md`.
+
+---
+
+## 1. Template source rule
+
+The app must store the current template in a file or database setting:
+
+```text
+chatgpt_template_current
+```
+
+The GUI button `Copier template ChatGPT` copies this exact template.
+
+---
+
+## 2. Canonical template
+
+```text
+Analyse le fichier joint comme une entrée pour Médiathèque kOA.
+
+Objectif : produire une fiche JSON stricte, directement importable dans la base locale SQLite de Médiathèque kOA.
+
+Contexte :
+- Médiathèque kOA est une médiathèque locale générale.
+- Certains documents sont liés à UCKK, d&#x27;autres non.
+- Certains documents sont publics, d&#x27;autres non publics, privés, restreints ou confidentiels.
+- Le classement doit rester compatible avec une future exportation vers une médiathèque de type mod_uckkarchive.
+- L&#x27;IA peut valider localement la classification.
+- La validation canonique finale doit rester canonical_validation_state = &quot;unverified&quot;, sauf instruction humaine explicite.
+- Ne pas inventer de droits, de source ou de statut public si le fichier ne le démontre pas clairement.
+- En cas d&#x27;incertitude, utiliser &quot;unknown&quot;, human_review_required = true, ou review_queue = &quot;needs_review&quot;.
+
+Retourne uniquement un objet JSON valide. Aucun commentaire avant ou après. Pas de bloc Markdown.
+
+Schéma JSON attendu :
+{
+  &quot;title&quot;: &quot;&quot;,
+  &quot;subtitle&quot;: &quot;&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;summary&quot;: &quot;&quot;,
+  &quot;media_type&quot;: &quot;document&quot;,
+  &quot;language&quot;: &quot;fr&quot;,
+  &quot;library_scope&quot;: &quot;koa&quot;,
+  &quot;uckk_relevance&quot;: &quot;unknown&quot;,
+  &quot;target_system&quot;: &quot;none&quot;,
+  &quot;target_export_allowed&quot;: false,
+  &quot;public_state&quot;: &quot;unknown&quot;,
+  &quot;visibility&quot;: &quot;private&quot;,
+  &quot;access_level&quot;: &quot;private&quot;,
+  &quot;ownership_scope&quot;: &quot;unknown&quot;,
+  &quot;source_type&quot;: &quot;unknown&quot;,
+  &quot;source_ownership&quot;: &quot;unknown_source&quot;,
+  &quot;rights_status&quot;: &quot;unknown&quot;,
+  &quot;rights_note&quot;: &quot;&quot;,
+  &quot;restriction_state&quot;: &quot;none&quot;,
+  &quot;restriction_reason&quot;: &quot;&quot;,
+  &quot;redaction_required&quot;: false,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;provenance&quot;: &quot;ai_assisted&quot;,
+  &quot;ai_validation_state&quot;: &quot;ai_uncertain&quot;,
+  &quot;ai_confidence&quot;: 0.0,
+  &quot;canonical_validation_state&quot;: &quot;unverified&quot;,
+  &quot;human_review_required&quot;: true,
+  &quot;review_queue&quot;: &quot;needs_review&quot;,
+  &quot;review_reason&quot;: &quot;&quot;,
+  &quot;collections&quot;: [],
+  &quot;tags&quot;: [],
+  &quot;relations&quot;: [],
+  &quot;content_flags&quot;: [],
+  &quot;audience_suitability&quot;: &quot;unknown&quot;,
+  &quot;export_to_uckk&quot;: &quot;review_required&quot;,
+  &quot;export_to_public&quot;: &quot;review_required&quot;,
+  &quot;export_policy_note&quot;: &quot;&quot;,
+  &quot;notes&quot;: &quot;&quot;
+}
+
+Valeurs autorisées : utiliser exactement les valeurs de docs/01_alignment_variables.md.
+
+Règles :
+- Si le document n&#x27;est pas lié à UCKK, mettre uckk_relevance = &quot;not_uckk&quot; et export_to_uckk = &quot;no&quot;.
+- Si le document est non public, mettre public_state = &quot;non_public&quot; ou plus restrictif.
+- Si le document est privé, confidentiel, sensible, culturel, lié à l&#x27;intégrité, ou contient des données personnelles, mettre human_review_required = true.
+- Si les droits sont incertains, mettre rights_status = &quot;unknown&quot; et human_review_required = true.
+- Si la source est incertaine, mettre source_type = &quot;unknown&quot; et source_ownership = &quot;unknown_source&quot;.
+- Ne jamais mettre canonical_validation_state = &quot;verified&quot; sauf instruction explicite.
+- Utiliser des tags courts, en minuscules, sans accents, séparés par underscores si nécessaire.
+- Utiliser des collections lisibles, stables, en minuscules, sans accents, séparées par underscores si nécessaire.
+```
+
+---
+
+## 3. Template versioning
+
+The app must store the template version used for each intake in `chatgpt_intake_log.prompt_template`.
+</pre></body></html>

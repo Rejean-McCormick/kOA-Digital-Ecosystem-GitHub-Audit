@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Artifacts-Operational.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Artifacts-Operational.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 50d95b6d935c50d4</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/1-Overview/Artifacts-Operational.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Operational integration artifacts
+
+Operational state is mutable, transactional state owned by the product/component responsible for the domain. It remains outside Kristal even when knowledge is derived from it.
+
+Examples include Orgo Signal/WorkflowVersion/Case/Task/IntegrationOperation state, Konnaxion consultations/participants/votes/DecisionRecords, product identity/session state, outbox/retry/idempotency state and local activation/job state.
+
+Cross-system flows use owner APIs, versioned contracts, immutable exports/snapshots and ArtifactRefs. They do not implement a bidirectional database synchronization model and do not dual-write the same authoritative domain record into Kristal.
+
+## Build Record
+
+A Build Record may remain as **ecosystem correlation/reproducibility evidence**. It must not replace Kristal artifacts, kOA-Linux Release Sets, component active-state records or lifecycle receipts.
+
+It should keep independent statuses for compilation, validation, recognition, publication and activation and reference the owning artifacts rather than re-declaring them.
+
+## Source-owned export/snapshot
+
+An operational owner may publish an immutable export/snapshot for knowledge compilation or cross-system processing. The export remains evidence of source state at a declared revision/digest; it does not transfer ownership of the live source record.
+
+Da’at may transform such an export into Kristal State or another explicitly supported Kristal-native input. The resulting Kristal artifact is a new knowledge artifact with provenance back to the source export, not a replacement operational record.
+
+## kOA-Linux Release Set
+
+Release Set is the platform release compatibility artifact. It binds versions across independent release channels and carries compatibility/activation metadata under the kOA-Linux contract.
+
+Release compatibility is represented by the kOA-Linux Release Set and owner receipts; Digital Ecosystem defines no parallel release authority.
+
+## Runtime Pack local state
+
+For kOA-Linux deployments, `kristal_runtime` owns:
+
+- Runtime Pack verification/compatibility record;
+- active Runtime Pack record;
+- activation receipt;
+- rollback receipt;
+- runtime health state.
+
+kOA Node Agent may execute the narrow privileged host transition required by the profile. A receipt does not replace the owner component&#x27;s active-state record.
+
+## Koali Space state
+
+Koali Space activation/rollback/deactivation belongs to Koali Spaces and is unrelated to Kristal Runtime Pack active state.
+</pre></body></html>

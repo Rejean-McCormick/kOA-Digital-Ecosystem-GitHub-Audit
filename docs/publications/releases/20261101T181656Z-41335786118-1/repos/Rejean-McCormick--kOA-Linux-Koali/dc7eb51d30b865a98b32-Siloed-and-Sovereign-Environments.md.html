@@ -1,0 +1,70 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · Siloed-and-Sovereign-Environments.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · Siloed-and-Sovereign-Environments.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · a014d6b410b4 · SHA-256 18b0671ee807ad7c</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/wiki/Siloed-and-Sovereign-Environments' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- Explanatory wiki projection; not an independent normative authority. --&gt;
+
+# Siloed and Sovereign Environments
+
+&gt; **Authority and status:** This wiki is an explanatory navigation layer. The repository contracts, accepted ADRs, normative documents, and executable validators remain authoritative for kOA-Linux Operating System. Public initkoa.org pages explain the wider kOA ecosystem and the product capabilities provided by its independently documented subsystems.
+
+## What “silo” means here
+
+A silo is not automatically a defect. A community, organization, institution, field team, municipality, or high-assurance unit may need its own data, identities, rules, storage, availability and authority. The problem is not separation itself; the problem is separation without safe interoperability, portability or exit.
+
+kOA-Linux Operating System is designed to support **bounded environments that can cooperate without becoming one shared database or one central authority**.
+
+## Isolation dimensions
+
+A deployment can separate:
+
+- identities and role assignments;
+- databases and authoritative stores;
+- files, media and encryption keys;
+- service accounts and host privileges;
+- network segments and outbound access;
+- policy bundles and trust roots;
+- release channels and activation schedules;
+- audit visibility and evidence access;
+- synchronization and publication gateways.
+
+## Interoperability between silos
+
+Cooperation happens through declared objects and transitions:
+
+- Kristals and other portable artifacts;
+- signed or verified bundles;
+- publication gateways;
+- Orgo signals, cases, tasks and receipts;
+- explicit synchronization sessions;
+- scoped identity and trust assertions;
+- controlled exports and imports.
+
+Direct writes into another subsystem&#x27;s authoritative database are prohibited by the architecture.
+
+## Deployment patterns
+
+### Independent organization
+
+One organization runs a local node with private Orgo services, local files, selected knowledge packs and controlled external publication.
+
+### Community hub
+
+A hub serves local users, distributes knowledge and civic surfaces, and synchronizes when connectivity is available.
+
+### Federated institutions
+
+Several institutions maintain separate authorities but exchange verified artifacts and accountable requests.
+
+### Air-gapped environment
+
+Updates and exports travel through removable media or controlled transfer, with local verification before activation.
+
+## Safe failure behavior
+
+A missing remote system does not justify broadening access or substituting a different provider. The system preserves queued work, visible version state and explicit unavailable/degraded labels.
+
+## Sources
+
+- [docs/01-constitution/07-component-separation.md](https://github.com/Rejean-McCormick/kOA-Linux/blob/main/docs/01-constitution/07-component-separation.md)
+- [docs/02-system/04-component-boundaries.md](https://github.com/Rejean-McCormick/kOA-Linux/blob/main/docs/02-system/04-component-boundaries.md)
+- [docs/07-security/02-security-domains.md](https://github.com/Rejean-McCormick/kOA-Linux/blob/main/docs/07-security/02-security-domains.md)
+- [docs/07-security/08-network-boundaries.md](https://github.com/Rejean-McCormick/kOA-Linux/blob/main/docs/07-security/08-network-boundaries.md)
+- [Kristal portability and offline use](https://initkoa.org/technology/kristal/portability-and-offline)
+</pre></body></html>

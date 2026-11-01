@@ -1,0 +1,848 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/00_KINTSUGI_START_HERE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/00_KINTSUGI_START_HERE.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 60f442e50cdff51d</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/00_KINTSUGI_START_HERE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 00 — Kintsugi Start Here
+
+**File:** `00_KINTSUGI_START_HERE.md`  
+**Pack:** ethiKos Kintsugi Update Documentation Pack  
+**Canonical path:** `docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/`  
+**Version:** `2026-04-25-kintsugi-doc-pack-v1`  
+**Status:** Canonical entry point  
+**Primary audience:** Réjean McCormick, future AI sessions, maintainers, implementers  
+**Module:** `ethiKos`  
+**Platform:** `Konnaxion`
+
+---
+
+## 1. Purpose
+
+This document is the entry point for the complete **ethiKos Kintsugi Upgrade** documentation pack.
+
+Its purpose is to prevent scope drift, architecture drift, naming drift, route drift, model drift, and AI-generated inconsistency while preparing the next major ethiKos upgrade.
+
+This pack exists because the Kintsugi update is not a small bugfix, not a cosmetic rewrite, and not a direct import of external civic-tech platforms. It is a documentation-first architecture upgrade that turns the existing ethiKos module into a more complete civic deliberation, drafting, decision-formation, and accountability engine.
+
+The documentation pack MUST be read and generated before implementation backlog generation.
+
+---
+
+## 2. What Kintsugi means in this upgrade
+
+The Kintsugi update is a **partial native mimic** strategy.
+
+It means:
+
+- keep the existing ethiKos frame;
+- keep the existing `/ethikos/*` route families;
+- keep the current backend ownership boundaries;
+- learn from selected civic-tech systems;
+- reimplement only selected patterns natively;
+- avoid full external code merges;
+- avoid premature annex/sidecar integration;
+- document contracts first;
+- inspect code second;
+- generate implementation backlog only after the docs are stable.
+
+Kintsugi does **not** mean merging other civic platforms into Konnaxion.
+
+---
+
+## 3. Canonical one-line definition
+
+**ethiKos Kintsugi Upgrade** is a documentation-first, native-mimic upgrade that extends ethiKos into a structured civic deliberation, consultation, drafting, decision, and accountability engine while preserving current routes, backend ownership, and source-of-truth boundaries.
+
+---
+
+## 4. Current stable baseline
+
+The following baseline is treated as the current known platform state before the Kintsugi upgrade.
+
+```yaml
+CURRENT_BASELINE:
+  FRONTEND_BUILD_WORKS: true
+  PLAYWRIGHT_SMOKE_RAN_SUCCESSFULLY: true
+  BACKEND_LOCAL_STARTUP_WORKS_WITH_UV: true
+  AUTH_CSRF_CATEGORY_TOPIC_CREATION_FIXED: true
+  ARGUMENT_POSTING_WORKS: true
+  EKOH_MIGRATION_0002_CREATED_AND_APPLIED: true
+  REMAINING_VISIBLE_ETHIKOS_BUG: &quot;Deliberate preview drawer shows &#x27;Preview / No data&#x27;&quot;
+````
+
+The preview drawer bug is a known targeted bugfix. It MUST NOT be used as a reason to redesign the Kintsugi architecture.
+
+---
+
+## 5. Primary strategy variables
+
+All documents in this pack MUST respect the following constants.
+
+```yaml
+KINTSUGI_UPDATE_TYPE: &quot;documentation-first architecture upgrade&quot;
+IMPLEMENTATION_STYLE: &quot;partial native mimic&quot;
+FULL_EXTERNAL_MERGE_ALLOWED: false
+ANNEX_FIRST_PASS_ALLOWED: false
+BIG_BANG_REWRITE_ALLOWED: false
+EXISTING_ROUTE_FAMILIES_STABLE: true
+EXISTING_ETHIKOS_FRAME_STABLE: true
+DOCS_BEFORE_CODE: true
+CODE_INSPECTION_AFTER_DOCS: true
+BACKLOG_AFTER_DOCS_AND_CODE_READING: true
+```
+
+If another document, prompt, or AI session conflicts with these variables, this document wins unless explicitly superseded by a later canonical ADR.
+
+---
+
+## 6. Source-of-truth priority order
+
+When sources conflict, use this priority order.
+
+```yaml
+SOURCE_PRIORITY_ORDER:
+  1_CODE_SNAPSHOT_REALITY:
+    description: &quot;Routes, files, current endpoints, current models, current implementation state.&quot;
+  2_BOUNDARIES_DOC:
+    description: &quot;Korum/Konsultations/Smart Vote/EkoH ownership, write rules, and pipeline.&quot;
+  3_CLEAN_SLATE_PLAN:
+    description: &quot;First-pass scope, no full merge, docs first, code inspection second.&quot;
+  4_KIALO_CORE_DOCS:
+    description: &quot;Structured deliberation contract for /ethikos/deliberate/*.&quot;
+  5_OSS_SOURCE_DOCS:
+    description: &quot;Pattern inspiration only; never direct merge in first pass.&quot;
+  6_PRIOR_MASTER_DOCS:
+    description: &quot;Use only after correcting scope and route reality.&quot;
+```
+
+Implementation reality comes from the current Konnaxion code snapshot.
+Ownership reality comes from the boundaries contract.
+Deliberation UX reality comes from the Kialo-style contract.
+OSS documents are inspiration sources only.
+
+---
+
+## 7. First-pass OSS scope
+
+The following sources are allowed in first pass as **native mimic inspirations only**.
+
+```yaml
+FIRST_PASS_OSS_SOURCES:
+  - &quot;Consider.it&quot;
+  - &quot;Kialo-style argument mapping&quot;
+  - &quot;Loomio&quot;
+  - &quot;Citizen OS&quot;
+  - &quot;Decidim&quot;
+  - &quot;CONSUL Democracy&quot;
+  - &quot;DemocracyOS&quot;
+```
+
+Their first-pass role is to provide patterns, not code.
+
+---
+
+## 8. Deferred OSS scope
+
+The following sources are explicitly deferred.
+
+```yaml
+DEFERRED_OSS_SOURCES:
+  - &quot;Polis&quot;
+  - &quot;LiquidFeedback&quot;
+  - &quot;All Our Ideas&quot;
+  - &quot;Your Priorities&quot;
+  - &quot;OpenSlides&quot;
+```
+
+Deferred means:
+
+* do not include them in the first implementation scope;
+* do not build backlog tasks for them now;
+* do not create annexes for them now;
+* do not import their code;
+* mention only as future inspiration or public credit where appropriate.
+
+---
+
+## 9. Core ownership model
+
+The Kintsugi update depends on strict ownership boundaries.
+
+```yaml
+OWNERSHIP:
+  KORUM_OWNS:
+    - &quot;Ethikos topics used as debate/deliberation containers&quot;
+    - &quot;Arguments&quot;
+    - &quot;Threaded argument graph&quot;
+    - &quot;Topic-level stance events&quot;
+    - &quot;Moderation on debate artifacts&quot;
+
+  KONSULTATIONS_OWNS:
+    - &quot;Intake&quot;
+    - &quot;Consultations&quot;
+    - &quot;Citizen suggestions&quot;
+    - &quot;Ballot capture&quot;
+    - &quot;Result snapshots&quot;
+    - &quot;Impact tracking&quot;
+
+  SMART_VOTE_OWNS:
+    - &quot;Derived readings&quot;
+    - &quot;Lens declarations&quot;
+    - &quot;Aggregations&quot;
+    - &quot;Result publication&quot;
+
+  EKOH_OWNS:
+    - &quot;Expertise context&quot;
+    - &quot;Ethics context&quot;
+    - &quot;Cohort eligibility&quot;
+    - &quot;Domain vectors&quot;
+    - &quot;Snapshot/audit context&quot;
+```
+
+No generated document may redefine these ownership boundaries without creating or referencing an ADR.
+
+---
+
+## 10. Write rules
+
+The following rules are mandatory.
+
+```yaml
+WRITE_RULES:
+  FOREIGN_TOOLS_WRITE_CORE_TABLES: false
+  SMART_VOTE_MUTATES_KORUM_RECORDS: false
+  SMART_VOTE_MUTATES_KONSULTATIONS_RECORDS: false
+  SMART_VOTE_WRITES_ONLY_DERIVED_ARTIFACTS: true
+  EKOH_IS_VOTING_ENGINE: false
+  EKOH_MUTATES_VOTES: false
+  WEIGHTED_OUTCOME_REQUIRES_REPRODUCIBILITY: true
+  READING_FORMULA: &quot;Reading = f(BaselineEvents, LensDeclaration, SnapshotContext?)&quot;
+```
+
+Smart Vote publishes readings.
+EkoH supplies expertise and ethics context.
+Korum and Konsultations own the source facts.
+
+---
+
+## 11. Current backend reality
+
+The current backend is Django/DRF.
+
+```yaml
+CURRENT_BACKEND_CORE:
+  ETHIKOS_BACKEND_APP: &quot;konnaxion.ethikos&quot;
+  KOLLECTIVE_BACKEND_APP: &quot;konnaxion.kollective_intelligence&quot;
+  USERS_APP: &quot;konnaxion.users&quot;
+  AUTH_USER_MODEL: &quot;users.User&quot;
+  ROOT_URLCONF: &quot;config.urls&quot;
+  API_ROUTER_FILE: &quot;config/api_router.py&quot;
+  DEFAULT_API_STYLE: &quot;Django REST Framework ViewSet + Serializer + Router&quot;
+  DEFAULT_DB: &quot;PostgreSQL&quot;
+  BACKGROUND_WORKER: &quot;Celery&quot;
+  BROKER_RESULT_BACKEND: &quot;Redis&quot;
+```
+
+Current ethiKos models:
+
+```yaml
+CURRENT_ETHIKOS_MODELS:
+  - &quot;EthikosCategory&quot;
+  - &quot;EthikosTopic&quot;
+  - &quot;EthikosStance&quot;
+  - &quot;EthikosArgument&quot;
+```
+
+Current canonical endpoints:
+
+```yaml
+CURRENT_ENDPOINTS_CANONICAL:
+  ETHIKOS_TOPICS: &quot;/api/ethikos/topics/&quot;
+  ETHIKOS_STANCES: &quot;/api/ethikos/stances/&quot;
+  ETHIKOS_ARGUMENTS: &quot;/api/ethikos/arguments/&quot;
+  ETHIKOS_CATEGORIES: &quot;/api/ethikos/categories/&quot;
+  KOLLECTIVE_VOTES: &quot;/api/kollective/votes/&quot;
+```
+
+Compatibility aliases:
+
+```yaml
+CURRENT_ENDPOINTS_COMPATIBILITY:
+  DELIBERATE_ALIAS: &quot;/api/deliberate/...&quot;
+  DELIBERATE_ELITE_ALIAS: &quot;/api/deliberate/elite/...&quot;
+```
+
+Legacy/problematic endpoint family:
+
+```yaml
+LEGACY_OR_PROBLEMATIC_ENDPOINTS:
+  API_HOME_PREFIX: &quot;/api/home/*&quot;
+  RULE: &quot;Do not expand /api/home/* usage. Replace, isolate, or mark legacy.&quot;
+```
+
+---
+
+## 12. Current frontend route surface
+
+The Kintsugi upgrade targets the existing ethiKos route surface.
+
+```yaml
+PRIMARY_ROUTE_SURFACE: &quot;/ethikos/*&quot;
+```
+
+Canonical route families:
+
+```yaml
+ETHIKOS_ROUTE_FAMILIES:
+  DECIDE:
+    PREFIX: &quot;/ethikos/decide/*&quot;
+    ROUTES:
+      - &quot;/ethikos/decide/elite&quot;
+      - &quot;/ethikos/decide/public&quot;
+      - &quot;/ethikos/decide/results&quot;
+      - &quot;/ethikos/decide/methodology&quot;
+
+  DELIBERATE:
+    PREFIX: &quot;/ethikos/deliberate/*&quot;
+    ROUTES:
+      - &quot;/ethikos/deliberate/elite&quot;
+      - &quot;/ethikos/deliberate/[topic]&quot;
+      - &quot;/ethikos/deliberate/guidelines&quot;
+
+  TRUST:
+    PREFIX: &quot;/ethikos/trust/*&quot;
+    ROUTES:
+      - &quot;/ethikos/trust/profile&quot;
+      - &quot;/ethikos/trust/badges&quot;
+      - &quot;/ethikos/trust/credentials&quot;
+
+  PULSE:
+    PREFIX: &quot;/ethikos/pulse/*&quot;
+    ROUTES:
+      - &quot;/ethikos/pulse/overview&quot;
+      - &quot;/ethikos/pulse/live&quot;
+      - &quot;/ethikos/pulse/health&quot;
+      - &quot;/ethikos/pulse/trends&quot;
+
+  IMPACT:
+    PREFIX: &quot;/ethikos/impact/*&quot;
+    ROUTES:
+      - &quot;/ethikos/impact/feedback&quot;
+      - &quot;/ethikos/impact/outcomes&quot;
+      - &quot;/ethikos/impact/tracker&quot;
+
+  LEARN:
+    PREFIX: &quot;/ethikos/learn/*&quot;
+    ROUTES:
+      - &quot;/ethikos/learn/changelog&quot;
+      - &quot;/ethikos/learn/glossary&quot;
+      - &quot;/ethikos/learn/guides&quot;
+
+  INSIGHTS:
+    PREFIX: &quot;/ethikos/insights&quot;
+    ROUTES:
+      - &quot;/ethikos/insights&quot;
+
+  ADMIN:
+    PREFIX: &quot;/ethikos/admin/*&quot;
+    ROUTES:
+      - &quot;/ethikos/admin/audit&quot;
+      - &quot;/ethikos/admin/moderation&quot;
+      - &quot;/ethikos/admin/roles&quot;
+```
+
+The Kintsugi update MUST NOT create a new top-level Kintsugi app or a new Kialo route family.
+
+---
+
+## 13. Route-family purpose
+
+| Route family            | Kintsugi role                                                                              |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| `/ethikos/deliberate/*` | Korum, structured argumentation, Kialo-style claim graph, Consider.it-style reason capture |
+| `/ethikos/decide/*`     | Decision protocols, ballots, Smart Vote readings, result publication                       |
+| `/ethikos/impact/*`     | Accountability, implementation tracking, outcomes, feedback loops                          |
+| `/ethikos/pulse/*`      | Participation health, live signals, trends, debate-quality indicators                      |
+| `/ethikos/trust/*`      | EkoH visibility, trust profile, credentials, badges                                        |
+| `/ethikos/admin/*`      | Audit, moderation, roles, eligibility and governance controls                              |
+| `/ethikos/learn/*`      | Guides, glossary, methodology, public explanation                                          |
+| `/ethikos/insights`     | Analytics, reading comparison, Smart Vote/EkoH interpretation                              |
+
+---
+
+## 14. Kialo-style deliberation contract summary
+
+Kialo-style argument mapping is a first-pass canonical reference for structured deliberation under Korum.
+
+It is not a separate module.
+
+```yaml
+KIALO:
+  STRATEGY: &quot;native_mimic&quot;
+  ROUTE_SCOPE: &quot;/ethikos/deliberate/*&quot;
+  BACKEND_SCOPE: &quot;konnaxion.ethikos&quot;
+  CREATE_KIALO_BACKEND_APP: false
+  CREATE_KIALO_FRONTEND_ROUTE: false
+  IMPORT_KIALO_CODE: false
+  ROLE_IN_KINTSUGI: &quot;Canonical structured deliberation UX reference for Korum.&quot;
+```
+
+Canonical Kialo-to-ethiKos mapping:
+
+```yaml
+KIALO_CANONICAL_MAPPING:
+  KIALO_DISCUSSION: &quot;EthikosTopic&quot;
+  KIALO_THESIS: &quot;Topic thesis/prompt field; current fallback is EthikosTopic.title + description&quot;
+  KIALO_CLAIM: &quot;EthikosArgument&quot;
+  KIALO_PRO_CON_EDGE: &quot;EthikosArgument.parent + EthikosArgument.side&quot;
+  KIALO_SOURCE: &quot;ArgumentSource&quot;
+  KIALO_IMPACT_VOTE: &quot;ArgumentImpactVote&quot;
+  KIALO_SUGGESTED_CLAIM: &quot;ArgumentSuggestion&quot;
+  KIALO_PERSPECTIVE: &quot;DiscussionPerspective / Smart Vote lens depending context&quot;
+  KIALO_PARTICIPANT_ROLE: &quot;DiscussionParticipantRole&quot;
+```
+
+Critical Kialo rules:
+
+```yaml
+KIALO_ANTI_DRIFT_RULES:
+  - &quot;Do not rename EthikosArgument to Claim.&quot;
+  - &quot;Do not create konnaxion.kialo.&quot;
+  - &quot;Do not create /kialo routes.&quot;
+  - &quot;Do not treat Kialo impact votes as Ethikos stances.&quot;
+  - &quot;Do not treat Kialo impact votes as Smart Vote ballots.&quot;
+  - &quot;Do not expose anonymous identities to normal participants.&quot;
+  - &quot;Do not publish suggested claims without approval when role is suggester.&quot;
+```
+
+---
+
+## 15. Vote-type separation
+
+The Kintsugi update MUST separate three concepts that are easy to confuse.
+
+```yaml
+VOTE_TYPE_SEPARATION:
+  ETHIKOS_STANCE:
+    RANGE: &quot;-3..+3&quot;
+    LEVEL: &quot;topic-level&quot;
+    OWNER: &quot;Korum&quot;
+    MODEL: &quot;EthikosStance&quot;
+    MEANING: &quot;User stance on topic.&quot;
+
+  KIALO_IMPACT_VOTE:
+    RANGE: &quot;0..4&quot;
+    LEVEL: &quot;argument/claim-level&quot;
+    OWNER: &quot;Korum&quot;
+    PROPOSED_MODEL: &quot;ArgumentImpactVote&quot;
+    MEANING: &quot;Impact of a claim on its parent; combines veracity and relevance.&quot;
+
+  SMART_VOTE_READING:
+    RANGE: &quot;not fixed; depends on lens and modality&quot;
+    LEVEL: &quot;derived aggregation&quot;
+    OWNER: &quot;Smart Vote&quot;
+    PROPOSED_MODEL: &quot;ReadingResult&quot;
+    MEANING: &quot;Published derived reading of baseline events.&quot;
+```
+
+Mandatory separation rules:
+
+```yaml
+CRITICAL_VOTE_RULES:
+  CLAIM_IMPACT_VOTE_IS_TOPIC_STANCE: false
+  CLAIM_IMPACT_VOTE_IS_SMART_VOTE_BALLOT: false
+  ETHIKOS_STANCE_IS_READING: false
+  SMART_VOTE_READING_IS_SOURCE_FACT: false
+```
+
+---
+
+## 16. Kintsugi pipeline
+
+The full civic workflow is expressed as six stages.
+
+| Stage | Name                     | Owner                      | Required outputs                                                        |
+| ----- | ------------------------ | -------------------------- | ----------------------------------------------------------------------- |
+| 0     | Intake                   | Konsultations              | `ProblemStatement`, `IntakeQueue`, `TopicTags`                          |
+| 1     | Discovery / Consultation | Konsultations              | `OptionSet`, `ConstraintSet`, optional `ConsensusMapArtifact`           |
+| 2     | Deliberation             | Korum                      | `ArgumentGraph`, `StanceEvents`, `ModerationLog`                        |
+| 3     | Drafting                 | ethiKos bounded capability | `Draft`, `VersionHistory`, `Amendments`, `RationalePacket`              |
+| 4     | Decision                 | Smart Vote                 | `BaselineResult`, `ReadingResults`, `DecisionRecord`                    |
+| 5     | Accountability           | Konsultations + handoff    | `ImpactTrack`, execution handoff links, public accountability snapshots |
+
+The pipeline is a contract. Individual routes may expose only part of it, but generated documents must not collapse all stages into one model or one table.
+
+---
+
+## 17. Data model policy
+
+The Kintsugi update must evolve the data model conservatively.
+
+```yaml
+DATA_MODEL_POLICY:
+  BREAK_EXISTING_MODELS: false
+  RENAME_EXISTING_MODELS: false
+  DELETE_EXISTING_FIELDS: false
+  ADD_NON_BREAKING_TABLES_ALLOWED: true
+  ADD_NON_BREAKING_FIELDS_ALLOWED: true
+  MIGRATIONS_REQUIRED_FOR_NEW_MODELS: true
+  FUTURE_MAKEMIGRATIONS_DRIFT_MUST_BE_AVOIDED: true
+```
+
+Existing models are preserved.
+
+Proposed models may be introduced only through documented migration plans and ownership contracts.
+
+---
+
+## 18. Proposed first-pass model priorities
+
+The following model concepts are candidates for first-pass consideration.
+
+```yaml
+FIRST_PASS_MODEL_PRIORITY:
+  MUST_CONSIDER:
+    - &quot;DecisionProtocol&quot;
+    - &quot;DecisionRecord&quot;
+    - &quot;LensDeclaration&quot;
+    - &quot;ReadingResult&quot;
+    - &quot;Draft&quot;
+    - &quot;DraftVersion&quot;
+    - &quot;Amendment&quot;
+    - &quot;RationalePacket&quot;
+    - &quot;ImpactTrack&quot;
+    - &quot;ArgumentSource&quot;
+    - &quot;ArgumentImpactVote&quot;
+    - &quot;ArgumentSuggestion&quot;
+    - &quot;DiscussionParticipantRole&quot;
+    - &quot;DiscussionVisibilitySetting&quot;
+
+  DEFER:
+    - &quot;ArgumentBookmark&quot;
+    - &quot;ArgumentLink&quot;
+    - &quot;DiscussionTemplate&quot;
+    - &quot;DiscussionGroup&quot;
+    - &quot;DiscussionPerspective&quot;
+    - &quot;DiscussionExport&quot;
+```
+
+This list is not an implementation backlog. It is a planning boundary.
+
+---
+
+## 19. Mimic vs Annex summary
+
+Default external-tool strategy:
+
+```yaml
+MIMIC_VS_ANNEX:
+  DEFAULT_EXTERNAL_TOOL_STRATEGY: &quot;mimic&quot;
+  MIMIC_FIRST_PASS: true
+  ANNEX_REQUIRES_ISOLATION: true
+  ANNEX_REQUIRES_REPLACEABILITY: true
+  ANNEX_REQUIRES_NO_CORE_TABLE_WRITES: true
+  ANNEX_REQUIRES_LICENSE_CLEARANCE: true
+  ANNEX_REQUIRES_ADAPTER_LAYER: true
+  FULL_CODE_IMPORT_DEFAULT: false
+```
+
+Annex boundary objects:
+
+```yaml
+ANNEX_BOUNDARY_OBJECTS:
+  - &quot;ExternalArtifact&quot;
+  - &quot;ProjectionMapping&quot;
+```
+
+In first pass, assume mimic. Do not design annex integration unless the assigned document explicitly concerns future annex rules.
+
+---
+
+## 20. Document pack
+
+The complete documentation pack contains the following files.
+
+```text
+00_KINTSUGI_START_HERE.md
+01_ETHIKOS_KINTSUGI_EXECUTION_STRATEGY.md
+02_SOURCE_OF_TRUTH_AND_DRIFT_CONTROL.md
+03_BOUNDARIES_AND_OWNERSHIP_CONTRACTS.md
+04_CANONICAL_NAMING_AND_VARIABLES.md
+05_CURRENT_STATE_BASELINE.md
+06_ROUTE_BY_ROUTE_ETHIKOS_UPGRADE_PLAN.md
+07_API_AND_SERVICE_CONTRACTS.md
+08_DATA_MODEL_AND_MIGRATION_PLAN.md
+09_SMART_VOTE_EKOH_READING_CONTRACT.md
+10_FIRST_PASS_INTEGRATION_MATRIX.md
+11_MIMIC_VS_ANNEX_RULEBOOK.md
+12_CANONICAL_OBJECTS_AND_EVENTS.md
+13_PAYLOAD_SHAPES_AND_SERIALIZER_CONTRACTS.md
+14_FRONTEND_ALIGNMENT_CONTRACT.md
+15_BACKEND_ALIGNMENT_CONTRACT.md
+16_TEST_AND_SMOKE_CONTRACT.md
+17_KNOWN_BUGS_AND_NON_KINTSUGI_ITEMS.md
+18_ADR_REGISTER.md
+19_OSS_CODE_READING_PLAN.md
+20_AI_GENERATION_GUARDRAILS.md
+21_KIALO_STYLE_ARGUMENT_MAPPING_CONTRACT.md
+22_IMPLEMENTATION_BACKLOG_TEMPLATE.md
+```
+
+---
+
+## 21. Recommended generation order
+
+When generating the pack in parallel AI conversations, each conversation should generate exactly one file.
+
+Recommended order:
+
+```text
+1.  00_KINTSUGI_START_HERE.md
+2.  02_SOURCE_OF_TRUTH_AND_DRIFT_CONTROL.md
+3.  03_BOUNDARIES_AND_OWNERSHIP_CONTRACTS.md
+4.  04_CANONICAL_NAMING_AND_VARIABLES.md
+5.  20_AI_GENERATION_GUARDRAILS.md
+6.  21_KIALO_STYLE_ARGUMENT_MAPPING_CONTRACT.md
+7.  01_ETHIKOS_KINTSUGI_EXECUTION_STRATEGY.md
+8.  10_FIRST_PASS_INTEGRATION_MATRIX.md
+9.  11_MIMIC_VS_ANNEX_RULEBOOK.md
+10. 05_CURRENT_STATE_BASELINE.md
+11. 06_ROUTE_BY_ROUTE_ETHIKOS_UPGRADE_PLAN.md
+12. 07_API_AND_SERVICE_CONTRACTS.md
+13. 08_DATA_MODEL_AND_MIGRATION_PLAN.md
+14. 09_SMART_VOTE_EKOH_READING_CONTRACT.md
+15. 12_CANONICAL_OBJECTS_AND_EVENTS.md
+16. 13_PAYLOAD_SHAPES_AND_SERIALIZER_CONTRACTS.md
+17. 14_FRONTEND_ALIGNMENT_CONTRACT.md
+18. 15_BACKEND_ALIGNMENT_CONTRACT.md
+19. 16_TEST_AND_SMOKE_CONTRACT.md
+20. 17_KNOWN_BUGS_AND_NON_KINTSUGI_ITEMS.md
+21. 18_ADR_REGISTER.md
+22. 19_OSS_CODE_READING_PLAN.md
+23. 22_IMPLEMENTATION_BACKLOG_TEMPLATE.md
+```
+
+---
+
+## 22. Document responsibilities
+
+| File                                            | Responsibility                               |
+| ----------------------------------------------- | -------------------------------------------- |
+| `00_KINTSUGI_START_HERE.md`                     | Entry point and orientation                  |
+| `01_ETHIKOS_KINTSUGI_EXECUTION_STRATEGY.md`     | Strategic execution framing                  |
+| `02_SOURCE_OF_TRUTH_AND_DRIFT_CONTROL.md`       | Source hierarchy and drift prevention        |
+| `03_BOUNDARIES_AND_OWNERSHIP_CONTRACTS.md`      | Ownership and write rules                    |
+| `04_CANONICAL_NAMING_AND_VARIABLES.md`          | Names, constants, slugs, enums               |
+| `05_CURRENT_STATE_BASELINE.md`                  | Current code and product baseline            |
+| `06_ROUTE_BY_ROUTE_ETHIKOS_UPGRADE_PLAN.md`     | Route-by-route Kintsugi mapping              |
+| `07_API_AND_SERVICE_CONTRACTS.md`               | API and frontend service contracts           |
+| `08_DATA_MODEL_AND_MIGRATION_PLAN.md`           | Schema and migration strategy                |
+| `09_SMART_VOTE_EKOH_READING_CONTRACT.md`        | Baseline, readings, lenses, snapshots        |
+| `10_FIRST_PASS_INTEGRATION_MATRIX.md`           | OSS first-pass mimic matrix                  |
+| `11_MIMIC_VS_ANNEX_RULEBOOK.md`                 | Rules for mimic, annex, and no-go            |
+| `12_CANONICAL_OBJECTS_AND_EVENTS.md`            | Domain objects and event vocabulary          |
+| `13_PAYLOAD_SHAPES_AND_SERIALIZER_CONTRACTS.md` | JSON contracts and serializer shape          |
+| `14_FRONTEND_ALIGNMENT_CONTRACT.md`             | Next.js, shell, route and service rules      |
+| `15_BACKEND_ALIGNMENT_CONTRACT.md`              | Django/DRF alignment rules                   |
+| `16_TEST_AND_SMOKE_CONTRACT.md`                 | Test and smoke minimums                      |
+| `17_KNOWN_BUGS_AND_NON_KINTSUGI_ITEMS.md`       | Known bugs and exclusions                    |
+| `18_ADR_REGISTER.md`                            | Architecture decision records                |
+| `19_OSS_CODE_READING_PLAN.md`                   | Future OSS repo inspection plan              |
+| `20_AI_GENERATION_GUARDRAILS.md`                | AI-specific generation constraints           |
+| `21_KIALO_STYLE_ARGUMENT_MAPPING_CONTRACT.md`   | Kialo-style structured deliberation contract |
+| `22_IMPLEMENTATION_BACKLOG_TEMPLATE.md`         | Template for later backlog generation        |
+
+---
+
+## 23. Required document sections
+
+Every document in this pack SHOULD include these sections unless the assigned document has a stronger reason to differ.
+
+```text
+1. Purpose
+2. Scope
+3. Canonical variables used
+4. Source-of-truth references
+5. Non-goals
+6. Main contract or content
+7. Anti-drift rules
+8. Related documents
+```
+
+---
+
+## 24. Non-goals for this pack
+
+The Kintsugi documentation pack is not intended to:
+
+* perform the implementation;
+* rewrite the whole platform;
+* replace current ethiKos routes;
+* replace current ethiKos models;
+* import external civic-tech code;
+* create a new Kialo module;
+* create a new Kintsugi frontend app;
+* create a full annex integration;
+* expand `/api/home/*`;
+* turn EkoH into a voting engine;
+* let Smart Vote mutate source facts;
+* generate a full implementation backlog before docs and code reading are complete.
+
+---
+
+## 25. Known bug boundary
+
+The following item is known and open.
+
+```yaml
+KNOWN_BUGS:
+  BUG_001:
+    TITLE: &quot;Deliberate preview drawer shows &#x27;Preview / No data&#x27;&quot;
+    STATUS: &quot;known_open&quot;
+    CLASSIFICATION: &quot;targeted_bugfix_not_architecture&quot;
+    DO_NOT_USE_TO_REDESIGN_KINTSUGI: true
+```
+
+This bug should be tracked and fixed, but it MUST NOT dominate the Kintsugi documentation process.
+
+---
+
+## 26. AI generation rules
+
+Any AI session generating one of these docs MUST follow these rules.
+
+```yaml
+GENERATION_RULES:
+  GENERATE_ONE_FILE_PER_CONVERSATION: true
+  EACH_CONVERSATION_MUST_OBEY_CANONICAL_VARIABLES: true
+  DO_NOT_REINTERPRET_SCOPE: true
+  DO_NOT_CREATE_NEW_ARCHITECTURE_UNLESS_DOC_EXPLICITLY_ASSIGNED: true
+  IF_CONFLICT_USE_SOURCE_PRIORITY_ORDER: true
+```
+
+Each AI-generated document MUST NOT:
+
+* invent new routes;
+* invent new endpoints;
+* rename existing canonical models;
+* create a new Kialo app;
+* create a new top-level Kintsugi app;
+* propose a full OSS merge;
+* treat Kialo impact votes as topic stances;
+* treat Kialo impact votes as Smart Vote ballots;
+* expand `/api/home/*`;
+* create a second layout shell;
+* create a second theme system.
+
+---
+
+## 27. Absolute forbidden outputs
+
+The following outputs are forbidden across the entire pack.
+
+```yaml
+FORBIDDEN:
+  - &quot;Do not propose full external OSS merge.&quot;
+  - &quot;Do not create a new Kialo app.&quot;
+  - &quot;Do not create a new top-level Kintsugi frontend app.&quot;
+  - &quot;Do not rename EthikosArgument to Claim.&quot;
+  - &quot;Do not rename /api/ethikos/... to /api/deliberation/...&quot;
+  - &quot;Do not convert EkoH into a voting engine.&quot;
+  - &quot;Do not let Smart Vote mutate upstream facts.&quot;
+  - &quot;Do not let foreign tools write to Korum/Konsultations core tables.&quot;
+  - &quot;Do not treat Kialo impact votes as Ethikos stances.&quot;
+  - &quot;Do not treat Kialo impact votes as Smart Vote ballots.&quot;
+  - &quot;Do not expand /api/home/*.&quot;
+  - &quot;Do not create a second layout shell.&quot;
+  - &quot;Do not create a second theme system.&quot;
+  - &quot;Do not produce implementation tasks before documentation contracts unless generating doc 22.&quot;
+```
+
+---
+
+## 28. Required ADRs
+
+The ADR register MUST include at least the following decisions.
+
+```yaml
+REQUIRED_ADRS:
+  ADR_001: &quot;No full OSS merge&quot;
+  ADR_002: &quot;Existing Ethikos route families remain stable&quot;
+  ADR_003: &quot;Korum and Konsultations ownership split&quot;
+  ADR_004: &quot;Smart Vote publishes readings only&quot;
+  ADR_005: &quot;EkoH is context, not voting engine&quot;
+  ADR_006: &quot;Drafting is separate bounded capability&quot;
+  ADR_007: &quot;External tools use mimic first, annex later&quot;
+  ADR_008: &quot;/api/home legacy calls must be removed or isolated&quot;
+  ADR_009: &quot;Impact belongs to Ethikos/Konsultations truth, not KeenKonnect truth&quot;
+  ADR_010: &quot;Implementation backlog comes after docs and code-reading&quot;
+  ADR_011: &quot;Kialo-style features extend Korum; no separate Kialo module&quot;
+```
+
+---
+
+## 29. How to use this file
+
+Before generating or editing any Kintsugi document:
+
+1. Read this file.
+2. Confirm the assigned document filename.
+3. Follow the source-of-truth order.
+4. Use the canonical variables.
+5. Do not reinterpret the first-pass scope.
+6. Do not invent new architecture.
+7. Generate only the assigned document.
+8. Cross-reference related documents.
+9. Keep implementation tasks out unless generating `22_IMPLEMENTATION_BACKLOG_TEMPLATE.md`.
+
+---
+
+## 30. Related documents
+
+This file directly governs or is referenced by:
+
+```text
+01_ETHIKOS_KINTSUGI_EXECUTION_STRATEGY.md
+02_SOURCE_OF_TRUTH_AND_DRIFT_CONTROL.md
+03_BOUNDARIES_AND_OWNERSHIP_CONTRACTS.md
+04_CANONICAL_NAMING_AND_VARIABLES.md
+05_CURRENT_STATE_BASELINE.md
+06_ROUTE_BY_ROUTE_ETHIKOS_UPGRADE_PLAN.md
+07_API_AND_SERVICE_CONTRACTS.md
+08_DATA_MODEL_AND_MIGRATION_PLAN.md
+09_SMART_VOTE_EKOH_READING_CONTRACT.md
+10_FIRST_PASS_INTEGRATION_MATRIX.md
+11_MIMIC_VS_ANNEX_RULEBOOK.md
+12_CANONICAL_OBJECTS_AND_EVENTS.md
+13_PAYLOAD_SHAPES_AND_SERIALIZER_CONTRACTS.md
+14_FRONTEND_ALIGNMENT_CONTRACT.md
+15_BACKEND_ALIGNMENT_CONTRACT.md
+16_TEST_AND_SMOKE_CONTRACT.md
+17_KNOWN_BUGS_AND_NON_KINTSUGI_ITEMS.md
+18_ADR_REGISTER.md
+19_OSS_CODE_READING_PLAN.md
+20_AI_GENERATION_GUARDRAILS.md
+21_KIALO_STYLE_ARGUMENT_MAPPING_CONTRACT.md
+22_IMPLEMENTATION_BACKLOG_TEMPLATE.md
+```
+
+---
+
+## 31. Final binding statement
+
+For the ethiKos Kintsugi Upgrade documentation pack:
+
+```yaml
+FINAL_BINDING_STATEMENT:
+  KINTSUGI_IS: &quot;A documentation-first native-mimic architecture upgrade.&quot;
+  KINTSUGI_IS_NOT: &quot;A full OSS merge, route rewrite, or backend ownership collapse.&quot;
+  PRIMARY_ROUTE_SURFACE: &quot;/ethikos/*&quot;
+  PRIMARY_BACKEND_APP: &quot;konnaxion.ethikos&quot;
+  PRIMARY_DELIBERATION_CONTRACT: &quot;Korum + Kialo-style native mimic&quot;
+  PRIMARY_DECISION_CONTRACT: &quot;Smart Vote readings over baseline events&quot;
+  PRIMARY_EXPERTISE_CONTEXT: &quot;EkoH snapshots and cohort context&quot;
+  PRIMARY_DRIFT_CONTROL_RULE: &quot;If a generated document conflicts with this file, this file wins unless a later ADR explicitly supersedes it.&quot;
+```
+
+---
+
+## V4.1 canonical extension — EkoH rating disclosure
+
+`27_EKOH_RATING_VISIBILITY_AND_ACCESS_CONTRACT.md` is the canonical contract for individual EkoH rating visibility, scoped disclosure, reusable EkoH profile UI, and the boundary between rating disclosure and Smart Vote contextual influence. It MUST be read with `03`, `07`, `08`, `09`, `13`, `14`, `15`, `16`, and `18`.
+
+</pre></body></html>

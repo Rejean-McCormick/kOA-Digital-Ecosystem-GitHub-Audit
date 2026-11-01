@@ -1,0 +1,1468 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/09_SMART_VOTE_EKOH_READING_CONTRACT.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/09_SMART_VOTE_EKOH_READING_CONTRACT.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 52eee661d7d4c343</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/09_SMART_VOTE_EKOH_READING_CONTRACT.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 09 — Smart Vote + EkoH Reading Contract
+
+**File:** `09_SMART_VOTE_EKOH_READING_CONTRACT.md`
+**Pack:** ethiKos Kintsugi Update Documentation Pack
+**Status:** Normative contract
+**Audience:** backend, frontend, analytics, Smart Vote, EkoH, ethiKos, future AI/code-generation sessions
+**Primary goal:** prevent drift between raw democratic facts, Smart Vote readings, and EkoH-derived context.
+
+---
+
+## 1. Purpose
+
+This document defines the contract between **ethiKos**, **Smart Vote**, and **EkoH** for the Kintsugi upgrade.
+
+The core rule is:
+
+&gt; ethiKos preserves one canonical set of source facts, while Smart Vote may publish multiple declared, reproducible readings of those facts.
+
+This contract exists to prevent four classes of drift:
+
+1. treating weighted results as source facts;
+2. treating EkoH as the voting engine;
+3. mixing topic-level stances, claim-level impact votes, and Smart Vote readings;
+4. allowing derived outputs to mutate Korum or Konsultations records.
+
+The source boundary document defines the principle as **single truth, multiple readings**: baseline outcomes remain visible, while Smart Vote readings are explicitly declared, reproducible transformations bound to an audit context, often an EkoH snapshot. 
+
+---
+
+## 2. Scope
+
+This document governs:
+
+* baseline results;
+* Smart Vote readings;
+* lens declarations;
+* EkoH snapshots;
+* weighted / filtered / cohort-specific outputs;
+* audit fields required for published readings;
+* how readings are shown in `/ethikos/decide/*`, `/ethikos/insights`, `/ethikos/pulse/*`, and related analytics views;
+* the separation between `EthikosStance`, `ArgumentImpactVote`, `Vote`, `VoteResult`, and `ReadingResult`.
+
+This document does **not** define the full data model for all Kintsugi entities. That belongs in:
+
+* `08_DATA_MODEL_AND_MIGRATION_PLAN.md`
+* `12_CANONICAL_OBJECTS_AND_EVENTS.md`
+* `13_PAYLOAD_SHAPES_AND_SERIALIZER_CONTRACTS.md`
+
+---
+
+## 3. Canonical variables used
+
+```yaml
+DOCUMENT_ID: &quot;09_SMART_VOTE_EKOH_READING_CONTRACT.md&quot;
+
+PROJECT:
+  PLATFORM_NAME: &quot;Konnaxion&quot;
+  MODULE_NAME: &quot;ethiKos&quot;
+  UPDATE_NAME: &quot;Kintsugi&quot;
+
+PRIMARY_ROUTE_SURFACE: &quot;/ethikos/*&quot;
+
+OWNERSHIP:
+  KORUM_OWNS:
+    - &quot;topics&quot;
+    - &quot;stances&quot;
+    - &quot;arguments&quot;
+    - &quot;argument moderation&quot;
+  KONSULTATIONS_OWNS:
+    - &quot;intake&quot;
+    - &quot;ballots&quot;
+    - &quot;consultation results&quot;
+    - &quot;impact tracking&quot;
+  SMART_VOTE_OWNS:
+    - &quot;readings&quot;
+    - &quot;lenses&quot;
+    - &quot;aggregations&quot;
+    - &quot;result publication&quot;
+  EKOH_OWNS:
+    - &quot;expertise context&quot;
+    - &quot;ethics context&quot;
+    - &quot;cohort eligibility&quot;
+    - &quot;snapshots&quot;
+
+READING_CONTRACT:
+  BASELINE_READING: &quot;raw_unweighted&quot;
+  WEIGHTED_READING: &quot;declared_lens_output&quot;
+  READING_REPRODUCIBLE: true
+  READING_INPUTS:
+    - &quot;BaselineEvents&quot;
+    - &quot;LensDeclaration&quot;
+    - &quot;SnapshotContext&quot;
+  SNAPSHOT_FIELD: &quot;snapshot_ref&quot;
+  LEGACY_EKOH_SNAPSHOT_FIELD: &quot;ekoh_snapshot_id&quot;
+  LENS_ID_FIELD: &quot;reading_key&quot;
+  LENS_HASH_FIELD: &quot;lens_hash&quot;
+  RESULT_PAYLOAD_FIELD: &quot;results_payload&quot;
+  COMPUTED_AT_FIELD: &quot;computed_at&quot;
+
+VOTE_TYPE_SEPARATION:
+  ETHIKOS_STANCE_RANGE: &quot;-3..+3&quot;
+  KIALO_IMPACT_VOTE_RANGE: &quot;0..4&quot;
+  SMART_VOTE_READING_IS_SOURCE_FACT: false
+  EKOH_IS_VOTING_ENGINE: false
+  SMART_VOTE_MUTATES_SOURCE_FACTS: false
+```
+
+---
+
+## 4. Source basis
+
+This contract is grounded in the following current project facts:
+
+1. ethiKos v2 defines **single truth, multiple readings** and assigns Smart Vote to computation/publication of outcomes as readings, while keeping it read-only on Korum/Konsultations facts. 
+
+2. The current Smart Vote backend already contains `Vote`, `VoteResult`, `VoteModality`, and `VoteLedger` concepts, including `raw_value`, `weighted_value`, target typing, and aggregate vote results. 
+
+3. EkoH and Smart Vote are configured as Django apps under `konnaxion.ekoh` and `konnaxion.smart_vote`, with periodic tasks for EkoH score recalculation, contextual analysis, and Smart Vote aggregation. 
+
+4. Existing technical references define EkoH weighting parameters, Smart Vote modalities, and ethiKos stance scale values. 
+
+5. Current frontend routes already expose EkoH and Smart Vote surfaces such as EkoH score, expertise, badges, voting weight, Konsensus, and activity feed. 
+
+---
+
+## 5. Core principle
+
+## 5.1 Single truth
+
+The source truth is the set of recorded civic events.
+
+Examples:
+
+```yaml
+SOURCE_FACTS:
+  - &quot;EthikosStance&quot;
+  - &quot;EthikosArgument&quot;
+  - &quot;BallotEvent&quot;
+  - &quot;Vote&quot;
+  - &quot;ModerationAction&quot;
+```
+
+Source facts are owned by the module that captured them.
+
+```yaml
+SOURCE_FACT_OWNERSHIP:
+  EthikosStance: &quot;Korum&quot;
+  EthikosArgument: &quot;Korum&quot;
+  BallotEvent: &quot;Konsultations&quot;
+  Vote: &quot;Smart Vote / Kollective voting substrate&quot;
+  ModerationAction: &quot;Korum or Konsultations depending target&quot;
+```
+
+A source fact is not a reading.
+
+A source fact must not change just because a new lens is introduced.
+
+---
+
+## 5.2 Multiple readings
+
+A reading is a declared interpretation of the source facts.
+
+Examples:
+
+```yaml
+READINGS:
+  baseline:
+    description: &quot;Raw unweighted result.&quot;
+  ekoh_weighted_v1:
+    description: &quot;Weighted reading using EkoH expertise and ethics context.&quot;
+  expert_cohort_v1:
+    description: &quot;Filtered reading using only users above an expertise threshold.&quot;
+  public_krowd_v1:
+    description: &quot;Public participant reading.&quot;
+  elite_council_v1:
+    description: &quot;Elite or expert-council scoped reading.&quot;
+```
+
+A reading must always answer:
+
+```yaml
+READING_MUST_ANSWER:
+  - &quot;What inputs were used?&quot;
+  - &quot;What filters were applied?&quot;
+  - &quot;What weights were applied?&quot;
+  - &quot;Which snapshot/config was used?&quot;
+  - &quot;When was it computed?&quot;
+  - &quot;Can it be recomputed?&quot;
+```
+
+---
+
+## 6. Ownership contract
+
+## 6.1 Korum
+
+Korum owns deliberation facts.
+
+```yaml
+KORUM_SOURCE_FACTS:
+  - &quot;EthikosTopic&quot;
+  - &quot;EthikosStance&quot;
+  - &quot;EthikosArgument&quot;
+  - &quot;ArgumentSource&quot;
+  - &quot;ArgumentImpactVote&quot;
+  - &quot;ArgumentSuggestion&quot;
+  - &quot;ModerationAction&quot;
+```
+
+Korum may expose stance distributions and argument statistics, but it does not own Smart Vote readings.
+
+Korum must not store `weighted_value` as if it were a canonical stance.
+
+---
+
+## 6.2 Konsultations
+
+Konsultations owns consultation and ballot facts.
+
+```yaml
+KONSULTATIONS_SOURCE_FACTS:
+  - &quot;IntakeSubmission&quot;
+  - &quot;Consultation&quot;
+  - &quot;BallotEvent&quot;
+  - &quot;ConsultationResultSnapshot&quot;
+  - &quot;ImpactTrack&quot;
+```
+
+Konsultations may store baseline ballot results.
+
+Konsultations must not store an EkoH-weighted outcome as its canonical result unless that value is explicitly marked as a Smart Vote reading.
+
+---
+
+## 6.3 Smart Vote
+
+Smart Vote owns computation and publication of readings.
+
+```yaml
+SMART_VOTE_OWNS:
+  - &quot;LensDeclaration&quot;
+  - &quot;ReadingResult&quot;
+  - &quot;Vote aggregation&quot;
+  - &quot;VoteResult&quot;
+  - &quot;Reading publication&quot;
+```
+
+Smart Vote may read Korum and Konsultations facts.
+
+Smart Vote must not mutate Korum or Konsultations facts.
+
+Smart Vote may write only derived artifacts:
+
+```yaml
+SMART_VOTE_DERIVED_ARTIFACTS:
+  - &quot;ReadingResult&quot;
+  - &quot;VoteResult&quot;
+  - &quot;AggregationBreakdown&quot;
+  - &quot;ReadingAuditRecord&quot;
+```
+
+---
+
+## 6.4 EkoH
+
+EkoH owns expertise and ethics context.
+
+```yaml
+EKOH_OWNS:
+  - &quot;ExpertiseCategory&quot;
+  - &quot;UserExpertiseScore&quot;
+  - &quot;UserEthicsScore&quot;
+  - &quot;ScoreConfiguration&quot;
+  - &quot;ScoreHistory&quot;
+  - &quot;ConfidentialitySetting&quot;
+  - &quot;ContextAnalysisLog&quot;
+  - &quot;EmergingExpert&quot;
+```
+
+EkoH is not the voting engine.
+
+EkoH provides context to Smart Vote through snapshots, scores, domain vectors, ethics multipliers, and cohort eligibility.
+
+---
+
+## 7. Vote type separation
+
+The Kintsugi upgrade must preserve a strict separation between three vote-like concepts.
+
+| Concept              | Owner      |                Level | Range / shape | Meaning                                   |
+| -------------------- | ---------- | -------------------: | ------------- | ----------------------------------------- |
+| `EthikosStance`      | Korum      |          topic-level | `-3..+3`      | User stance on a topic                    |
+| `ArgumentImpactVote` | Korum      | argument/claim-level | `0..4`        | Impact of a claim on its parent           |
+| `Smart Vote Reading` | Smart Vote |    aggregate/derived | lens-specific | Published interpretation of source events |
+
+## 7.1 `EthikosStance`
+
+`EthikosStance` is the canonical topic-level stance.
+
+```yaml
+ETHIKOS_STANCE:
+  MODEL: &quot;EthikosStance&quot;
+  OWNER: &quot;Korum&quot;
+  LEVEL: &quot;topic&quot;
+  RANGE: &quot;-3..+3&quot;
+  MEANING:
+    - &quot;-3 strongly against&quot;
+    - &quot;0 neutral / undecided&quot;
+    - &quot;+3 strongly for&quot;
+```
+
+Rules:
+
+```yaml
+ETHIKOS_STANCE_RULES:
+  - &quot;An EthikosStance is a source fact.&quot;
+  - &quot;An EthikosStance may be used as input to a baseline result.&quot;
+  - &quot;An EthikosStance may be used as input to a Smart Vote reading.&quot;
+  - &quot;An EthikosStance must not store weighted meaning directly.&quot;
+```
+
+---
+
+## 7.2 `ArgumentImpactVote`
+
+`ArgumentImpactVote` is a Kialo-style claim-level signal.
+
+```yaml
+ARGUMENT_IMPACT_VOTE:
+  MODEL: &quot;ArgumentImpactVote&quot;
+  OWNER: &quot;Korum&quot;
+  LEVEL: &quot;argument / claim&quot;
+  RANGE: &quot;0..4&quot;
+  MEANING: &quot;Perceived impact, relevance, and/or strength of a claim relative to its parent.&quot;
+```
+
+Rules:
+
+```yaml
+ARGUMENT_IMPACT_VOTE_RULES:
+  - &quot;ArgumentImpactVote is not a topic stance.&quot;
+  - &quot;ArgumentImpactVote is not a Smart Vote ballot.&quot;
+  - &quot;ArgumentImpactVote may affect argument quality analytics.&quot;
+  - &quot;ArgumentImpactVote may inform summaries or debate health metrics.&quot;
+  - &quot;ArgumentImpactVote must not be mixed into baseline decision results unless a lens explicitly declares it as allowed input.&quot;
+```
+
+---
+
+## 7.3 Smart Vote reading
+
+A Smart Vote reading is an aggregate output.
+
+```yaml
+SMART_VOTE_READING:
+  MODEL: &quot;ReadingResult&quot;
+  OWNER: &quot;Smart Vote&quot;
+  LEVEL: &quot;aggregate&quot;
+  RANGE: &quot;depends on reading type&quot;
+  MEANING: &quot;Declared interpretation of source facts.&quot;
+```
+
+Rules:
+
+```yaml
+SMART_VOTE_READING_RULES:
+  - &quot;A Smart Vote reading is not a source fact.&quot;
+  - &quot;A Smart Vote reading must be reproducible.&quot;
+  - &quot;A Smart Vote reading must reference its lens.&quot;
+  - &quot;A Smart Vote reading must reference its EkoH snapshot when EkoH context is used.&quot;
+  - &quot;A Smart Vote reading must never overwrite baseline results.&quot;
+```
+
+---
+
+## 8. Baseline result contract
+
+A baseline result is the canonical unweighted aggregation of source events.
+
+```yaml
+BASELINE_RESULT:
+  reading_key: &quot;baseline&quot;
+  weighting: &quot;none&quot;
+  source_truth: &quot;raw events&quot;
+  snapshot_ref_required: false
+  lens_hash_required: true
+```
+
+## 8.1 Allowed baseline inputs
+
+Allowed baseline inputs must be raw, source-owned events.
+
+```yaml
+BASELINE_ALLOWED_INPUTS:
+  KORUM:
+    - &quot;EthikosStance&quot;
+  KONSULTATIONS:
+    - &quot;BallotEvent&quot;
+  SMART_VOTE:
+    - &quot;Vote.raw_value&quot;
+```
+
+## 8.2 Disallowed baseline inputs
+
+```yaml
+BASELINE_DISALLOWED_INPUTS:
+  - &quot;Vote.weighted_value&quot;
+  - &quot;VoteResult.sum_weighted_value&quot;
+  - &quot;UserExpertiseScore.weighted_score&quot;
+  - &quot;UserEthicsScore&quot;
+  - &quot;EkoH-derived multiplier&quot;
+  - &quot;ArgumentImpactVote unless explicitly declared in a non-baseline reading&quot;
+```
+
+## 8.3 Baseline display rule
+
+Any UI that displays a weighted, filtered, expert-only, cohort-only, or EkoH-adjusted result must also keep the baseline visible or reachable.
+
+```yaml
+BASELINE_VISIBILITY_RULE:
+  BASELINE_MUST_REMAIN_VISIBLE: true
+  WEIGHTED_READING_MAY_BE_HIGHLIGHTED: true
+  WEIGHTED_READING_MUST_NOT_ERASE_BASELINE: true
+```
+
+---
+
+## 9. Lens declaration contract
+
+A `LensDeclaration` is the contract that defines how a reading is computed.
+
+Every non-trivial reading must have a lens.
+
+## 9.1 Required fields
+
+```yaml
+LensDeclaration:
+  reading_key:
+    type: &quot;string&quot;
+    required: true
+    examples:
+      - &quot;baseline&quot;
+      - &quot;ekoh_weighted_v1&quot;
+      - &quot;expert_cohort_v1&quot;
+      - &quot;public_krowd_v1&quot;
+      - &quot;elite_council_v1&quot;
+
+  label:
+    type: &quot;string&quot;
+    required: true
+    examples:
+      - &quot;Baseline&quot;
+      - &quot;EkoH-weighted&quot;
+      - &quot;Expert cohort&quot;
+      - &quot;Public Krowd&quot;
+
+  description:
+    type: &quot;text&quot;
+    required: true
+
+  allowed_inputs:
+    type: &quot;array[string]&quot;
+    required: true
+    examples:
+      - &quot;EthikosStance&quot;
+      - &quot;BallotEvent&quot;
+      - &quot;Vote.raw_value&quot;
+
+  segmentation_rules:
+    type: &quot;json&quot;
+    required: true
+    nullable: false
+
+  weighting_rules:
+    type: &quot;json&quot;
+    required: true
+    nullable: false
+
+  required_snapshot_refs:
+    type: &quot;array[string]&quot;
+    required: true
+    examples:
+      - &quot;ekoh_snapshot_id&quot;
+      - &quot;score_configuration_hash&quot;
+
+  lens_hash:
+    type: &quot;string&quot;
+    required: true
+    description: &quot;Stable content-addressable hash of the lens declaration.&quot;
+
+  version:
+    type: &quot;string&quot;
+    required: true
+    examples:
+      - &quot;v1&quot;
+      - &quot;v1.1&quot;
+
+  status:
+    type: &quot;enum&quot;
+    required: true
+    values:
+      - &quot;draft&quot;
+      - &quot;active&quot;
+      - &quot;deprecated&quot;
+      - &quot;archived&quot;
+
+  created_at:
+    type: &quot;datetime&quot;
+    required: true
+
+  updated_at:
+    type: &quot;datetime&quot;
+    required: true
+```
+
+## 9.2 Lens hash rule
+
+The `lens_hash` must change when any of the following changes:
+
+```yaml
+LENS_HASH_REQUIRES_CHANGE_WHEN:
+  - &quot;allowed_inputs changes&quot;
+  - &quot;segmentation_rules changes&quot;
+  - &quot;weighting_rules changes&quot;
+  - &quot;required_snapshot_refs changes&quot;
+  - &quot;thresholds change&quot;
+  - &quot;cohort definitions change&quot;
+  - &quot;score configuration reference changes&quot;
+```
+
+The `lens_hash` must not change for display-only copy changes unless the change affects interpretation.
+
+---
+
+## 10. Reading result contract
+
+A `ReadingResult` is the stored output of a lens applied to source events.
+
+## 10.1 Required fields
+
+```yaml
+ReadingResult:
+  id:
+    type: &quot;integer or uuid&quot;
+    required: true
+
+  reading_key:
+    type: &quot;string&quot;
+    required: true
+    examples:
+      - &quot;baseline&quot;
+      - &quot;ekoh_weighted_v1&quot;
+
+  lens_hash:
+    type: &quot;string&quot;
+    required: true
+
+  snapshot_ref:
+    type: &quot;string&quot;
+    nullable: true
+    required_if:
+      - &quot;EkoH context is used&quot;
+      - &quot;cohort eligibility is derived from EkoH&quot;
+      - &quot;expertise weighting is used&quot;
+      - &quot;ethics weighting is used&quot;
+
+  target_type:
+    type: &quot;string&quot;
+    required: true
+    examples:
+      - &quot;ethikos_topic&quot;
+      - &quot;consultation&quot;
+      - &quot;decision_record&quot;
+      - &quot;project&quot;
+
+  target_id:
+    type: &quot;integer or uuid&quot;
+    required: true
+
+  computed_at:
+    type: &quot;datetime&quot;
+    required: true
+
+  source_event_window:
+    type: &quot;object&quot;
+    required: true
+    fields:
+      from:
+        type: &quot;datetime&quot;
+        nullable: true
+      to:
+        type: &quot;datetime&quot;
+        nullable: true
+
+  source_event_counts:
+    type: &quot;json&quot;
+    required: true
+
+  results_payload:
+    type: &quot;json&quot;
+    required: true
+
+  audit_payload:
+    type: &quot;json&quot;
+    required: true
+
+  status:
+    type: &quot;enum&quot;
+    required: true
+    values:
+      - &quot;pending&quot;
+      - &quot;computed&quot;
+      - &quot;published&quot;
+      - &quot;invalidated&quot;
+      - &quot;archived&quot;
+```
+
+## 10.2 Minimal `results_payload`
+
+```json
+{
+  &quot;summary&quot;: {
+    &quot;support&quot;: 0.0,
+    &quot;oppose&quot;: 0.0,
+    &quot;neutral&quot;: 0.0,
+    &quot;total_participants&quot;: 0
+  },
+  &quot;distribution&quot;: [],
+  &quot;breakdowns&quot;: {},
+  &quot;confidence&quot;: {
+    &quot;sample_size&quot;: 0,
+    &quot;minimum_threshold_met&quot;: false,
+    &quot;notes&quot;: []
+  }
+}
+```
+
+## 10.3 Minimal `audit_payload`
+
+```json
+{
+  &quot;lens_hash&quot;: &quot;sha256:...&quot;,
+  &quot;input_sources&quot;: [],
+  &quot;input_event_ids_hash&quot;: &quot;sha256:...&quot;,
+  &quot;snapshot_ref&quot;: null,
+  &quot;score_configuration_hash&quot;: null,
+  &quot;computed_by&quot;: &quot;smart_vote&quot;,
+  &quot;code_version&quot;: null,
+  &quot;warnings&quot;: []
+}
+```
+
+---
+
+## 11. EkoH snapshot contract
+
+An EkoH snapshot is a frozen reference to the EkoH context used by a reading.
+
+It may include:
+
+```yaml
+EKOH_SNAPSHOT_MAY_INCLUDE:
+  - &quot;expertise category taxonomy version&quot;
+  - &quot;user expertise scores&quot;
+  - &quot;user ethics scores&quot;
+  - &quot;score configuration&quot;
+  - &quot;cohort eligibility&quot;
+  - &quot;domain relevance vector&quot;
+  - &quot;privacy/confidentiality settings&quot;
+  - &quot;emerging expert markers&quot;
+```
+
+## 11.1 Required when EkoH is used
+
+If a reading uses EkoH scores, ethics multipliers, cohort eligibility, expert thresholds, domain relevance, or emerging expert signals, it must include:
+
+```yaml
+EKOH_REQUIRED_READING_FIELDS:
+  snapshot_ref: &quot;required&quot;
+  lens_hash: &quot;required&quot;
+  score_configuration_hash: &quot;required&quot;
+  computed_at: &quot;required&quot;
+  results_payload: &quot;required&quot;
+```
+
+## 11.2 EkoH must not mutate votes
+
+```yaml
+EKOH_MUTATION_RULES:
+  EKOH_MUTATES_ETHIKOS_STANCE: false
+  EKOH_MUTATES_BALLOT_EVENT: false
+  EKOH_MUTATES_ARGUMENT_IMPACT_VOTE: false
+  EKOH_MUTATES_SMART_VOTE_RAW_VALUE: false
+```
+
+EkoH may change future readings only by changing the snapshot/context used in a new computation.
+
+Existing published readings must not silently change when EkoH scores change.
+
+---
+
+## 12. Weighting contract
+
+Smart Vote may compute weighted values using EkoH context.
+
+The current Smart Vote architecture includes `Vote.raw_value`, `Vote.weighted_value`, `VoteResult.sum_weighted_value`, and vote modality definitions. 
+
+## 12.1 Raw value
+
+```yaml
+RAW_VALUE:
+  source: &quot;user action&quot;
+  examples:
+    - &quot;stance value&quot;
+    - &quot;approval value&quot;
+    - &quot;rating value&quot;
+    - &quot;ranking position&quot;
+  mutable_by_smart_vote: false
+```
+
+## 12.2 Weighted value
+
+```yaml
+WEIGHTED_VALUE:
+  source: &quot;Smart Vote computation&quot;
+  inputs:
+    - &quot;raw_value&quot;
+    - &quot;LensDeclaration&quot;
+    - &quot;EkoH snapshot if used&quot;
+  mutable_by_smart_vote: true
+  source_fact: false
+```
+
+## 12.3 Weighting function
+
+The exact implementation may vary by modality, but every weighted reading must conceptually follow:
+
+```text
+weighted_value = f(raw_value, lens_declaration, ekoh_snapshot_context?)
+```
+
+Where:
+
+```yaml
+WEIGHTING_INPUTS:
+  raw_value:
+    required: true
+  lens_declaration:
+    required: true
+  ekoh_snapshot_context:
+    required_if:
+      - &quot;expertise weighting&quot;
+      - &quot;ethics weighting&quot;
+      - &quot;cohort filtering&quot;
+      - &quot;expert threshold&quot;
+```
+
+## 12.4 Hard rule
+
+`weighted_value` is not the canonical civic fact.
+
+It is a derived value.
+
+---
+
+## 13. Current implementation alignment
+
+## 13.1 Current backend concepts
+
+The current backend already contains Smart Vote concepts that must be respected:
+
+```yaml
+CURRENT_SMART_VOTE_MODELS:
+  - &quot;Vote&quot;
+  - &quot;VoteResult&quot;
+  - &quot;VoteModality&quot;
+  - &quot;VoteLedger&quot;
+```
+
+Known current model semantics:
+
+```yaml
+Vote:
+  fields:
+    - &quot;user&quot;
+    - &quot;target_type&quot;
+    - &quot;target_id&quot;
+    - &quot;modality&quot;
+    - &quot;raw_value&quot;
+    - &quot;weighted_value&quot;
+    - &quot;created_at&quot;
+
+VoteResult:
+  fields:
+    - &quot;target_type&quot;
+    - &quot;target_id&quot;
+    - &quot;sum_weighted_value&quot;
+    - &quot;vote_count&quot;
+
+VoteModality:
+  known_values:
+    - &quot;approval&quot;
+    - &quot;ranking&quot;
+    - &quot;rating&quot;
+    - &quot;preferential&quot;
+    - &quot;budget_split&quot;
+
+VoteLedger:
+  role: &quot;append-only hash ledger for vote audit / anchoring&quot;
+```
+
+## 13.2 Current settings
+
+The backend settings include EkoH/Smart Vote apps and scheduled tasks:
+
+```yaml
+CURRENT_EKOH_SMART_VOTE_APPS:
+  - &quot;konnaxion.ekoh&quot;
+  - &quot;konnaxion.smart_vote&quot;
+
+CURRENT_PERIODIC_TASKS:
+  - &quot;ekoh-score-recalc&quot;
+  - &quot;ekoh-contextual-analysis&quot;
+  - &quot;smartvote-vote-aggregate&quot;
+```
+
+These tasks align with the Kintsugi requirement that EkoH context and Smart Vote aggregation remain separate responsibilities. 
+
+## 13.3 Current frontend alignment
+
+The existing EkoH route group already exposes Smart Vote surfaces such as voting weight and Konsensus activity. 
+
+Kintsugi must preserve this separation:
+
+```yaml
+FRONTEND_ALIGNMENT:
+  EKOH_ROUTES:
+    role: &quot;identity, expertise, ethics, voting weight visibility&quot;
+  ETHIKOS_DECIDE_ROUTES:
+    role: &quot;decision workflows and reading publication&quot;
+  ETHIKOS_INSIGHTS_ROUTE:
+    role: &quot;analytics and reading comparison&quot;
+  KONSENSUS:
+    role: &quot;Smart Vote / collective poll center&quot;
+```
+
+---
+
+## 14. Route display contract
+
+## 14.1 `/ethikos/decide/*`
+
+Decision routes may display:
+
+```yaml
+DECIDE_MAY_DISPLAY:
+  - &quot;BaselineResult&quot;
+  - &quot;ReadingResult&quot;
+  - &quot;DecisionRecord&quot;
+  - &quot;Lens summary&quot;
+  - &quot;EkoH weighted interpretation&quot;
+  - &quot;Public vs expert readings&quot;
+```
+
+Decision routes must not hide the baseline.
+
+---
+
+## 14.2 `/ethikos/insights`
+
+Insights may display:
+
+```yaml
+INSIGHTS_MAY_DISPLAY:
+  - &quot;Reading comparison&quot;
+  - &quot;Weighted vs unweighted deltas&quot;
+  - &quot;Score distributions&quot;
+  - &quot;Expertise and ethics breakdowns&quot;
+  - &quot;Consensus evolution&quot;
+  - &quot;Emerging expert signals&quot;
+```
+
+Insights should fetch via a service layer that composes Smart Vote / Kollective data with domain APIs, instead of embedding raw multi-endpoint orchestration inside components. 
+
+---
+
+## 14.3 `/ethikos/pulse/*`
+
+Pulse may display:
+
+```yaml
+PULSE_MAY_DISPLAY:
+  - &quot;participation health&quot;
+  - &quot;current baseline trend&quot;
+  - &quot;reading divergence&quot;
+  - &quot;expert/public gap&quot;
+  - &quot;minimum threshold warnings&quot;
+```
+
+Pulse must not present a weighted result as if it were the only public outcome.
+
+---
+
+## 14.4 `/ethikos/trust/*`
+
+Trust routes may display:
+
+```yaml
+TRUST_MAY_DISPLAY:
+  - &quot;EkoH expertise profile&quot;
+  - &quot;EkoH ethics signals&quot;
+  - &quot;badges&quot;
+  - &quot;credentials&quot;
+  - &quot;voting weight explanation&quot;
+```
+
+Trust routes must not expose confidential EkoH data beyond the configured visibility rules.
+
+---
+
+## 15. API and service contract
+
+This document does not create final API endpoints by itself. Endpoint definitions belong in `07_API_AND_SERVICE_CONTRACTS.md`.
+
+However, the following rules are binding.
+
+## 15.1 Existing endpoints to respect
+
+```yaml
+EXISTING_RELEVANT_ENDPOINTS:
+  ETHIKOS_TOPICS: &quot;/api/ethikos/topics/&quot;
+  ETHIKOS_STANCES: &quot;/api/ethikos/stances/&quot;
+  ETHIKOS_ARGUMENTS: &quot;/api/ethikos/arguments/&quot;
+  KOLLECTIVE_VOTES: &quot;/api/kollective/votes/&quot;
+  SMART_VOTE_API_V1: &quot;/api/v1/smart-vote/&quot;
+  EKOH_API_V1: &quot;/api/v1/ekoh/&quot;
+```
+
+The current backend includes `/api/v1/ekoh/` and `/api/v1/smart-vote/` route includes. 
+
+## 15.2 Service-layer rule
+
+Frontend components must not directly orchestrate readings by fetching multiple low-level endpoints inside page components.
+
+```yaml
+SERVICE_LAYER_REQUIRED:
+  - &quot;services/ethikos&quot;
+  - &quot;services/decide&quot;
+  - &quot;services/insights&quot;
+  - &quot;services/kollective or smart-vote service wrapper&quot;
+```
+
+## 15.3 Reading API shape
+
+A future reading endpoint should expose a shape compatible with:
+
+```json
+{
+  &quot;target_type&quot;: &quot;ethikos_topic&quot;,
+  &quot;target_id&quot;: 123,
+  &quot;baseline&quot;: {
+    &quot;reading_key&quot;: &quot;baseline&quot;,
+    &quot;lens_hash&quot;: &quot;sha256:...&quot;,
+    &quot;snapshot_ref&quot;: null,
+    &quot;computed_at&quot;: &quot;2026-04-25T00:00:00Z&quot;,
+    &quot;results_payload&quot;: {}
+  },
+  &quot;readings&quot;: [
+    {
+      &quot;reading_key&quot;: &quot;ekoh_weighted_v1&quot;,
+      &quot;lens_hash&quot;: &quot;sha256:...&quot;,
+      &quot;snapshot_ref&quot;: &quot;ekoh_snapshot:...&quot;,
+      &quot;computed_at&quot;: &quot;2026-04-25T00:00:00Z&quot;,
+      &quot;results_payload&quot;: {}
+    }
+  ]
+}
+```
+
+---
+
+## 16. Privacy and confidentiality
+
+EkoH data may be sensitive.
+
+A reading may use EkoH information without exposing individual EkoH scores.
+
+## 16.1 Public output rule
+
+Public readings may expose:
+
+```yaml
+PUBLIC_READING_MAY_EXPOSE:
+  - &quot;aggregate weighted result&quot;
+  - &quot;aggregate expert cohort result&quot;
+  - &quot;number of eligible participants&quot;
+  - &quot;threshold met / not met&quot;
+  - &quot;lens explanation&quot;
+```
+
+Public readings must not expose:
+
+```yaml
+PUBLIC_READING_MUST_NOT_EXPOSE:
+  - &quot;individual private EkoH score&quot;
+  - &quot;individual ethics score&quot;
+  - &quot;private cohort eligibility reason&quot;
+  - &quot;identity behind anonymous or pseudonymous setting&quot;
+```
+
+## 16.2 Admin/audit output rule
+
+Admin surfaces may expose more detail only if permissions allow.
+
+```yaml
+ADMIN_AUDIT_MAY_EXPOSE:
+  - &quot;score configuration hash&quot;
+  - &quot;cohort counts&quot;
+  - &quot;excluded-event counts&quot;
+  - &quot;snapshot reference&quot;
+  - &quot;lens declaration&quot;
+  - &quot;computation warnings&quot;
+```
+
+Even admin surfaces should avoid exposing private score details unless there is a defined operational reason.
+
+---
+
+## 17. Thresholds and confidence
+
+A reading should not imply legitimacy when the data is insufficient.
+
+## 17.1 Minimum fields
+
+Every reading payload should include:
+
+```yaml
+READING_CONFIDENCE_FIELDS:
+  sample_size: &quot;integer&quot;
+  eligible_population_size: &quot;integer | null&quot;
+  minimum_threshold_met: &quot;boolean&quot;
+  warnings: &quot;array[string]&quot;
+```
+
+## 17.2 Example warnings
+
+```yaml
+READING_WARNINGS:
+  - &quot;insufficient_sample_size&quot;
+  - &quot;expert_threshold_not_met&quot;
+  - &quot;snapshot_missing&quot;
+  - &quot;lens_deprecated&quot;
+  - &quot;baseline_event_window_too_small&quot;
+  - &quot;cohort_filter_too_narrow&quot;
+```
+
+## 17.3 Expert threshold
+
+Existing references define an expert quorum concept for ethiKos results: a minimum expert vote count with EkoH percentile logic. 
+
+This contract does not hard-code all thresholds, but requires any threshold to be declared in the lens.
+
+---
+
+## 18. Invalidating readings
+
+A reading must be invalidated when the inputs or interpretation contract are no longer reliable.
+
+```yaml
+INVALIDATE_READING_WHEN:
+  - &quot;source events changed after computed_at and reading is not explicitly frozen&quot;
+  - &quot;lens declaration changed&quot;
+  - &quot;lens_hash changed&quot;
+  - &quot;EkoH snapshot was revoked or invalidated&quot;
+  - &quot;score configuration was corrected&quot;
+  - &quot;privacy rule changed&quot;
+  - &quot;bug found in computation&quot;
+```
+
+Invalidation must not delete the old reading unless retention policy permits deletion.
+
+Preferred behavior:
+
+```yaml
+READING_INVALIDATION_BEHAVIOR:
+  - &quot;mark status = invalidated&quot;
+  - &quot;store invalidated_at&quot;
+  - &quot;store invalidation_reason&quot;
+  - &quot;recompute as a new ReadingResult&quot;
+```
+
+---
+
+## 19. Publishing rules
+
+## 19.1 Baseline publishing
+
+Baseline may be published when:
+
+```yaml
+BASELINE_PUBLISHING_REQUIREMENTS:
+  - &quot;source event query succeeded&quot;
+  - &quot;source event count is recorded&quot;
+  - &quot;result payload is generated&quot;
+  - &quot;computed_at is recorded&quot;
+```
+
+## 19.2 Weighted reading publishing
+
+Weighted readings may be published only when:
+
+```yaml
+WEIGHTED_READING_PUBLISHING_REQUIREMENTS:
+  - &quot;LensDeclaration is active&quot;
+  - &quot;lens_hash is recorded&quot;
+  - &quot;snapshot_ref is recorded if EkoH is used&quot;
+  - &quot;source_event_counts are recorded&quot;
+  - &quot;audit_payload is recorded&quot;
+  - &quot;minimum threshold status is explicit&quot;
+  - &quot;baseline remains visible&quot;
+```
+
+## 19.3 UI label rule
+
+Every non-baseline reading must be labeled.
+
+Good labels:
+
+```yaml
+GOOD_LABELS:
+  - &quot;Baseline&quot;
+  - &quot;EkoH-weighted reading&quot;
+  - &quot;Expert cohort reading&quot;
+  - &quot;Public Krowd reading&quot;
+  - &quot;Elite council reading&quot;
+```
+
+Bad labels:
+
+```yaml
+BAD_LABELS:
+  - &quot;The result&quot;
+  - &quot;True result&quot;
+  - &quot;Corrected vote&quot;
+  - &quot;Real consensus&quot;
+  - &quot;Expert truth&quot;
+```
+
+---
+
+## 20. Audit reproducibility
+
+A reading is valid only if it can be recomputed.
+
+## 20.1 Required reproducibility inputs
+
+```yaml
+REPRODUCIBILITY_INPUTS:
+  - &quot;target_type&quot;
+  - &quot;target_id&quot;
+  - &quot;source event query definition&quot;
+  - &quot;source event window&quot;
+  - &quot;source event ids hash&quot;
+  - &quot;lens declaration&quot;
+  - &quot;lens_hash&quot;
+  - &quot;snapshot_ref if used&quot;
+  - &quot;score configuration hash if used&quot;
+  - &quot;code version if available&quot;
+  - &quot;computed_at&quot;
+```
+
+## 20.2 Required reproducibility statement
+
+Every reading documentation or admin detail page should be able to state:
+
+```text
+This reading was computed from [source events] using [lens] at [computed_at], with [snapshot_ref], producing [results_payload].
+```
+
+---
+
+## 21. Data model implications
+
+The following models are either current, proposed, or required by this contract.
+
+## 21.1 Current or already present concepts
+
+```yaml
+CURRENT_OR_EXISTING:
+  - &quot;Vote&quot;
+  - &quot;VoteResult&quot;
+  - &quot;VoteModality&quot;
+  - &quot;VoteLedger&quot;
+  - &quot;UserExpertiseScore&quot;
+  - &quot;UserEthicsScore&quot;
+  - &quot;ExpertiseCategory&quot;
+  - &quot;ScoreConfiguration&quot;
+  - &quot;ScoreHistory&quot;
+  - &quot;EthikosStance&quot;
+```
+
+## 21.2 Proposed Kintsugi models
+
+```yaml
+PROPOSED_FOR_KINTSUGI:
+  - &quot;LensDeclaration&quot;
+  - &quot;ReadingResult&quot;
+  - &quot;ReadingAuditRecord&quot;
+  - &quot;SnapshotRef&quot;
+```
+
+## 21.3 Fields that must not be added to source tables as shortcuts
+
+Do not add these as canonical source fields on `EthikosStance`, `EthikosArgument`, or ballot source tables:
+
+```yaml
+DO_NOT_ADD_AS_SOURCE_TRUTH:
+  - &quot;weighted_result&quot;
+  - &quot;expert_result&quot;
+  - &quot;ekoh_adjusted_value&quot;
+  - &quot;final_truth_value&quot;
+  - &quot;corrected_stance&quot;
+```
+
+If needed, such values belong in `ReadingResult` or another derived artifact.
+
+---
+
+## 22. Example lens declarations
+
+## 22.1 Baseline
+
+```yaml
+reading_key: &quot;baseline&quot;
+label: &quot;Baseline&quot;
+description: &quot;Raw unweighted aggregation of source events.&quot;
+allowed_inputs:
+  - &quot;EthikosStance&quot;
+segmentation_rules: {}
+weighting_rules:
+  type: &quot;none&quot;
+required_snapshot_refs: []
+lens_hash: &quot;sha256:&lt;computed&gt;&quot;
+version: &quot;v1&quot;
+status: &quot;active&quot;
+```
+
+## 22.2 EkoH-weighted reading
+
+```yaml
+reading_key: &quot;ekoh_weighted_v1&quot;
+label: &quot;EkoH-weighted reading&quot;
+description: &quot;Weighted reading using EkoH domain expertise and ethics context.&quot;
+allowed_inputs:
+  - &quot;EthikosStance&quot;
+segmentation_rules:
+  include_users: &quot;all_eligible&quot;
+weighting_rules:
+  type: &quot;ekoh_domain_expertise_and_ethics&quot;
+  expertise_source: &quot;UserExpertiseScore&quot;
+  ethics_source: &quot;UserEthicsScore&quot;
+  cap_source: &quot;ScoreConfiguration&quot;
+required_snapshot_refs:
+  - &quot;ekoh_snapshot_id&quot;
+  - &quot;score_configuration_hash&quot;
+lens_hash: &quot;sha256:&lt;computed&gt;&quot;
+version: &quot;v1&quot;
+status: &quot;active&quot;
+```
+
+## 22.3 Expert cohort reading
+
+```yaml
+reading_key: &quot;expert_cohort_v1&quot;
+label: &quot;Expert cohort reading&quot;
+description: &quot;Filtered reading using participants above an EkoH expertise threshold in the topic domain.&quot;
+allowed_inputs:
+  - &quot;EthikosStance&quot;
+segmentation_rules:
+  cohort: &quot;experts&quot;
+  expertise_percentile_min: 75
+weighting_rules:
+  type: &quot;none_or_declared&quot;
+required_snapshot_refs:
+  - &quot;ekoh_snapshot_id&quot;
+lens_hash: &quot;sha256:&lt;computed&gt;&quot;
+version: &quot;v1&quot;
+status: &quot;active&quot;
+```
+
+---
+
+## 23. Example reading result
+
+```json
+{
+  &quot;reading_key&quot;: &quot;ekoh_weighted_v1&quot;,
+  &quot;lens_hash&quot;: &quot;sha256:7b5f...&quot;,
+  &quot;snapshot_ref&quot;: &quot;ekoh_snapshot:2026-04-25T15:00:00Z&quot;,
+  &quot;target_type&quot;: &quot;ethikos_topic&quot;,
+  &quot;target_id&quot;: 42,
+  &quot;computed_at&quot;: &quot;2026-04-25T15:30:00Z&quot;,
+  &quot;source_event_window&quot;: {
+    &quot;from&quot;: &quot;2026-04-01T00:00:00Z&quot;,
+    &quot;to&quot;: &quot;2026-04-25T15:29:59Z&quot;
+  },
+  &quot;source_event_counts&quot;: {
+    &quot;EthikosStance&quot;: 184,
+    &quot;excluded&quot;: 3
+  },
+  &quot;results_payload&quot;: {
+    &quot;summary&quot;: {
+      &quot;support&quot;: 0.68,
+      &quot;oppose&quot;: 0.21,
+      &quot;neutral&quot;: 0.11,
+      &quot;total_participants&quot;: 181
+    },
+    &quot;distribution&quot;: [
+      { &quot;bucket&quot;: &quot;-3&quot;, &quot;weighted_share&quot;: 0.05 },
+      { &quot;bucket&quot;: &quot;-2&quot;, &quot;weighted_share&quot;: 0.07 },
+      { &quot;bucket&quot;: &quot;-1&quot;, &quot;weighted_share&quot;: 0.09 },
+      { &quot;bucket&quot;: &quot;0&quot;, &quot;weighted_share&quot;: 0.11 },
+      { &quot;bucket&quot;: &quot;+1&quot;, &quot;weighted_share&quot;: 0.19 },
+      { &quot;bucket&quot;: &quot;+2&quot;, &quot;weighted_share&quot;: 0.24 },
+      { &quot;bucket&quot;: &quot;+3&quot;, &quot;weighted_share&quot;: 0.25 }
+    ],
+    &quot;confidence&quot;: {
+      &quot;sample_size&quot;: 181,
+      &quot;minimum_threshold_met&quot;: true,
+      &quot;notes&quot;: []
+    }
+  },
+  &quot;audit_payload&quot;: {
+    &quot;lens_hash&quot;: &quot;sha256:7b5f...&quot;,
+    &quot;input_event_ids_hash&quot;: &quot;sha256:91ab...&quot;,
+    &quot;snapshot_ref&quot;: &quot;ekoh_snapshot:2026-04-25T15:00:00Z&quot;,
+    &quot;score_configuration_hash&quot;: &quot;sha256:f310...&quot;,
+    &quot;computed_by&quot;: &quot;smart_vote&quot;,
+    &quot;warnings&quot;: []
+  },
+  &quot;status&quot;: &quot;published&quot;
+}
+```
+
+---
+
+## 24. Anti-drift rules
+
+```yaml
+ANTI_DRIFT_RULES:
+  - &quot;Do not call a weighted reading the baseline.&quot;
+  - &quot;Do not hide the baseline when displaying weighted readings.&quot;
+  - &quot;Do not let Smart Vote mutate Korum records.&quot;
+  - &quot;Do not let Smart Vote mutate Konsultations records.&quot;
+  - &quot;Do not let EkoH mutate votes, stances, or ballots.&quot;
+  - &quot;Do not treat EkoH as the voting engine.&quot;
+  - &quot;Do not treat EthikosStance as a Smart Vote reading.&quot;
+  - &quot;Do not treat ArgumentImpactVote as an EthikosStance.&quot;
+  - &quot;Do not treat ArgumentImpactVote as a Smart Vote ballot.&quot;
+  - &quot;Do not store weighted outcomes as canonical consultation results.&quot;
+  - &quot;Do not publish an EkoH-derived reading without snapshot_ref.&quot;
+  - &quot;Do not publish a non-baseline reading without lens_hash.&quot;
+  - &quot;Do not silently recompute published readings without new computed_at.&quot;
+  - &quot;Do not expose individual private EkoH scores in public reading payloads.&quot;
+```
+
+---
+
+## 25. Non-goals
+
+This document does not:
+
+* define all Smart Vote UI screens;
+* replace the Smart Vote technical specification;
+* replace the EkoH schema documentation;
+* define every database migration;
+* define all endpoints;
+* define Kialo-style argument impact voting in full;
+* define implementation tasks;
+* authorize direct OSS integration;
+* authorize any full external merge.
+
+---
+
+## 26. Acceptance checklist
+
+A Smart Vote/EkoH reading implementation is acceptable only if all of the following are true:
+
+```yaml
+ACCEPTANCE_CHECKLIST:
+  baseline:
+    - &quot;Baseline result exists or is explicitly unavailable.&quot;
+    - &quot;Baseline is raw and unweighted.&quot;
+    - &quot;Baseline remains visible when readings are shown.&quot;
+
+  lens:
+    - &quot;Every non-baseline reading has a LensDeclaration.&quot;
+    - &quot;Every lens has a stable lens_hash.&quot;
+    - &quot;Allowed inputs are explicit.&quot;
+    - &quot;Weighting rules are explicit.&quot;
+    - &quot;Segmentation rules are explicit.&quot;
+
+  ekoh:
+    - &quot;EkoH-derived readings include snapshot_ref.&quot;
+    - &quot;EkoH-derived readings include score/config audit references.&quot;
+    - &quot;Private EkoH data is not leaked in public payloads.&quot;
+
+  audit:
+    - &quot;computed_at is stored.&quot;
+    - &quot;source_event_counts are stored.&quot;
+    - &quot;results_payload is stored.&quot;
+    - &quot;audit_payload is stored.&quot;
+    - &quot;reading can be recomputed.&quot;
+
+  ownership:
+    - &quot;Smart Vote does not mutate upstream Korum/Konsultations facts.&quot;
+    - &quot;EkoH does not act as the voting engine.&quot;
+    - &quot;Weighted values are stored as derived artifacts.&quot;
+```
+
+---
+
+## 27. Related documents
+
+```yaml
+RELATED_DOCS:
+  - &quot;00_KINTSUGI_START_HERE.md&quot;
+  - &quot;02_SOURCE_OF_TRUTH_AND_DRIFT_CONTROL.md&quot;
+  - &quot;03_BOUNDARIES_AND_OWNERSHIP_CONTRACTS.md&quot;
+  - &quot;04_CANONICAL_NAMING_AND_VARIABLES.md&quot;
+  - &quot;06_ROUTE_BY_ROUTE_ETHIKOS_UPGRADE_PLAN.md&quot;
+  - &quot;07_API_AND_SERVICE_CONTRACTS.md&quot;
+  - &quot;08_DATA_MODEL_AND_MIGRATION_PLAN.md&quot;
+  - &quot;12_CANONICAL_OBJECTS_AND_EVENTS.md&quot;
+  - &quot;13_PAYLOAD_SHAPES_AND_SERIALIZER_CONTRACTS.md&quot;
+  - &quot;14_FRONTEND_ALIGNMENT_CONTRACT.md&quot;
+  - &quot;15_BACKEND_ALIGNMENT_CONTRACT.md&quot;
+  - &quot;20_AI_GENERATION_GUARDRAILS.md&quot;
+  - &quot;21_KIALO_STYLE_ARGUMENT_MAPPING_CONTRACT.md&quot;
+```
+
+---
+
+## 28. Final normative summary
+
+```yaml
+FINAL_CONTRACT:
+  SINGLE_TRUTH: &quot;source events&quot;
+  MULTIPLE_READINGS: &quot;declared Smart Vote outputs&quot;
+  BASELINE: &quot;raw unweighted aggregation&quot;
+  WEIGHTED_RESULT: &quot;derived reading&quot;
+  SMART_VOTE_ROLE: &quot;compute and publish readings&quot;
+  EKOH_ROLE: &quot;provide expertise/ethics context&quot;
+  EKOH_IS_VOTING_ENGINE: false
+  SMART_VOTE_MUTATES_SOURCE_FACTS: false
+  EKO_H_SNAPSHOT_REQUIRED_WHEN_USED: true
+  LENS_HASH_REQUIRED_FOR_EVERY_READING: true
+  BASELINE_MUST_REMAIN_VISIBLE: true
+```
+
+---
+
+## V4.1 clarification — rating disclosure is not reading ownership
+
+EkoH rating visibility and Smart Vote contextual influence are different contracts. Smart Vote may compute aggregate declared readings from EkoH context while participant-level EkoH-derived detail returned to a caller MUST respect the EkoH disclosure decision. This does not alter the baseline, source stances, or reading formula. See `27_EKOH_RATING_VISIBILITY_AND_ACCESS_CONTRACT.md`.
+
+</pre></body></html>

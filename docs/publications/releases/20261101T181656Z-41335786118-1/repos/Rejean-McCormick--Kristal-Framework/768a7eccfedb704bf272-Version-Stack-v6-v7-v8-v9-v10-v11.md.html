@@ -1,0 +1,27 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Version-Stack-v6-v7-v8-v9-v10-v11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Version-Stack-v6-v7-v8-v9-v10-v11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 9797f06582b2e592</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Version-Stack-v6-v7-v8-v9-v10-v11' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Version stack — v6 through v11
+
+| Version | Capability added | Previous layer preserved? |
+|---|---|---|
+| **v6** | Portable epistemic state, provenance/assertions | Original form remains valid |
+| **v7** | KQ/KP/KA/KS opaque semantic IDs, registries and mappings | Yes |
+| **v8** | Language/lexical layers, exact query, read models | Yes |
+| **v9** | Logical Artifacts, commitments, state snapshots and polymorphic storage | Yes |
+| **v10** | Hosting nodes, publication, discovery, read surfaces | Yes |
+| **v11 draft.4** | Strict canonical semantic identity, separated multilingual dictionary catalogs and Wikidata crosswalk + diK coverage/migration contracts | **Yes** (opt-in for new v11 canonical graphs) |
+
+### Invariants across all layers
+
+```text
+IDENTITY != LABEL != EXTERNAL ID
+LOGICAL COMMITMENT != PHYSICAL BLOB DIGEST
+SEMANTIC STATE != HOST BINDING != DISCOVERY DIRECTORY
+CANONICAL GRAPH != LEXICAL DICTIONARY != CROSSWALK
+VALIDATION != DOMAIN TRUTH != PUBLICATION AUTHORITY
+```
+
+The versions have distinct machine formats and conformance profiles; this wiki does not pretend that a v6 word-based source *already conforms* to v11 canonical strict rules. An explicit migration can produce a new v11 revision **without deleting the old state**.
+
+**Dive into:** [[Kristal-v11]] · [[Kristal-v10]] · [[Kristal-v9]] · [[Kristal-v8]].
+
+**Draft.4 is an integration/tooling clarification**: its KQ/KP schema/TCK rules remain byte-identical to draft.3; this does not merge diK or Kit into Framework.
+</pre></body></html>

@@ -1,0 +1,45 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Kompose/wiki/Home | commit: ec94ee500739b0078a14ee9cf67d34d46d2087e4 | SHA-256: de68d79054a6946ed6facc05afb3e314f7381e6ac6d80665e8ca3c2f5e2933f2 -->
+
+# KOMPOSE — Reference Wiki
+
+**KOMPOSE `0.2.0`: educational capsule preparation, validation, and local simulation.** It is **not a product ready** for use with real students. No hosted server, school identity system, classroom frontend, operational Orgo client, or real student permissions are implemented here.
+
+> **Operational boundary (ADR 0008): Orgo is the sole authority for real Tandem Case/Task workflows, transitions, dispatch, permissions, and reconciliation.** KOMPOSE's historical session state machine and mission coordination are **pure local reference simulations**. Independence from KOR (ADR 0006) does not grant KOMPOSE authority parallel to Orgo.
+
+## Where to start
+
+| Goal | Page |
+|---|---|
+| Understand product scope and what is actually implemented | [[Overview]] · [[Project-Status]] |
+| Run tests and the fictional CLI | [[Quick-Start]] · [[Testing-and-Validation]] |
+| Understand Orgo vs. KOMPOSE vs. Ekole vs. Kontexte | [[Tandem-Orgo-Boundary]] |
+| Try the B6 Kontexte bakery planning preview | [[Kontexte-B6-Preview]] |
+| Verify a synthetic Ekole P1 teacher preview | [[Ekole-P1-Preview]] |
+| Review architecture and proposed API definitions | [[Architecture]] · [[API-and-Contracts]] |
+| Review student protections and unfinished work | [[Security-Privacy-and-Fairness]] · [[Roadmap]] |
+
+## What the source demonstrates
+
+```mermaid
+flowchart LR
+  K[Kontexte synthetic definitions] --> P[KOMPOSE preview and local validation]
+  P --> B[Non-executable scenario plan / mock replay]
+  E[Ekole synthetic teacher-preview JSON] --> V[KOMPOSE structure-only verification]
+  B -. proposed integration only .-> O[Orgo: sole operational authority]
+  V -. no permission or release proof .-> O
+  UI[KOR or other optional UI] -. future adapter .-> O
+```
+
+KOMPOSE ships a deterministic Kristal reader, fictional Rivers capsule, local state and dependency examples, B6 plan compilation, and an Ekole P1 synthetic input gate. **No real Case/Task is created**, no real fragment is delivered, and no school identity or WorldRelease is verified.
+
+## Non-negotiable protections
+
+- A capsule code is **not** school authentication; `--demo` is never authorization.
+- No student's grade, ranking, accommodation, private constraint, or secret fragment may leak into an audience-facing preview.
+- Role assignments and sensitive decisions require a teacher-controlled, actually authorized workflow before live use.
+- Kristals contain sourced, versioned, prewritten answers: **no generative AI**. All historical demo content is fictional.
+- A successful schema or unit test is **not evidence of real operational readiness**.
+
+The normative material is in the source repository's `contracts/`, `docs/`, and tests; this English wiki is a separate optional checkout and is not evidence of published GitHub pages.
+
+[[Overview|Overview]] · [[Project-Status|Implementation status]] · [[Tandem-Orgo-Boundary|Authority boundaries]] · [[FAQ]]

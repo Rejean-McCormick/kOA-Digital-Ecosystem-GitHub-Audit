@@ -1,0 +1,25 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Mediatheque · docs/03_folder_architecture.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Mediatheque · docs/03_folder_architecture.md</h1><p class='meta'><small>Rejean-McCormick/Mediatheque · 21e8d732e669 · SHA-256 2cd99fdbe3389235</small><br><a href='https://github.com/Rejean-McCormick/Mediatheque/blob/21e8d732e6690ab15ced87179eb5b152386fe716/docs/03_folder_architecture.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture des dossiers
+
+```text
+workspace/
+├── mediatheque/
+│   ├── 05_TOOLS/
+│   ├── 06_GUI/
+│   ├── schemas/sqlite/
+│   ├── contracts/
+│   ├── docs/
+│   └── tests/
+└── content/
+    ├── 01_DB/
+    ├── 02_STORAGE/
+    ├── 03_IMPORTS/
+    ├── 04_EXPORTS/
+    ├── 07_BACKUPS/
+    ├── 08_LOGS/
+    ├── kristals/
+    ├── documents/
+    └── config.toml
+```
+
+`mediatheque/` est versionnable et ne contient pas de données privées. `content/` est l&#x27;état local et doit rester privé.
+</pre></body></html>

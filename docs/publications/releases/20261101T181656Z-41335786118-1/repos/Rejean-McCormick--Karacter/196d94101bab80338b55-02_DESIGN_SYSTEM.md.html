@@ -1,0 +1,52 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Karacter · docs/ux/02_DESIGN_SYSTEM.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Karacter · docs/ux/02_DESIGN_SYSTEM.md</h1><p class='meta'><small>Rejean-McCormick/Karacter · c50db0afda42 · SHA-256 252010b1df27e197</small><br><a href='https://github.com/Rejean-McCormick/Karacter/blob/c50db0afda429e4be45e41f67658061e49e9282f/docs/ux/02_DESIGN_SYSTEM.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Design system and interaction standards
+
+## Visual direction
+
+Karacter&#x27;s current identity is a calm creative studio: warm off-white backgrounds, dark ink, teal accent `#1e6864`, friendly rounded cards and restrained decorative elements. Keep the supplied Karacter SVG logo. Avoid gamification that assigns value or ranking to character personalities.
+
+## Tokens (reference starting point)
+
+| Token | Suggested starting value | Notes |
+|---|---|---|
+| `color.accent` | `#1e6864` | Brand teal; check contrast in use |
+| `color.text` | `#20352f` | Readable body text |
+| `color.background` | `#f6f7f1` | Warm neutral |
+| `color.surface` | `#ffffff` | Cards and dialogs |
+| `color.border` | `#dae5dc` | Subtle dividers |
+| `radius.card` | `20px` | Consistent card shape |
+| `radius.control` | `11–12px` | Inputs and buttons |
+| `space.unit` | `4px` | Consistent spacing scale |
+
+The token values are design guidance, not proof of accessible contrast. Verify WCAG contrast against actual backgrounds.
+
+## Primary components
+
+- `CharacterPicker`, `CollectionFilter`, `LanguageToggle`, `DepthToggle`.
+- `PolarityPair`: two named sliders, 0..6 labels, context details and screen reader announcements.
+- `NarrativeFieldGroup`, `RelationshipEditor`, `MilestoneTimeline`.
+- `ScenarioPicker`, `StakesSelector`, `ReactionCandidateCard`, `EvidenceDisclosure`.
+- `ComparisonColumns`, `ThemeSelector`, `PromptEditor`, `ImageSlot`, `ImportPreviewDialog`.
+
+## Polarity pair interaction
+
+Both controls occupy equivalent visual space and have the same typography. Avoid green-versus-red or &quot;good-versus-bad&quot; encoding. Display e.g. **Caution 5 / Boldness 1** with neutral colors. A centered 3/3 is not a moral ideal. Numeric information must be visible without interpreting color or thumb position.
+
+## Responsive behavior
+
+- Mobile single-column, generous touch target, no horizontal overflow in axis cards.
+- Compare A/B stacks vertically; scenario context remains visible or easily expandable.
+- Gallery resizes thumbnail grid without stretching/cropping original display unpredictably.
+- Keyboard and reduced-motion preferences work across breakpoint changes.
+
+## Interaction copy rules
+
+- Say &quot;possible response&quot; rather than &quot;will react&quot;.
+- Say &quot;preferred approach&quot; rather than &quot;ability&quot; or &quot;personality score&quot;.
+- Say &quot;can help / can complicate&quot; rather than &quot;strength / flaw&quot; for axes.
+- &quot;Saved locally&quot; does not mean &quot;backed up&quot;. Show an explicit backup reminder where appropriate.
+- When a user&#x27;s manual text would be overwritten, state exactly what changes and offer Cancel.
+
+## Accessible interaction
+
+See [accessibility](../technical/04_I18N_ACCESSIBILITY.md). All slider outputs use semantic `&lt;output&gt;` or equivalent, linked labels, descriptive `aria-valuetext`, keyboard Arrow/Home/End and status changes. Modals trap focus and restore it on close.
+</pre></body></html>

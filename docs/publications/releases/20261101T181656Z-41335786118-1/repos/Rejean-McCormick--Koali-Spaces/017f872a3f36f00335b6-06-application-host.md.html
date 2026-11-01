@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/06-application-host.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/06-application-host.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 4aee0c65312fb7f6</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/01-core-architecture/06-application-host.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 6. ApplicationHost : contrat fonctionnel
+
+`ApplicationHost` encadre une `local_module_surface` **après** résolution côté serveur.
+
+Il possède uniquement :
+
+- le cadre visuel Koali minimal ;
+- le mode framed/immersive ;
+- l&#x27;état de chargement de l&#x27;embed ;
+- l&#x27;affichage de l&#x27;état public de disponibilité ;
+- la commande de retour à Koali ;
+- la gestion bornée des erreurs d&#x27;embed ;
+- les événements de télémétrie de présentation ;
+- les contrôles d&#x27;accessibilité propres au host.
+
+Il reçoit un `SurfaceDescriptorPublic`. Il ne connaît pas `runtimeRef`, ne choisit pas un port et ne démarre pas le runtime.
+
+Il ne possède pas :
+
+- l&#x27;état de session métier du module ;
+- les permissions métier ;
+- les données métier ;
+- le router interne du module ;
+- les formulaires du module ;
+- le stockage du module ;
+- les décisions du module ;
+- le cycle de vie métier du module ;
+- le lifecycle système du runtime.
+
+`LOCK-KS-SURF-018` — **ApplicationHost n&#x27;est pas un BFF métier.** Toute projection additionnelle doit rester non autoritative, bornée et explicitement déclarée.
+
+`LOCK-KS-SURF-019` — **ApplicationHost n&#x27;inspecte pas le DOM interne de l&#x27;application hostée.**
+
+`LOCK-KS-SURF-020` — **ApplicationHost n&#x27;injecte pas de JavaScript dans l&#x27;application hostée.**
+
+`LOCK-KS-SURF-021` — **ApplicationHost ne dépend pas d&#x27;un CDN ou d&#x27;un asset runtime distant pour fonctionner.**
+</pre></body></html>

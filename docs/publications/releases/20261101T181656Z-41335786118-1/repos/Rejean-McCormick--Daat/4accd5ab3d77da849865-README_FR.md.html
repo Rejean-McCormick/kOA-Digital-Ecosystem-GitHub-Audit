@@ -1,0 +1,23 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Daat · README_FR.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Daat · README_FR.md</h1><p class='meta'><small>Rejean-McCormick/Daat · 24d288b040d3 · SHA-256 b8d9ca403db147f3</small><br><a href='https://github.com/Rejean-McCormick/Daat/blob/24d288b040d345405c508eb650d40a6c8856cf2a/README_FR.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># DaaT — Documentation fondatrice
+
+**Statut : spécification technique de construction, pas encore service déployé.**
+
+DaaT est la frontière d&#x27;interopérabilité des systèmes externes. Chaque application peut se connecter à l&#x27;écosystème sans abandonner son architecture : un système déjà aligné utilise un DaaT minimal, un système avec des contrats différents utilise un adaptateur explicite plus élaboré. Le **coût sémantique de l&#x27;adaptation** est un indicateur de distance d&#x27;alignement, jamais une mesure de qualité ou une raison d&#x27;exclure une application.
+
+La documentation technique canonique est en anglais pour faciliter la construction par une IA et la contribution d&#x27;autres développeurs; [la vision fondatrice en français](docs/fr/VISION.md) précise l&#x27;intention.
+
+## Lecture recommandée
+
+1. [Instructions pour l&#x27;IA de construction](AGENTS.md) : contraintes, interdits et validation.
+2. [État actuel vérifié dans les snapshots](docs/01-SOURCE-BASELINE.md) : ce qui existe réellement dans IK et Kristal.
+3. [Architecture](docs/03-ARCHITECTURE.md) : qui est propriétaire de quoi.
+4. [Profils de mapping](docs/06-MAPPING-PROFILES.md) : transformations déterministes et traçables.
+5. [Mesure de l&#x27;alignement](docs/07-ALIGNMENT-METRICS.md) : couverture, transformations, pertes et conformité.
+6. [Sécurité](docs/05-ADMISSION-AND-SECURITY.md) : autorisation et frontières de confiance.
+7. [Plan d&#x27;implémentation](docs/11-IMPLEMENTATION-PLAN.md) et [backlog pour l&#x27;IA](docs/15-AI-BUILD-BACKLOG.md).
+8. [Décisions en suspens](docs/14-OPEN-DECISIONS.md) : les sujets à ne pas inventer.
+
+## Point important
+
+Les documents distinguent les contrats **déjà établis** — notamment l&#x27;adaptateur DaaT/Kristal d&#x27;Interaction Kernel — de l&#x27;extension **proposée** vers un DaaT général pour les systèmes externes. Ils n&#x27;affirment pas qu&#x27;un service DaaT complet existe ou que l&#x27;ensemble de l&#x27;écosystème est déjà aligné.
+</pre></body></html>

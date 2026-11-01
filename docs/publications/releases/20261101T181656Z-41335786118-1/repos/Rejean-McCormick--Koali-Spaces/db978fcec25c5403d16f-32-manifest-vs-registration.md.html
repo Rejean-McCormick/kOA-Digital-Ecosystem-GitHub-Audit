@@ -1,0 +1,46 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/03-routing-and-registry/32-manifest-vs-registration.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/03-routing-and-registry/32-manifest-vs-registration.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 51e336023e597149</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/03-routing-and-registry/32-manifest-vs-registration.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 32. Séparation des contrats : manifest vs registration
+
+## 32.1 Module interface manifest
+
+Rôle : présentation déclarative du module.
+
+Il peut décrire, selon le contrat canonique applicable :
+
+- routes ;
+- sidebar ;
+- top-bar widgets ;
+- labels ;
+- capability requirements ;
+- offline presentation behavior.
+
+Il ne doit pas contenir de secret ni devenir une configuration privilégiée de runtime.
+
+## 32.2 Local surface registration
+
+Rôle Koali local : relier une identité de module validée à un runtime local explicitement admis.
+
+Exemple cible non canonique kOA :
+
+```json
+{
+  &quot;schema_version&quot;: 1,
+  &quot;module_id&quot;: &quot;konnaxion&quot;,
+  &quot;surface_kind&quot;: &quot;local_module_surface&quot;,
+  &quot;runtime_ref&quot;: &quot;service:konnaxion-web&quot;,
+  &quot;health_ref&quot;: &quot;service:konnaxion-health&quot;,
+  &quot;presentation&quot;: {
+    &quot;default_mode&quot;: &quot;framed&quot;,
+    &quot;immersive_allowed&quot;: true,
+    &quot;context_accent_token&quot;: &quot;module.konnaxion&quot;
+  }
+}
+```
+
+`runtime_ref` doit être résolu côté serveur à partir d&#x27;une configuration admise. Le navigateur ne reçoit pas de secret.
+
+`LOCK-KS-SURF-107` — **`runtime_ref` n&#x27;est pas une capability et n&#x27;accorde pas d&#x27;autorisation.**
+
+`LOCK-KS-SURF-108` — **Un module manifest et une local surface registration doivent correspondre au même `module_id` stable avant activation.**
+
+---
+</pre></body></html>

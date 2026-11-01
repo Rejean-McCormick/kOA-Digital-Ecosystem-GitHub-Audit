@@ -1,0 +1,20 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/30-artifacts/runtime-activation-state.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/30-artifacts/runtime-activation-state.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 3194d2d1a0df6d48</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/30-artifacts/runtime-activation-state.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Runtime Activation State — deprecated compatibility artifact
+
+**Status:** Deprecated for kOA-Linux Runtime Pack activation.
+
+The current kOA-Linux contracts already assign authoritative Runtime Pack state to `kristal_runtime`, including:
+
+- `runtime_pack_verification_record`;
+- `active_runtime_pack_record`;
+- activation receipts;
+- rollback receipts;
+- runtime health state.
+
+Digital Ecosystem MUST NOT create another authoritative Runtime Activation State beside those records.
+
+kOA Node Agent may execute the narrow privileged node-local transition when required, but its receipt does not replace `kristal_runtime`&#x27;s active-state record.
+
+For standalone deployments outside kOA-Linux, the deployment may define another owner, but that owner remains deployment-specific rather than a universal Digital Ecosystem artifact.
+
+The former `schemas/runtime-activation-state.schema.json` is retained only for migration readers.
+</pre></body></html>

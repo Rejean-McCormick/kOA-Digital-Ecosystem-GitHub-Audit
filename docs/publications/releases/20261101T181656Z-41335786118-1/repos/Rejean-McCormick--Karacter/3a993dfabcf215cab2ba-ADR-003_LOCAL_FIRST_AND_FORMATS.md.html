@@ -1,0 +1,18 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Karacter · docs/decisions/ADR-003_LOCAL_FIRST_AND_FORMATS.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Karacter · docs/decisions/ADR-003_LOCAL_FIRST_AND_FORMATS.md</h1><p class='meta'><small>Rejean-McCormick/Karacter · c50db0afda42 · SHA-256 8483f0175e9f31c5</small><br><a href='https://github.com/Rejean-McCormick/Karacter/blob/c50db0afda429e4be45e41f67658061e49e9282f/docs/decisions/ADR-003_LOCAL_FIRST_AND_FORMATS.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR-003: Local-first character ownership and portable backups
+
+**Status:** Confirmed preference for file-based character sheets; proposed v6 schema mechanics.
+
+## Decision
+
+The distributed application operates without a mandatory server. Editable UTF-8 TXT sheets remain supported, while JSON/ZIP full backups carry all characters, relationships, scenarios, user edits and image bytes. Imported data is validated before replacing saved data.
+
+## Consequences
+
+- Browser storage is not a backup; export is prominent.
+- Imported images are kept in an isolated browser blob store and exported separately as bytes.
+- Both v5 and v6 data are recognized by version, not guessed from numbers.
+- Changes to schemas require migrations and fixture tests.
+- `file://` quirks must be tested and clearly explained.
+
+See [data and storage](../technical/02_DATA_AND_STORAGE.md).
+</pre></body></html>

@@ -1,0 +1,31 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · Tandem-Orgo-Boundary.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · Tandem-Orgo-Boundary.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · ec94ee500739 · SHA-256 daa8e2c061fbefe0</small><br><a href='https://github.com/Rejean-McCormick/Kompose/wiki/Tandem-Orgo-Boundary' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tandem — Orgo Operational Authority (ADR 0008)
+
+**Adopted decision:** in real Tandem operations, **Orgo is the sole owner** of Cases, Tasks, Signals, workflow transitions, dispatch, operational authorization, and reconciliation. **KOMPOSE does not implement a parallel live orchestrator.** The older pure `lifecycle` and `coordination` functions remain valid for reference tests and fictional simulations only.
+
+This is separate from **ADR 0006**: KOMPOSE can be independent of the optional KOR interface while still having **no authority to replace Orgo**.
+
+| Component | Owns | KOMPOSE involvement |
+|---|---|---|
+| Kontexte | Mission, role, step, curriculum and fragment *references* | Read and validate synthetic sources; compile a plan without changes |
+| KOMPOSE | Local rules, validation, preview and simulated receipt checks | No operational Case/Task/Signal state, no real pupil assignment |
+| Orgo | Actual task state, transitions, dispatch, authorization and reconciliation | Future integration only, no network API here |
+| Orgo_Worlds | Tenant/World/WorldRelease | Fixture UUID syntax checks do not verify tenancy or release |
+| Ekole | Authorized teacher and learning projections | Strict synthetic preview shape check only |
+| KOR | Optional narrative presentation | Non-operational example manifest only |
+
+## No accidental authority transfer
+
+- An `authority: orgo` value in a local JSON file is **not** a signed authorization token.
+- `teacher_authorized: true` in `orgo_mock_fixture` receipts is a **test assertion**, not proof that a teacher approved an operation.
+- A simulated `step_completed` or `done` cannot prove a learning competency was acquired.
+- `verify-ekole-preview` reports `runtime_admitted: false`, `permissions_verified: false`, and `world_release_verified: false` even for structurally valid input.
+- No real learner identities, confidential teacher constraints, content of hidden fragments, or live rights are accepted by the P1 preview contract.
+
+## To connect a real Orgo environment
+
+A separate authorized project must supply authenticated tenant/World boundaries, verified workflow and release versions, teacher review, transactional state, anti-replay/idempotence, delivery controls, negative authorization tests, and a rollback plan. **No automatic `apply` behavior is justified by this wiki or by the existing CLI.**
+
+**Repository references:** `docs/adr/0008-tandem-orgo-operational-authority.md`, `docs/TANDEM_P1_ORGO_EKOLE_ALIGNMENT.md`, `docs/b6/ARCHITECTURE.md`, and `docs/CURRENT_IMPLEMENTATION_AND_BOUNDARIES.md`.
+
+[[Home|← Home]] · [[Kontexte-B6-Preview|B6 preview]] · [[Ekole-P1-Preview|Ekole preview]]
+</pre></body></html>

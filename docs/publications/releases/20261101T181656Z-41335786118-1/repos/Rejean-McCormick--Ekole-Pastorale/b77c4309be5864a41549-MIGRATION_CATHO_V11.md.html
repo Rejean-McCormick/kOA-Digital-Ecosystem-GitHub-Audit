@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Ekole-Pastorale · docs/MIGRATION_CATHO_V11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Ekole-Pastorale · docs/MIGRATION_CATHO_V11.md</h1><p class='meta'><small>Rejean-McCormick/Ekole-Pastorale · 0ca3e9ad06de · SHA-256 03d307ec56c9663a</small><br><a href='https://github.com/Rejean-McCormick/Ekole-Pastorale/blob/0ca3e9ad06de7a41940c3459cdb8183e3cf2643a/docs/MIGRATION_CATHO_V11.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Projet de migration contrôlée du patrimoine A-Kristal-Catho vers Framework v11
+
+## Ce qui existe à ce stade
+
+Les deux artefacts historiques suivants ont été identifiés et adressés **par empreintes exactes** dans `federation/catho-legacy-bridge.json` : `canon/domain/personnes-reconnaissances.json` et `knowledge-base/corpus/corpus-chretien.semantic.json`. Le premier contient 38 docteurs reconnus dans la taxonomie donnée. Le second contient 138 références documentaires. Les assertions bibliques, théologiques, et les titres d&#x27;auteurs font partie de ce corpus historique, qui n&#x27;est **pas** un graphe v11 natif. Les ressemblances textuelles ne valent pas approbation d&#x27;identité.
+
+## Processus recommandé, sans migration destructive
+
+**Phase 1 — Inventaire** : classer les artefacts existants, états, sources, licences et statuts historiques. Garder les octets d&#x27;origine et leurs SHA256 comme reçus immuables.
+
+**Phase 2 — Définir les propriétaires** : séparer le patrimoine des textes, l&#x27;index des personnes et œuvres, les dossiers de saints et les séquences pédagogiques. Une école ne possède pas automatiquement toutes ces connaissances.
+
+**Phase 3 — Nouveaux namespaces** : générer les KQ/KP/KA/KS v11 à partir des entités réellement relues. Les chaînes historiques telles que `urn:kristal:catho:personne:*` sont conservées comme références historiques, jamais renumérotées ni prises pour des KQ valables.
+
+**Phase 4 — Table de correspondances révisée** : enregistrer l&#x27;ancienne référence, la nouvelle identité locale, le type de relation, sa preuve, le réviseur, la date et le statut. Autoriser les statuts *non résolu*, *candidat*, *confirmé*, *rejeté*; aucun texte de libellé ne déclenche une relation confirmée.
+
+**Phase 5 — Test de cohérence** : check-v11, validation Framework, contrôle du catalogue linguistique, couverture des assertions et comparaison des engagements d&#x27;état. Pour les saints, distinguer l&#x27;écrit authentifié et le récit hagiographique.
+
+**Phase 6 — Actualiser les liens pédagogiques** : seules des références vers des états connus (state_ref, logical State Commitment et identifiants namespacés) peuvent alimenter des cours par l&#x27;interface fédérée. La provenance doit être exportée avec le cours et une nouvelle décision est nécessaire lors de l&#x27;évolution d&#x27;une source.
+
+L&#x27;audit actuel `auditer_catho.py` n&#x27;effectue **que la phase 1 pour deux artefacts** : il ne doit jamais être présenté comme une migration finale.
+</pre></body></html>

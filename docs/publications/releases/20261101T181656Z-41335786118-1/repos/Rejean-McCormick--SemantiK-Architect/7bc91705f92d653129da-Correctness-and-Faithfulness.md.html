@@ -1,0 +1,60 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · Correctness-and-Faithfulness.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · Correctness-and-Faithfulness.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 16e028d162ad8218</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/Correctness-and-Faithfulness' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Correctness &amp; Faithfulness
+
+Faithfulness is a hard correctness property in SemantiK Architect.
+
+## Core invariants
+
+### No invention
+
+Every output domain claim must come from submitted semantics or an explicitly declared deterministic derivation.
+
+### No silent omission
+
+Every communication obligation must be discharged or the request fails.
+
+### Role preservation
+
+Agent, patient, recipient, location, time, quantity and other roles must not be swapped.
+
+### Polarity and modality preservation
+
+Negation, uncertainty, obligation, permission, hypotheticality and other relevant modalities must remain intact.
+
+### Identity preservation
+
+Entities, identifiers, names, numbers and references must not be silently substituted.
+
+### No status elevation
+
+Uncertain or hypothetical meaning must not be rendered as unqualified fact.
+
+## Coverage
+
+A successful result records coverage at least as:
+
+```text
+obligation_id
+  → block_id
+  → realization_unit_id(s)
+```
+
+The planner also preserves the semantic references associated with each unit so that an obligation cannot be declared covered while one of its required semantic statements vanished during planning.
+
+## Determinism
+
+For identical:
+
+- canonical semantic request;
+- presentation/profile versions;
+- SA version;
+- RuntimeSet identity;
+- SA↔GF contract version;
+
+SA produces the same deterministic structured result.
+
+Operational values such as latency or trace IDs are excluded from deterministic result identity.
+
+## Runtime AI policy
+
+Probabilistic models are not required by the canonical production path. AI may assist development of grammars, lexicons, mappings, tests and documentation, but release authority comes from conformance evidence against immutable artifacts.
+</pre></body></html>

@@ -1,0 +1,46 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · FAQ.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · FAQ.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 4eb78305f912 · SHA-256 a949f67a44091663</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/FAQ' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># FAQ
+
+### Is Spek a new language model?
+
+No. It composes *existing short expressions* into a structure with defined argumentative roles. SemantiK can be one realization provider.
+
+### Does Spek write scientific paragraphs?
+
+Not yet. Its central proposition is that a reader can understand many scientific ideas faster through reproducible result cards, argument maps and comparisons rather than invented transitions in free-form prose.
+
+### Can I reuse a layout across research projects?
+
+Yes. Slot contracts and dedicated renderers can be reused with different semantic IDs and expression bundles.
+
+### Can I publish in other languages?
+
+The current prototype explicitly supports English, French, and Italian. More languages require realization inputs, localized labels, tests and review; they are not automatically supported by SemantiK&#x27;s experiments.
+
+### Does `--production` make the research certified?
+
+No. It checks declarations and pinned metadata. Authentic upstream scientific, translation and disclosure approvals remain separate.
+
+### Is GitHub needed to compile?
+
+No. Builds are local and offline. GitHub is an optional distribution/verification channel for vetted derived output.
+
+### Is the wiki part of the same repository?
+
+Wiki **source files** live in `wiki/`. The published GitHub Wiki is a second Git repository that must be initialized and synced explicitly.
+
+### Why no license file?
+
+The intellectual-property owner has not selected a distribution license. No open-source grant is assumed; see `LICENSE-DECISION.md`.
+
+### Does Spek write the prose for a Kristal Wiki?
+
+No. **SemantiK Architect** produces bounded expressions from an explicit semantic communication request; **Spek** arranges already supplied realizations into typed layouts selected in accordance with **Arketype**. The content-selection step is owned upstream by the Kristal publication process. See [[Kristal Wiki Architecture]].
+
+### Can I run `build-wiki` on a clean Spek 0.5 checkout?
+
+Not without the optional Spek/Arketype Wiki overlay. The clean snapshot ships eight layouts and HTML/PDF/TeX compilation, while the separately prepared extension adds the `build-wiki`, `verify-wiki`, and `list-wiki-templates` CLI commands.
+
+### Does a successful Wiki draft mean the GitHub Wiki is online?
+
+No. Draft compilation and SHA-256 verification are local checks. Signed publication approvals, GitHub Wiki activation, and a separate authorized push are still required.
+</pre></body></html>

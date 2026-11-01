@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/13-implementation-vnext/stockage-migration.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/13-implementation-vnext/stockage-migration.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 f55845ee7c82dd1f</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/13-implementation-vnext/stockage-migration.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Registre opérationnel v2 et migration
+
+## Compatibilité
+
+Les tables v1 `workspaces` et `observations` restent présentes. Les nouvelles
+entrées v2 sont écrites **dans la même transaction SQLite** que leurs
+homologues v1. Les tables additionnelles sont `runs_v2`, `observations_v2`,
+`decisions_v2`.
+
+Lors de la première ouverture d&#x27;un ancien registre v1, une sauvegarde hors du
+flux canonique est créée dans `catalogue/kristal-manager-operations.sqlite3.before-v2.backup`.
+Aucune table v1 n&#x27;est supprimée. `PRAGMA user_version` passe à 2.
+La commande `migrer-index` importe idempotemment les événements historiques v1.
+
+## Métadonnées importantes
+
+- `run_id` : identifiant UUID d&#x27;une exécution; étapes et résultat final persistants.
+- `kind` : inventory, analysis, diagnostic, arketype, verification, classification.
+- `profile` : profil exact, indispensable pour ne pas mélanger V9 et V10.
+- `source_scope` : frontière des preuves de fraîcheur.
+- `source_fingerprint` : surface bornée de fichiers; ce n&#x27;est pas la totalité du canon.
+- `qualification` : toujours `NOT_ESTABLISHED` pour les observations locales.
+- `evidence_uri` : lien vers un rapport extérieur à la base, pas une preuve autonome.
+
+## Indicateurs de fraîcheur
+
+`CURRENT`: fichier couvert par l&#x27;empreinte unchanged (seulement pour les moteurs
+pour lesquels la portée de comparaison est suffisante).
+`PARTIAL_SCOPE`: empreinte identique, mais couverture sémantique incomplète.
+`STALE`: une surface enregistrée est différente.
+`UNVERIFIED`: empreinte absente, import non fiable, entrée changeant durant le run.
+
+## Restauration
+
+1. Fermer Manager et confirmer qu&#x27;aucun batch n&#x27;est en cours.
+2. Sauvegarder le fichier de base actuel.
+3. Restaurer le fichier de sauvegarde `.before-v2.backup` dans une copie du dépôt
+   ou conserver une application Manager compatible v1.
+4. Relancer `migrer-index` sur une copie pour vérifier la conversion.
+
+La base de contenu de 189 Mo n&#x27;est pas modifiée par cette migration.
+</pre></body></html>

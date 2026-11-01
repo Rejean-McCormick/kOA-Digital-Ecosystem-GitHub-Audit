@@ -1,0 +1,16 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/EncyKlopedia · docs/RELEASE_GATES.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/EncyKlopedia · docs/RELEASE_GATES.md</h1><p class='meta'><small>Rejean-McCormick/EncyKlopedia · 25d970c45c35 · SHA-256 633d15cb1f2501be</small><br><a href='https://github.com/Rejean-McCormick/EncyKlopedia/blob/25d970c45c358c9de2ade33b8703db225c7f4676/docs/RELEASE_GATES.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Release and public exposure gates
+
+**Current status:** ALL PRODUCTION GATES BLOCKED. This project serves synthetic demo data on loopback only.
+
+| Gate | Minimum condition before a real public deployment | Alpha status |
+|---|---|---|
+| C1 Implementation/contract | Exact Framework v11 integration pins, compatible published reader, reproducible build | BLOCKED |
+| C2 Content/security | Explicit artifact origin, source rights, authorizations, private/public separation, redaction approval | BLOCKED |
+| C3 Materialization | Verified immutable publication, digest verification, storage/index consistency, rollback and observability | BLOCKED |
+| C4 Public release | Explicit independent approval of named collection + projection + locale coverage + public exposure | BLOCKED |
+| Production | Qualified load tests, network security, rate limits, CDN, backup and incident/rollback procedures | BLOCKED |
+
+An Integration Pack reading view is **derived only**; `presentation` is not a publication grant. Likewise a Skope scope, EncyK source handoff, Konstellation view or GitHub Pages demonstration is not evidence of permission to publish a real Kristal collection.
+
+The application refuses `ENCYKLOPEDIA_MODE=public` for this release. Do not remove this gate as a deployment shortcut. The future gate must verify *external, independently authorized* publication attestation, never a `true` flag provided by the same untrusted bundle.
+</pre></body></html>

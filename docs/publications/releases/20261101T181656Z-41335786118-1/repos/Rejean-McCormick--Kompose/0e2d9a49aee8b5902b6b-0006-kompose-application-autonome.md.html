@@ -1,0 +1,18 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · docs/adr/0006-kompose-application-autonome.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · docs/adr/0006-kompose-application-autonome.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · a5a2d855584d · SHA-256 2e03b0fc4265b7fa</small><br><a href='https://github.com/Rejean-McCormick/Kompose/blob/a5a2d855584d55d7ee5553207cb2e2b95d9c823d/docs/adr/0006-kompose-application-autonome.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR 0006 — KOMPOSE autonome, KOR comme intégration facultative
+
+**Décision : acceptée le 2026-10-12.**
+
+## Contexte
+
+Le prototype « capsules, rôles, Kristals » était nommé comme une couche de KOR. L&#x27;orientation produit est désormais **KOMPOSE**, nom propre d&#x27;un orchestrateur autonome. KOR désigne une application distincte.
+
+## Choix
+
+Les contrats métier, identifiants de packages, schémas et événements portent KOMPOSE. Un adaptateur KOR demeure possible mais n&#x27;est pas un prérequis. Les fonctionnalités pourront migrer vers différents services tant que les invariants, versions et tests de contrat sont conservés.
+
+## Conséquences
+
+- Pas d&#x27;URL/identité d&#x27;API KOR codée comme dépendance obligatoire.
+- Interfaces et IAM remplaçables via ports.
+- Documentation des dépendances, des responsabilités et du transfert de propriété.
+</pre></body></html>

@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · API.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · API.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 01bfc9126e06 · SHA-256 e8e824e1b5a6b958</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/wiki/API' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Local API and Public Contracts
+
+The Node server exposes an HTTP API and built Astro UI assets. In the local profile, the expected URL is `http://127.0.0.1:4321`.
+
+## Key endpoints
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| GET | `/api/health` | Basic service health |
+| GET | `/api/version` | Version and permitted build information |
+| GET | `/api/kristals` | Reader catalog and current selection |
+| GET | `/api/fleet` | Optional, locally authorized Manager preview |
+| GET | `/api/bootstrap` | Registries, Lenses, and capabilities for the selected Kristal |
+| GET | `/api/capabilities` | Visible capabilities |
+| POST | `/api/query` | Query a selection |
+| POST | `/api/facets` | Selection facets |
+| POST | `/api/entity` | Entity details |
+| POST | `/api/evidence` | Visible assertions/evidence |
+| POST | `/api/constellation` | Derived constellation |
+| POST | `/api/navigation/plan` | Compute a navigation plan |
+| POST | `/api/navigation/project` | Build a bounded projection |
+
+Additional endpoints (SA, Kompiler, metrics, exploration state) may be enabled depending on configuration and scopes. HTTP `404` on an **optional** module may simply mean it is disabled; a Kompiler `503` can indicate an unconfigured dependency.
+
+## Minimal example
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:4321/api/health
+Invoke-RestMethod http://127.0.0.1:4321/api/kristals
+```
+
+In neutral mode, no Kristal is initially selected. The client handles selection; the presence of the catalog does not mean that every specialized reader&#x27;s `bootstrap` is already ready.
+
+## Security, context, and errors
+
+- Roles filter visible content; scopes filter API actions.
+- For nonlocal deployments, use the authentication mechanisms provided by the project.
+- The server enforces Host/Origin controls, size limits, and Reader Policy.
+- Structured errors typically include `error.code`, `error.message`, and `requestId`. Do not display sensitive details from private sources.
+
+Refer to `docs/24-api-contracts.md` for request/response schemas. This wiki does not replace JSON Schemas or tests.
+</pre></body></html>

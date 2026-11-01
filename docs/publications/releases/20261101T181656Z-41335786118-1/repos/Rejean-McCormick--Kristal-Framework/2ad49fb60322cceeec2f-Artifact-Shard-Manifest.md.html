@@ -1,0 +1,66 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Artifact-Shard-Manifest.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Artifact-Shard-Manifest.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 a134f13908711f0b</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Artifact-Shard-Manifest' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Artifact: Shard Manifest
+
+&gt; **Legacy compatibility surface:** this page describes the historical v5-era Shard Manifest contract. Kristal v9 does not promote this historical schema to its semantic core. For the inherited v9 semantic-state architecture see [[Artifacts]], [[Exchange-and-Runtime-v9]], [[State-Snapshots-v9]] and [[Federation-and-Coverage-v9]]; for the v10 hosted network see [[Architecture-v10]].
+
+A **Shard Manifest** describes a scoped shard of Kristal material and the metadata needed to verify, validate, recognize, and compose it.
+
+A shard may represent a domain, subdomain, tenant, time window, authority channel, dataset subset, or federation slice.
+
+---
+
+## What it is
+
+A Shard Manifest is a verifiable pointer to shard content or a shard Exchange, annotated with:
+
+- shard identity;
+- artifact status;
+- scope;
+- authority channel;
+- validation references;
+- authority recognition references;
+- integrity metadata;
+- lineage;
+- reader-policy-relevant labels.
+
+---
+
+## When it exists
+
+You create a Shard Manifest when:
+
+- a publisher produces a domain-scoped artifact;
+- an authority channel publishes only a scoped subset;
+- a federation needs to compose many sources;
+- a tenant, environment, or time window needs independent update cadence;
+- you want validation and authority metadata at the shard boundary.
+
+---
+
+## How consumers use it
+
+Consumers typically:
+
+1. read the shard scope;
+2. verify integrity metadata if required;
+3. inspect validation report references;
+4. inspect authority recognition references;
+5. check the authority registry and reader policy;
+6. decide whether the shard can be used, hidden, rejected, or exposed with labels.
+
+---
+
+## Relationship to other artifacts
+
+- **Exchange**: shard content may be an Exchange or Exchange-derived payload.
+- **Validation Report**: records checks on the shard.
+- **Authority Registry**: determines authority acceptance for the shard scope.
+- **Federation Manifest**: composes shard manifests.
+- **Runtime Pack**: may materialize a shard or federated shard set.
+
+---
+
+## Technical details
+
+- Schema: `kristal-docs-v5/02-schemas/exchange-shard-manifest.schema.json`
+- Example: `kristal-docs-v5/10-examples/exchange-shard-manifest.example.json`
+</pre></body></html>

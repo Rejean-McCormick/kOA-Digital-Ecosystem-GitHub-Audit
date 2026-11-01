@@ -1,0 +1,26 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · docs/DEEP_ADVERSARIAL.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · docs/DEEP_ADVERSARIAL.md</h1><p class='meta'><small>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · 4c8505150eae · SHA-256 bbbbd77a9b08b3df</small><br><a href='https://github.com/Rejean-McCormick/LevelUpDiag_SemantiK-Architect/blob/4c8505150eae36193bc32cff587ba0860d608f2f/docs/DEEP_ADVERSARIAL.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Deep Adversarial Diagnostics
+
+Status: **LevelUpDiag SemantiK Architect v2.3.0**
+
+The `deep` campaign is the bug-hunting layer above the normal release gate. It does not require a deployed real-language RuntimeSet and does not mutate the target checkout.
+
+## S90 — Adversarial Semantic Invariants
+
+Checks duplicate obligation IDs, missing semantic references, invalid supporting-context subjects, impossible framing constraints, expired deadlines, missing/unknown coverage, negative polarity preservation, canonical role→operation selection, and rejection of unknown operation hints through the stable `SA-LANG-003` envelope; raw Python exceptions are diagnostic failures.
+
+## S100 — RuntimeSet Mutation &amp; Release Integrity
+
+Builds valid synthetic RuntimeSets in temporary storage, then independently tests artifact hash tampering, capability-manifest tampering, failed conformance evidence, missing capability-profile artifacts, ambiguous released runtimes without activation, explicit activation, and incompatible SA version ranges.
+
+## S110 — Bridge &amp; Lexical Adversarial Contract
+
+Uses a deterministic PGF test double and temporary artifacts. It verifies that every lexical slot and semantic feature must be consumed, contract-version mismatches fail, missing concrete languages fail, missing concept lexemes are not guessed, and exact lexical bindings succeed when present.
+
+## S120 — Determinism, Concurrency &amp; Packaging Isolation
+
+Runs repeated full renders against a synthetic RuntimeSet both sequentially and concurrently and requires identical deterministic result IDs and surface output. It then copies the target source tree into a temporary directory, builds a wheel without dependency/network resolution, installs it into an isolated target directory, and imports it under isolated Python mode.
+
+## Non-mutation rule
+
+All generated RuntimeSets, corrupted files, build outputs and installs live under temporary directories. `.levelupdiag/` remains the only diagnostic evidence written under the target repository by the LevelUpDiag runner itself.
+</pre></body></html>

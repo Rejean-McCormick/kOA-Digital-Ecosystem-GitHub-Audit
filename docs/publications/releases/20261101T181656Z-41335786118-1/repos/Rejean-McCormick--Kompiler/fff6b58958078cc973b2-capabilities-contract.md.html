@@ -1,0 +1,125 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/02-protocol/capabilities-contract.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/02-protocol/capabilities-contract.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 9130f06438c9a906</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/02-protocol/capabilities-contract.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Capabilities Contract
+
+`kompiler.capabilities/1.1` tells an LLM or client exactly what the current runtime can do.
+
+## Required shape
+
+```json
+{
+  &quot;protocol&quot;: &quot;kompiler.capabilities&quot;,
+  &quot;version&quot;: &quot;1.1&quot;,
+  &quot;snapshot_id&quot;: &quot;cap:sha256:...&quot;,
+  &quot;generated_at&quot;: &quot;2026-10-02T15:00:00Z&quot;,
+  &quot;runtime&quot;: {
+    &quot;name&quot;: &quot;kompiler&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;
+  },
+  &quot;targets&quot;: []
+}
+```
+
+## Target descriptor
+
+```json
+{
+  &quot;target_id&quot;: &quot;HumanBody&quot;,
+  &quot;kind&quot;: &quot;kristal&quot;,
+  &quot;adapter&quot;: {
+    &quot;id&quot;: &quot;kristal-humanbody&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;
+  },
+  &quot;source&quot;: {
+    &quot;kristal_schema_version&quot;: &quot;6.0&quot;,
+    &quot;state_id&quot;: &quot;sha256:...&quot;
+  },
+  &quot;operations&quot;: []
+}
+```
+
+## Operation descriptor
+
+```json
+{
+  &quot;operation_id&quot;: &quot;mechanisms&quot;,
+  &quot;description&quot;: &quot;Retrieve mechanism-oriented assertions relevant to a topic.&quot;,
+  &quot;input_schema&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+      &quot;topic&quot;: {&quot;type&quot;: &quot;string&quot;},
+      &quot;limit&quot;: {&quot;type&quot;: &quot;integer&quot;, &quot;minimum&quot;: 1, &quot;maximum&quot;: 500}
+    },
+    &quot;required&quot;: [&quot;topic&quot;],
+    &quot;additionalProperties&quot;: false
+  },
+  &quot;output&quot;: {
+    &quot;record_kinds&quot;: [&quot;assertion&quot;, &quot;relation&quot;],
+    &quot;supports_provenance&quot;: true
+  },
+  &quot;semantics&quot;: {
+    &quot;read_only&quot;: true,
+    &quot;deterministic&quot;: true,
+    &quot;supports_reader_policy&quot;: true
+  },
+  &quot;limits&quot;: {
+    &quot;max_items&quot;: 500,
+    &quot;timeout_ms&quot;: 30000
+  }
+}
+```
+
+## Capability dimensions
+
+An operation SHOULD advertise support for applicable dimensions instead of implying universal support:
+
+- referent/subject/predicate/object;
+- assertion status;
+- valuations and value semantics;
+- coordinates/applicability;
+- record role;
+- actionability;
+- evidence/source;
+- validation/recognition;
+- conflict/supersession/lineage;
+- pagination;
+- cardinality;
+- joins;
+- domain-specific projections.
+
+## Capability snapshot binding
+
+A Query Plan SHOULD include `capability_snapshot_id`. If the current runtime snapshot differs, default behavior is `CAPABILITY_SNAPSHOT_MISMATCH`. A caller MAY explicitly allow compatible drift, but never silent semantic drift.
+
+## Agent guidance
+
+Descriptions are part of the LLM-facing interface. They SHOULD explain intent, not implementation. Do not expose shell templates as capability descriptions.
+
+## Protocol 1.1: semantic-plane declarations
+
+Operation semantics may advertise:
+
+```json
+{
+  &quot;semantic_plane&quot;: &quot;meta&quot;,
+  &quot;requires_surface&quot;: true,
+  &quot;v7_native&quot;: true
+}
+```
+
+`semantic_plane=source` remains the default for traditional Kristal adapters. A v7-native Surface operation uses `meta` and may require a Surface selector.
+
+The runtime descriptor also advertises standard support, currently including v6 source/projection states and Kristall v7 draft.3.2 meta-artifacts.
+
+## v7 conformance advertisement
+
+Protocol 1.1 runtime descriptors include `conformance_profiles`. Kompiler 0.5 advertises:
+
+```json
+{
+  &quot;conformance_profiles&quot;: {
+    &quot;kristal_v7&quot;: &quot;V7-Projection&quot;
+  }
+}
+```
+
+This is deliberately lower than `V7-Kristall`: the runtime can read source states, consume Mesh structure, compile Surfaces and materialize portable projections, but does not claim the full crystallization/promotion/reconstruction lifecycle.
+</pre></body></html>

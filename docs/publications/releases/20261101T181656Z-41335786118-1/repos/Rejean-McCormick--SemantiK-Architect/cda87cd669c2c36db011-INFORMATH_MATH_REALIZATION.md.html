@@ -1,0 +1,48 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · docs/reference/INFORMATH_MATH_REALIZATION.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · docs/reference/INFORMATH_MATH_REALIZATION.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · 74b07c42811d · SHA-256 bccf503d02a729cb</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/blob/74b07c42811dae0c68549d8554c00bc44a04298d/docs/reference/INFORMATH_MATH_REALIZATION.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Informath Mathematical Realization
+
+Status: **candidate integration**
+
+## Responsibility
+
+SemantiK Architect does not implement a second mathematical natural-language grammar. Mathematical `RealizationUnit`s are delegated to Informath, whose MathCore/Informath grammars and GF/RGL concrete syntaxes own the linguistic realization.
+
+```text
+Formula IR
+  ↓ MathKristal ACL
+CommunicationRequest
+  ↓ math language planner
+math.informalize_formula
+  ↓ structural encoder
+Dedukti fragment + versioned symbol table
+  ↓ Informath
+MathCore / Informath
+  ↓ GF/RGL
+human language
+```
+
+## Runtime artifacts
+
+A released math RuntimeSet MUST pin, hash and validate:
+
+- one `informath-config*` artifact;
+- one `math-symbol-registry*` artifact;
+- the capability profile;
+- conformance evidence for every released language/profile.
+
+The config maps BCP-47/SA language codes to Informath concrete codes and declares separate argument sets for `PURE` and `NATURAL` modes.
+
+## Symbol registry
+
+The symbol registry maps stable MathKristal semantic references to:
+
+- a Dedukti identifier;
+- an explicit Dedukti declaration;
+- an Informath/GF symbol-table mapping;
+- optional Wikidata, OpenMath and MMT alignment identifiers.
+
+Unmapped symbols fail closed. Wikidata Lexemes remain generic lexical knowledge; the symbol registry carries the grammatical/function mapping needed to make a formal math identifier realizable by Informath.
+
+## No fallback
+
+If Informath is missing, returns an error/empty result, lacks the target language, or cannot map a Formula IR symbol, SemantiK returns a stable math error. It does not use emergency templates.
+</pre></body></html>

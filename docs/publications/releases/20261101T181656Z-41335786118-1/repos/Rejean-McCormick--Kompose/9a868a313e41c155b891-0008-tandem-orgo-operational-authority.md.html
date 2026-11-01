@@ -1,0 +1,28 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · docs/adr/0008-tandem-orgo-operational-authority.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · docs/adr/0008-tandem-orgo-operational-authority.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · a5a2d855584d · SHA-256 08b4afa703c00b43</small><br><a href='https://github.com/Rejean-McCormick/Kompose/blob/a5a2d855584d55d7ee5553207cb2e2b95d9c823d/docs/adr/0008-tandem-orgo-operational-authority.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR 0008 — Orgo est l&#x27;unique autorité opérationnelle des missions Tandem
+
+**Décision adoptée pour l&#x27;intégration P1 (aperçu seulement).**
+
+L&#x27;ADR 0006 demeure valable pour l&#x27;autonomie de **l&#x27;application** KOMPOSE vis-à-vis de KOR.
+Elle ne donne **pas** à KOMPOSE un droit d&#x27;orchestration concurrent à Orgo.
+L&#x27;ancienne machine `lifecycle.apply_session_command` reste une **simulation de référence**
+compatible avec les tests historiques; ses événements et états ne sont pas des `Case`,
+`Task`, `Signal` ou des décisions d&#x27;autorisation Orgo.
+
+- **Kontexte** : sources de situations, rôles, étapes, références de fragments.
+- **KOMPOSE** : préparation de capsule, contenu, diagnostic, casting sous supervision,
+  validations et simulations locales, **sans mutation d&#x27;exécution Orgo**.
+- **Orgo** : seul propriétaire des tâches réelles, transitions, dispatch, autorisations de
+  dévoilement et réconciliation.
+- **Orgo_Worlds** : tenant / World / WorldRelease, hors Work.
+- **Ekole** : projection enseignant et apprentissage; aucune maîtrise inférée d&#x27;un `Task done`.
+
+Le nouveau `verify-ekole-preview` contrôle exclusivement la structure d&#x27;un JSON
+`ekole.tandem-teacher-preview/1.0`. Ses sorties `runtime_admitted=false`,
+`permissions_verified=false` et `world_release_verified=false` sont obligatoires.
+Une mention d&#x27;autorité `orgo` est une **déclaration de propriété**, pas un jeton signé.
+Aucune connexion réseau, identité réelle, revue officielle ou livraison de fragment.
+
+Un futur raccordement Orgo exige authentification, isolation du tenant/World,
+version de workflow vérifiée, revue enseignante, tests d&#x27;absence/rejeu et contrôle
+transactionnel; aucun `apply` automatique ne découle de cet ADR.
+</pre></body></html>

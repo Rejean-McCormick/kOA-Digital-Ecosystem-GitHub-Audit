@@ -1,0 +1,52 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Security-and-Confidentiality-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Security-and-Confidentiality-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 5924cc7310b2b8a6</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Security-and-Confidentiality-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Security and Confidentiality — v9
+
+## Threat classes
+
+V9 distinguishes at least:
+
+- accidental corruption;
+- incomplete writes/crashes;
+- concurrent publishers;
+- malicious storage;
+- unauthorized readers;
+- unauthorized publishers/activators;
+- epistemically untrusted sources.
+
+Different controls address different threats.
+
+## Commitment visibility
+
+A deterministic Logical Commitment need not be globally public. For low-entropy sensitive data, public hashes may leak equality or enable guessing attacks.
+
+V9 therefore keeps commitment security profile-driven. The baseline does not invent custom cryptography.
+
+## Encryption
+
+Re-encryption may change physical blob bytes while preserving logical content:
+
+```text
+new key / nonce / ciphertext
+→ new Blob Digest
+→ same Logical Commitment
+```
+
+when the applicable security profile permits logical comparison.
+
+## Privilege separation
+
+```text
+STORE WRITE != PUBLISH AUTHORITY != ACTIVATE AUTHORITY
+```
+
+A deployment may separate these privileges.
+
+## Remote content
+
+Retrieved manifests and blobs are untrusted input until validated.
+
+```text
+RETRIEVED CONTENT != INSTRUCTION AUTHORITY
+```
+
+The existence of data in a package cannot grant itself execution, mutation or activation permission.
+</pre></body></html>

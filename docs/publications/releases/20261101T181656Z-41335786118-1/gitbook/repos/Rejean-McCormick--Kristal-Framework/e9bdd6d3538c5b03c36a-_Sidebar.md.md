@@ -1,0 +1,80 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Kristal-Framework/wiki/_Sidebar | commit: cc9ab116371b3a783dfe83ef68182575e8aca83b | SHA-256: 7dda866ca74c8fff65178293df7033c7c621b956debdf4243efadb500a0581c7 -->
+
+# Kristal Framework Wiki
+
+## Current: v11 draft.4
+- [[Home]]
+- [[Kristal-v11]]
+- [[Status-v11]]
+- [[Version-Stack-v6-v7-v8-v9-v10-v11]]
+- [[Getting-Started]]
+- [[Quickstart]]
+- [[Core-Invariants-v11]]
+- [[Semantic-Identity-v11]]
+- [[Wikidata-Crosswalk-v11]]
+- [[UNESCO-Thesaurus-Classification-v11]]
+- [[Dictionary-Management-v11]]
+- [[diK-Integration-v11]]
+- [[diK-Authoring-Exchange-v11]]
+- [[diK-Synchronization-v11]]
+- [[Conformance-and-Ecosystem-v11]]
+- [[Authoring-Kit-v11]]
+- [[Legacy-Migration-v11]]
+- [[Conformance-v11]]
+- [[Update-Notes-v11]]
+- [[Migration-v10-to-v11]]
+
+## v10 — Hosted network (preserved)
+- [[Kristal-v10]]
+- [[Status-v10]]
+- [[Version-Stack-v6-v7-v8-v9-v10]]
+- [[Architecture-v10]]
+- [[Nodes-and-Collections-v10]]
+- [[Host-Bindings-v10]]
+- [[Reader-Discovery-and-Arketype-v10]]
+- [[Publication-and-Discovery-v10]]
+- [[Directories-and-Federation-v10]]
+- [[Compatibility-v9-v10]]
+- [[Migration-v9-to-v10]]
+- [[GitHub-Reference-Profile-v10]]
+- [[GitHub-Read-Surfaces-v10]]
+- [[Workflow-GitHub-v10]]
+- [[Toolchain-v10]]
+- [[Security-and-Confidentiality-v10]]
+- [[Conformance-v10]]
+- [[Reference-Runtime-v10]]
+
+## v9 — Logical and committed state
+- [[Kristal-v9]]
+- [[Architecture-v9]]
+- [[Logical-Artifacts]]
+- [[State-Snapshots-v9]]
+- [[Identity-and-Commitments-v9]]
+- [[Derivations-and-Reproducibility-v9]]
+- [[Materialization-v9]]
+- [[Build-Publish-Activate-v9]]
+- [[Conformance-v9]]
+- [[KristalDiag-v9]]
+- [[Ecosystem-Integration]]
+
+## v8 — Language and query
+- [[Kristal-v8]]
+- [[Language-Layer]]
+- [[Semantic-Universe-and-Lexical-Kristals]]
+- [[Lexical-Resolution]]
+- [[AI-Query-Layer]]
+- [[Query]]
+
+## v7 / v6 — semantic foundation
+- [[Semantic-Identity-and-Registries]]
+- [[Identity-and-Determinism]]
+- [[Referents-and-Domain-Neutral-Model]]
+- [[Kristal-State]]
+- [[Information-Layers-and-Operational-Boundaries]]
+
+## Reference and operations
+- [[Workflows]]
+- [[Operations]]
+- [[Glossary]]
+- [[FAQ]]
+- [[What-is-Kristal]]

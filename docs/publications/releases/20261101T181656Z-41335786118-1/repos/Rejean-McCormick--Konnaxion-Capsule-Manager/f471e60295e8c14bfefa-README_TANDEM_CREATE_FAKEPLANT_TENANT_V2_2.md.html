@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Capsule-Manager · README_TANDEM_CREATE_FAKEPLANT_TENANT_V2_2.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Capsule-Manager · README_TANDEM_CREATE_FAKEPLANT_TENANT_V2_2.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Capsule-Manager · a137f3c1ab5e · SHA-256 52a695f35c1c1f80</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Capsule-Manager/blob/a137f3c1ab5e7a79887074560b11a2a6b0a70518/README_TANDEM_CREATE_FAKEPLANT_TENANT_V2_2.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Capsule Manager - Creation minimale du tenant FakePlant dans Orgo (V2.2)
+
+**Depot cible :** `C:\mycode\Konnaxion\Konnaxion_Capsule_Manager` (overlay root-drop). Le script ne modifie pas ce depot ni ses anciennes fonctions.
+
+## Double-clic
+
+1. Demarrer **Docker Desktop** et s&#x27;assurer que `docker compose ps` dans `C:\mycode\Orgo\Orgo` montre **api** et **postgres** actifs.
+2. Double-cliquer `START_TANDEM_CREER_FAKEPLANT_TENANT.cmd`.
+3. Lire l&#x27;**apercu en lecture seule** (base active et presence du tenant). S&#x27;il est deja present et actif, le script s&#x27;arrete sans ecriture.
+4. Si absent, verifier la base et taper exactement `CREER fakeplant` pour autoriser **une seule creation `Organization`** dans la base active du conteneur API.
+5. Le script relit l&#x27;UUID et l&#x27;etat apres creation. Relancer `START_TANDEM_ORGO_IDENTITE_DIAG.cmd` pour l&#x27;inventaire des workflows.
+
+## Garde-fous
+
+- Ne fait **aucune migration**, ne lance **aucun seed standard**, n&#x27;importe **aucun des 900 profils**.
+- Ne cree ni administrateur, ni role, ni compte utilisateur, ni token, ni workflow, ni case, ni task.
+- Refuse de modifier un tenant existant mais inactif; idempotent pour un tenant actif existant.
+- Execute Prisma dans le **conteneur API Orgo actif**, pas contre une base `DATABASE_URL` Windows distincte.
+- Verifie la liaison canonique : `Konnaxion_Worlds/universes/fakeplant/integrations/orgo.tandem.json`.
+- Aucune URL, mot de passe ou jeton de connexion n&#x27;est affiche.
+
+**Ne pas utiliser si la base Compose Orgo n&#x27;est pas la base voulue.** Bien que `docker compose ps` soit local, son volume PostgreSQL est persistant. Faire une sauvegarde avant d&#x27;autoriser l&#x27;ecriture.
+
+## Validation sans ecriture
+
+```powershell
+cd C:\mycode\Konnaxion\Konnaxion_Capsule_Manager
+pwsh -NoProfile -File .\tools\tandem_v2\CREATE_ORGO_FAKEPLANT_TENANT.ps1 -PreviewOnly
+```
+
+## Portee et limites
+
+Le script termine **uniquement la premiere dependance d&#x27;identite** (`Organization.id`). Les ACL, l&#x27;authentification, le binding machine-verifiable Konnaxion/Orgo et les echanges Interaction Kernel restent a mettre en place et a tester. Aucune publication tandem n&#x27;est autorisee par ce changement.
+</pre></body></html>

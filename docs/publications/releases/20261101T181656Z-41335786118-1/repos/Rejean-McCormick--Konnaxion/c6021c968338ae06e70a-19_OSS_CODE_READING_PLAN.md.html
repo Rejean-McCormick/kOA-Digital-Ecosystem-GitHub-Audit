@@ -1,0 +1,1393 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/19_OSS_CODE_READING_PLAN.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/19_OSS_CODE_READING_PLAN.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 8d145766c927b6eb</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/Kintsugi_Kompendio/ethiKos_Kintsugi_Update/19_OSS_CODE_READING_PLAN.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 19 — OSS Code Reading Plan
+
+**File:** `19_OSS_CODE_READING_PLAN.md`
+**Pack:** ethiKos Kintsugi Update Documentation Pack
+**Status:** Normative planning document
+**Audience:** architecture, backend, frontend, product, future AI/code-reading sessions
+**Primary goal:** define how to inspect downloaded OSS civic-tech repositories without drifting into premature implementation, full merges, or speculative architecture.
+
+---
+
+## 1. Purpose
+
+This document defines the code-reading plan for the first-pass OSS repositories considered in the ethiKos Kintsugi upgrade.
+
+The goal is to inspect external civic-tech repositories **after the Kintsugi documentation contracts are stable**, in order to extract useful patterns for native implementation inside ethiKos.
+
+The code-reading process must answer:
+
+1. What exists in the OSS codebase, not just in product documentation?
+2. Which concepts are useful for ethiKos?
+3. Which concepts can be mimicked natively?
+4. Which concepts should be deferred?
+5. Which concepts must not be imported because they conflict with Konnaxion architecture?
+6. Which ethiKos route family, model, service, or contract would receive the pattern?
+
+The clean-slate plan explicitly states that OSS repo inspection comes only after documentation is stable, and that the purpose is to confirm real code patterns, avoid assumptions from docs alone, and produce implementation backlog only afterward. 
+
+---
+
+## 2. Scope
+
+This document covers code-reading for the first-pass OSS sources:
+
+```yaml id=&quot;6v9mth&quot;
+FIRST_PASS_OSS_SOURCES:
+  - &quot;Consider.it&quot;
+  - &quot;Kialo-style argument mapping&quot;
+  - &quot;Loomio&quot;
+  - &quot;Citizen OS&quot;
+  - &quot;Decidim&quot;
+  - &quot;CONSUL Democracy&quot;
+  - &quot;DemocracyOS&quot;
+```
+
+This document also identifies deferred OSS sources:
+
+```yaml id=&quot;k33l6u&quot;
+DEFERRED_OSS_SOURCES:
+  - &quot;Polis&quot;
+  - &quot;LiquidFeedback&quot;
+  - &quot;All Our Ideas&quot;
+  - &quot;Your Priorities&quot;
+  - &quot;OpenSlides&quot;
+```
+
+The deferred sources may be referenced for public inspiration or future research, but they are **not part of the first-pass code-reading workload**.
+
+---
+
+## 3. Non-goals
+
+This document does **not** authorize:
+
+* importing OSS code directly into Konnaxion;
+* creating new top-level apps for external tools;
+* replacing existing `/ethikos/*` routes;
+* replacing existing `/api/ethikos/*` endpoints;
+* creating a separate Kialo module;
+* creating a separate Loomio, Decidim, CONSUL, Citizen OS, or DemocracyOS module;
+* writing implementation tasks before the code-reading report is complete;
+* rewriting Konnaxion around the architecture of an external project;
+* adding GraphQL, WebSocket, Rails, Node, or other foreign stack assumptions into Konnaxion unless explicitly approved in a later ADR.
+
+---
+
+## 4. Canonical variables used
+
+```yaml id=&quot;bzihmt&quot;
+DOCUMENT_ID: &quot;19_OSS_CODE_READING_PLAN.md&quot;
+
+KINTSUGI:
+  UPDATE_TYPE: &quot;documentation-first architecture upgrade&quot;
+  IMPLEMENTATION_STYLE: &quot;partial native mimic&quot;
+  FULL_EXTERNAL_MERGE_ALLOWED: false
+  ANNEX_FIRST_PASS_ALLOWED: false
+  DOCS_BEFORE_CODE: true
+  CODE_READING_BEFORE_BACKLOG: true
+
+PRIMARY_ROUTE_SURFACE: &quot;/ethikos/*&quot;
+
+CURRENT_ETHIKOS_ROUTES:
+  DECIDE: &quot;/ethikos/decide/*&quot;
+  DELIBERATE: &quot;/ethikos/deliberate/*&quot;
+  TRUST: &quot;/ethikos/trust/*&quot;
+  PULSE: &quot;/ethikos/pulse/*&quot;
+  IMPACT: &quot;/ethikos/impact/*&quot;
+  LEARN: &quot;/ethikos/learn/*&quot;
+  INSIGHTS: &quot;/ethikos/insights&quot;
+  ADMIN: &quot;/ethikos/admin/*&quot;
+
+CURRENT_ETHIKOS_BACKEND:
+  APP: &quot;konnaxion.ethikos&quot;
+  API_TOPICS: &quot;/api/ethikos/topics/&quot;
+  API_STANCES: &quot;/api/ethikos/stances/&quot;
+  API_ARGUMENTS: &quot;/api/ethikos/arguments/&quot;
+  API_CATEGORIES: &quot;/api/ethikos/categories/&quot;
+  COMPAT_ALIASES:
+    - &quot;/api/deliberate/...&quot;
+    - &quot;/api/deliberate/elite/...&quot;
+
+CURRENT_ETHIKOS_MODELS:
+  - &quot;EthikosCategory&quot;
+  - &quot;EthikosTopic&quot;
+  - &quot;EthikosStance&quot;
+  - &quot;EthikosArgument&quot;
+
+DEFAULT_EXTERNAL_TOOL_STRATEGY: &quot;mimic&quot;
+
+ANNEX_REQUIREMENTS:
+  ISOLATED: true
+  REPLACEABLE: true
+  NO_CORE_TABLE_WRITES: true
+  LICENSE_CLEARANCE_REQUIRED: true
+  ADAPTER_LAYER_REQUIRED: true
+
+FORBIDDEN_FIRST_PASS:
+  FULL_CODE_IMPORT: true
+  DIRECT_DB_WRITES_FROM_EXTERNAL_TOOLS: true
+  ROUTE_REPLACEMENT: true
+  NEW_TOP_LEVEL_FOREIGN_APP: true
+```
+
+---
+
+## 5. Source basis
+
+This plan is grounded in the following project facts:
+
+1. The clean-slate Kintsugi plan requires documentation first, then OSS code inspection, then implementation backlog. 
+
+2. The current ethiKos implementation already has first-class route families under `/ethikos/*`, including Decide, Deliberate, Trust, Pulse, Impact, Learn, Insights, and Admin. 
+
+3. The current canonical ethiKos backend is centered on `EthikosTopic`, `EthikosStance`, `EthikosArgument`, and `EthikosCategory`, exposed through `/api/ethikos/topics/`, `/stances/`, `/arguments/`, and `/categories/`. 
+
+4. Konnaxion uses a Next.js App Router frontend and a Django modular monolith backend with REST APIs exposed through DRF under `/api/...`. 
+
+5. External tools must be treated as inspiration sources. The Kintsugi strategy explicitly rejects blind merging and requires either native mimicry or isolated sidecar boundaries. 
+
+6. The Kialo corpus adds specific structured-deliberation concepts such as sources, single-thesis vs multi-thesis topology, perspectives, background info, lifecycle controls, and small-group modes.    
+
+---
+
+## 6. Reading discipline
+
+OSS code reading must follow a strict sequence.
+
+```yaml id=&quot;d01hmh&quot;
+CODE_READING_SEQUENCE:
+  1: &quot;Confirm repository identity&quot;
+  2: &quot;Confirm license&quot;
+  3: &quot;Confirm stack&quot;
+  4: &quot;Map application boundaries&quot;
+  5: &quot;Identify data models&quot;
+  6: &quot;Identify route/controller/API patterns&quot;
+  7: &quot;Identify frontend UX patterns&quot;
+  8: &quot;Identify permissions and roles&quot;
+  9: &quot;Identify audit/moderation/accountability patterns&quot;
+  10: &quot;Extract mimic candidates&quot;
+  11: &quot;Reject incompatible patterns&quot;
+  12: &quot;Map useful patterns to existing Ethikos route families&quot;
+  13: &quot;Produce code-reading report&quot;
+  14: &quot;Only then feed implementation backlog&quot;
+```
+
+The reader must not jump directly from an OSS feature to a Konnaxion task.
+
+Every pattern must pass through:
+
+```yaml id=&quot;8j2b3p&quot;
+PATTERN_FILTER:
+  - &quot;Is it real in code?&quot;
+  - &quot;Is it useful for Kintsugi?&quot;
+  - &quot;Can it be mimicked natively?&quot;
+  - &quot;Does it preserve Ethikos ownership boundaries?&quot;
+  - &quot;Does it fit existing /ethikos/* routes?&quot;
+  - &quot;Does it avoid foreign writes to core tables?&quot;
+  - &quot;Does it avoid stack capture?&quot;
+  - &quot;Does it require a new model, service, or only UI behavior?&quot;
+```
+
+---
+
+## 7. Required output per repository
+
+Each OSS code-reading pass must produce a mini-report with this exact structure.
+
+```markdown id=&quot;9j46vo&quot;
+# OSS Code Reading Report — &lt;Repository Name&gt;
+
+## 1. Repository identity
+- Name:
+- Local path:
+- Upstream URL:
+- License:
+- Stack:
+- Primary language/framework:
+- Runtime requirements:
+- Database:
+- Frontend framework:
+- Backend framework:
+
+## 2. Product role
+- What civic problem does it solve?
+- Which Kintsugi stage does it resemble?
+- Which ethiKos route family could receive its pattern?
+
+## 3. Actual code architecture
+- App structure:
+- Core modules:
+- Important models:
+- Important controllers/routes/views:
+- Important services/jobs:
+- Permission/role system:
+- Admin/moderation system:
+- Test coverage observed:
+
+## 4. Feature inventory
+| Feature | Exists in code? | Location | Notes |
+|---|---:|---|---|
+
+## 5. Pattern extraction
+| Pattern | Mimic candidate? | Annex candidate? | Reject? | Reason |
+|---|---:|---:|---:|---|
+
+## 6. Konnaxion mapping
+| OSS concept | Ethikos/Konnaxion concept | Route family | Backend owner | Data impact |
+|---|---|---|---|---|
+
+## 7. Risks
+- License risk:
+- Stack mismatch:
+- Data ownership risk:
+- UX dominance risk:
+- Security/privacy risk:
+- Migration risk:
+- Maintenance risk:
+
+## 8. Decision
+- Recommendation: mimic / defer / annex-later / reject
+- First-pass priority: high / medium / low / none
+- Required Kintsugi docs to update:
+- Required ADR if any:
+
+## 9. Evidence
+- Files inspected:
+- Models inspected:
+- Routes inspected:
+- Components inspected:
+- Tests inspected:
+```
+
+---
+
+## 8. Repository reading checklist
+
+Every repository must be inspected against the same checklist.
+
+```yaml id=&quot;r56tx9&quot;
+REPO_READING_CHECKLIST:
+  IDENTITY:
+    - &quot;README&quot;
+    - &quot;license file&quot;
+    - &quot;package manager / dependency file&quot;
+    - &quot;deployment files&quot;
+    - &quot;documentation index&quot;
+
+  STACK:
+    - &quot;frontend framework&quot;
+    - &quot;backend framework&quot;
+    - &quot;database&quot;
+    - &quot;job queue&quot;
+    - &quot;auth system&quot;
+    - &quot;API style&quot;
+
+  DOMAIN:
+    - &quot;core civic entities&quot;
+    - &quot;proposal/debate/topic models&quot;
+    - &quot;vote/stance models&quot;
+    - &quot;comment/argument models&quot;
+    - &quot;draft/document models&quot;
+    - &quot;process/phase models&quot;
+    - &quot;accountability/outcome models&quot;
+
+  INTEGRATION:
+    - &quot;API routes&quot;
+    - &quot;service layer&quot;
+    - &quot;adapters&quot;
+    - &quot;webhooks&quot;
+    - &quot;exports/imports&quot;
+    - &quot;background jobs&quot;
+
+  GOVERNANCE:
+    - &quot;roles&quot;
+    - &quot;permissions&quot;
+    - &quot;moderation&quot;
+    - &quot;audit logs&quot;
+    - &quot;privacy/confidentiality&quot;
+    - &quot;anonymity&quot;
+
+  TESTING:
+    - &quot;unit tests&quot;
+    - &quot;integration tests&quot;
+    - &quot;e2e tests&quot;
+    - &quot;fixtures&quot;
+    - &quot;seed data&quot;
+
+  EXTRACTABILITY:
+    - &quot;standalone pattern&quot;
+    - &quot;deeply coupled pattern&quot;
+    - &quot;license-sensitive pattern&quot;
+    - &quot;too stack-specific&quot;
+    - &quot;safe to mimic in Ethikos&quot;
+```
+
+---
+
+## 9. Evaluation rubric
+
+Each discovered pattern must be scored.
+
+```yaml id=&quot;b6op6b&quot;
+PATTERN_SCORE:
+  PRODUCT_FIT:
+    0: &quot;not relevant&quot;
+    1: &quot;interesting but weak fit&quot;
+    2: &quot;useful&quot;
+    3: &quot;strong fit&quot;
+    4: &quot;core Kintsugi fit&quot;
+
+  ARCHITECTURE_FIT:
+    0: &quot;conflicts with Konnaxion&quot;
+    1: &quot;requires major rewrite&quot;
+    2: &quot;requires significant adaptation&quot;
+    3: &quot;fits with modest adaptation&quot;
+    4: &quot;fits natively&quot;
+
+  IMPLEMENTATION_COST:
+    0: &quot;not implementable&quot;
+    1: &quot;high cost&quot;
+    2: &quot;medium cost&quot;
+    3: &quot;low cost&quot;
+    4: &quot;configuration/UI only&quot;
+
+  RISK:
+    0: &quot;unacceptable&quot;
+    1: &quot;high risk&quot;
+    2: &quot;medium risk&quot;
+    3: &quot;low risk&quot;
+    4: &quot;minimal risk&quot;
+
+  FIRST_PASS_PRIORITY:
+    0: &quot;reject&quot;
+    1: &quot;defer&quot;
+    2: &quot;consider&quot;
+    3: &quot;include if easy&quot;
+    4: &quot;include&quot;
+```
+
+A first-pass mimic candidate should normally score:
+
+```yaml id=&quot;tsex46&quot;
+FIRST_PASS_MINIMUM:
+  PRODUCT_FIT: &quot;&gt;= 3&quot;
+  ARCHITECTURE_FIT: &quot;&gt;= 3&quot;
+  IMPLEMENTATION_COST: &quot;&gt;= 2&quot;
+  RISK: &quot;&gt;= 3&quot;
+```
+
+---
+
+## 10. First-pass source plans
+
+## 10.1 Consider.it
+
+```yaml id=&quot;w7v4fg&quot;
+SOURCE:
+  NAME: &quot;Consider.it&quot;
+  FIRST_PASS_STATUS: &quot;mimic&quot;
+  PRIMARY_KINTSUGI_STAGE: &quot;Stage 2 — Deliberation&quot;
+  PRIMARY_ROUTE_TARGET: &quot;/ethikos/deliberate/*&quot;
+  SECONDARY_ROUTE_TARGETS:
+    - &quot;/ethikos/pulse/*&quot;
+    - &quot;/ethikos/insights&quot;
+  EXPECTED_PATTERN:
+    - &quot;reason capture&quot;
+    - &quot;pro/con deliberation compression&quot;
+    - &quot;structured rationale summaries&quot;
+    - &quot;opinion positioning if present&quot;
+```
+
+### Reading goals
+
+Inspect Consider.it for:
+
+* how pro/con reasons are represented;
+* whether reasons are separate from votes;
+* whether it supports stance positioning;
+* how arguments/reasons are clustered or summarized;
+* whether participants can compare their position to others;
+* what moderation or admin primitives exist;
+* whether there are exportable decision artifacts.
+
+### Konnaxion mapping
+
+```yaml id=&quot;x4q98a&quot;
+CONSIDER_IT_MAPPING:
+  reason: &quot;EthikosArgument&quot;
+  pro_con_side: &quot;EthikosArgument.side&quot;
+  stance_position: &quot;EthikosStance&quot;
+  reason_cluster: &quot;ArgumentGraph / future summary artifact&quot;
+  route_target: &quot;/ethikos/deliberate/[topic]&quot;
+```
+
+### First-pass likely mimic
+
+```yaml id=&quot;u9jujl&quot;
+FIRST_PASS_MIMIC:
+  - &quot;clearer pro/con reason capture&quot;
+  - &quot;argument compression panel&quot;
+  - &quot;reason summary by stance bucket&quot;
+  - &quot;participant-position context if simple&quot;
+```
+
+### Defer
+
+```yaml id=&quot;hvm0cm&quot;
+DEFER:
+  - &quot;full opinion-map engine&quot;
+  - &quot;complex clustering&quot;
+  - &quot;direct external code reuse&quot;
+```
+
+---
+
+## 10.2 Kialo-style argument mapping
+
+```yaml id=&quot;5aps0h&quot;
+SOURCE:
+  NAME: &quot;Kialo-style argument mapping&quot;
+  FIRST_PASS_STATUS: &quot;mimic&quot;
+  PRIMARY_KINTSUGI_STAGE: &quot;Stage 2 — Deliberation&quot;
+  PRIMARY_ROUTE_TARGET: &quot;/ethikos/deliberate/[topic]&quot;
+  EXPECTED_PATTERN:
+    - &quot;thesis&quot;
+    - &quot;claim&quot;
+    - &quot;pro/con edge&quot;
+    - &quot;sources&quot;
+    - &quot;impact voting&quot;
+    - &quot;discussion topology&quot;
+    - &quot;roles&quot;
+    - &quot;visibility&quot;
+    - &quot;perspectives&quot;
+```
+
+Kialo is the canonical first-pass structured deliberation reference for Korum. Its documentation contains explicit patterns for discussion topology, sources, background information, perspectives, scheduled start/stop windows, and small-group controls.    
+
+### Reading goals
+
+Inspect Kialo-style source material for:
+
+* single-thesis vs multi-thesis topology;
+* claim creation;
+* pro/con relation semantics;
+* source/citation attachment;
+* discussion-level source views;
+* impact vote semantics;
+* anonymous discussions;
+* author visibility;
+* vote visibility;
+* participant roles;
+* suggested claims;
+* perspectives;
+* templates;
+* small groups;
+* discussion lifecycle start/stop;
+* export behavior.
+
+### Konnaxion mapping
+
+```yaml id=&quot;4g8ydk&quot;
+KIALO_MAPPING:
+  Discussion: &quot;EthikosTopic&quot;
+  Thesis: &quot;EthikosTopic.title + description / future thesis field&quot;
+  Claim: &quot;EthikosArgument&quot;
+  ProConEdge: &quot;EthikosArgument.parent + EthikosArgument.side&quot;
+  Source: &quot;ArgumentSource&quot;
+  ImpactVote: &quot;ArgumentImpactVote&quot;
+  SuggestedClaim: &quot;ArgumentSuggestion&quot;
+  Perspective: &quot;DiscussionPerspective / Smart Vote lens depending context&quot;
+  ParticipantRole: &quot;DiscussionParticipantRole&quot;
+```
+
+### First-pass likely mimic
+
+```yaml id=&quot;28esp2&quot;
+FIRST_PASS_MIMIC:
+  - &quot;argument tree using current EthikosArgument.parent&quot;
+  - &quot;pro/con/neutral side enforcement&quot;
+  - &quot;claim source attachment&quot;
+  - &quot;discussion-level sources panel&quot;
+  - &quot;claim impact vote separated from EthikosStance&quot;
+  - &quot;suggested claims queue&quot;
+  - &quot;basic participant role settings&quot;
+  - &quot;background info block&quot;
+  - &quot;single-thesis default&quot;
+```
+
+### Defer
+
+```yaml id=&quot;wsyspg&quot;
+DEFER:
+  - &quot;small group mode&quot;
+  - &quot;sunburst minimap&quot;
+  - &quot;clone-from-template&quot;
+  - &quot;custom perspectives&quot;
+  - &quot;discussion export&quot;
+  - &quot;move/link claim between discussions&quot;
+```
+
+### Hard anti-drift rules
+
+```yaml id=&quot;0dql4d&quot;
+KIALO_FORBIDDEN:
+  - &quot;Do not rename EthikosArgument to Claim.&quot;
+  - &quot;Do not create a new Kialo app.&quot;
+  - &quot;Do not create /kialo routes.&quot;
+  - &quot;Do not treat Kialo impact votes as Ethikos stances.&quot;
+  - &quot;Do not treat Kialo impact votes as Smart Vote ballots.&quot;
+```
+
+---
+
+## 10.3 Loomio
+
+```yaml id=&quot;o35q1d&quot;
+SOURCE:
+  NAME: &quot;Loomio&quot;
+  FIRST_PASS_STATUS: &quot;mimic&quot;
+  PRIMARY_KINTSUGI_STAGE: &quot;Stage 4 — Decision&quot;
+  PRIMARY_ROUTE_TARGET: &quot;/ethikos/decide/*&quot;
+  SECONDARY_ROUTE_TARGETS:
+    - &quot;/ethikos/admin/*&quot;
+    - &quot;/ethikos/learn/*&quot;
+  EXPECTED_PATTERN:
+    - &quot;proposal lifecycle&quot;
+    - &quot;decision protocol&quot;
+    - &quot;timeboxed decision&quot;
+    - &quot;outcome publication&quot;
+    - &quot;participant notification&quot;
+```
+
+The currently available Loomio documentation focuses on authentication and account linking, so code-reading must go beyond docs and inspect actual proposal, poll, outcome, group, and permission implementation if present. 
+
+### Reading goals
+
+Inspect Loomio for:
+
+* proposal models;
+* poll/vote models;
+* decision closing behavior;
+* outcome publishing;
+* group permissions;
+* notification triggers;
+* timeboxed participation;
+* discussion-to-decision transition;
+* reason/comment capture around decisions.
+
+### Konnaxion mapping
+
+```yaml id=&quot;ttghpi&quot;
+LOOMIO_MAPPING:
+  group: &quot;Ethikos participation context / future consultation group&quot;
+  proposal: &quot;DecisionRecord&quot;
+  poll: &quot;DecisionProtocol instance&quot;
+  vote: &quot;BallotEvent or Smart Vote Vote depending context&quot;
+  outcome: &quot;DecisionRecord.published_outcome&quot;
+  closing_at: &quot;DecisionRecord.closes_at&quot;
+```
+
+### First-pass likely mimic
+
+```yaml id=&quot;z9rd0z&quot;
+FIRST_PASS_MIMIC:
+  - &quot;decision lifecycle states&quot;
+  - &quot;proposal open/close window&quot;
+  - &quot;outcome summary&quot;
+  - &quot;decision protocol vocabulary&quot;
+  - &quot;result publishing pattern&quot;
+```
+
+### Defer
+
+```yaml id=&quot;coueh7&quot;
+DEFER:
+  - &quot;full Loomio group model&quot;
+  - &quot;email/code auth patterns&quot;
+  - &quot;OAuth/SSO account-linking logic&quot;
+  - &quot;native Loomio notifications&quot;
+```
+
+---
+
+## 10.4 Citizen OS
+
+```yaml id=&quot;ba8hio&quot;
+SOURCE:
+  NAME: &quot;Citizen OS&quot;
+  FIRST_PASS_STATUS: &quot;mimic&quot;
+  PRIMARY_KINTSUGI_STAGE: &quot;Stage 3 — Drafting&quot;
+  PRIMARY_ROUTE_TARGET: &quot;/ethikos/decide/* or future bounded drafting surface&quot;
+  SECONDARY_ROUTE_TARGETS:
+    - &quot;/ethikos/deliberate/*&quot;
+    - &quot;/ethikos/impact/*&quot;
+  EXPECTED_PATTERN:
+    - &quot;collaborative drafting&quot;
+    - &quot;topic phases&quot;
+    - &quot;document editing&quot;
+    - &quot;versioning&quot;
+    - &quot;signing/voting transition&quot;
+```
+
+Citizen OS documentation indicates a separated architecture with frontend, API, and Etherpad integration, which makes direct first-pass integration inappropriate. The first pass should mimic drafting patterns, not import infrastructure. 
+
+### Reading goals
+
+Inspect Citizen OS for:
+
+* topic lifecycle states;
+* draft/document models;
+* versioning patterns;
+* comments around text;
+* editing permissions;
+* transition from discussion to vote;
+* Etherpad integration boundaries;
+* exports;
+* user roles and groups.
+
+### Konnaxion mapping
+
+```yaml id=&quot;5h4rl5&quot;
+CITIZEN_OS_MAPPING:
+  Topic: &quot;EthikosTopic / Consultation&quot;
+  DraftDocument: &quot;Draft&quot;
+  DraftVersion: &quot;DraftVersion&quot;
+  TextProposal: &quot;Amendment&quot;
+  VotePhase: &quot;DecisionRecord&quot;
+  Comment: &quot;EthikosArgument or DraftComment depending scope&quot;
+```
+
+### First-pass likely mimic
+
+```yaml id=&quot;fujqbe&quot;
+FIRST_PASS_MIMIC:
+  - &quot;Draft&quot;
+  - &quot;DraftVersion&quot;
+  - &quot;Amendment&quot;
+  - &quot;RationalePacket&quot;
+  - &quot;transition from deliberation to draft to decision&quot;
+```
+
+### Defer
+
+```yaml id=&quot;9kc77l&quot;
+DEFER:
+  - &quot;Etherpad integration&quot;
+  - &quot;real-time collaborative editing&quot;
+  - &quot;full Citizen OS API compatibility&quot;
+  - &quot;document signing infrastructure&quot;
+```
+
+---
+
+## 10.5 Decidim
+
+```yaml id=&quot;q0gf7a&quot;
+SOURCE:
+  NAME: &quot;Decidim&quot;
+  FIRST_PASS_STATUS: &quot;mimic&quot;
+  PRIMARY_KINTSUGI_STAGE: &quot;Stage 5 — Process and accountability&quot;
+  PRIMARY_ROUTE_TARGET: &quot;/ethikos/impact/*&quot;
+  SECONDARY_ROUTE_TARGETS:
+    - &quot;/ethikos/admin/*&quot;
+    - &quot;/ethikos/pulse/*&quot;
+    - &quot;/ethikos/learn/*&quot;
+  EXPECTED_PATTERN:
+    - &quot;participatory process architecture&quot;
+    - &quot;components&quot;
+    - &quot;phases&quot;
+    - &quot;proposals&quot;
+    - &quot;accountability&quot;
+    - &quot;admin governance&quot;
+```
+
+Decidim’s documentation is developer-oriented and generated through an Antora/AsciiDoc system, with extensive modules beyond the root README. 
+
+### Reading goals
+
+Inspect Decidim for:
+
+* participatory process model;
+* component architecture;
+* proposals;
+* debates;
+* meetings;
+* consultations;
+* surveys;
+* accountability components;
+* admin permissions;
+* audit logs;
+* scopes/areas/taxonomies;
+* lifecycle phase configuration;
+* public result/accountability pages.
+
+### Konnaxion mapping
+
+```yaml id=&quot;3thg7x&quot;
+DECIDIM_MAPPING:
+  ParticipatoryProcess: &quot;Ethikos Process / ConsultationProcess&quot;
+  Phase: &quot;ProcessPhase&quot;
+  Proposal: &quot;DecisionRecord or Draft depending stage&quot;
+  AccountabilityResult: &quot;ImpactTrack&quot;
+  AdminPermission: &quot;Ethikos admin role&quot;
+  Taxonomy: &quot;EthikosCategory / TopicTag&quot;
+```
+
+### First-pass likely mimic
+
+```yaml id=&quot;6y0qnx&quot;
+FIRST_PASS_MIMIC:
+  - &quot;process phases&quot;
+  - &quot;accountability tracker&quot;
+  - &quot;public milestone/status view&quot;
+  - &quot;admin process controls&quot;
+  - &quot;taxonomy-aware process grouping&quot;
+```
+
+### Defer
+
+```yaml id=&quot;hdwa84&quot;
+DEFER:
+  - &quot;full component marketplace&quot;
+  - &quot;full Decidim admin architecture&quot;
+  - &quot;direct GraphQL/API compatibility&quot;
+  - &quot;full participatory-space abstraction&quot;
+```
+
+---
+
+## 10.6 CONSUL Democracy
+
+```yaml id=&quot;nr6atv&quot;
+SOURCE:
+  NAME: &quot;CONSUL Democracy&quot;
+  FIRST_PASS_STATUS: &quot;mimic&quot;
+  PRIMARY_KINTSUGI_STAGE: &quot;Stage 4/5 — Decision and accountability&quot;
+  PRIMARY_ROUTE_TARGET: &quot;/ethikos/decide/*&quot;
+  SECONDARY_ROUTE_TARGETS:
+    - &quot;/ethikos/admin/*&quot;
+    - &quot;/ethikos/impact/*&quot;
+  EXPECTED_PATTERN:
+    - &quot;proposal thresholds&quot;
+    - &quot;eligibility&quot;
+    - &quot;census&quot;
+    - &quot;participatory budgeting concepts&quot;
+    - &quot;admin customization&quot;
+```
+
+CONSUL documentation includes customization surfaces for controllers, components, models, routes, CSS, tests, and translations, which suggests strong platform-level coupling; first pass should mimic policy patterns, not stack structure. 
+
+### Reading goals
+
+Inspect CONSUL for:
+
+* proposal model;
+* support/endorsement thresholds;
+* voting eligibility;
+* census integration;
+* budget allocation;
+* admin controls;
+* moderation;
+* result publication;
+* accountability tracking;
+* customization extension points.
+
+### Konnaxion mapping
+
+```yaml id=&quot;weqi5e&quot;
+CONSUL_MAPPING:
+  Proposal: &quot;DecisionRecord&quot;
+  SupportThreshold: &quot;EligibilityRule / DecisionProtocol.threshold&quot;
+  CensusEligibility: &quot;EligibilityRule&quot;
+  BudgetVote: &quot;Future decision modality&quot;
+  ResultPublication: &quot;ReadingResult / DecisionRecord outcome&quot;
+  Accountability: &quot;ImpactTrack&quot;
+```
+
+### First-pass likely mimic
+
+```yaml id=&quot;g3afep&quot;
+FIRST_PASS_MIMIC:
+  - &quot;eligibility rules&quot;
+  - &quot;proposal thresholds&quot;
+  - &quot;public participation gates&quot;
+  - &quot;support count / threshold display&quot;
+  - &quot;accountability-style status&quot;
+```
+
+### Defer
+
+```yaml id=&quot;zz6xco&quot;
+DEFER:
+  - &quot;full participatory budgeting&quot;
+  - &quot;census integration&quot;
+  - &quot;Rails customization pattern&quot;
+  - &quot;direct CONSUL route/controller model&quot;
+```
+
+---
+
+## 10.7 DemocracyOS
+
+```yaml id=&quot;avlmda&quot;
+SOURCE:
+  NAME: &quot;DemocracyOS&quot;
+  FIRST_PASS_STATUS: &quot;mimic&quot;
+  PRIMARY_KINTSUGI_STAGE: &quot;Stage 2/4 — Deliberation and decision&quot;
+  PRIMARY_ROUTE_TARGET: &quot;/ethikos/decide/*&quot;
+  SECONDARY_ROUTE_TARGETS:
+    - &quot;/ethikos/deliberate/*&quot;
+    - &quot;/ethikos/admin/*&quot;
+  EXPECTED_PATTERN:
+    - &quot;proposal-centric policy debate&quot;
+    - &quot;forum/topic organization&quot;
+    - &quot;commentary around proposals&quot;
+    - &quot;roles and permissions&quot;
+    - &quot;visibility configuration&quot;
+```
+
+DemocracyOS documentation includes configuration and install docs, suggesting that code-reading should focus on proposal, topic, forum, role, and permission models rather than operational setup. 
+
+### Reading goals
+
+Inspect DemocracyOS for:
+
+* proposal/topic models;
+* forum or space models;
+* discussion/comment models;
+* vote behavior;
+* role/permission settings;
+* visibility settings;
+* tags/categories;
+* admin configuration;
+* notification and activity patterns.
+
+### Konnaxion mapping
+
+```yaml id=&quot;3ew1k3&quot;
+DEMOCRACY_OS_MAPPING:
+  Proposal: &quot;DecisionRecord&quot;
+  Forum: &quot;Ethikos process or category context&quot;
+  Topic: &quot;EthikosTopic&quot;
+  Comment: &quot;EthikosArgument&quot;
+  Vote: &quot;BallotEvent or Smart Vote Vote depending decision context&quot;
+  Visibility: &quot;DiscussionVisibilitySetting&quot;
+```
+
+### First-pass likely mimic
+
+```yaml id=&quot;0vck29&quot;
+FIRST_PASS_MIMIC:
+  - &quot;proposal-centric debate page&quot;
+  - &quot;clear proposal status&quot;
+  - &quot;discussion attached to policy/proposal&quot;
+  - &quot;visibility/role controls&quot;
+```
+
+### Defer
+
+```yaml id=&quot;itdnht&quot;
+DEFER:
+  - &quot;full DemocracyOS configuration model&quot;
+  - &quot;foreign forum architecture&quot;
+  - &quot;direct Mongo/Node assumptions&quot;
+```
+
+---
+
+## 11. Deferred source policy
+
+The following sources are not part of first-pass code reading.
+
+```yaml id=&quot;blcznk&quot;
+DEFERRED_SOURCE_POLICY:
+  Polis:
+    status: &quot;deferred_public_credit_only&quot;
+    reason: &quot;valuable consensus/opinion mapping, but not first-pass scope&quot;
+  LiquidFeedback:
+    status: &quot;deferred_public_credit_only&quot;
+    reason: &quot;delegation/governance math too complex for first pass&quot;
+  All_Our_Ideas:
+    status: &quot;deferred&quot;
+    reason: &quot;pairwise ranking not required in first-pass Kintsugi&quot;
+  Your_Priorities:
+    status: &quot;deferred&quot;
+    reason: &quot;idea intake/prioritization later&quot;
+  OpenSlides:
+    status: &quot;deferred_possible_future_annex&quot;
+    reason: &quot;assembly/parliament mode is outside first-pass Ethikos route upgrade&quot;
+```
+
+If a future reader inspects these anyway, the result must be stored in a future research note, not folded into first-pass Kintsugi backlog.
+
+---
+
+## 12. Cross-source comparison matrix
+
+After all first-pass repos are read, produce a comparison table.
+
+```markdown id=&quot;m66jcf&quot;
+| Source | Real code feature | Useful pattern | Route target | Data target | Mimic now | Defer | Reject | Notes |
+|---|---|---|---|---|---:|---:|---:|---|
+| Consider.it | | | /ethikos/deliberate/* | EthikosArgument | | | | |
+| Kialo-style | | | /ethikos/deliberate/* | EthikosArgument + extensions | | | | |
+| Loomio | | | /ethikos/decide/* | DecisionRecord | | | | |
+| Citizen OS | | | Drafting / Decide | Draft / Amendment | | | | |
+| Decidim | | | /ethikos/impact/* | ProcessPhase / ImpactTrack | | | | |
+| CONSUL Democracy | | | /ethikos/decide/* | EligibilityRule / DecisionProtocol | | | | |
+| DemocracyOS | | | /ethikos/decide/* | DecisionRecord / EthikosArgument | | | | |
+```
+
+---
+
+## 13. Required final OSS reading deliverables
+
+The OSS code-reading phase must produce these outputs before implementation backlog generation.
+
+```yaml id=&quot;6ongkh&quot;
+REQUIRED_DELIVERABLES:
+  - &quot;OSS_READING_REPORT_CONSIDER_IT.md&quot;
+  - &quot;OSS_READING_REPORT_KIALO_STYLE.md&quot;
+  - &quot;OSS_READING_REPORT_LOOMIO.md&quot;
+  - &quot;OSS_READING_REPORT_CITIZEN_OS.md&quot;
+  - &quot;OSS_READING_REPORT_DECIDIM.md&quot;
+  - &quot;OSS_READING_REPORT_CONSUL_DEMOCRACY.md&quot;
+  - &quot;OSS_READING_REPORT_DEMOCRACY_OS.md&quot;
+  - &quot;OSS_CROSS_SOURCE_COMPARISON.md&quot;
+  - &quot;OSS_PATTERN_TO_ETHIKOS_ROUTE_MAPPING.md&quot;
+  - &quot;OSS_RISK_AND_LICENSE_NOTES.md&quot;
+```
+
+These are working reports, not permanent Kintsugi pack files unless promoted later.
+
+---
+
+## 14. Evidence rules
+
+Every OSS code-reading report must cite concrete evidence.
+
+```yaml id=&quot;l5i90p&quot;
+EVIDENCE_REQUIRED:
+  - &quot;file path inspected&quot;
+  - &quot;model/entity file path&quot;
+  - &quot;controller/view/route file path&quot;
+  - &quot;frontend component file path&quot;
+  - &quot;test file path if available&quot;
+  - &quot;configuration file path&quot;
+  - &quot;license file path&quot;
+```
+
+Forbidden evidence style:
+
+```yaml id=&quot;6gf6lq&quot;
+FORBIDDEN_EVIDENCE:
+  - &quot;The docs say it has X, so code must have X.&quot;
+  - &quot;The product is known for X, so implement X.&quot;
+  - &quot;This seems similar to Konnaxion, so merge it.&quot;
+  - &quot;The README implies a feature, so assume its data model.&quot;
+```
+
+Correct evidence style:
+
+```yaml id=&quot;4od0tb&quot;
+CORRECT_EVIDENCE:
+  - &quot;Feature found in model file X and controller Y.&quot;
+  - &quot;Docs mention feature, but code path not found.&quot;
+  - &quot;Code implements feature, but stack coupling is too high.&quot;
+  - &quot;Pattern is useful, but must be mimicked as native Ethikos data.&quot;
+```
+
+---
+
+## 15. License and dependency review
+
+Before any pattern is promoted to implementation backlog, record:
+
+```yaml id=&quot;nbss53&quot;
+LICENSE_REVIEW_FIELDS:
+  repository_name: &quot;&quot;
+  license_detected: &quot;&quot;
+  license_file_path: &quot;&quot;
+  copyleft_risk: &quot;none | low | medium | high | unknown&quot;
+  attribution_required: &quot;yes | no | unknown&quot;
+  code_reuse_allowed: &quot;yes | no | unknown&quot;
+  mimic_allowed: &quot;yes | no | unknown&quot;
+  notes: &quot;&quot;
+```
+
+First-pass Kintsugi assumes:
+
+```yaml id=&quot;wmz27h&quot;
+LICENSE_POLICY:
+  DIRECT_CODE_REUSE_DEFAULT: false
+  PRODUCT_PATTERN_MIMIC_DEFAULT: true
+  ATTRIBUTION_REQUIRED_IN_PUBLIC_CREDIT: true
+  LEGAL_REVIEW_REQUIRED_FOR_IMPORT: true
+```
+
+---
+
+## 16. Stack compatibility review
+
+Each repo must be classified by stack compatibility.
+
+```yaml id=&quot;xti57y&quot;
+STACK_COMPATIBILITY_LEVELS:
+  native_fit:
+    description: &quot;Pattern fits Konnaxion&#x27;s Next.js + Django/DRF architecture.&quot;
+  mimic_fit:
+    description: &quot;Pattern useful but source stack differs; mimic natively.&quot;
+  adapter_fit_later:
+    description: &quot;Could become a sidecar or adapter later.&quot;
+  reject:
+    description: &quot;Stack or architecture conflicts with Konnaxion goals.&quot;
+```
+
+Expected defaults:
+
+```yaml id=&quot;xebkpd&quot;
+EXPECTED_STACK_DEFAULTS:
+  ConsiderIt: &quot;mimic_fit&quot;
+  KialoStyle: &quot;mimic_fit&quot;
+  Loomio: &quot;mimic_fit&quot;
+  CitizenOS: &quot;mimic_fit&quot;
+  Decidim: &quot;mimic_fit&quot;
+  CONSULDemocracy: &quot;mimic_fit&quot;
+  DemocracyOS: &quot;mimic_fit&quot;
+```
+
+---
+
+## 17. Route-mapping discipline
+
+All useful patterns must map to existing ethiKos route families.
+
+The current route structure is already explicit and should not be replaced by older simplified `/debate`, `/consult`, or `/reputation` concepts. 
+
+```yaml id=&quot;4glwgq&quot;
+ROUTE_MAPPING_RULES:
+  ConsiderIt:
+    primary: &quot;/ethikos/deliberate/*&quot;
+  KialoStyle:
+    primary: &quot;/ethikos/deliberate/*&quot;
+  Loomio:
+    primary: &quot;/ethikos/decide/*&quot;
+  CitizenOS:
+    primary: &quot;/ethikos/decide/*&quot;
+    possible_future: &quot;/ethikos/draft/* only if separately approved&quot;
+  Decidim:
+    primary: &quot;/ethikos/impact/*&quot;
+    secondary: &quot;/ethikos/admin/*&quot;
+  CONSULDemocracy:
+    primary: &quot;/ethikos/decide/*&quot;
+    secondary: &quot;/ethikos/admin/*&quot;
+  DemocracyOS:
+    primary: &quot;/ethikos/decide/*&quot;
+    secondary: &quot;/ethikos/deliberate/*&quot;
+```
+
+Forbidden:
+
+```yaml id=&quot;2cs3qk&quot;
+FORBIDDEN_ROUTE_OUTPUTS:
+  - &quot;/kialo&quot;
+  - &quot;/loomio&quot;
+  - &quot;/decidim&quot;
+  - &quot;/consul&quot;
+  - &quot;/democracyos&quot;
+  - &quot;/kintsugi as separate product app&quot;
+  - &quot;/api/deliberation/...&quot;
+```
+
+---
+
+## 18. Backend-mapping discipline
+
+The current Konnaxion backend is a Django modular monolith with DRF under `/api/...`; this must remain the implementation reality. 
+
+```yaml id=&quot;xxm30m&quot;
+BACKEND_MAPPING_RULES:
+  KORUM_PATTERNS:
+    target_app: &quot;konnaxion.ethikos&quot;
+    allowed_current_models:
+      - &quot;EthikosTopic&quot;
+      - &quot;EthikosStance&quot;
+      - &quot;EthikosArgument&quot;
+      - &quot;EthikosCategory&quot;
+
+  DECISION_PATTERNS:
+    target_app: &quot;konnaxion.ethikos or kollective_intelligence depending exact ownership&quot;
+    proposed_models:
+      - &quot;DecisionProtocol&quot;
+      - &quot;DecisionRecord&quot;
+      - &quot;EligibilityRule&quot;
+
+  READING_PATTERNS:
+    target_app: &quot;konnaxion.kollective_intelligence / Smart Vote layer&quot;
+    proposed_models:
+      - &quot;LensDeclaration&quot;
+      - &quot;ReadingResult&quot;
+
+  DRAFTING_PATTERNS:
+    target_app: &quot;konnaxion.ethikos&quot;
+    proposed_models:
+      - &quot;Draft&quot;
+      - &quot;DraftVersion&quot;
+      - &quot;Amendment&quot;
+      - &quot;RationalePacket&quot;
+
+  IMPACT_PATTERNS:
+    target_app: &quot;konnaxion.ethikos / Konsultations ownership&quot;
+    proposed_models:
+      - &quot;ImpactTrack&quot;
+      - &quot;ImpactUpdate&quot;
+```
+
+Forbidden:
+
+```yaml id=&quot;d0onjs&quot;
+FORBIDDEN_BACKEND_OUTPUTS:
+  - &quot;Create konnaxion.kialo&quot;
+  - &quot;Create konnaxion.loomio&quot;
+  - &quot;Create konnaxion.decidim&quot;
+  - &quot;Create Rails sidecar in first pass&quot;
+  - &quot;Create Node/Mongo dependency in first pass&quot;
+  - &quot;Let external tool write directly to Ethikos core tables&quot;
+```
+
+---
+
+## 19. Frontend-mapping discipline
+
+The Konnaxion frontend uses a shared shell, Ant Design, and module-specific page shells. Module pages plug into the global shell rather than acting as separate top-level apps. 
+
+```yaml id=&quot;7ynyr4&quot;
+FRONTEND_MAPPING_RULES:
+  USE_EXISTING_SHELL: true
+  USE_ETHIKOS_PAGE_SHELL: true
+  USE_PAGE_CONTAINER: true
+  USE_SERVICES_LAYER: true
+  RAW_FETCH_IN_COMPONENTS: &quot;avoid&quot;
+  NEW_TOP_LEVEL_FOREIGN_UI: false
+```
+
+Every UI pattern found in OSS must be translated into one of:
+
+```yaml id=&quot;gbszt3&quot;
+ETHIKOS_UI_TARGETS:
+  - &quot;Deliberate topic page&quot;
+  - &quot;Argument tree component&quot;
+  - &quot;Sources panel&quot;
+  - &quot;Decision workflow card&quot;
+  - &quot;Decision result view&quot;
+  - &quot;Impact tracker&quot;
+  - &quot;Admin moderation/audit view&quot;
+  - &quot;Insights analytics panel&quot;
+  - &quot;Learn/methodology explanation&quot;
+```
+
+---
+
+## 20. Security, privacy, and governance review
+
+Every repo must be checked for governance-relevant behavior.
+
+```yaml id=&quot;a9i4gr&quot;
+SECURITY_PRIVACY_GOVERNANCE_CHECKLIST:
+  - &quot;authentication model&quot;
+  - &quot;authorization model&quot;
+  - &quot;role hierarchy&quot;
+  - &quot;anonymous or pseudonymous participation&quot;
+  - &quot;author visibility&quot;
+  - &quot;vote visibility&quot;
+  - &quot;moderation workflow&quot;
+  - &quot;audit logs&quot;
+  - &quot;export behavior&quot;
+  - &quot;personal data exposure&quot;
+  - &quot;admin override capabilities&quot;
+```
+
+For Kintsugi, these are especially important:
+
+```yaml id=&quot;xjov9r&quot;
+KINTSUGI_SENSITIVE_AREAS:
+  - &quot;anonymous deliberation&quot;
+  - &quot;expertise-weighted voting&quot;
+  - &quot;EkoH score exposure&quot;
+  - &quot;moderator identity visibility&quot;
+  - &quot;suggested claim approval&quot;
+  - &quot;result publication&quot;
+  - &quot;source/evidence export&quot;
+```
+
+---
+
+## 21. Code-reading order
+
+Use this exact order.
+
+```yaml id=&quot;y1y3ft&quot;
+RECOMMENDED_READING_ORDER:
+  1:
+    source: &quot;Kialo-style&quot;
+    reason: &quot;Defines the strongest Korum / Deliberate contract.&quot;
+  2:
+    source: &quot;Consider.it&quot;
+    reason: &quot;Complements Kialo with reason capture and deliberation compression.&quot;
+  3:
+    source: &quot;Loomio&quot;
+    reason: &quot;Clarifies proposal lifecycle and decision protocols.&quot;
+  4:
+    source: &quot;Citizen OS&quot;
+    reason: &quot;Clarifies drafting/versioning patterns.&quot;
+  5:
+    source: &quot;Decidim&quot;
+    reason: &quot;Clarifies process/accountability architecture.&quot;
+  6:
+    source: &quot;CONSUL Democracy&quot;
+    reason: &quot;Clarifies eligibility and threshold mechanics.&quot;
+  7:
+    source: &quot;DemocracyOS&quot;
+    reason: &quot;Clarifies proposal-centric policy debate.&quot;
+```
+
+---
+
+## 22. Promotion rule: from code-reading to backlog
+
+A pattern can enter the implementation backlog only if all conditions are true.
+
+```yaml id=&quot;8s1qwc&quot;
+PROMOTION_CONDITIONS:
+  - &quot;The pattern exists in code or is clearly documented as a product behavior.&quot;
+  - &quot;The pattern maps to an existing Ethikos route family.&quot;
+  - &quot;The pattern does not require full external merge.&quot;
+  - &quot;The pattern can be implemented natively in Konnaxion.&quot;
+  - &quot;The ownership boundary is clear.&quot;
+  - &quot;The data model impact is known.&quot;
+  - &quot;The API/service impact is known.&quot;
+  - &quot;The test impact is known.&quot;
+  - &quot;The risk level is acceptable.&quot;
+  - &quot;The relevant Kintsugi doc is updated or referenced.&quot;
+```
+
+A pattern must be rejected or deferred if:
+
+```yaml id=&quot;dhicf2&quot;
+DEFER_OR_REJECT_WHEN:
+  - &quot;It requires replacing Ethikos route families.&quot;
+  - &quot;It requires direct foreign DB writes.&quot;
+  - &quot;It requires importing a large external stack.&quot;
+  - &quot;It conflicts with Korum/Konsultations/Smart Vote/EkoH ownership.&quot;
+  - &quot;It duplicates an existing Konnaxion capability.&quot;
+  - &quot;It depends on deferred sources.&quot;
+  - &quot;It cannot be tested safely in the current stack.&quot;
+```
+
+---
+
+## 23. Anti-drift rules
+
+```yaml id=&quot;vyz4ww&quot;
+ANTI_DRIFT_RULES:
+  - &quot;Do not inspect OSS code before the Kintsugi documentation contracts are stable.&quot;
+  - &quot;Do not convert repo findings directly into implementation tasks.&quot;
+  - &quot;Do not assume README/product claims equal implemented code.&quot;
+  - &quot;Do not import external code in first pass.&quot;
+  - &quot;Do not create foreign route families.&quot;
+  - &quot;Do not create foreign Django apps for first-pass mimic.&quot;
+  - &quot;Do not replace /ethikos/* with OSS-native navigation.&quot;
+  - &quot;Do not replace /api/ethikos/* with invented endpoints.&quot;
+  - &quot;Do not expand /api/home/* usage.&quot;
+  - &quot;Do not treat deferred sources as first-pass.&quot;
+  - &quot;Do not let a powerful OSS architecture dominate Konnaxion architecture.&quot;
+  - &quot;Do not mix product strategy, code-reading, and implementation backlog in the same artifact.&quot;
+```
+
+---
+
+## 24. Acceptance checklist
+
+This document is satisfied when the OSS code-reading phase can produce:
+
+```yaml id=&quot;nrl3hi&quot;
+ACCEPTANCE_CHECKLIST:
+  per_repo_reports:
+    - &quot;Each first-pass source has a code-reading report.&quot;
+    - &quot;Each report identifies stack, license, core models, routes, and permissions.&quot;
+    - &quot;Each report distinguishes code reality from product idea.&quot;
+    - &quot;Each report maps patterns to /ethikos/* route families.&quot;
+    - &quot;Each report recommends mimic, defer, annex-later, or reject.&quot;
+
+  cross_source_outputs:
+    - &quot;A cross-source comparison matrix exists.&quot;
+    - &quot;A pattern-to-route mapping exists.&quot;
+    - &quot;A risk/license note exists.&quot;
+    - &quot;Deferred sources remain deferred.&quot;
+
+  drift_control:
+    - &quot;No full merge is recommended.&quot;
+    - &quot;No external route family is created.&quot;
+    - &quot;No external app is created for first pass.&quot;
+    - &quot;No implementation backlog is generated before reading reports.&quot;
+```
+
+---
+
+## 25. Related documents
+
+```yaml id=&quot;npx7yx&quot;
+RELATED_DOCS:
+  - &quot;00_KINTSUGI_START_HERE.md&quot;
+  - &quot;01_ETHIKOS_KINTSUGI_EXECUTION_STRATEGY.md&quot;
+  - &quot;02_SOURCE_OF_TRUTH_AND_DRIFT_CONTROL.md&quot;
+  - &quot;03_BOUNDARIES_AND_OWNERSHIP_CONTRACTS.md&quot;
+  - &quot;04_CANONICAL_NAMING_AND_VARIABLES.md&quot;
+  - &quot;05_CURRENT_STATE_BASELINE.md&quot;
+  - &quot;06_ROUTE_BY_ROUTE_ETHIKOS_UPGRADE_PLAN.md&quot;
+  - &quot;07_API_AND_SERVICE_CONTRACTS.md&quot;
+  - &quot;08_DATA_MODEL_AND_MIGRATION_PLAN.md&quot;
+  - &quot;10_FIRST_PASS_INTEGRATION_MATRIX.md&quot;
+  - &quot;11_MIMIC_VS_ANNEX_RULEBOOK.md&quot;
+  - &quot;14_FRONTEND_ALIGNMENT_CONTRACT.md&quot;
+  - &quot;15_BACKEND_ALIGNMENT_CONTRACT.md&quot;
+  - &quot;18_ADR_REGISTER.md&quot;
+  - &quot;20_AI_GENERATION_GUARDRAILS.md&quot;
+  - &quot;21_KIALO_STYLE_ARGUMENT_MAPPING_CONTRACT.md&quot;
+  - &quot;22_IMPLEMENTATION_BACKLOG_TEMPLATE.md&quot;
+```
+
+---
+
+## 26. Final normative summary
+
+```yaml id=&quot;qkpp80&quot;
+FINAL_CONTRACT:
+  OSS_CODE_READING_PURPOSE: &quot;extract patterns, not import systems&quot;
+  FIRST_PASS_STRATEGY: &quot;native mimic&quot;
+  FULL_MERGE_ALLOWED: false
+  ANNEX_FIRST_PASS_ALLOWED: false
+  PRIMARY_ROUTE_SURFACE: &quot;/ethikos/*&quot;
+  PRIMARY_BACKEND_STYLE: &quot;Django REST Framework under /api/...&quot;
+  PRIMARY_FRONTEND_STYLE: &quot;Next.js App Router inside shared Konnaxion shell&quot;
+  FIRST_PASS_SOURCES:
+    - &quot;Consider.it&quot;
+    - &quot;Kialo-style argument mapping&quot;
+    - &quot;Loomio&quot;
+    - &quot;Citizen OS&quot;
+    - &quot;Decidim&quot;
+    - &quot;CONSUL Democracy&quot;
+    - &quot;DemocracyOS&quot;
+  DEFERRED_SOURCES:
+    - &quot;Polis&quot;
+    - &quot;LiquidFeedback&quot;
+    - &quot;All Our Ideas&quot;
+    - &quot;Your Priorities&quot;
+    - &quot;OpenSlides&quot;
+  OUTPUT_BEFORE_BACKLOG:
+    - &quot;per-repo reading reports&quot;
+    - &quot;cross-source comparison&quot;
+    - &quot;pattern-to-route mapping&quot;
+    - &quot;risk/license notes&quot;
+```
+</pre></body></html>

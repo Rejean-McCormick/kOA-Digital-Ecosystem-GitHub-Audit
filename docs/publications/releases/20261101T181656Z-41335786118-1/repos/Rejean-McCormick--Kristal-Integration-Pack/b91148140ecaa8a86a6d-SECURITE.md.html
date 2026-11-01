@@ -1,0 +1,18 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · docs/SECURITE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · docs/SECURITE.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · b7e08f384609 · SHA-256 7609295e6cc50426</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/blob/b7e08f38460917f6e23df59151b1a8b8e447b4f7/docs/SECURITE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Security and authorization boundaries
+
+The bridge permits only local loopback HTTP (`127.0.0.1`, `localhost`, or `[::1]`) with no URL credentials/path or redirects. The CLI caps response bodies at 8 MB and the Konstellation overlay caps them at 2 MB by default; both enforce request timeouts and an explicit endpoint allowlist.
+
+Konstellation&#x27;s route adapter requires **both** `read` and `kompiler` scopes where installed, along with its existing origin/auth/rate-limit checks. The local-scoped feature is opt-in (`KONSTELLATION_ENABLE_KOMPILER_LOCAL=true`). A remote/shared deployment must **not** enable it until the principal&#x27;s Reader Policy and allowable upstream targets are bound **unavoidably** to every Kompiler request. The bridge does not currently prove this mapping.
+
+- Never forward a Konstellation principal&#x27;s wide service token into Kompiler as an implicit right to all sources.
+- Protect Context Packs, JSON projections, receipts and source metadata. They may contain confidential content even if the state is described as a “derived view.”
+- `/v1/projections/v6` creates a derived representation only when a compatible v7 Surface is available, and cannot certify or publish a Kristal state.
+- CLI authoring is limited to named Kit actions; `build-v9`/`publish-v9` require `KRISTAL_ALLOW_WRITE=1` plus exactly matching `--confirm`. This does not substitute for owner authorization or a transaction rollback service.
+- C3 `scan` / `validate-index` checks local **structure**, not independent qualification, consent, release, publication, or activation.
+- No scripts in this pack write to `kristal-public`, `kristal-private`, Manager, Bootstrap, or GitHub. `GitSink.bat` is a legacy utility that is **not** invoked by the integration workflow.
+- Backups are checksummed and rollback refuses upstream drift; existing Konstellation integrations differing from the packaged overlay are **not overwritten**.
+
+### Negative tests to retain
+
+Unsupported protocol/version, fake target ID, nonloopback origin, redirect, unauthorized endpoint, oversized response, unknown CLI option, existing output directory, modified owner bridge, wrong contract-set SHA, missing public C3 index, unauthorized reader scope.
+</pre></body></html>

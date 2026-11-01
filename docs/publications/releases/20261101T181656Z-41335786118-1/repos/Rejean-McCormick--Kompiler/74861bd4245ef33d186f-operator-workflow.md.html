@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/09-reference/operator-workflow.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/09-reference/operator-workflow.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 12d81fb392feca1d</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/09-reference/operator-workflow.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Operator Workflow
+
+## Clipboard-first
+
+1. Run `kompiler capabilities --json`.
+2. Give the capability snapshot to the LLM.
+3. Ask the LLM to return one `kompiler.query/1.1` JSON artifact.
+4. Paste/drop that JSON into the desktop Query Inbox or run it through the CLI.
+5. Execute locally.
+6. Copy the resulting Context Pack into the conversation.
+7. Continue reasoning; issue follow-up Query Plans only where the Context Pack exposes gaps.
+
+## Desktop
+
+Run the Python API and the desktop frontend. The UI is intentionally a control/inspection surface; query semantics live only in the Python core.
+
+Local browser/webview origins must be explicitly listed under `api.cors_origins` when the UI uses HTTP transport.
+
+## Heavy sessions
+
+For large plans, use async API runs so the UI can display receipts and cancellation state. Context Packs remain normal protocol artifacts regardless of transport.
+</pre></body></html>

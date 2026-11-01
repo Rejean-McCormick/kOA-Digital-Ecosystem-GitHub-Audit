@@ -1,0 +1,35 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/06-experience/navigation-et-plan-ecrans.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/06-experience/navigation-et-plan-ecrans.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 387ef1ea6155b10b</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/06-experience/navigation-et-plan-ecrans.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Navigation cible — application orientée Kristals
+
+## Structure principale (CIBLE)
+
+```text
+Manager
+├── Vue d&#x27;ensemble        [priorités, historique récent, actions restantes]
+├── Kristals              [liste unifiée, filtre, sélection]
+│   └── Fiche Kristal
+│       ├── Aperçu        [identité, structure, statut]
+│       ├── Résultats     [diagnostics, analyse, preuves et historique]
+│       ├── Contenu       [KQ/KP, limites de lecture et recherche]
+│       └── Classement    [ARK, PRF, UNESCO, propositions et décisions]
+├── Centre d&#x27;analyse      [lancer/monitorer scan et diagnostics par sélection]
+└── Avancé                [imports, maintenance, publication contrôlée, préférences]
+```
+
+**Pas de page supplémentaire** si le centre et la liste peuvent partager le même contexte. Les « 4 espaces » sont une proposition de regroupement, pas un quota graphique fixe.
+
+## Fonctions à fusionner
+
+Les anciennes actions `Scan folder`, `Analyse globale`, `Diagnostic`, `catalogue`, `vérification` doivent utiliser des commandes d&#x27;application communes. Les anciens menus peuvent rediriger vers les mêmes actions mais ne doivent pas créer des pipelines parallèles. Le nouveau centre montre le **résultat courant** et les sorties au même endroit où on lance le travail.
+
+## Détails de la liste
+
+Colonnes par défaut : nom, readiness, dernière analyse et date, diagnostic (profil + fraîcheur), action requise. Colonnes facultatives : `state_ref`, URI UNESCO, ARK détaillés, nombre d&#x27;assertions, empreinte, artefacts. Filtres par `READY`, `WARN`, `FAILED`, `STALE`, `PROPOSED`, sans transformer une revue sémantique en erreur.
+
+## Fiche Kristal
+
+En-tête : titre, identité, chemin, type natif/v9/v11, dernier scan. Bandeau « état vérifié à telle date / périmé / inconnu ». Chaque onglet possède **son** état de chargement, ses preuves et actions proches. Le retour à la liste restaure sélection et filtres.
+
+## Commandes avancées
+
+GitHub/publishing, installation dépendances, logs, reconstructions de catalogue et maintenance des caches restent hors parcours principal et explicitement confirmés lorsqu&#x27;ils peuvent écrire.
+</pre></body></html>

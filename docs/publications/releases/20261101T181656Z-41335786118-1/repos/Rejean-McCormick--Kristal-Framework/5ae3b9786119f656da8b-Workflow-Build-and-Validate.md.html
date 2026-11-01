@@ -1,0 +1,64 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Workflow-Build-and-Validate.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Workflow-Build-and-Validate.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 1360d32d271fd24c</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Workflow-Build-and-Validate' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Workflow: Build &amp; Validate
+
+## 1. Identify canonical meaning first
+
+A build may begin from observations, source documents, extracted claims, domain-native models, organizational rules, prior Kristals or machine-generated candidates.
+
+Preserve the domain&#x27;s true native structure. Do not flatten a DAG/AST/graph merely because a generic assertion representation exists.
+
+## 2. Preserve inherited semantics
+
+For v6, preserve referents, assertions, valuations, applicability, roles, provenance/evidence and actionability.
+
+For v7, preserve KQ/KP/KA/KS identity, Mesh/KOS mappings and unresolved/conflicting states.
+
+For v8, preserve language/query boundaries and completeness semantics.
+
+## 3. Normalize under the Logical Contract
+
+The domain contract determines collection semantics, defaults and logical projection before the v9 Logical Commitment is calculated.
+
+## 4. Validate in layers
+
+```text
+schema validation
+        ↓
+domain semantic validation
+        ↓
+epistemic/referential validation
+        ↓
+authority/admission policy where applicable
+        ↓
+Logical Commitment verification
+```
+
+Schema validity alone is not semantic validity or authority.
+
+## 5. Record the Derivation
+
+Declare exact source commitments, transform identity/version, parameters and toolchain/policy inputs that affect the result.
+
+```text
+EPISTEMIC PROVENANCE != BUILD PROVENANCE
+```
+
+## 6. Build derived capabilities separately
+
+After logical artifacts are valid:
+
+- build v6 portable projections where needed;
+- build v8 lexical/query companions;
+- build v9 materializations/runtime packs;
+- verify every derived output binds to the correct source commitment.
+
+## Checklist
+
+- [ ] Is the native canon explicit?
+- [ ] Are semantic IDs stable and not label-derived?
+- [ ] Are ordered/set-like collections defined before hashing?
+- [ ] Is epistemic provenance separate from build lineage?
+- [ ] Are derived indexes rebuildable?
+- [ ] Does the declared Logical Commitment recompute exactly?
+- [ ] Are external dependencies pinned rather than mutable?
+- [ ] Does model output still pass deterministic admission gates?
+</pre></body></html>

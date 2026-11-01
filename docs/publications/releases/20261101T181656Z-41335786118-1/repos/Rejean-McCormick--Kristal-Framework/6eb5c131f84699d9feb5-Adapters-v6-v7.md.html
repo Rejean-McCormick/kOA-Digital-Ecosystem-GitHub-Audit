@@ -1,0 +1,25 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Adapters-v6-v7.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Adapters-v6-v7.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 5d48866ae87b41c3</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Adapters-v6-v7' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># v6/v7 Adapters
+
+Adapters are anti-corruption boundaries. They let a v8 engine operate over earlier Kristal generations without leaking v8 assumptions into older canonical artifacts.
+
+## v6 adapter
+
+A v6 adapter:
+
+- reads `kristal_state/6.0` unchanged;
+- preserves referent namespaces, assertion status, valuation semantics, coordinates, applicability and source/evidence links;
+- exposes stable v6 referents through `identity_space: kristal_v6` unless an already-declared v7 mapping exists;
+- never invents `KQ` equivalence merely to simplify query.
+
+## v7 adapter
+
+A v7 adapter directly exposes `KQ/KP/KA/KS`, Mesh, KOS, axes, source and projection metadata. Existing labels may be used as display fallback material but do not become v8 lexical authority.
+
+## External KOS adapter
+
+External vocabularies remain external identities/mappings. Adapter code translates transport/schema differences at the edge and must not redefine Kristall identity.
+
+## Determinism
+
+Given the same source snapshot and adapter profile, normalized read output should be reproducible. Adapter version/profile is part of derived lineage.
+</pre></body></html>

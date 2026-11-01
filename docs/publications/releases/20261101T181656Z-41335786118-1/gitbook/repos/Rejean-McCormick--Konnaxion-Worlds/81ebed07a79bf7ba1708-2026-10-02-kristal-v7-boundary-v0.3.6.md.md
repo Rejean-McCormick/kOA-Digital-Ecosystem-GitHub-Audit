@@ -1,0 +1,13 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Konnaxion-Worlds/blob/0e8d47c147d13a5721c5ae8e4b1dd7968def51fb/docs/status/2026-10-02-kristal-v7-boundary-v0.3.6.md | commit: 0e8d47c147d13a5721c5ae8e4b1dd7968def51fb | SHA-256: da2bd46dfe8990b1a089d115550978be060303ba1c62a5e49adccaa6e8894d93 -->
+
+# Konnaxion Worlds v0.3.6 — Kristal v7 boundary alignment
+
+**Date:** 2026-10-02  
+**Kristal target:** `7.0.0-draft.3.1`  
+**Portable-state compatibility:** v6 `6.0.0` unchanged
+
+This update adds the Kristal v7/Kristall boundary without replacing the existing v6 portable-state contract.
+
+Executable static evidence is provided by `scripts/check_kristal_v7_boundary.py`; `scripts/check_kristal_v6_boundary.py` remains required.
+
+The package still owns only Konnaxion Universe/World/WorldRelease mechanics. No Kristal/Kristall runtime, semantic registry, Mesh, resonance engine or Interaction Kernel product adapter is introduced here.

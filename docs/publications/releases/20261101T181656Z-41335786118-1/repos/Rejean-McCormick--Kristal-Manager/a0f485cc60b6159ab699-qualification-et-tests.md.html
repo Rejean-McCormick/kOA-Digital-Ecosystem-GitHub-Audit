@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/13-implementation-vnext/qualification-et-tests.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/13-implementation-vnext/qualification-et-tests.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 0ebeb9141430 · SHA-256 7acc2553baa6e2a9</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/0ebeb9141430cb35396e448f422522ea6aecdf8b/docs/13-implementation-vnext/qualification-et-tests.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tests et réserves réelles
+
+## Tests effectués dans la sandbox Linux
+
+- Migration v1→v2 et sauvegarde préalable.
+- Idempotence v1/v2, écriture dans une seule transaction.
+- Profil de diagnostic et provenance `run_id` distincts.
+- Marquage `STALE` lorsqu&#x27;un fichier V9 suivi change.
+- Observation Arketype marquée `PARTIAL_SCOPE`, jamais certifiée.
+- Décision locale sans changement du canon.
+- Inventaire complet et dashboard sur 127 Kristals simulés.
+- V9 `NOT_APPLICABLE` et `EXECUTION_ERROR` sans fausse réussite.
+- Diagnostic interrompu et reprise des éléments de preuve déjà enregistrés.
+- Import de rapport ancien conservé comme `UNVERIFIED`.
+- Ouvrir / fermer / rouvrir GUI sous affichage Xvfb.
+
+Les tests ne remplacent pas un essai sous Windows 11 + PowerShell 7.
+
+## Suite complète (à qualifier avant publication stable)
+
+La suite historique a encore 16 échecs sur un snapshot de base. La plupart
+concernent l&#x27;ancien backend de publication, volontairement désactivé (aucun
+push/commit Git autorisé par Manager). Deux concernent des assertions de
+l&#x27;ancienne GUI devenues obsolètes sur l&#x27;ordre des colonnes et la catégorie
+UNESCO. **Aucun test n&#x27;a été modifié pour masquer ces échecs.**
+
+Les tests ciblés vNext, l&#x27;indexation, l&#x27;intégration graphique, l&#x27;UI locale,
+les ressources graphiques et le nouveau registre réussissent. Voir le
+rapport `LIVRAISON-VNEXT-TESTS.txt` à la racine du dépôt complet.
+
+## Définition de terminé pour une future vNext stable
+
+Une suite historique révisée et cohérente avec la politique de sécurité,
+une stratégie de profils v10/v11/natifs et un test complet sous Windows réel
+restent nécessaires avant de qualifier cette version comme stable.
+</pre></body></html>
