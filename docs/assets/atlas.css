@@ -165,3 +165,108 @@ html[lang="fr"] .en, html[lang="en"] .fr {display:none!important}
 .publication-doc-row small{color:#7fa99a;font-size:10px}
 .publication-disclaimer{margin-top:19px;font-size:11px;color:#b3d0c2;border-left:3px solid #4d9f8b;padding:10px;background:#10362c}
 @media(max-width:740px){.publication-summary{flex-direction:column;align-items:start}.publication-detail{min-height:280px}}
+
+/* v0.20 - Prevent header and historic campaign panels from overlapping at
+   Windows browser zoom levels and narrow/medium viewports. */
+.topbar{
+  height:auto;
+  min-height:86px;
+  padding-top:12px;
+  padding-bottom:12px;
+  flex-wrap:wrap;
+  align-items:center;
+  row-gap:12px;
+}
+.topbar .brandline{min-width:0;flex:1 1 220px;max-width:100%;}
+.topbar .brandline>div{min-width:0;}
+.topbar .brandline strong,.topbar .brandline small{overflow-wrap:normal;word-break:normal;}
+.topbar .topactions{
+  min-width:0;
+  flex:2 1 600px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:9px 12px;
+}
+.topbar .topactions>*{min-width:0;}
+#publication-stamp{overflow-wrap:anywhere;}
+#load-status{max-width:160px;overflow-wrap:break-word;}
+@media(max-width:1100px){
+  .topbar .topactions{justify-content:flex-start;flex-basis:100%;}
+  .topbar .brandline{flex-basis:100%;}
+}
+#historique-campagnes{
+  display:grid;
+  grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr);
+  grid-template-rows:auto auto 1fr;
+  gap:16px clamp(22px,3vw,48px);
+  align-items:start;
+}
+#historique-campagnes>.heading{
+  grid-column:1;grid-row:1;
+  display:block;
+  min-width:0;
+  margin:0 0 6px;
+}
+#historique-campagnes>.heading>div{min-width:0;}
+#historique-campagnes>.heading h2{max-width:14ch;line-height:1.22;overflow-wrap:normal;}
+#historique-campagnes>.heading p{max-width:45ch;margin-top:12px;}
+#historique-campagnes>#campaigns-local-link{
+  grid-column:1;grid-row:2;
+  display:inline-block;
+  width:fit-content;
+  max-width:100%;
+  white-space:normal;
+  overflow-wrap:break-word;
+  line-height:1.6;
+}
+#historique-campagnes>.campaign-review-link{
+  grid-column:1;grid-row:3;
+  margin:0;
+  min-width:0;
+  max-width:100%;
+}
+#historique-campagnes>.campaign-review-link .small-button{
+  display:inline-block;
+  max-width:100%;
+  white-space:normal;
+  line-height:1.6;
+}
+#historique-campagnes>#latest-campaign{
+  grid-column:2;grid-row:1 / span 3;
+  width:auto;
+  min-width:0;
+  padding:6px 0 0;
+  margin:0;
+}
+#historique-campagnes>#latest-campaign>p{max-width:100%;overflow-wrap:break-word;}
+#historique-campagnes .campaign-bars{
+  grid-template-columns:minmax(0,1fr);
+  gap:11px;
+  margin-top:18px;
+}
+#historique-campagnes>.campaign-public-note{grid-column:1/-1;}
+@media(max-width:980px){
+  #historique-campagnes{grid-template-columns:minmax(0,1fr);grid-template-rows:none;gap:12px;}
+  #historique-campagnes>.heading,
+  #historique-campagnes>#campaigns-local-link,
+  #historique-campagnes>.campaign-review-link,
+  #historique-campagnes>#latest-campaign,
+  #historique-campagnes>.campaign-public-note{
+    grid-column:1;
+    grid-row:auto;
+  }
+  #historique-campagnes>.heading h2{max-width:none;}
+  #historique-campagnes>#latest-campaign{padding-top:15px;border-top:1px solid #345a50;}
+}
+/* Fallback for cached HTML with the old documentary cards: dark palette, readable links. */
+.documentation-candidate{
+  min-width:0;
+  background:#18362e;
+  border-color:#396c5d;
+  color:#e6f8f0;
+  overflow-wrap:anywhere;
+}
+.documentation-candidate strong{color:#effff9;}
+.documentation-candidate small{color:#b7d6ca;}
+.documentation-candidate .detail-links{margin-bottom:8px;}
+.documentation-candidate .secondary-link{color:#d3f9eb;border-color:#599787;max-width:100%;white-space:normal;}

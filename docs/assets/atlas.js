@@ -284,7 +284,7 @@
   function statusFor(repo,stage){return qualification?.repositories?.[repo]?.[stage]||'Non évalué';}
   function createStageBars(){
     const holder=$('stage-chart');holder.replaceChildren();
-    const data=atlas?.repositories||[],total=data.length;
+    const data=(atlas?.repositories||[]).filter(r=>!r.additional_documented),total=data.length;
     stages.forEach(([id,label])=>{
       const counts={'Étayé par preuve':0,'À documenter':0,'Non applicable':0,'Non évalué':0};
       data.forEach(r=>{const v=statusFor(r.repo,id);counts[v in counts?v:'Non évalué']++;});
@@ -506,7 +506,7 @@
     const holder=$('repo-list');holder.replaceChildren();
     const matching=atlas.repositories.filter(r=>(activeGroup==='all'||r.group===activeGroup) &&
       (r.name.toLocaleLowerCase().includes(searchText)||r.role.toLocaleLowerCase().includes(searchText)));
-    $('result-count').textContent=`${matching.length} / ${atlas.total} dépôts`;
+    $('result-count').textContent=`${matching.length} / ${atlas.total} applications`; 
     if(!matching.length){holder.append(el('div','empty','Aucune application ne correspond au filtre.'));return;}
     for(const r of matching){
       const btn=el('button','repo-entry'+(activeRepo===r.repo?' active':''));btn.type='button';
@@ -516,21 +516,11 @@
       btn.addEventListener('click',()=>selectRepo(r.repo,false));holder.append(btn);
     }
   }
-  function renderDocumentationCandidates(catalog){
-    const holder=$('documentary-candidates');
-    if(!holder)return;
-    holder.replaceChildren();
-    const candidates=Array.isArray(catalog?.repositories)?catalog.repositories:[];
-    for(const candidate of candidates){
-      if(!candidate||candidate.verification!=='github_repository_present'||!githubDocumentationLinks(candidate.repo).length)continue;
-      if(atlas?.repositories?.some(item=>item.repo===candidate.repo))continue;
-      const entry=el('div','documentation-candidate');
-      entry.append(el('strong','',candidate.repo.split('/').pop()));
-      const links=el('div','detail-links');links.append(...githubDocumentationLinks(candidate.repo));
-      entry.append(links,el('small','','Dépôt GitHub repéré · non admis dans l’inventaire des 49 · disponibilité des pages de documentation non vérifiée.'));
-      holder.append(entry);
-    }
-    const section=$('documentary-candidate-section');if(section)section.hidden=!holder.childElementCount||workspace!=='applications';
+  // Supplementary documented repositories are now listed inside Applications.
+  // Legacy separate "outside inventory" cards are intentionally discontinued.
+  function renderDocumentationCandidates(_catalog){
+    const section=$('documentary-candidate-section');
+    if(section)section.hidden=true;
   }
   function metricCell(title,value){const d=el('div','small-stat');d.append(el('strong','',value),el('span','',title));return d;}
   function detailTabs(){
@@ -566,7 +556,7 @@
   function renderDetail(){
     const holder=$('detail');holder.replaceChildren();const r=repoByName(activeRepo);
     if(!r){holder.append(el('div','detail-placeholder','Choisis une application dans le graphe ou la liste.'));return;}
-    holder.append(el('div','detail-eyebrow','FICHE APPLICATION / '+(r.group==='other'?'INVENTAIRE':r.group.toUpperCase())),el('h3','',r.name),el('p','detail-role',r.role));
+    holder.append(el('div','detail-eyebrow','FICHE APPLICATION / '+(r.additional_documented?'DOCUMENTATION':r.group==='other'?'INVENTAIRE':r.group.toUpperCase())),el('h3','',r.name),el('p','detail-role',r.role));
     const actions=el('div','detail-links');
     if(qualification && r.has_local_profile){actions.append(link('/local/engineering/'+encodeURIComponent(r.slug),'↗ Lire l’Engineering Profile original','primary-link'));}
     else if(r.report){actions.append(link(r.report,'↗ Voir l’Engineering Profile','primary-link'));}
@@ -591,7 +581,7 @@
       grid.append(metricCell('Profil mesuré',m?'Disponible':'Non fourni'),metricCell('Fichiers actifs',m?count(m.counts.active_files):'—'),metricCell('Lignes source de production',m?count(m.counts.production_nonblank_lines):'—'));
       section.append(grid);
       if(kristalByRepo(r.repo)?.found){const entry=kristalByRepo(r.repo);section.append(el('p','profile-copy','Kristal : '+(entry.description||humanRole(entry.role))+'. Les relations se trouvent dans l’onglet Kristal (local).'));}
-      section.append(el('p','profile-copy',m?'Ouvre le rapport pour consulter les langues, les contrôles, le périmètre, les dates et la provenance. Mesure ≠ certificat.':'Ce dépôt reste dans l’inventaire officiel : son absence de profil ne constitue pas une non-conformité.'));
+      section.append(el('p','profile-copy',m?'Ouvre le rapport pour consulter les langues, les contrôles, le périmètre, les dates et la provenance. Mesure ≠ certificat.':r.additional_documented?'Ce dépôt est accessible avec les autres applications. Il apparaît dans la publication documentaire; les mesures de la campagne historique des 49 n’ont pas été réalisées pour lui.':'L’absence de profil d’ingénierie ne constitue pas une non-conformité.'));
     }else if(detailTab==='report'){
       if(!m){section.append(el('p','profile-copy','Aucune mesure d’ingénierie structurée n’a été fournie pour ce dépôt.'));
       if(qualification&&r.has_local_profile)section.append(link('/local/engineering/'+encodeURIComponent(r.slug),'Lire le document Markdown original ↗','primary-link'));}
@@ -642,22 +632,37 @@
       validationBoard=board?.format==='koa.validation_board.private.v1'&&board.local_only?board:null;
       atlas=newAtlas;localAudit=audit;qualification=local?.format==='koa_qualification.public_status.v1'?local:null;
       publicGraph=graph?.format==='koa.graph.public.v1'?graph:null;
-      if(publicGraph && location.hostname.toLowerCase().endsWith('.github.io')){
-        // The 49-reference inventory remains separate from discovered repositories.
-        // Source graph was pinned to the owner's Git SHA when the release was built.
-        const known=new Set(atlas.repositories.map(x=>x.repo));
-        for(const candidate of publicGraph.repositories||[]){
-          if(candidate.admission!=='discovered_not_admitted'||known.has(candidate.repo))continue;
-          atlas.repositories.push({repo:candidate.repo,name:candidate.name,slug:candidate.name,
-            role:'Dépôt repéré · responsabilité à qualifier',group:'other',node_id:null,
-            report:null,engineering:null,has_local_profile:false,admission:candidate.admission});
-          known.add(candidate.repo);
-        }
-        atlas.total=atlas.repositories.length;
-        if(publicGraph.systems?.length && publicGraph.links?.length){
-          atlas.systems=publicGraph.systems;
-          atlas.links=publicGraph.links;
-        }
+      // Separate the 49-repository historical evidence cohort from the current
+      // directory. Two further public repos occur in the dated documentation
+      // release; their lack of a historical audit profile is NOT exclusion
+      // from the ecosystem nor a negative certification.
+      const referenceRepos=atlas.repositories.slice();
+      atlas.reference_total=referenceRepos.length;
+      const known=new Set(atlas.repositories.map(x=>x.repo));
+      const documentary=[
+        ...(Array.isArray(publicGraph?.repositories)?publicGraph.repositories:[]),
+        ...(Array.isArray(candidates?.repositories)?candidates.repositories:[]),
+      ];
+      for(const item of documentary){
+        if(!item || typeof item.repo!=='string' ||
+           !/^Rejean-McCormick\/[A-Za-z0-9_.-]+$/.test(item.repo) ||
+           known.has(item.repo))continue;
+        // Only include repositories actually present in the reviewed graph or
+        // the documented public GitHub repository catalogue.
+        if(item.admission!=='discovered_not_admitted' &&
+           item.verification!=='github_repository_present')continue;
+        const name=item.repo.split('/').pop();
+        atlas.repositories.push({repo:item.repo,name,slug:name,
+          role:'Application kOA · documentation disponible; mesures à compléter',
+          group:'other',node_id:null,report:null,engineering:null,
+          has_local_profile:false,additional_documented:true});
+        known.add(item.repo);
+      }
+      atlas.total=atlas.repositories.length;
+      if(publicGraph && location.hostname.toLowerCase().endsWith('.github.io') &&
+         publicGraph.systems?.length && publicGraph.links?.length){
+        atlas.systems=publicGraph.systems;
+        atlas.links=publicGraph.links;
       }
       publishedDocs=null;
       if(publishedPointer?.release_id && /^[0-9]{8}T[0-9]{6}Z(?:-[0-9]+(?:-[0-9]+)?)?$/.test(publishedPointer.release_id)){
@@ -677,8 +682,9 @@
           const c=privateCampaigns.latest;
           latestPanel.append(el('p','',`Campagne figée du ${c.frozen_at.slice(0,10)} (état historique) · ${count(c.engineering_profiles)}/${count(c.repository_count)} profils figés · ${count(c.proof_files)} pièces jointes · ${count(c.practice_reviews)} pratiques examinées.`));
           const frozenEvidenced=stages.reduce((sum,[key])=>sum+(Number(c.stages_evidenced?.[key])||0),0);
-          const totalPossible=atlas.repositories.length*stages.length;
-          const currentEvidenced=atlas.repositories.reduce((sum,r)=>sum+stages.filter(([id])=>statusFor(r.repo,id)==='Étayé par preuve').length,0);
+          const referenceRepos=atlas.repositories.filter(r=>!r.additional_documented);
+          const totalPossible=referenceRepos.length*stages.length;
+          const currentEvidenced=referenceRepos.reduce((sum,r)=>sum+stages.filter(([id])=>statusFor(r.repo,id)==='Étayé par preuve').length,0);
           latestPanel.append(el('p','campaign-scope-note',`Jalons étayés — campagne figée : ${count(frozenEvidenced)}/${count(totalPossible)} · registre actuel : ${count(currentEvidenced)}/${count(totalPossible)}. Les décisions postérieures à la campagne n’en modifient pas le contenu.`));
           if(currentEvidenced!==frozenEvidenced){
             latestPanel.append(el('p','campaign-scope-note','Pour conserver l’état actuel, crée une nouvelle campagne dans l’application Windows. Aucune ancienne campagne n’est réécrite.'));
@@ -709,15 +715,16 @@
         $('kristal-source-title').textContent='Graphe public kOA';
         $('kristal-source-note').textContent='Pour consulter Kristal en direct, ouvre le centre depuis le launcher Windows.';
       }
-      const measured=atlas.repositories.filter(r=>r.report).length;
-      $('kpi-total').textContent=count(atlas.total);
-      $('kpi-profiles').textContent=`${count(measured)} / ${count(atlas.total)}`;
-      $('kpi-profiles-note').textContent=`${Math.round(measured/atlas.total*100)} % de dépôts avec profil mesuré`;
-      $('bar-profiles').style.width=measured/atlas.total*100+'%';
+      const measured=atlas.repositories.filter(r=>!r.additional_documented&&r.report).length;
+      const baseline=atlas.reference_total||49;
+      $('kpi-total').textContent=count(baseline);
+      $('kpi-profiles').textContent=`${count(measured)} / ${count(baseline)}`;
+      $('kpi-profiles-note').textContent=`${Math.round(measured/baseline*100)} % des dépôts de référence avec profil mesuré`;
+      $('bar-profiles').style.width=measured/baseline*100+'%';
       const scans=(localAudit?.snapshots||[]).filter(x=>x.mode==='LOCAL_OBSERVE').sort((a,b)=>a.at.localeCompare(b.at));
       const latest=scans[scans.length-1];
-      $('kpi-audited').textContent=latest?`${count(latest.inventory_scanned)} / ${count(atlas.total)}`:'Non publié';
-      $('bar-audited').style.width=latest?Math.min(100,100*latest.inventory_scanned/atlas.total)+'%':'0%';
+      $('kpi-audited').textContent=latest?`${count(latest.inventory_scanned)} / ${count(baseline)}`:'Non publié';
+      $('bar-audited').style.width=latest?Math.min(100,100*latest.inventory_scanned/baseline)+'%':'0%';
       if(kristal&&!mapTouched)mapMode='kristal';
       createStageBars();drawMap();drawConstellation();drawKristal();switchMap(mapMode);filters();directory();
       if(!activeRepo){const requested=new URLSearchParams(location.search).get('app');const r=atlas.repositories.find(x=>x.slug===requested);

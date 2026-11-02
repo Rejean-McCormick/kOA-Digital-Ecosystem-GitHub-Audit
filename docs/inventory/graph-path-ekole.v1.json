@@ -1,0 +1,504 @@
+{
+  "id": "ekole",
+  "title": {
+    "fr": "eKole → Apprentissage → Revue",
+    "en": "eKole → Learning → Review"
+  },
+  "summary": {
+    "fr": "Le moteur pédagogique neutre eKole charge un corpus indépendant, présente des activités et sépare les traces de travail de la preuve de maîtrise. Les missions interactives Kontexte–Kompose–Akor–Orgo sont montrées autour comme un circuit cible non qualifié de bout en bout.",
+    "en": "The neutral eKole engine loads an independent content pack, displays learning activities and keeps task/work traces separate from evidence of mastery. The Kontexte–Kompose–Akor–Orgo interactive-mission route is shown around it as a target circuit, not qualified end-to-end."
+  },
+  "spine": [
+    {
+      "id": "ek-pack",
+      "label": {
+        "fr": "Pack de cours sélectionné",
+        "en": "Selected course pack"
+      },
+      "description": {
+        "fr": "Un pack versionné : Québec ou Pastorale, sans mélanger leurs règles ni leurs autorisations.",
+        "en": "A versioned pack: Québec or Pastorale, without merging rules or authorizations."
+      },
+      "repo": null,
+      "kind": "artifact"
+    },
+    {
+      "id": "ek-core",
+      "label": {
+        "fr": "eKole Core",
+        "en": "eKole Core"
+      },
+      "description": {
+        "fr": "Moteur neutre Python : pack.json, cours JSON, contrôle du corpus, API locale.",
+        "en": "Neutral Python engine: pack.json, JSON lessons, pack checks and local API."
+      },
+      "repo": "Rejean-McCormick/Ekole",
+      "kind": "application"
+    },
+    {
+      "id": "ek-surface",
+      "label": {
+        "fr": "Parcours et interfaces",
+        "en": "Learning and teaching surfaces"
+      },
+      "description": {
+        "fr": "Portail apprenant et interface enseignant; séparation des rôles, lecture seule par défaut.",
+        "en": "Learner portal and teacher interface; distinct audiences and read-only by default."
+      },
+      "repo": null,
+      "kind": "interface"
+    },
+    {
+      "id": "ek-work",
+      "label": {
+        "fr": "Travail et réponses",
+        "en": "Learning work and responses"
+      },
+      "description": {
+        "fr": "Activités et travaux : aucun statut Orgo ne devient automatiquement une compétence.",
+        "en": "Activities and work: Orgo task state never automatically becomes mastery."
+      },
+      "repo": null,
+      "kind": "artifact"
+    },
+    {
+      "id": "ek-review",
+      "label": {
+        "fr": "Revue pédagogique",
+        "en": "Pedagogical review"
+      },
+      "description": {
+        "fr": "Vérification et décision éducative par une autorité humaine; preuves et notes privées.",
+        "en": "Human educational review and decisions; private evidence and marks."
+      },
+      "repo": null,
+      "kind": "interface"
+    }
+  ],
+  "spine_links": [
+    {
+      "from": "ek-pack",
+      "to": "ek-core",
+      "label": {
+        "fr": "Chargement du pack choisi",
+        "en": "Load the selected pack"
+      },
+      "status": "implemented_owner",
+      "contract": "ekole.content-pack/0.1",
+      "evidence": {
+        "repo": "Rejean-McCormick/Ekole",
+        "path": "README.md"
+      }
+    },
+    {
+      "from": "ek-core",
+      "to": "ek-surface",
+      "label": {
+        "fr": "Vues élèves et enseignants",
+        "en": "Learner and teacher views"
+      },
+      "status": "implemented_owner",
+      "contract": "portail /eleve/ · éditeur local",
+      "evidence": {
+        "repo": "Rejean-McCormick/Ekole",
+        "path": "README.md"
+      }
+    },
+    {
+      "from": "ek-surface",
+      "to": "ek-work",
+      "label": {
+        "fr": "Activités et réponses dans le périmètre local",
+        "en": "Local learning activities and responses"
+      },
+      "status": "documented",
+      "contract": "",
+      "evidence": {
+        "repo": "Rejean-McCormick/Ekole",
+        "path": "README.md"
+      }
+    },
+    {
+      "from": "ek-work",
+      "to": "ek-review",
+      "label": {
+        "fr": "Revue humaine, pas de notation automatique",
+        "en": "Human review, not automatic grading"
+      },
+      "status": "candidate",
+      "contract": "",
+      "evidence": {
+        "repo": "Rejean-McCormick/Ekole",
+        "path": "docs/TANDEM_EKOLE_ORGO_PREVIEW_P1.md"
+      }
+    }
+  ],
+  "branches": [
+    {
+      "id": "ek-quebec",
+      "anchor": 0,
+      "side": "above",
+      "label": {
+        "fr": "eKole Québec : 202 cours",
+        "en": "eKole Québec: 202 lessons"
+      },
+      "status": "documented",
+      "steps": [
+        {
+          "id": "ek-quebec-pack",
+          "label": {
+            "fr": "Corpus scolaire québécois",
+            "en": "Québec school content"
+          },
+          "description": {
+            "fr": "202 cours candidats et 6 parcours; dépôt distinct du moteur, sans approbation scolaire officielle.",
+            "en": "202 candidate lessons and six paths; independent of the engine and without official curricular approval."
+          },
+          "repo": null,
+          "kind": "artifact"
+        }
+      ],
+      "description": {
+        "fr": "Corpus candidat indépendant; l’absence du dépôt dans le registre de référence ne vaut pas admission automatique.",
+        "en": "Independent candidate corpus; absence from the reference inventory does not imply automatic admission."
+      },
+      "contract": "",
+      "evidence": {
+        "repo": "Rejean-McCormick/Ekole",
+        "path": "docs/Integration-Verification-2026-10-27.md"
+      }
+    },
+    {
+      "id": "ek-pastorale",
+      "anchor": 0,
+      "side": "below",
+      "label": {
+        "fr": "École Pastorale : 32 cours",
+        "en": "Pastoral School: 32 lessons"
+      },
+      "status": "candidate",
+      "steps": [
+        {
+          "id": "ek-pastorale-pack",
+          "label": {
+            "fr": "eKole Pastorale",
+            "en": "eKole Pastorale"
+          },
+          "description": {
+            "fr": "32 cours et 7 parcours, prototype non approuvé pour diffusion publique ou ecclésiale.",
+            "en": "32 lessons and seven pathways, prototype not approved for public or ecclesiastical release."
+          },
+          "repo": "Rejean-McCormick/Ekole-Pastorale",
+          "kind": "application"
+        }
+      ],
+      "description": {
+        "fr": "Corpus autonome à sources Kristal v11 draft; la projection vers eKole ne donne pas une autorisation de publication.",
+        "en": "Separate content with draft Kristal v11 sources; projection to eKole is not publication approval."
+      },
+      "contract": "ekole.content-pack/0.1",
+      "evidence": {
+        "repo": "Rejean-McCormick/Ekole-Pastorale",
+        "path": "README.md"
+      }
+    },
+    {
+      "id": "ek-kristal",
+      "anchor": 0,
+      "side": "above",
+      "label": {
+        "fr": "Kristal et sources pédagogiques",
+        "en": "Kristal and learning sources"
+      },
+      "status": "documented",
+      "steps": [
+        {
+          "id": "ek-kristal-framework",
+          "label": {
+            "fr": "Kristal Framework",
+            "en": "Kristal Framework"
+          },
+          "description": {
+            "fr": "Identités sémantiques et politiques de preuve selon version.",
+            "en": "Semantic identity and proof policies under version-specific contracts."
+          },
+          "repo": "Rejean-McCormick/Kristal-Framework",
+          "kind": "application"
+        },
+        {
+          "id": "ek-kristal-kit",
+          "label": {
+            "fr": "Kristal Authoring Kit",
+            "en": "Kristal Authoring Kit"
+          },
+          "description": {
+            "fr": "Édition de sources et projections selon les contrats reconnus.",
+            "en": "Authoring of source workspaces and projections under recognized contracts."
+          },
+          "repo": "Rejean-McCormick/Kristal-Authoring-Kit",
+          "kind": "application"
+        }
+      ],
+      "description": {
+        "fr": "Les contenus peuvent provenir de Kristals, mais l’outil eKole n’est pas propriétaire du canon.",
+        "en": "Content may derive from Kristals, but eKole is not the owner of canonical semantic truth."
+      },
+      "contract": "",
+      "evidence": {
+        "repo": "Rejean-McCormick/Ekole-Pastorale",
+        "path": "README.md"
+      }
+    },
+    {
+      "id": "ek-kontexte",
+      "anchor": 1,
+      "side": "above",
+      "label": {
+        "fr": "Kontexte : scénarios et rôles",
+        "en": "Kontexte: scenarios and roles"
+      },
+      "status": "implemented_owner",
+      "steps": [
+        {
+          "id": "ek-kontexte-app",
+          "label": {
+            "fr": "Kontexte",
+            "en": "Kontexte"
+          },
+          "description": {
+            "fr": "Propriétaire des situations, RoleFrame/MissionFrame et contextes, pas des états Orgo.",
+            "en": "Owns scenarios, RoleFrame/MissionFrame and contexts, not Orgo task state."
+          },
+          "repo": "Rejean-McCormick/Kontexte",
+          "kind": "application"
+        }
+      ],
+      "description": {
+        "fr": "Export synthétique ekole.tandem-teacher-preview/1.0 vers l’enseignant; aucune session ni autorisation d’élève.",
+        "en": "Synthetic ekole.tandem-teacher-preview/1.0 export for teachers; no learner session or authorization."
+      },
+      "contract": "ekole.tandem-teacher-preview/1.0",
+      "evidence": {
+        "repo": "Rejean-McCormick/Kontexte",
+        "path": "docs/ekole-orgo/TANDEM_P1_EKOLE_PREVIEW_EXPORT.md"
+      }
+    },
+    {
+      "id": "ek-kompose",
+      "anchor": 1,
+      "side": "below",
+      "label": {
+        "fr": "Kompose : plan et contrôle",
+        "en": "Kompose: plan and checks"
+      },
+      "status": "documented",
+      "steps": [
+        {
+          "id": "ek-kompose-app",
+          "label": {
+            "fr": "Kompose",
+            "en": "Kompose"
+          },
+          "description": {
+            "fr": "Vérifie des plans de coordination et des aperçus synthétiques; ne crée pas de workflow Orgo.",
+            "en": "Validates coordination plans and synthetic previews; does not create Orgo workflows."
+          },
+          "repo": "Rejean-McCormick/Kompose",
+          "kind": "application"
+        }
+      ],
+      "description": {
+        "fr": "Vérification locale de prévisualisation; des identifiants valides et un plan ne donnent aucun droit de mission réelle.",
+        "en": "Local preview validation; well-formed IDs and a plan do not authorize a real mission."
+      },
+      "contract": "ekole.tandem-teacher-preview/1.0",
+      "evidence": {
+        "repo": "Rejean-McCormick/Akor",
+        "path": "README.md"
+      }
+    },
+    {
+      "id": "ek-aktor",
+      "anchor": 2,
+      "side": "above",
+      "label": {
+        "fr": "Akor : tandem éducatif synthétique",
+        "en": "Akor: synthetic education tandem"
+      },
+      "status": "candidate",
+      "steps": [
+        {
+          "id": "ek-akor-app",
+          "label": {
+            "fr": "Akor",
+            "en": "Akor"
+          },
+          "description": {
+            "fr": "Préflight et intentions P2/P3; la demande P3 attend une vérification côté autorité.",
+            "en": "Preflight plus P2/P3 intentions; P3 awaits verification by an authoritative service."
+          },
+          "repo": "Rejean-McCormick/Akor",
+          "kind": "application"
+        },
+        {
+          "id": "ek-orgo-app",
+          "label": {
+            "fr": "Orgo",
+            "en": "Orgo"
+          },
+          "description": {
+            "fr": "État canonique Work/Case/Task/Signal pour les missions réellement orchestrées.",
+            "en": "Canonical Work/Case/Task/Signal state for genuinely orchestrated missions."
+          },
+          "repo": "Rejean-McCormick/Orgo",
+          "kind": "application"
+        }
+      ],
+      "description": {
+        "fr": "Circuit cible Kontexte → Kompose → Akor → Orgo, sans création de tâches live, identité scolaire ni admission runtime qualifiée.",
+        "en": "Target Kontexte → Kompose → Akor → Orgo route, with no live task creation, school identity or qualified runtime admission."
+      },
+      "contract": "akor.tandem-authority-request/1.0",
+      "evidence": {
+        "repo": "Rejean-McCormick/Akor",
+        "path": "docs/STATUS.md"
+      }
+    },
+    {
+      "id": "ek-worlds",
+      "anchor": 2,
+      "side": "below",
+      "label": {
+        "fr": "Orgo Worlds : contexte de mission",
+        "en": "Orgo Worlds: mission context"
+      },
+      "status": "documented",
+      "steps": [
+        {
+          "id": "ek-worlds-app",
+          "label": {
+            "fr": "Orgo Worlds",
+            "en": "Orgo Worlds"
+          },
+          "description": {
+            "fr": "World/WorldRelease, contexte et version; Orgo détient les tâches et transitions.",
+            "en": "World/WorldRelease, context and version; Orgo owns tasks and transitions."
+          },
+          "repo": "Rejean-McCormick/Orgo-Worlds",
+          "kind": "application"
+        }
+      ],
+      "description": {
+        "fr": "L’autorité WorldRelease est distincte de celle des tâches et de l’approbation pédagogique.",
+        "en": "WorldRelease authority is separate from task authority and educational approval."
+      },
+      "contract": "",
+      "evidence": {
+        "repo": "Rejean-McCormick/Kontexte",
+        "path": "docs/ekole-orgo/02_ARCHITECTURE_CIBLE.md"
+      }
+    },
+    {
+      "id": "ek-preview",
+      "anchor": 4,
+      "side": "above",
+      "label": {
+        "fr": "Aperçu enseignant P1",
+        "en": "Teacher preview P1"
+      },
+      "status": "implemented_owner",
+      "steps": [
+        {
+          "id": "ek-teacher-preview",
+          "label": {
+            "fr": "Projection synthétique P1",
+            "en": "Synthetic P1 projection"
+          },
+          "description": {
+            "fr": "Lecture seule, accès local à l’enseignant; aucune donnée réelle d’enfant ni API Orgo.",
+            "en": "Read-only, local teacher-only access; no real child records or Orgo API."
+          },
+          "repo": null,
+          "kind": "artifact"
+        }
+      ],
+      "description": {
+        "fr": "Mode désactivé par défaut, sur des fixtures fictives. Un aperçu n’est pas une autorisation ni une preuve scolaire.",
+        "en": "Disabled by default, using synthetic fixtures. A preview is neither authorization nor school evidence."
+      },
+      "contract": "ekole.tandem-teacher-preview/1.0",
+      "evidence": {
+        "repo": "Rejean-McCormick/Ekole",
+        "path": "docs/TANDEM_EKOLE_ORGO_PREVIEW_P1.md"
+      }
+    },
+    {
+      "id": "ek-images",
+      "anchor": 2,
+      "side": "below",
+      "label": {
+        "fr": "Personnages et visuels pédagogiques",
+        "en": "Characters and learning visuals"
+      },
+      "status": "optional",
+      "steps": [
+        {
+          "id": "ek-role-visuals",
+          "label": {
+            "fr": "Catalogue de rôles / visuels",
+            "en": "Role and visual catalog"
+          },
+          "description": {
+            "fr": "Rôles, variantes de personnages et visuels de cours; couche de présentation sans permissions métier.",
+            "en": "Role identities, character variants and lesson visuals; presentation layer with no business permissions."
+          },
+          "repo": null,
+          "kind": "artifact"
+        }
+      ],
+      "description": {
+        "fr": "Les archives Karacter et Kolor décrivent des outils indépendants. Leurs passerelles effectives vers eKole restent à qualifier.",
+        "en": "Karacter and Kolor are independent tools in the supplied archives; live connectors to eKole remain unqualified."
+      },
+      "contract": "",
+      "evidence": {
+        "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+        "path": "docs/inventory/EKOLE_PARCOURS.md"
+      }
+    },
+    {
+      "id": "ek-inku",
+      "anchor": 4,
+      "side": "below",
+      "label": {
+        "fr": "Inkuisite : évaluation séparée",
+        "en": "Inkuisite: separate assessment"
+      },
+      "status": "candidate",
+      "steps": [
+        {
+          "id": "ek-inku-work",
+          "label": {
+            "fr": "Banque et évaluation Inkui",
+            "en": "Inkui item bank and assessment"
+          },
+          "description": {
+            "fr": "Import de banques candidates, corrigés privés et résultat provisoire; intégration pédagogique à qualifier.",
+            "en": "Candidate bank imports, private answer keys and provisional results; pedagogical integration to qualify."
+          },
+          "repo": null,
+          "kind": "artifact"
+        }
+      ],
+      "description": {
+        "fr": "Le snapshot Inkuisite lit les banques eKole mais ne prouve ni évaluation officielle, ni intégration des résultats au registre eKole, ni connexion Moodle.",
+        "en": "The Inkuisite snapshot reads eKole banks but does not prove official assessment, result synchronization to eKole, or a Moodle link."
+      },
+      "contract": "",
+      "evidence": {
+        "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+        "path": "docs/inventory/EKOLE_PARCOURS.md"
+      }
+    }
+  ]
+}

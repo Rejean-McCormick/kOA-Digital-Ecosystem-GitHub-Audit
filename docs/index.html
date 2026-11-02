@@ -82,8 +82,8 @@ html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{displa
         <div class="heading"><div><div class="eyebrow">REGISTRE PRIVÉ · DATES ET VERSIONS</div>
         <h2>Campagnes de conformité figées.</h2>
         <p>Chaque campagne conserve ses documents et ses décisions à une date donnée, indépendamment des évolutions GitHub.</p>
-        </div><a class="small-button" href="/local/campaigns" id="campaigns-local-link">Ouvrir l'historique, les preuves et les versions GitHub →</a>
-        <p><a class="small-button" href="/local/review" id="review-private-link" hidden>Consulter les 245 dossiers de preuves historiques →</a></p>
+        </div></div><a class="small-button" href="/local/campaigns" id="campaigns-local-link">Ouvrir l'historique, les preuves et les versions GitHub →</a>
+        <p class="campaign-review-link"><a class="small-button" href="/local/review" id="review-private-link" hidden>Consulter les 245 dossiers de preuves historiques →</a></p>
         <div class="campaign-panel" id="latest-campaign" aria-live="polite"></div>
         <p class="campaign-public-note" id="campaign-public-note" hidden>Le registre des campagnes est privé. Ouvre cet écran avec le lanceur Windows pour retrouver les archives et les décisions figées. Le graphe public et les profils restent consultables dans « Applications ».</p>
       </section>
@@ -121,7 +121,7 @@ html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{displa
         </div>
         <details class="focus-legacy"><summary>Autres vues du graphe : responsabilités, constellation, Kristal local / Other graph views</summary>
         <div class="source-banner" id="kristal-banner" role="status">Référentiel Kristal : vérification locale en cours…</div><p class="kristal-catalog-note" id="kristal-catalog-note">Les statistiques du référentiel s’affichent ici lorsque Kristal est accessible localement.</p>
-        <div class="map-view-toggle" role="group" aria-label="Vue du graphe"><button type="button" id="view-contracts" class="map-view-button active" aria-pressed="true">Graphe des responsabilités · 12 systèmes</button><button type="button" id="view-all" class="map-view-button" aria-pressed="false">Constellation · 49 dépôts</button><button type="button" id="view-kristal" class="map-view-button" aria-pressed="false">Kristal canonique · 49 dépôts</button></div>
+        <div class="map-view-toggle" role="group" aria-label="Vue du graphe"><button type="button" id="view-contracts" class="map-view-button active" aria-pressed="true">Graphe des responsabilités · 12 systèmes</button><button type="button" id="view-all" class="map-view-button" aria-pressed="false">Constellation · applications</button><button type="button" id="view-kristal" class="map-view-button" aria-pressed="false">Kristal canonique · 49 dépôts</button></div>
         <div class="map-scroller" id="map-scroller"><div id="ecosystem-map" class="ecosystem-map" role="group" aria-label="Graphe interactif des systèmes kOA"><svg id="map-lines" viewBox="0 0 1150 640" aria-hidden="true" preserveAspectRatio="none"></svg><div id="map-nodes" class="map-nodes"></div></div></div>
         <div class="constellation" id="constellation" hidden aria-label="Constellation des 49 dépôts"></div>
         <div class="kristal-constellation" id="kristal-constellation" hidden aria-label="Dépôts rapprochés avec le registre canonique Kristal"></div>
@@ -139,13 +139,9 @@ html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{displa
           <aside class="detail" id="detail" aria-live="polite"><div class="detail-placeholder">Sélectionne une application sur le graphe ou dans la liste pour afficher son dossier.</div></aside>
         </div>
       </section>
-      <section id="documentary-candidate-section" class="section" data-workspace="applications" hidden>
-        <div class="heading"><div><div class="eyebrow">NOUVEAUX DÉPÔTS · LIENS DOCUMENTAIRES</div><h2>Dépôts repérés hors inventaire.</h2><p>Accès direct au README et au wiki GitHub, si disponibles. Ces liens ne constituent pas une preuve d’intégration ni une admission au registre.</p></div></div>
-        <div id="documentary-candidates" class="documentation-candidates"></div>
-      </section>
       <section class="method-section" data-workspace="validations"><div class="method-icon">i</div><div><strong>Ce tableau de bord suit les preuves, pas les impressions.</strong><p>« Profil disponible » mesure une documentation d'ingénierie. « Audit réalisé » mesure la couverture des observations. Les preuves déjà vérifiées sont reconnues automatiquement, sans validation manuelle à répéter. Les rapports sont fondés sur des snapshots et ne démontrent pas à eux seuls la qualité, la sécurité ou la complétion fonctionnelle.</p><p>Les diagnostics automatiques restent consultables séparément : <a href="observations.html">ouvrir les observations techniques (vue secondaire)</a>.</p></div></section>
     </main>
-    <footer><span>kOA Digital Ecosystem · Centre de pilotage</span><span>49 dépôts · 5 jalons indépendants · rapports d'ingénierie vérifiables</span></footer>
+    <footer><span>kOA Digital Ecosystem · Centre de pilotage</span><span>49 dépôts de référence · documentation complémentaire · 5 jalons indépendants</span></footer>
   </div>
 </div>
 <script>

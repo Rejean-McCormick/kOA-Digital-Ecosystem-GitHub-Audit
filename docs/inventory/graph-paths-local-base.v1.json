@@ -1,0 +1,626 @@
+{
+  "format": "koa.graph.focus.preview.v1",
+  "notice": {
+    "fr": "Aperçu local de référence : une publication datée fait autorité.",
+    "en": "Local reference preview: dated publications remain authoritative."
+  },
+  "paths": [
+    {
+      "id": "decision",
+      "title": {
+        "fr": "Décision → Travail → Retour",
+        "en": "Decision → Work → Return"
+      },
+      "summary": {
+        "fr": "Konnaxion et Orgo échangent des commandes et impacts via des contrats versionnés; ils restent autonomes.",
+        "en": "Konnaxion and Orgo exchange commands and impact under versioned contracts; they remain autonomous."
+      },
+      "spine": [
+        {
+          "id": "kn-dec",
+          "label": {
+            "fr": "Konnaxion",
+            "en": "Konnaxion"
+          },
+          "description": {
+            "fr": "DecisionRecord",
+            "en": "DecisionRecord"
+          },
+          "repo": "Rejean-McCormick/Konnaxion",
+          "kind": "application"
+        },
+        {
+          "id": "kn-ik-out",
+          "label": {
+            "fr": "Interaction Kernel",
+            "en": "Interaction Kernel"
+          },
+          "description": {
+            "fr": "Interaction Kernel",
+            "en": "Interaction Kernel"
+          },
+          "repo": "Rejean-McCormick/Interaction-Kernel",
+          "kind": "protocol"
+        },
+        {
+          "id": "orgo-work",
+          "label": {
+            "fr": "Orgo",
+            "en": "Orgo"
+          },
+          "description": {
+            "fr": "Signal · Workflow · Task",
+            "en": "Signal · Workflow · Task"
+          },
+          "repo": "Rejean-McCormick/Orgo",
+          "kind": "application"
+        },
+        {
+          "id": "kn-ik-back",
+          "label": {
+            "fr": "Interaction Kernel",
+            "en": "Interaction Kernel"
+          },
+          "description": {
+            "fr": "Interaction Kernel",
+            "en": "Interaction Kernel"
+          },
+          "repo": "Rejean-McCormick/Interaction-Kernel",
+          "kind": "protocol"
+        },
+        {
+          "id": "kn-account",
+          "label": {
+            "fr": "Konnaxion",
+            "en": "Konnaxion"
+          },
+          "description": {
+            "fr": "Reddition de comptes",
+            "en": "Accountability"
+          },
+          "repo": "Rejean-McCormick/Konnaxion",
+          "kind": "application"
+        }
+      ],
+      "spine_links": [
+        {
+          "from": "kn-dec",
+          "to": "kn-ik-out",
+          "label": {
+            "fr": "Commande",
+            "en": "Command"
+          },
+          "status": "qualified_local",
+          "contract": "governance.decision.execute/1.0.0",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/2-Technical-Reference/40-integration/contract-map.md"
+          }
+        },
+        {
+          "from": "kn-ik-out",
+          "to": "orgo-work",
+          "label": {
+            "fr": "Signal reçu",
+            "en": "Signal received"
+          },
+          "status": "qualified_local",
+          "contract": "governance.decision.execute/1.0.0",
+          "evidence": {
+            "repo": "Rejean-McCormick/Interaction-Kernel",
+            "path": "docs/tandem-konnaxion-orgo-conformance.md"
+          }
+        },
+        {
+          "from": "orgo-work",
+          "to": "kn-ik-back",
+          "label": {
+            "fr": "Impact",
+            "en": "Impact"
+          },
+          "status": "qualified_local",
+          "contract": "accountability.impact.publish/1.0.0",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/2-Technical-Reference/40-integration/contract-map.md"
+          }
+        },
+        {
+          "from": "kn-ik-back",
+          "to": "kn-account",
+          "label": {
+            "fr": "Retour d’impact",
+            "en": "Impact return"
+          },
+          "status": "qualified_local",
+          "contract": "accountability.impact.publish/1.0.0",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/2-Technical-Reference/40-integration/contract-map.md"
+          }
+        }
+      ],
+      "branches": [
+        {
+          "id": "decision-orgo-kristal",
+          "anchor": 2,
+          "side": "below",
+          "label": {
+            "fr": "Artefact Orgo → Kristal",
+            "en": "Orgo → Kristal artifact"
+          },
+          "status": "implemented_owner",
+          "steps": [
+            {
+              "id": "d-daat",
+              "label": {
+                "fr": "Da’at",
+                "en": "Da’at"
+              },
+              "description": {
+                "fr": "Da’at",
+                "en": "Da’at"
+              },
+              "repo": "Rejean-McCormick/Daat",
+              "kind": "application"
+            },
+            {
+              "id": "d-kristal",
+              "label": {
+                "fr": "Kristal",
+                "en": "Kristal"
+              },
+              "description": {
+                "fr": "Kristal",
+                "en": "Kristal"
+              },
+              "repo": "Rejean-McCormick/Kristal-Framework",
+              "kind": "application"
+            }
+          ],
+          "description": {
+            "fr": "Demande explicite d’artefact puis retour comme Signal ; pas de nouvelle autorité d’exécution.",
+            "en": "Explicit artifact request with Signal return; no execution authority."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Orgo",
+            "path": "docs/status/2026-10-01-kristal-v6-integration.md"
+          }
+        },
+        {
+          "id": "decision-worlds",
+          "anchor": 2,
+          "side": "above",
+          "label": {
+            "fr": "Orgo Worlds",
+            "en": "Orgo Worlds"
+          },
+          "status": "documented",
+          "steps": [
+            {
+              "id": "d-ow",
+              "label": {
+                "fr": "Orgo Worlds",
+                "en": "Orgo Worlds"
+              },
+              "description": {
+                "fr": "Orgo Worlds",
+                "en": "Orgo Worlds"
+              },
+              "repo": "Rejean-McCormick/Orgo-Worlds",
+              "kind": "application"
+            }
+          ],
+          "description": {
+            "fr": "Frontière de composition indépendante.",
+            "en": "Separate composition boundary."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Orgo",
+            "path": "README.md"
+          }
+        }
+      ]
+    },
+    {
+      "id": "knowledge",
+      "title": {
+        "fr": "Sources → Kristal → Lecture",
+        "en": "Sources → Kristal → Reading"
+      },
+      "summary": {
+        "fr": "Acquisition, références, admission et lecture sont des responsabilités distinctes.",
+        "en": "Acquisition, references, admission and reading belong to separate owners."
+      },
+      "spine": [
+        {
+          "id": "k-ency",
+          "label": {
+            "fr": "EncyKlopedia",
+            "en": "EncyKlopedia"
+          },
+          "description": {
+            "fr": "EncyKlopedia",
+            "en": "EncyKlopedia"
+          },
+          "repo": "Rejean-McCormick/EncyKlopedia",
+          "kind": "application"
+        },
+        {
+          "id": "k-media",
+          "label": {
+            "fr": "Médiathèque",
+            "en": "Médiathèque"
+          },
+          "description": {
+            "fr": "Médiathèque",
+            "en": "Médiathèque"
+          },
+          "repo": "Rejean-McCormick/Mediatheque",
+          "kind": "application"
+        },
+        {
+          "id": "k-daat",
+          "label": {
+            "fr": "Da’at",
+            "en": "Da’at"
+          },
+          "description": {
+            "fr": "Da’at",
+            "en": "Da’at"
+          },
+          "repo": "Rejean-McCormick/Daat",
+          "kind": "application"
+        },
+        {
+          "id": "k-framework",
+          "label": {
+            "fr": "Kristal",
+            "en": "Kristal"
+          },
+          "description": {
+            "fr": "Kristal",
+            "en": "Kristal"
+          },
+          "repo": "Rejean-McCormick/Kristal-Framework",
+          "kind": "application"
+        },
+        {
+          "id": "k-konst",
+          "label": {
+            "fr": "Konstellation",
+            "en": "Konstellation"
+          },
+          "description": {
+            "fr": "Konstellation",
+            "en": "Konstellation"
+          },
+          "repo": "Rejean-McCormick/Konstellation",
+          "kind": "application"
+        }
+      ],
+      "spine_links": [
+        {
+          "from": "k-ency",
+          "to": "k-media",
+          "label": {
+            "fr": "Handoff de sources",
+            "en": "Source handoff"
+          },
+          "status": "candidate",
+          "contract": "encyk.source-evidence-handoff/2.0.0",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/2-Technical-Reference/40-integration/contract-map.md"
+          }
+        },
+        {
+          "from": "k-media",
+          "to": "k-daat",
+          "label": {
+            "fr": "Adaptation",
+            "en": "Mapping"
+          },
+          "status": "documented",
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/1-Overview/Integration.md"
+          }
+        },
+        {
+          "from": "k-daat",
+          "to": "k-framework",
+          "label": {
+            "fr": "Admission Kristal",
+            "en": "Kristal admission"
+          },
+          "status": "documented",
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/2-Technical-Reference/40-integration/contract-map.md"
+          }
+        },
+        {
+          "from": "k-framework",
+          "to": "k-konst",
+          "label": {
+            "fr": "Lecture autorisée",
+            "en": "Authorized reading"
+          },
+          "status": "documented",
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Konstellation",
+            "path": "docs/06-integrations.md"
+          }
+        }
+      ],
+      "branches": [
+        {
+          "id": "knowledge-authoring",
+          "anchor": 3,
+          "side": "above",
+          "label": {
+            "fr": "Authoring Kit · KristalDiag",
+            "en": "Authoring Kit · KristalDiag"
+          },
+          "status": "documented",
+          "steps": [
+            {
+              "id": "k-kit",
+              "label": {
+                "fr": "Authoring Kit",
+                "en": "Authoring Kit"
+              },
+              "description": {
+                "fr": "Authoring Kit",
+                "en": "Authoring Kit"
+              },
+              "repo": "Rejean-McCormick/Kristal-Authoring-Kit",
+              "kind": "application"
+            },
+            {
+              "id": "k-diag",
+              "label": {
+                "fr": "KristalDiag",
+                "en": "KristalDiag"
+              },
+              "description": {
+                "fr": "KristalDiag",
+                "en": "KristalDiag"
+              },
+              "repo": "Rejean-McCormick/KristalDiag",
+              "kind": "application"
+            }
+          ],
+          "description": {
+            "fr": "Auteur et validation ne remplacent pas l’autorité sémantique.",
+            "en": "Authoring and validation do not replace semantic authority."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Kristal-Authoring-Kit",
+            "path": "docs/27_DIK_INTEGRATION.md"
+          }
+        },
+        {
+          "id": "knowledge-kompiler",
+          "anchor": 3,
+          "side": "below",
+          "label": {
+            "fr": "Kompiler : Context Pack",
+            "en": "Kompiler: Context Pack"
+          },
+          "status": "documented",
+          "steps": [
+            {
+              "id": "k-kp",
+              "label": {
+                "fr": "Kompiler",
+                "en": "Kompiler"
+              },
+              "description": {
+                "fr": "Kompiler",
+                "en": "Kompiler"
+              },
+              "repo": "Rejean-McCormick/Kompiler",
+              "kind": "application"
+            }
+          ],
+          "description": {
+            "fr": "Lecture contextuelle, sans décider la vérité.",
+            "en": "Contextual reading, without deciding truth."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Kompiler",
+            "path": "docs/01-architecture/ecosystem-boundaries.md"
+          }
+        }
+      ]
+    },
+    {
+      "id": "publication",
+      "title": {
+        "fr": "Connaissance → Publication",
+        "en": "Knowledge → Publication"
+      },
+      "summary": {
+        "fr": "Spek compose des contenus choisis. SemantiK peut fournir des formulations sans être obligatoire.",
+        "en": "Spek composes selected content; SemantiK can optionally supply realizations."
+      },
+      "spine": [
+        {
+          "id": "p-kristal",
+          "label": {
+            "fr": "Kristal",
+            "en": "Kristal"
+          },
+          "description": {
+            "fr": "Kristal",
+            "en": "Kristal"
+          },
+          "repo": "Rejean-McCormick/Kristal-Framework",
+          "kind": "application"
+        },
+        {
+          "id": "p-konstellation",
+          "label": {
+            "fr": "Konstellation",
+            "en": "Konstellation"
+          },
+          "description": {
+            "fr": "Konstellation",
+            "en": "Konstellation"
+          },
+          "repo": "Rejean-McCormick/Konstellation",
+          "kind": "application"
+        },
+        {
+          "id": "p-spek",
+          "label": {
+            "fr": "Spek",
+            "en": "Spek"
+          },
+          "description": {
+            "fr": "Spek",
+            "en": "Spek"
+          },
+          "repo": "Rejean-McCormick/Spek",
+          "kind": "application"
+        },
+        {
+          "id": "p-output",
+          "label": {
+            "fr": "Publication",
+            "en": "Publication"
+          },
+          "description": {
+            "fr": "HTML · PDF · TeX",
+            "en": "HTML · PDF · TeX"
+          },
+          "repo": null,
+          "kind": "artifact"
+        }
+      ],
+      "spine_links": [
+        {
+          "from": "p-kristal",
+          "to": "p-konstellation",
+          "label": {
+            "fr": "Projection",
+            "en": "Projection"
+          },
+          "status": "documented",
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Konstellation",
+            "path": "docs/06-integrations.md"
+          }
+        },
+        {
+          "from": "p-konstellation",
+          "to": "p-spek",
+          "label": {
+            "fr": "ResultSet",
+            "en": "ResultSet"
+          },
+          "status": "documented",
+          "contract": "konstellation ResultSet 0.2",
+          "evidence": {
+            "repo": "Rejean-McCormick/Spek",
+            "path": "docs/STANDALONE_AND_CONNECTORS.md"
+          }
+        },
+        {
+          "from": "p-spek",
+          "to": "p-output",
+          "label": {
+            "fr": "Composition",
+            "en": "Composition"
+          },
+          "status": "implemented_owner",
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Spek",
+            "path": "docs/STANDALONE_AND_CONNECTORS.md"
+          }
+        }
+      ],
+      "branches": [
+        {
+          "id": "publication-semantik",
+          "anchor": 2,
+          "side": "above",
+          "label": {
+            "fr": "SemantiK Architect",
+            "en": "SemantiK Architect"
+          },
+          "status": "candidate",
+          "steps": [
+            {
+              "id": "p-semantik",
+              "label": {
+                "fr": "SemantiK Architect",
+                "en": "SemantiK Architect"
+              },
+              "description": {
+                "fr": "SemantiK Architect",
+                "en": "SemantiK Architect"
+              },
+              "repo": "Rejean-McCormick/SemantiK-Architect",
+              "kind": "application"
+            }
+          ],
+          "description": {
+            "fr": "Intégration de réalisations, sans qualification E2E globale.",
+            "en": "Imported realizations without global end-to-end qualification."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Spek",
+            "path": "docs/SEMANTIK_INTEGRATION.md"
+          }
+        },
+        {
+          "id": "publication-manual",
+          "anchor": 2,
+          "side": "below",
+          "label": {
+            "fr": "Textes indépendants",
+            "en": "Independent texts"
+          },
+          "status": "optional",
+          "steps": [
+            {
+              "id": "p-manual",
+              "label": {
+                "fr": "Rédaction manuelle",
+                "en": "Manual writing"
+              },
+              "description": {
+                "fr": "Rédaction manuelle",
+                "en": "Manual writing"
+              },
+              "repo": null,
+              "kind": "artifact"
+            }
+          ],
+          "description": {
+            "fr": "Spek peut fonctionner sans SemantiK.",
+            "en": "Spek can operate without SemantiK."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Spek",
+            "path": "docs/STANDALONE_AND_CONNECTORS.md"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -166,35 +166,84 @@
     }
     renderDetails(path);
   }
-  async function load() {
-    const status=$('focus-loading');status.textContent=labels().waiting;
-    try {
-      const resp=await fetch('data/focus-paths.json',{cache:'no-store'});
-      if(!resp.ok)throw new Error('HTTP '+resp.status);
-      const obj=await resp.json();
-      if(obj.format!=='koa.graph.focus.public.v1'||!Array.isArray(obj.paths)||!obj.paths.length||!(/^[a-f0-9]{40}$/.test(obj.owner_commit)))throw new Error('Invalid frozen focus data');
-      data=obj;
-      try {
-        const pointer=await fetch('data/publication-current.json',{cache:'no-store'}).then(r=>r.ok?r.json():null);
-        if (/^[0-9]{8}T[0-9]{6}Z(?:-[0-9]+(?:-[0-9]+)?)?$/.test(pointer?.release_id||'')) {
-          const manifestResponse=await fetch('publications/releases/'+pointer.release_id+'/manifest.json',{cache:'no-store'});
-          if (manifestResponse.ok) {
-            const m=await manifestResponse.json();
-            if(m.release_id===pointer.release_id) manifest=m;
-          }
-        }
-      }catch(_){/* Source link still works without manifest. */}
-      status.textContent=labels().provenance+' '+obj.owner_commit.slice(0,12)+' · '+obj.source_date;
-      $('focus-interactive').hidden=false;
-      const requested=new URLSearchParams(location.search).get('parcours');
-      pathId=data.paths.some(p=>p.id===requested)?requested:data.paths[0].id;
-      renderPath(data.paths.find(p=>p.id===pathId));
-    } catch(_){
-      status.replaceChildren(elem('span','',labels().missing));
-      const a=elem('a','focus-source-link',labels().actions+' ↗');
-      a.href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/actions/workflows/dashboard-pages.yml';
-      a.target='_blank';a.rel='noopener noreferrer';status.append(' ',a);
+  // Frozen source paths win. Local add-ons are clearly identified as previews.
+  // No commit, backend mutation, or hidden writes are performed by this reader.
+  let localOverlayIds = [], referencePreview = false;
+  function addGraphNavigation() {
+    const apps = document.querySelector('.rail a[data-nav="applications"]');
+    if (!apps || document.querySelector('[data-graph-nav]')) return;
+    const link = elem('a','workspace-nav','');
+    link.href='#cartographie';link.dataset.graphNav='true';
+    link.append(elem('span','', '⬡'));
+    link.append(document.createTextNode(' '));
+    link.append(elem('span','',language()==='fr'?'Graphe':'Graph'));
+    link.setAttribute('aria-label',language()==='fr'?'Explorer les cinq parcours kOA':'Explore five kOA paths');
+    apps.insertAdjacentElement('afterend',link);
+    const update = () => {
+      const active = location.hash==='#cartographie';
+      link.classList.toggle('active',active);
+      if(active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');
+      const appsNav=document.querySelector('.rail a[data-nav="applications"]');
+      if(active){appsNav?.classList.remove('active');appsNav?.removeAttribute('aria-current');}
+    };
+    window.addEventListener('hashchange',update);
+    update();
+  }
+  function provenanceText(){
+    const fr=language()==='fr';
+    const base = data?.owner_commit
+      ? labels().provenance+' '+data.owner_commit.slice(0,12)+' · '+data.source_date
+      : (fr?'Aperçu local des parcours de référence (non figé)':'Local reference paths preview (not frozen)');
+    return base+(localOverlayIds.length
+      ? (fr?' · Parcours additionnels non figés : ':' · Additional non-frozen paths: ')+localOverlayIds.join(', ')
+      : '')+(referencePreview?(fr?' · Référence locale':' · Local reference'):'');
+  }
+  async function getJson(path) {
+    try{const r=await fetch(path,{cache:'no-store'});return r.ok?await r.json():null;}catch(_){return null;}
+  }
+  const validPath = p => p && typeof p.id==='string' && /^(?:decision|knowledge|publication|koali|ekole)$/.test(p.id)
+       && p.title?.fr && p.title?.en && Array.isArray(p.spine) && p.spine.length>=3
+       && Array.isArray(p.spine_links) && p.spine_links.length===p.spine.length-1
+       && Array.isArray(p.branches);
+  async function load(){
+    addGraphNavigation();
+    const status=$('focus-loading'); status.textContent=labels().waiting;
+    const [frozen,preview,koali,ekole]=await Promise.all([
+      getJson('data/focus-paths.json'),
+      getJson('inventory/graph-paths-local-base.v1.json'),
+      getJson('inventory/graph-path-koali.v1.json'),
+      getJson('inventory/graph-path-ekole.v1.json')
+    ]);
+    const validFrozen=frozen?.format==='koa.graph.focus.public.v1'
+      && Array.isArray(frozen.paths) && /^[a-f0-9]{40}$/.test(frozen.owner_commit);
+    if (validFrozen) data={...frozen,paths:frozen.paths.filter(validPath)};
+    else if(preview?.format==='koa.graph.focus.preview.v1' && Array.isArray(preview.paths)){
+      data={format:'koa.graph.focus.preview.v1',owner_commit:null,source_date:'2026-11-01',
+        paths:preview.paths.filter(validPath)};
+      referencePreview=true;
+    } else data={format:'koa.graph.focus.preview.v1',owner_commit:null,source_date:'2026-11-01',paths:[]};
+    for(const candidate of [koali,ekole]){
+      if (validPath(candidate) && !data.paths.some(p=>p.id===candidate.id)) {
+        data.paths.push(candidate);localOverlayIds.push(candidate.id);
+      }
     }
+    if(!data.paths.length){
+      status.textContent=labels().missing;return;
+    }
+    if(validFrozen){
+      try{
+        const pointer=await getJson('data/publication-current.json');
+        if (/^[0-9]{8}T[0-9]{6}Z(?:-[0-9]+(?:-[0-9]+)?)?$/.test(pointer?.release_id||'')) {
+          const m=await getJson('publications/releases/'+pointer.release_id+'/manifest.json');
+          if(m?.release_id===pointer.release_id)manifest=m;
+        }
+      }catch(_){/* Dated source links remain optional. */}
+    }
+    status.textContent=provenanceText();
+    $('focus-interactive').hidden=false;
+    const requested=new URLSearchParams(location.search).get('parcours');
+    pathId=data.paths.some(p=>p.id===requested)?requested:data.paths[0].id;
+    renderPath(data.paths.find(p=>p.id===pathId));
   }
   $('focus-disclosure')?.addEventListener('click',()=>{
     branchesVisible=!branchesVisible;
@@ -202,7 +251,9 @@
     if(path)renderPath(path);
   });
   window.addEventListener('koa:languagechange',()=>{
-    if(data){$('focus-loading').textContent=labels().provenance+' '+data.owner_commit.slice(0,12)+' · '+data.source_date;
+    const nav=document.querySelector('[data-graph-nav]');
+    if(nav){nav.lastElementChild.textContent=language()==='fr'?'Graphe':'Graph';nav.setAttribute('aria-label',language()==='fr'?'Explorer les cinq parcours kOA':'Explore five kOA paths');}
+    if(data){$('focus-loading').textContent=provenanceText();
       const path=data.paths.find(p=>p.id===pathId);if(path)renderPath(path);}
   });
   load();
