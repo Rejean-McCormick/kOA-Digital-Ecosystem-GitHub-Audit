@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Karacter · Contributing-and-Development.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Karacter · Contributing-and-Development.md</h1><p class='meta'><small>Rejean-McCormick/Karacter · 04b4db906ad2 · SHA-256 0654b5cdd8d2c734</small><br><a href='https://github.com/Rejean-McCormick/Karacter/wiki/Contributing-and-Development' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Contributing and Development
+
+The Karacter codebase is designed for local editing without a build system. Before developing a feature, read the versioned **main repository** specifications under `docs/`.
+
+## Local workflow
+
+1. Clone/download the **main Karacter application repository**.
+2. Open it in a code editor and serve it with `python -m http.server 8080`.
+3. Make a **full ZIP backup of test data** before schema-changing experiments.
+4. Implement behavior and update its tests.
+5. Run `npm test` (Node.js 20+).
+6. Check the English/French interface, one existing character, John Doe, one story event and a restored image.
+7. Update this wiki only after the implementation has changed.
+
+## Project design rules
+
+- Preserve **0–6 linked polarity totals** and avoid moral ranking.
+- Simulations must remain **hypotheses** until a user canonizes one.
+- No automatic rewriting of a character&#x27;s polarity axes from narrative events.
+- Keep source-backed King Klown information distinct from **creative interpretation**.
+- Never delete or overwrite user edits simply because a bundled pack changes.
+- Preserve stable IDs, character relationships, and existing image bytes during migration.
+- Test the schema, backup, and restoration path for every new persisted field.
+- Make important new UI labels available in **EN and FR**.
+
+## Where to document changes
+
+| Change | Update |
+|---|---|
+| Product feature or workflow | Main `docs/product/`, relevant wiki page |
+| Character/polarity model | Main `docs/domain/`, `docs/schemas/`, tests |
+| Storage or migration | Main `docs/technical/`, migration tests, backup wiki |
+| Source-canon interpretation | Main `docs/universe/` and evidence metadata |
+| UI/translation | `src/i18n.js`, UX docs, bilingual wiki |
+| Public release | `docs/RELEASE_*`, `README.md`, wiki version statements |
+
+## Manual checks still matter
+
+Node and isolated UI tests are useful, but they do not replace **real browser close/reopen persistence tests**, accessible navigation checks or testing on physical mobile devices.
+
+For the actual module map, see [Technical Reference](Technical-Reference).
+</pre></body></html>

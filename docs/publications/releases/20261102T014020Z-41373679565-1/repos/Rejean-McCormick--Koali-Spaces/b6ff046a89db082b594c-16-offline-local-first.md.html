@@ -1,0 +1,23 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/16-offline-local-first.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/16-offline-local-first.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 0a55f6da1f51af8e</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/04-runtime-and-security/16-offline-local-first.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 16. Offline et local-first
+
+Le browser-rendered de Koali ne doit pas être interprété comme Internet-dependent.
+
+Le shell, ses assets, ses icônes, sa localisation et ses manifests runtime nécessaires doivent rester locaux.
+
+Pour une application hostée :
+
+- si son runtime local est disponible, la surface peut être disponible hors Internet ;
+- si le module dépend d&#x27;une ressource distante optionnelle, l&#x27;état dégradé doit être visible ;
+- si le module ne possède aucun runtime local admis, Koali ne doit pas simuler une disponibilité ;
+- une panne Internet ne doit pas causer un fallback silencieux vers un fournisseur externe.
+
+`LOCK-KS-SURF-059` — **Aucun asset distant requis pour le shell ou le renderer.**
+
+`LOCK-KS-SURF-060` — **Pas de substitution externe silencieuse lorsqu&#x27;un runtime local manque.**
+
+`LOCK-KS-SURF-061` — **Un module `unavailable` reste indisponible ; le renderer ne fabrique pas son contenu.**
+
+`LOCK-KS-SURF-062` — **L&#x27;état offline/degraded est une information de disponibilité, pas une autorité métier.**
+
+---
+</pre></body></html>

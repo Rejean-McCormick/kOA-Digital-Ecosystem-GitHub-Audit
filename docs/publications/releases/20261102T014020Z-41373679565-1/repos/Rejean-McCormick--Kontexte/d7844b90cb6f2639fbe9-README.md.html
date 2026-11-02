@@ -1,0 +1,68 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontexte · docs/locales/qc3/README.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontexte · docs/locales/qc3/README.md</h1><p class='meta'><small>Rejean-McCormick/Kontexte · da916882f789 · SHA-256 8bf7aac9dfb924ba</small><br><a href='https://github.com/Rejean-McCormick/Kontexte/blob/da916882f789e4ac15d004871396fbd21300fe24/docs/locales/qc3/README.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kontexte — Profil Québec / 3e année du primaire (v0.3)
+
+**Périmètre** : couche d&#x27;adaptation du catalogue **culturellement neutre** de Kontexte v0.2, pour une classe francophone de 3e année du primaire québécois (deuxième cycle).
+
+## Héritage : NE PAS écraser les trames neutres
+
+```
+data/trames/catalogue-neutral-v0.2.json       ← trame neutre inchangée, SHA-256 b475de9ede6880…
+      + locales/qc/fr-CA/grade3/        ← surcouche québécoise référençant les ID parents
+      + objectifs-candidats.json         ← enseignements visés, Kristals Ekole associés (pas codes MEQ)
+      + parcours-36-semaines.json        ← plan d&#x27;instanciation par étapes internes Ekole
+      + Orgo (dépôt existant)            ← seul orchestrateur des cas, tâches, indices, signaux
+      + Ekole (dépôt existant)           ← preuves pédagogiques et correspondances officielles
+```
+
+La couche québécoise contient **60 adaptations**, **83 objectifs pédagogiques internes**, **32 trames pilotes planifiées et 34 micro-situations complémentaires, dans un parcours indicatif de 36 semaines**, et **15 exercices chiffrés vérifiables**. La banque des 28 trames restantes sert aux reprises, enrichissements et remplacements. Les deux niveaux de données restent séparés : `base_trame_id` référence l&#x27;identité du problème, l&#x27;overlay précise les objets et les apprentissages.
+
+**Important sur « entièrement »** : la couche est complète **au niveau de l&#x27;inventaire des 60 trames et des objets de conception**. Elle n&#x27;est **pas** un programme scolaire officiellement homologué, pas 36 semaines de séquences clés en main, et elle ne démontre pas que les apprentissages ont été enseignés ou maîtrisés. Les correspondances exactes et la couverture de toutes les prescriptions de 3e année doivent encore faire l&#x27;objet de la revue décrite dans `reports/audit-couverture.json` et `locales/qc/fr-CA/grade3/seances-a-completer.json`.
+
+## Dossiers
+
+| Fichier | Contenu |
+| --- | --- |
+| `data/trames/catalogue-neutral-v0.2.json` | Source neutre de référence, copie binaire intacte |
+| `locales/qc/fr-CA/grade3/profil-localisation.json` | Québec, langue, mesures, culture, sécurité |
+| `locales/qc/fr-CA/grade3/overlays-60.json` | 60 localisations distinctes et leurs objectifs |
+| `locales/qc/fr-CA/grade3/objectifs-candidats.json` | Index d&#x27;objectifs internes et IDs Ekole existants |
+| `locales/qc/fr-CA/grade3/programmes-exigences.json` | Contenus repérés dans les sources officielles, surtout CCQ 3e |
+| `locales/qc/fr-CA/grade3/parcours-36-semaines.json` | Proposition de planification, 4 étapes Ekole |
+| `locales/qc/fr-CA/grade3/seances-a-completer.json` | Registre transparent des objectifs non planifiés par les trames pilotes |
+| `locales/qc/fr-CA/grade3/exercices-deterministes.json` | Problèmes de maths, opérations exactes et corrigés |
+| `examples/fete-sorciere-instance.json` | Exemple de déclinaison du même problème neutre sous l&#x27;habillage sorcière |
+| `examples/preuve-pseudonyme.json` | Trace candidate non validée, sans donnée réelle |
+| `reports/audit-couverture.json` | Couverture DOCUMENTAIRE, aucun score d&#x27;élève |
+| `schemas/overlay-qc3.schema.json` | Contrat d&#x27;adaptation |
+| `scripts/verifier.py` | Vérification hors ligne de l&#x27;héritage, liens et calculs |
+| `index.html` | Index interactif hors ligne, sans réseau ni suivi utilisateur |
+
+## Principes pédagogiques
+
+1. **Interdisciplinarité réelle** : une trame peut mobiliser plusieurs disciplines au fil d&#x27;actions concrètes.
+2. **Même rôle, parcours adaptable** : les aides ou la difficulté ne doivent pas révéler un handicap ou une classification personnelle.
+3. **Informations distribuées** : Kontexte décrit les fragments; **Orgo** décide l&#x27;assignation, la libération et les transitions, en solo ou en groupe.
+4. **Couvert ≠ maîtrisé ≠ validé** : l&#x27;instance collecte une preuve; Ekole et le personnel compétent déterminent le statut.
+5. **Respect culturel** : Québec ne signifie pas une seule façon de célébrer, parler, vivre ou connaître le territoire.
+6. **Politique médias restrictive** : un refus bloque l&#x27;export des fichiers et des tags identifiants; un simple floutage visuel ne suffit pas.
+7. **CCQ protégé** : les thèmes obligatoires, y compris la prévention des agressions sexuelles, ne sont pas confiés à une simulation non encadrée.
+8. **Calcul de taxes** : pourcentages / véritables taxes = enrichissement facultatif et scénarios guidés, pas acquisition ministérielle automatiquement attribuée à la 3e année.
+
+## Vérifier
+
+```bash
+python3 scripts/verifier.py
+```
+
+## Guide d&#x27;intégration
+
+Le compilateur Kontexte doit charger le scénario neutre immuable, vérifier son empreinte, puis fusionner les propriétés **autorisées** de l&#x27;overlay (`titre_qc`, contexte, objets, variantes, liens pédagogiques). Les déclencheurs restent des **intentions** jusqu&#x27;à leur matérialisation par Orgo. En production, ne jamais exposer un bloc d&#x27;indices destiné à un autre élève via HTML statique accessible. Les corrections ne doivent jamais se retrouver dans l&#x27;export public Élève.
+
+Voir `docs/INTEGRATION.md`, `docs/SOURCES.md` et `docs/VALIDATION_PEDAGOGIQUE.md`.
+
+## Deux fichiers supplémentaires après enrichissement
+
+- `locales/qc/fr-CA/grade3/micro-situations-34.json` : activités ciblées pour les 34 objectifs internes absents des 32 trames du tronc annuel.
+- `examples/corrige-enseignant-ne-pas-exporter.json` : 60 réponses ou pistes de vérification **strictement réservées au personnel habilité**, jamais à l’export Élève.
+
+Les deux indices de chaque scénario sont maintenant des **données concrètes distinctes**; Orgo doit décider quand et à qui les dévoiler.
+</pre></body></html>

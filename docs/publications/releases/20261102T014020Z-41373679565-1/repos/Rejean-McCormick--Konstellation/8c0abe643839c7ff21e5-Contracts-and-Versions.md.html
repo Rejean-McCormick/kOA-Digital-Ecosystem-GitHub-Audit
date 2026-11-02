@@ -1,0 +1,35 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · Contracts-and-Versions.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · Contracts-and-Versions.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 01bfc9126e06 · SHA-256 9a739a563d90bb13</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/wiki/Contracts-and-Versions' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Contracts, Versions, and Normative Status
+
+| Component | Reference in the examined sources | Scope |
+| --- | --- | --- |
+| Konstellation | `1.0.0-rc.2` | Application release candidate; final qualification not achieved |
+| Kristal Framework | `10.0.0-draft.3.2` | **Proposed** network standard retaining the v9 state model |
+| Semantic state | `schema_version: &quot;9.0&quot;` | Artifacts, snapshots, commitments, materializations |
+| Reader Discovery | `kristal.discovery/1.0` | **Noncanonical** discovery declaration |
+| Reader Inventory | `kristal.reader-inventory/1.0` | Recorded files and fingerprints |
+| Reader Profile | `kristal.reader-profile/1.0` | Reader guidance, not permissions |
+| Local Manager | `kristal.manager-local-inventory/0.1-candidate` | Candidate operational export |
+| Manager alpha.14 | `kristal.manager-operational-assessment/0.2-candidate` | Local diagnosis, not a certificate |
+| Konstellation relation registry | Repository JSON Schema contract, version 0.2 | Domain limited to 10 types per definition |
+| NavigationPlan / projections | Repository 1.0 contracts | **Derived** rendering plans and projections |
+
+## Critical distinctions
+
+```text
+File SHA-256 ≠ State Commitment
+Git commit ≠ State Commitment
+Fresh Discovery ≠ certified canonical integrity
+Manager export ≠ permission to read
+Build ≠ C1 qualification
+Synchronization ≠ immutable publication ≠ activation
+Read projection ≠ Kristal canon
+```
+
+The Framework defines conformance contracts; a reader **does not replace** its verifiers. Manager can coordinate local diagnostics; it does not become an epistemic authority.
+
+## Sources of truth
+
+Exact definitions are found in Konstellation&#x27;s `contracts/*.schema.json` and the Framework&#x27;s `contracts/`, `spec/v9/`, `spec/v10/`, and `profiles/reader-discovery/`. This wiki reports what was **observed in the snapshots** and changes no contracts.
+
+See [[Ecosystem and Responsibilities|Ecosystem-and-Responsibilities]] and [[Manager and Discovery|Manager-and-Discovery]].
+</pre></body></html>

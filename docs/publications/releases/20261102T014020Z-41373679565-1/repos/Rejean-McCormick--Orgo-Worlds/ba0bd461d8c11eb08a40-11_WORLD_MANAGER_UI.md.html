@@ -1,0 +1,9 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo-Worlds · docs/Technical-Reference/Worlds/11_WORLD_MANAGER_UI.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo-Worlds · docs/Technical-Reference/Worlds/11_WORLD_MANAGER_UI.md</h1><p class='meta'><small>Rejean-McCormick/Orgo-Worlds · c2445db8abf7 · SHA-256 018203f1df47e10f</small><br><a href='https://github.com/Rejean-McCormick/Orgo-Worlds/blob/c2445db8abf78afcb647f22615ad3b9dd132bde8/docs/Technical-Reference/Worlds/11_WORLD_MANAGER_UI.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># World Manager UI
+
+Deux clients sont fournis :
+
+1. `/worlds` dans Next.js : catalogue, création, métriques, releases, promotion, memberships, archive.
+2. `Orgo_World_Manager.pyw` : client Tkinter utilisant la même API HTTP, avec login local en mémoire, sans accès DB et sans stockage persistant du mot de passe ni du bearer token.
+
+Le `WorldSwitcher` est visible dans la topbar runtime. Changer de World fait une navigation complète vers `/w/{key}/...`; le token de session est conservé en `sessionStorage` pour reprendre la session sans partager le token entre onglets ou sur disque.
+</pre></body></html>

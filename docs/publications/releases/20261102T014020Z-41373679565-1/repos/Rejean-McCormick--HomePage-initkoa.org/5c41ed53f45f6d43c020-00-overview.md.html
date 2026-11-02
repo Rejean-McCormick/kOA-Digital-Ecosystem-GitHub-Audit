@@ -1,0 +1,615 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/HomePage-initkoa.org · docs/reading-db-upgrade/00-overview.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/HomePage-initkoa.org · docs/reading-db-upgrade/00-overview.md</h1><p class='meta'><small>Rejean-McCormick/HomePage-initkoa.org · 3b952d1da199 · SHA-256 8db44a39d723bd46</small><br><a href='https://github.com/Rejean-McCormick/HomePage-initkoa.org/blob/3b952d1da199b8ff827141022576775e8c8c9f34/docs/reading-db-upgrade/00-overview.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>---
+docSet: &quot;reading-db-upgrade&quot;
+docStatus: &quot;draft&quot;
+project: &quot;initkOA&quot;
+canonicalTermsVersion: &quot;2026-05-25&quot;
+title: &quot;Reading DB Upgrade — Overview&quot;
+path: &quot;docs/reading-db-upgrade/00-overview.md&quot;
+dependsOn: []
+relatedDocs:
+  - &quot;docs/reading-db-upgrade/01-data-model.md&quot;
+  - &quot;docs/reading-db-upgrade/02-import-pipeline.md&quot;
+  - &quot;docs/reading-db-upgrade/03-nextjs-reading-ui.md&quot;
+  - &quot;docs/reading-db-upgrade/04-ai-accessibility.md&quot;
+---
+
+# Reading DB Upgrade — Overview
+
+## Purpose
+
+The goal of this upgrade is to create a central, database-backed reading library for initkOA.
+
+The current site has a resource catalog at `/play`. It is useful for surfacing links, videos, podcasts, books, Medium articles, GitHub pages, and other external resources. However, `/play` is not designed to store or render full-text documents.
+
+The new system introduces `/reading` as a dedicated section for full-text documents.
+
+```txt
+/play    = resource catalog
+/reading = full-text document library
+````
+
+This distinction is foundational.
+
+## Problem
+
+The current Medium import workflow adds article metadata into:
+
+```txt
+public/inventory.articles.catalog.json
+```
+
+That means the site can display article cards, titles, descriptions, topics, and external URLs. But the article bodies remain outside the site, usually on Medium.
+
+This creates several limitations:
+
+1. AI systems cannot reliably read the full article text from initkOA.
+2. The site does not control the long-term availability of the text.
+3. Search is limited to metadata unless the full body is stored elsewhere.
+4. `/play` becomes overloaded if it tries to serve both as a resource catalog and a full reading library.
+5. Large-scale document management becomes difficult once the project grows to hundreds of documents.
+
+The target system must support documents ranging from short articles to long texts of 1–100 pages or more.
+
+## Target architecture
+
+The target architecture uses Supabase Postgres as the central source of truth for readable documents.
+
+```txt
+Supabase Postgres
+  ↓
+documents
+document_topics
+document_versions
+document_chunks
+document_assets
+  ↓
+Next.js server-rendered routes
+  ↓
+/reading
+/reading/[slug]
+```
+
+The full document body is stored in the database, not only as an external link.
+
+The site renders each published document as a server-side HTML page so it is accessible to:
+
+* human readers;
+* search engines;
+* AI crawlers;
+* internal AI/discovery artifacts;
+* future semantic search and retrieval workflows.
+
+## Core decision
+
+```txt
+Supabase Postgres = central source of truth
+```
+
+Supabase is selected because the project will likely need more than simple SQL storage:
+
+* document metadata;
+* full Markdown body;
+* plain-text body for search;
+* topics;
+* versions;
+* import logs;
+* source files;
+* full-text search;
+* future vector search with pgvector;
+* optional Storage for original files.
+
+Neon Postgres remains a valid alternative for a leaner database-only setup, but Supabase is the preferred default for this upgrade because it combines Postgres, admin tooling, Storage, auth, SQL, full-text search, and future pgvector support.
+
+## Key terms
+
+### Resource
+
+A resource is a catalog item, often an external reference.
+
+Examples:
+
+```txt
+Medium link
+YouTube video
+Spotify podcast
+Amazon book
+GitHub wiki
+PhilPapers article
+External website
+```
+
+Resources belong primarily to `/play`.
+
+### Document
+
+A document is a full-text readable entity stored in the central database.
+
+Examples:
+
+```txt
+Medium article copied into the DB
+Markdown essay
+PDF with extracted text
+Manual long-form page
+Research note
+Whitepaper
+Book chapter
+```
+
+Documents belong primarily to `/reading`.
+
+### Source
+
+The source describes where the document came from.
+
+Valid initial sources:
+
+```txt
+medium
+markdown
+pdf
+manual
+imported_html
+```
+
+### Canonical URL
+
+The canonical URL is the original external source URL.
+
+For a Medium import, this is the original Medium article URL.
+
+```txt
+canonical_url = &quot;https://medium.com/...&quot;
+```
+
+### Internal URL
+
+The internal URL is the initkOA reading route.
+
+```txt
+internal_path = &quot;/reading/cartographer-of-ideas&quot;
+```
+
+### Body Markdown
+
+The normalized Markdown body stored in the DB.
+
+```txt
+body_markdown
+```
+
+### Body Text
+
+The plain-text version derived from `body_markdown`, used for search and AI workflows.
+
+```txt
+body_text
+```
+
+### Chunk
+
+A chunk is a section of a document prepared for AI/search workflows.
+
+Chunks are not the canonical document. They are derived from the canonical body.
+
+```txt
+document_chunks
+```
+
+### Asset
+
+An asset is an original file or media object linked to a document.
+
+Examples:
+
+```txt
+original .md file
+original Medium HTML export
+source PDF
+image
+attachment
+```
+
+## Existing system
+
+The current system already includes:
+
+```txt
+/play
+public/inventory.articles.catalog.json
+scripts/import-medium-rss.mjs
+content/medium/source/*.html
+```
+
+The Medium importer currently updates the public inventory catalog.
+
+That workflow is useful and should not be discarded. However, it should become part of a larger reading pipeline.
+
+The future flow should be:
+
+```txt
+Medium RSS / Medium HTML / Markdown / PDF
+  ↓
+import pipeline
+  ↓
+Supabase Postgres documents
+  ↓
+/reading/[slug]
+  ↓
+AI/search/discovery artifacts
+```
+
+## Relationship between `/play` and `/reading`
+
+`/play` should remain a broad resource catalog.
+
+It should continue to support:
+
+```txt
+videos
+podcasts
+books
+external articles
+GitHub resources
+tools
+platform links
+```
+
+`/reading` should serve full-text documents.
+
+It should support:
+
+```txt
+articles
+essays
+papers
+long-form notes
+imported Markdown
+imported Medium copies
+PDF text extractions
+manual documents
+```
+
+When a Medium article is copied into the DB, `/play` may still show it as a resource, but the primary URL should eventually point to the internal reading page:
+
+```txt
+/reading/cartographer-of-ideas
+```
+
+The original Medium URL remains available as `canonical_url`.
+
+## Target routes
+
+Initial public routes:
+
+```txt
+/reading
+/reading/[slug]
+/reading/source/[source]
+/reading/topic/[topic]
+```
+
+Future admin route:
+
+```txt
+/admin/reading
+```
+
+Existing route preserved:
+
+```txt
+/play
+```
+
+## Document lifecycle
+
+Documents move through a simple lifecycle:
+
+```txt
+draft
+published
+archived
+```
+
+### Draft
+
+The document exists in the DB but is not publicly visible.
+
+### Published
+
+The document is visible at:
+
+```txt
+/reading/[slug]
+```
+
+### Archived
+
+The document is hidden from normal browsing but retained in the DB.
+
+## Migration phases
+
+### Phase 0 — Documentation
+
+Document the architecture, data model, import pipeline, UI, and AI accessibility requirements.
+
+Documents:
+
+```txt
+docs/reading-db-upgrade/00-overview.md
+docs/reading-db-upgrade/01-data-model.md
+docs/reading-db-upgrade/02-import-pipeline.md
+docs/reading-db-upgrade/03-nextjs-reading-ui.md
+docs/reading-db-upgrade/04-ai-accessibility.md
+```
+
+### Phase 1 — Supabase schema
+
+Create the core Supabase Postgres schema.
+
+Initial tables:
+
+```txt
+documents
+document_topics
+document_versions
+document_chunks
+document_assets
+import_runs
+import_items
+```
+
+### Phase 2 — Medium import to DB
+
+Create a new importer:
+
+```txt
+scripts/import-medium-to-reading-db.mjs
+```
+
+It should import from:
+
+```txt
+Medium RSS
+content/medium/source/*.html
+```
+
+It should write to:
+
+```txt
+documents
+document_topics
+document_assets
+import_runs
+import_items
+```
+
+### Phase 3 — Reading UI
+
+Create the public reading section:
+
+```txt
+app/reading/page.tsx
+app/reading/[slug]/page.tsx
+app/reading/layout.tsx
+```
+
+The document body must be rendered server-side.
+
+### Phase 4 — Markdown import
+
+Create a Markdown importer:
+
+```txt
+scripts/import-reading-md-to-db.mjs
+```
+
+It should support dropping `.md` files into an import directory, parsing metadata, and inserting/updating DB records.
+
+Default import directory:
+
+```txt
+content/reading-inbox
+```
+
+### Phase 5 — Search and AI chunks
+
+Add:
+
+```txt
+Postgres full-text search
+document_chunks
+optional pgvector embeddings
+```
+
+Initial search should use Postgres full-text search.
+
+Future search can use hybrid retrieval:
+
+```txt
+text search + vector search + metadata filters
+```
+
+### Phase 6 — Admin UI
+
+Add:
+
+```txt
+/admin/reading
+```
+
+This can eventually support:
+
+```txt
+review imports
+edit metadata
+publish/unpublish
+manage topics
+view import logs
+inspect chunks
+```
+
+## Environment variables
+
+Initial variables:
+
+```txt
+DATABASE_URL
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+MEDIUM_RSS_URL
+MEDIUM_SOURCE_DIR
+READING_IMPORT_DIR
+```
+
+The service role key must only be used in trusted server-side scripts or server-only code.
+
+It must not be exposed to client-side components.
+
+## Package scripts
+
+Current relevant script:
+
+```txt
+npm run import:medium
+```
+
+Future scripts:
+
+```txt
+npm run reading:import
+npm run reading:sync
+npm run db:migrate
+npm run db:seed
+```
+
+The existing Medium catalog import can remain while the DB-backed reading pipeline is introduced.
+
+## SEO and AI rules
+
+Published reading documents must be rendered as server-side HTML.
+
+Do not rely on client-only fetching for the document body.
+
+Rules:
+
+```txt
+Only status=published documents are public.
+Use canonical_url for original external source when applicable.
+Keep internal /reading/[slug] stable after publication.
+Render full document text server-side.
+Expose published documents to AI discovery artifacts when appropriate.
+Do not expose draft or private documents.
+```
+
+## Slug rules
+
+Slugs should be:
+
+```txt
+lowercase
+kebab-case
+stable after publication
+unique
+human-readable
+```
+
+Default slug source:
+
+```txt
+title
+```
+
+Collision strategy:
+
+```txt
+append short hash
+```
+
+Example:
+
+```txt
+cartographer-of-ideas
+cartographer-of-ideas-a13f92
+```
+
+## Search rules
+
+### Phase 1
+
+Use Postgres full-text search over:
+
+```txt
+title
+description
+body_text
+topics
+source
+author
+```
+
+### Phase 2
+
+Add vector embeddings in:
+
+```txt
+document_chunks
+```
+
+### Phase 3
+
+Use hybrid search:
+
+```txt
+full-text search
++ vector search
++ metadata filters
+```
+
+## Non-goals for the first implementation
+
+The first implementation should not attempt to solve everything.
+
+Non-goals:
+
+```txt
+full CMS editing
+collaborative editing
+PDF OCR at scale
+semantic search UI
+multi-user permissions
+private document sharing
+automatic summarization
+automatic topic taxonomy
+```
+
+Those can come later.
+
+The first implementation should focus on:
+
+```txt
+central DB schema
+Medium/local HTML import
+Markdown import
+server-rendered /reading pages
+basic filters
+basic search
+AI-visible published text
+```
+
+## Summary
+
+This upgrade separates two concerns:
+
+```txt
+/play    = catalog of resources and external references
+/reading = full-text document library backed by Supabase Postgres
+```
+
+The immediate value is that initkOA can host its own readable corpus instead of only linking to external sources.
+
+The long-term value is that the corpus becomes searchable, versioned, AI-accessible, and extensible to hundreds or thousands of documents.
+
+
+</pre></body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Federation-Pagination-and-Continuations.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Federation-Pagination-and-Continuations.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 42270790a987d7c4</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Federation-Pagination-and-Continuations' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Federation, Pagination and Continuations
+
+## Federation
+
+A logical Kristall may span many shards/operators. Federated query must preserve:
+
+- semantic identity namespace;
+- source/shard provenance;
+- snapshot/source fingerprints;
+- unresolved or missing shard state;
+- parent budget accounting.
+
+A timeout or unavailable shard yields `partial` unless policy explicitly requires fail-closed behavior.
+
+## Pagination
+
+Every paginated operation must declare or derive a stable ordering key. Cursor state is opaque to clients and should bind to the normalized query and source state.
+
+## Continuation safety
+
+A continuation should fail rather than silently resume against incompatible source state when snapshot consistency is required.
+
+## Streaming
+
+Streaming transport is optional. Every emitted page/atom still belongs to the same query/source state, and early termination must remain explicit when the transport supports it.
+
+## Unknown outcome
+
+If a federated subquery&#x27;s completion state is unknown, the coordinator records that uncertainty instead of inferring success or absence.
+</pre></body></html>

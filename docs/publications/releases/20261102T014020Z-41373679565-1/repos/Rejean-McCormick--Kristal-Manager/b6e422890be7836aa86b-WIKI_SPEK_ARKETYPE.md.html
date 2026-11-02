@@ -1,0 +1,53 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/WIKI_SPEK_ARKETYPE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/WIKI_SPEK_ARKETYPE.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 7c5c8ab6d131f721</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/WIKI_SPEK_ARKETYPE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Wiki Kristal — pipeline Manager → SemantiK → Spek
+
+## Séparation des responsabilités
+
+- `locals` demeure l&#x27;unique espace source canonique.
+- Le Manager sélectionne les Kristals et les assertions **à exposer** (la mise en page ne choisit pas les faits).
+- SemantiK Architect réalise les formulations à partir d&#x27;entrées sémantiques structurées, non de prose brute.
+- Spek reçoit les **unités déjà sélectionnées**, leurs rôles éditoriaux et les réalisations SemantiK par clé/langue.
+- Le dépôt `kristal-public` contient les surfaces publiées après C1/C2/C3 et l&#x27;export Wiki produit des **brouillons privés**.
+
+## Répertoire de transfert privé
+
+Par défaut, le panneau « Publier sur GitHub » utilise :
+
+```text
+%LOCALAPPDATA%\Kristal\private-candidates\wiki-spek-inputs\
+  kristal-ai\
+    article.json
+    realizations.json
+    archetype.json
+  kristal-accounting\
+    article.json
+    realizations.json
+    archetype.json
+```
+
+Format de `archetype.json` :
+
+```json
+{&quot;format&quot;:&quot;spek.wiki-archetype-binding/1.0&quot;,&quot;archetype&quot;:&quot;referentiel-semantique&quot;}
+```
+
+Le `slug` du dossier doit correspondre exactement à `kristals/index.json` (C3). L&#x27;archétype doit appartenir aux 19 profils de `Spek/wiki-templates/archetype-profiles.json`.
+
+Le `article.json` est une projection **Spek** `kristal.layout-article-source/0.1`, et `realizations.json` est une table `kristal.layout-realizations/0.1`. Les clés de titre, sous-titre, résumé, headings et unités doivent toutes être renseignées. Pour l&#x27;export réel, les réalisations doivent annoncer un canal `semantik_architect`, le request ID et le RuntimeSet, sans prétendre que Spek valide leur signature.
+
+## Opération
+
+1. Préparer la collection C3 sur un commit local du dépôt public et obtenir les autorisations indépendantes C1/C2.
+2. Confirmer que ce **même** commit est en ligne ; ceci est contrôlé par `publication_flow.py`.
+3. Fournir les bundles Spek remplis par les résultats SemantiK; l&#x27;automatisation de ce mapping est un chantier restant.
+4. Cliquer sur **« Composer le Wiki avec Spek + SemantiK après push »**.
+5. Le dossier créé est privé et contient `Home.md`, `_Sidebar.md`, une page par Kristal et `manifest.json` ; **ce bouton ne pousse pas le Wiki natif**.
+
+Le GitHub Wiki natif de `kristal-public` est un dépôt Git distinct et doit être activé dans les paramètres. Publication ultérieure seulement après revue éditoriale, confidentialité, qualification SA, approbations et signature des surfaces.
+
+## Limites intentionnelles
+
+- Pas de réalisation de texte automatique depuis un état brut : SemantiK requiert une projection de communication explicite.
+- Pas de conversion heuristique d&#x27;un archétype vers un layout incompatible.
+- Pas de publication ni de réseau dans Spek.
+- Pas de faux succès si une fiche manque, si l&#x27;état v9 ne correspond pas ou si la source n&#x27;est pas validée.
+</pre></body></html>

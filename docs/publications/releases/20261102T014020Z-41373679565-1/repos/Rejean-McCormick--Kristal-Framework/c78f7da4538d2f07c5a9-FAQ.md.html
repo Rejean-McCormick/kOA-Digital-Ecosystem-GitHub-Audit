@@ -1,0 +1,97 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · FAQ.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · FAQ.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 e52648ec14f5068f</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/FAQ' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>**Current baseline:** Framework `11.0.0-draft.4` (proposed), with preserved v10 hosting and v9 commitments. The v10 answer below is a historical snapshot. See [[Status-v11]] and [[Kristal-v11]].
+
+---
+
+# FAQ
+
+## What is the current Kristal Framework baseline in these snapshots?
+The supplied Framework snapshot is **v10 `10.0.0-draft.3.2` (proposed standard)**. It adds a hosted-network layer to the unchanged v9 state architecture; see [[Kristal-v10]] and [[Status-v10]].
+
+## Does adopting v10 invalidate or rehash v9 State Snapshots?
+No. Existing logical state and commitment profiles remain unchanged. Host movement, mirrors, read-surface Sync and discovery-index rebuilds do not by themselves create new logical revisions; see [[Compatibility-v9-v10]].
+
+## Is one GitHub repository required per Kristal?
+No. A `collection` node can host multiple independent Kristals in `kristals/&lt;slug&gt;/` read surfaces; permission/lifecycle boundaries should drive repository allocation; see [[Nodes-and-Collections-v10]].
+
+## Does Manager Sync publish or activate a Kristal?
+No. Manager Sync projects a derived reader surface. Immutable publication and optional activation belong to the GitHub Bootstrap/Setup lifecycle; see [[Workflow-GitHub-v10]].
+
+## Does the supplied KristalDiag snapshot qualify Framework draft.3?
+Its README identifies a pinned **draft.2** target. Do not infer draft.3 qualification without checking the actual examiner lock and evidence; see [[Status-v10]].
+
+---
+
+## v9 semantic-state FAQ (preserved)
+
+## What is Kristal v9 in one sentence?
+Kristal v9 is a polymorphic Semantic State Architecture that separates what knowledge **is** from how it is built, physically materialized, distributed and consumed.
+
+## Does v9 replace v6, v7 or v8?
+No. V9 is additive. V6 portable epistemic state, v7 semantic identities and v8 language/query contracts remain inherited compatibility surfaces.
+
+## Does every v9 Kristal need a `kristal_state/6.0` as its native canon?
+No. A v6 state remains a valid portable truth artifact, but a domain-native graph, DAG, AST, hierarchy or research corpus may be the richer native canon and expose v6 only as a projection.
+
+## Are assertions obsolete?
+No. Assertions remain the natural logical unit for independently addressable claims. V9 only rejects the idea that every domain structure must be flattened into assertions.
+
+## What is a Logical Artifact?
+A typed, independently identifiable logical unit whose internal shape is defined by a domain `logical_contract`.
+
+## What is a State Snapshot?
+An immutable composition of exact Logical Artifact commitments and pinned external references.
+
+## What is the difference between a semantic ID and a Logical Commitment?
+A semantic ID identifies **which object**. A Logical Commitment identifies **the exact normalized logical content of a revision**.
+
+## What is a Blob Digest?
+A hash of exact physical bytes. Recompression, re-encryption or resegmentation can change the Blob Digest without changing the Logical Commitment.
+
+## Why not just gzip the large v6 JSON?
+Compression can solve disk/network size while leaving monolithic parse cost, update amplification, partial-read limitations and representation-coupled identity unresolved.
+
+## Does v9 require Parquet or Arrow?
+No. They may be useful optional profiles, not core semantics.
+
+## Is a shard the same as a segment?
+No. A shard is a semantic/governance/lifecycle boundary. A segment is physical storage partitioning.
+
+## Can two different files have the same Logical Commitment?
+Yes, if they reconstruct the same normalized logical content under the same profile.
+
+## Does a parent state own referenced children?
+No. `REFERENCE != OWNERSHIP TRANSFER`.
+
+## Does state composition merge authority?
+No. `STATE COMPOSITION != AUTHORITY MERGE`.
+
+## What happens when only part of a state is local?
+The runtime/query layer must expose incomplete coverage. Missing local material is not evidence of logical absence or falsity.
+
+## What is the difference between build provenance and epistemic provenance?
+Build provenance says how software produced an artifact. Epistemic provenance says why knowledge is supported and how it should be interpreted.
+
+## What is Build / Publish / Activate?
+Build creates candidates. Publish creates an immutable snapshot. Activate changes a mutable operational pointer to select a published snapshot.
+
+## Are query indexes authoritative?
+No. V8&#x27;s rule remains: `QUERY INDEX != SOURCE OF TRUTH`.
+
+## Can model output directly modify canonical state?
+Not merely because it came from a model. `MODEL OUTPUT != AUTHORITY`.
+
+## Does v9 require distributed consensus?
+No. The baseline requires safe immutable publication and atomic activation within the claimed transport/profile. Distributed consensus is deployment-specific.
+
+## Why was v9 `9.0.0-draft.1` labeled draft?
+The architecture is implemented and testable, but finalization means freezing commitment rules and machine contracts so independent implementations can rely on them permanently. Independent qualification is part of that freeze process.
+
+## What is KristalDiag v9?
+An independent Python examiner that recalculates v9 commitments and validates conformance without reusing the Framework JavaScript commitment code. See [[KristalDiag-v9]].
+
+## How do I migrate from v8?
+Start with authority/canon inventory, wrap native logical artifacts, create immutable snapshots, then optimize materializations only where useful. See [[Migration-v8-to-v9]].
+
+## How do I migrate old v5 material?
+Use [[Migration-v5-to-v6]] for the portable semantic substrate, then add v7/v8/v9 capabilities as appropriate.
+</pre></body></html>

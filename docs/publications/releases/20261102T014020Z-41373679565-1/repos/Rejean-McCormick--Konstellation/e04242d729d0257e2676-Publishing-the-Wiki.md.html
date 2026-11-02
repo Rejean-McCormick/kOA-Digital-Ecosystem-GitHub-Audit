@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · Publishing-the-Wiki.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · Publishing-the-Wiki.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 01bfc9126e06 · SHA-256 080c0bc5a8e9a9f6</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/wiki/Publishing-the-Wiki' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Publishing This Wiki on GitHub
+
+This package is structured for a **GitHub Wiki Git repository**: `Home.md` is the home page, `_Sidebar.md` is the navigation menu, and `_Footer.md` is the footer. Other `.md` files are individual pages.
+
+## Publish without overwriting an existing wiki
+
+1. Enable **Wiki** in the Konstellation repository&#x27;s GitHub settings, if permitted.
+2. Back up or clone the existing wiki. If content already exists, compare and merge changes before replacing `Home.md` or `_Sidebar.md`.
+3. Clone the **wiki Git repository** (not the source repository), replacing the organization placeholder:
+
+```powershell
+git clone https://github.com/ORGANIZATION/Konstellation.wiki.git
+```
+
+4. Copy the `.md` files from this ZIP to the **root** of the `.wiki` repository.
+5. Check internal links and review private data before publishing publicly.
+6. Commit and push **after review**:
+
+```powershell
+git add *.md
+git commit -m &quot;docs(wiki): add English Konstellation wiki&quot;
+git push
+```
+
+GitHub may require wiki initialization through the UI or sufficient repository permissions. These instructions **do not assume** a connected GitHub account, write access, or an existing wiki.
+
+## Alternative
+
+Keep these same `.md` files in the Konstellation repository&#x27;s `docs/wiki/` directory and link them from `README.md`. This is a **documentation set**, not a platform change.
+
+## Maintenance guidance
+
+Update `Sources-and-Status.md` as snapshots evolve. **Never present a draft as a final standard**; clearly identify limitations of experimental features.
+</pre></body></html>

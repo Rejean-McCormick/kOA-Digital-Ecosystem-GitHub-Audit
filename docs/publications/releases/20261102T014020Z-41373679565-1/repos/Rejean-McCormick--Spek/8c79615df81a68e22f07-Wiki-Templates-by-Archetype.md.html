@@ -1,0 +1,56 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Wiki-Templates-by-Archetype.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Wiki-Templates-by-Archetype.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 4eb78305f912 · SHA-256 ad8351291bc4a759</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Wiki-Templates-by-Archetype' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Wiki Templates by Arketype
+
+**Contract:** `spek.wiki-archetype-templates/1.0` (optional overlay; not shipped in the clean Spek 0.5.0 snapshot).
+
+Arketype describes **what kind of structured content** a Kristal page has; Spek describes **how that content can be represented** with typed slots. A profile is a compatibility constraint, not a replacement for the actual eight Spek `layouts/*.json` contracts.
+
+## Registry — all 19 Arketype profiles
+
+| Arketype | Preferred Spek layout | Admitted section layouts |
+| --- | --- | --- |
+| `carte-jalons-preuves` | `chronology` | `chronology`, `result-card`, `argument-map` |
+| `compilation-collection` | `concept-card` | `concept-card`, `evidence-comparison`, `chronology` |
+| `composition-hybride` | `result-card` | `result-card`, `argument-map`, `comparison`, `concept-card`, `learning-path`, `evidence-comparison`, `observation-inference`, `chronology` |
+| `deposition-temoignage` | `evidence-comparison` | `evidence-comparison`, `chronology`, `observation-inference` |
+| `diagnostic-causal` | `observation-inference` | `observation-inference`, `argument-map`, `result-card` |
+| `dossier-suivi` | `chronology` | `chronology`, `result-card` |
+| `etat-systemes` | `observation-inference` | `observation-inference`, `result-card`, `comparison` |
+| `federation-topologie` | `comparison` | `comparison`, `concept-card` |
+| `interpretations-couches` | `evidence-comparison` | `evidence-comparison`, `comparison`, `argument-map` |
+| `invariant-theorie` | `argument-map` | `argument-map`, `result-card`, `observation-inference` |
+| `memoire-recherche` | `result-card` | `result-card`, `evidence-comparison`, `observation-inference` |
+| `modele-multiplexe` | `comparison` | `comparison`, `concept-card`, `evidence-comparison` |
+| `parcours-pedagogique` | `learning-path` | `learning-path`, `concept-card` |
+| `procedure-protocole` | `learning-path` | `learning-path`, `observation-inference` |
+| `referentiel-semantique` | `concept-card` | `concept-card`, `comparison` |
+| `registre-evenementiel` | `chronology` | `chronology`, `observation-inference` |
+| `simulation-transition` | `chronology` | `chronology`, `comparison`, `result-card` |
+| `taxonomie-classification` | `concept-card` | `concept-card`, `comparison` |
+| `univers-oeuvres-medias` | `concept-card` | `concept-card`, `chronology` |
+
+**Important:** `preferred_layout` is a proposal, not a force-fill instruction. The source supplies the ordered sections. If a required slot is absent or the unit kind/evidence cannot satisfy the chosen layout, Spek rejects the draft instead of manufacturing facts or reclassifying evidence.
+
+## One Kristal, several sections
+
+An article source may contain several sections using different admitted layouts. For example, a `diagnostic-causal` page might present `observation-inference` and later `result-card` **only when both sections are supported by actual, selected input units**. Spek does not infer the article plan from a folder name.
+
+## Specialist domains
+
+Taxonomies, topology, mathematical notation, graph relationships and similar specialized material may not be faithfully communicated by any of the current eight general-purpose layouts. The correct remedy is a **new versioned Spek layout and tested renderer**, not squeezing the input into a misleading card.
+
+## Where profiles live
+
+After installing the overlay:
+
+- `Spek/wiki-templates/archetype-profiles.json` — authoritative compatibility table.
+- `Spek/wiki-templates/archetype-binding.example.json` — typed per-Kristal declaration example.
+- `Spek/docs/KRISTAL_WIKI_TEMPLATES.md` — normative implementation instructions.
+
+List what the installed CLI admits:
+
+```powershell
+python -m spek list-wiki-templates
+```
+
+See [[Layout Catalog]], [[Kristal Wiki Architecture]] and [[Wiki Draft Workflow]].
+</pre></body></html>

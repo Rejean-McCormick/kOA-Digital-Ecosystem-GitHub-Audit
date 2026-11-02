@@ -1,0 +1,14 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo-Worlds · docs/Technical-Reference/Worlds/18_IMPLEMENTATION_CHECKLIST.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo-Worlds · docs/Technical-Reference/Worlds/18_IMPLEMENTATION_CHECKLIST.md</h1><p class='meta'><small>Rejean-McCormick/Orgo-Worlds · c2445db8abf7 · SHA-256 837044a29782ba59</small><br><a href='https://github.com/Rejean-McCormick/Orgo-Worlds/blob/c2445db8abf78afcb647f22615ad3b9dd132bde8/docs/Technical-Reference/Worlds/18_IMPLEMENTATION_CHECKLIST.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Implementation checklist
+
+- [x] Standalone World registry
+- [x] WorldRelease lifecycle
+- [x] WorldMembership and permissions
+- [x] Standalone API/UI tooling
+- [x] Main Orgo operational engine removed
+- [x] Interaction Kernel operational boundary removed from Orgo_Worlds
+- [x] Static anti-drift validation
+- [ ] Replace JSON control-plane store only if a dedicated Worlds persistence decision is made
+
+`Signal`, `WorkflowVersion`, `Case`, `Task`, `IntegrationOperation` and the Orgo
+outbox are deliberately outside this checklist because they are owned by `Orgo`.
+</pre></body></html>

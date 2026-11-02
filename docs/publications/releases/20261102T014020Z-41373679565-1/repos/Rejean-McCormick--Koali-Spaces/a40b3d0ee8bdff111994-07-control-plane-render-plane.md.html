@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/07-control-plane-render-plane.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/07-control-plane-render-plane.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 043f6cad871980ef</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/01-core-architecture/07-control-plane-render-plane.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 7. Séparation control side / render side
+
+La Surface Layer comporte deux plans techniques distincts.
+
+## 7.1 Control side serveur
+
+Le control side peut connaître :
+
+```text
+active Space
+validated interface manifest
+capability projection
+runtime registration
+artifact/admission reference
+health reference
+lifecycle profile
+transport profile
+operator-local topology
+```
+
+Il produit un résultat de résolution fermé.
+
+## 7.2 Render side navigateur
+
+Le render side reçoit uniquement ce qui est nécessaire pour afficher la surface :
+
+```text
+surface identity
+public route identity
+public presentation metadata
+orthogonal public status
+safe embed target
+browser sandbox/permissions
+optional versioned bridge ref
+```
+
+`LOCK-KS-SURF-134` — **La résolution de `runtimeRef`, origine opérateur, endpoint de health, lifecycle ou transport appartient au control side serveur ; le navigateur ne réalise pas cette résolution.**
+
+`LOCK-KS-SURF-135` — **`ApplicationHost` consomme uniquement un `SurfaceDescriptorPublic` déjà résolu et ne consulte jamais directement le registre runtime opérateur.**
+
+`LOCK-KS-SURF-136` — **Le descriptor navigateur ne doit contenir ni secret, ni credential, ni chemin opérateur privé, ni endpoint privilégié, ni information de contrôle inutile au rendu.**
+</pre></body></html>

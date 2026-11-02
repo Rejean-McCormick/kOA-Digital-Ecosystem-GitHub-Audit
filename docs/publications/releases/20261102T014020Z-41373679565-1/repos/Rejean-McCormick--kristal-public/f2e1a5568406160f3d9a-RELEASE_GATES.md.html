@@ -1,0 +1,20 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kristal-public · docs/RELEASE_GATES.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kristal-public · docs/RELEASE_GATES.md</h1><p class='meta'><small>Rejean-McCormick/kristal-public · 88d3e2035d1e · SHA-256 786eca2611a797f5</small><br><a href='https://github.com/Rejean-McCormick/kristal-public/blob/88d3e2035d1eedc9234d5c7c2c4bc6694a07311a/docs/RELEASE_GATES.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Release gates: C3 structural integrity is not publication approval
+
+| Gate | Evidence | Current supplied snapshot |
+| --- | --- | --- |
+| G0: approved Framework revision | Full SHA and matching v10 contract set, independent of branch names | **NOT VERIFIED** |
+| G1: real Kit read surface | Exact non-sensitive, ready files from Authoring Kit, with source state and provenance | **ABSENT for Zoology** |
+| G2: Manager sync manifest and collection index | Checked file list/size/SHA, `surface_digest`, `index_digest`, exact state ref | **BLOCKED: index and Zoology manifest absent** |
+| G3: C3 structural audit | `validate-index` PASS on exact staged bytes | **BLOCKED** |
+| G4: independent C1 qualification | Authenticated receipt bound to exact state/revision/scope | **NOT VERIFIED** |
+| G5: C2 authorization before public upload | Real signer, revocation, scope, paths and visibility | **NOT VERIFIED** |
+| G6: public synchronization | Protected, reviewed write by authorized operator with exact scope | **NOT AUTHORIZED by this repository** |
+| G7: immutable publication | Separate verified release/tag/attestation after approval | **DISABLED in existing workflow** |
+| G8: activation / consumer intake | Independently authorized channel and pinned reader release | **NOT VERIFIED** |
+
+The `kristal-qualify.yml` workflow is named historically: its checks are C3 structural checks **only**. It cannot replace C1 or C2. The `kristal-publish.yml` workflow is intentionally `contents: read`, always ends `BLOCKED`, and contains **no** GitHub Release operation.
+
+The `c3-regression-tests.yml` workflow is only a unit-test job and may pass while the actual hosted collection is incomplete. A build, a successful test or a green badge does not authorize a public write. Publishing a pull request containing confidential bytes to a public repository already exposes them; permission must precede that step.
+
+Do not release real Kristals until each gate is proved on the **same exact revision**, with operator and domain-owner approval.
+</pre></body></html>

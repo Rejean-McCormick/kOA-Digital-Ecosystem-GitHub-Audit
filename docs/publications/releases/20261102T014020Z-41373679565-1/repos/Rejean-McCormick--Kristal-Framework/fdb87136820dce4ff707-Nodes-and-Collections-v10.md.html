@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Nodes-and-Collections-v10.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Nodes-and-Collections-v10.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 a433a5fa6f6112a7</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Nodes-and-Collections-v10' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Nodes &amp; Collections — v10
+
+A **Kristal node** is an operational endpoint with a stable `node_id`, described by `kristal_node_manifest`. It can expose one or more states and related services. A hosting repository is an operational boundary, not automatically a single Kristal.
+
+## Node roles
+
+- `collection`: one or many related independent Kristal states.
+- `directory`: advertises nodes and their host locations.
+- `publisher`: publishes immutable state representations.
+- `gateway`: exposes read/query access without necessarily owning the state.
+
+A node may have several roles. A collection boundary reflects ownership, confidentiality, lifecycle or scale, and **does not merge semantic authority**.
+
+## Reference GitHub layout
+
+```text
+account or organization
+├── private root directory (recommended for mixed visibility)
+├── public collection repository
+│   └── kristals/&lt;slug&gt;/
+└── private collection repository
+    └── kristals/&lt;slug&gt;/
+```
+
+Use a new collection repository when permissions, governance, retention or publication lifecycle actually diverge. Many small Kristals can coexist in one repository with independent State Snapshots.
+
+See [[GitHub-Reference-Profile-v10]], [[GitHub-Read-Surfaces-v10]] and [[Directories-and-Federation-v10]].
+
+*Normative source: Framework `spec/v10/Nodes-and-Collections.md`.*
+</pre></body></html>

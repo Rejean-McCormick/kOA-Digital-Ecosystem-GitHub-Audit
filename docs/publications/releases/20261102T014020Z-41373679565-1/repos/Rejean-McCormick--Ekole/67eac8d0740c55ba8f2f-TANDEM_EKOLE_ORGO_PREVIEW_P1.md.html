@@ -1,0 +1,41 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Ekole · docs/TANDEM_EKOLE_ORGO_PREVIEW_P1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Ekole · docs/TANDEM_EKOLE_ORGO_PREVIEW_P1.md</h1><p class='meta'><small>Rejean-McCormick/Ekole · 0ae6f634e223 · SHA-256 67a4f94ee89df066</small><br><a href='https://github.com/Rejean-McCormick/Ekole/blob/0ae6f634e223b7e2fafd68faf6f151730578e490/docs/TANDEM_EKOLE_ORGO_PREVIEW_P1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Ekole — Tournée Tandem P1 — projection pédagogique synthétique (2026-10-19)
+
+## Statut réel
+
+**Implémenté dans ce correctif :** import contrôlé d&#x27;une *projection de démonstration*, lecture seule et **enseignant seulement** via `/api/tandem/preview.json`. Corpus, cours, éditeur et publication existants inchangés. Pas de modification des dépôts frères `ekole-quebec` / `ecole-pastorale`.
+
+**Non implémenté :** connexion OIDC, identité d&#x27;élève, permissions distribuées, API Orgo distante, import d&#x27;un `Case` / `Task` authentifié, traduction MissionFrame → WorkflowVersion, distribution d&#x27;indices à des enfants, preuve scolaire certifiée, notifications, consentement média. Cette étape ne fournit **aucune** de ces garanties.
+
+## Propriété des données (Kontexte ADR-009)
+
+- **Orgo** décide les attributions, dépendances et transitions, y compris pour une mission solo. Ne pas ajouter de « MissionRuntime » à Ekole.
+- **Orgo_Worlds** est le control-plane du World et de sa release, sans Task/Case.
+- **Ekole** possède les contenus, les affichages pédagogiques et les preuves d&#x27;apprentissage, sans inférer une compétence d&#x27;un `Task COMPLETED`.
+- Le `teacher-preview/1.0` **n&#x27;est ni le contrat officiel Orgo, ni un profil IK, ni une preuve signée** : c&#x27;est uniquement un modèle Ekole de préparation des vues.
+
+## Essai sûr (aucun réseau externe, aucune DB)
+
+```powershell
+cd &#x27;C:\mycode\Ekole\ekole&#x27;
+py -3 launcher.py --contenu none --tandem-preview tandem/fixtures/fete-sorciere.synthetic.json --verifier
+py -3 launcher.py --contenu none --tandem-preview tandem/fixtures/fete-sorciere.synthetic.json
+```
+
+Utiliser le lien enseignant affiché dans le terminal, puis ouvrir `http://127.0.0.1:8766/api/tandem/preview.json` dans **la même session enseignant**. Le port public 8765 répond 404 sur cette route. Si `--tandem-preview` n&#x27;est pas fourni, le endpoint retourne 404 même à l&#x27;enseignant.
+
+L&#x27;exemple de la fête est **100 % fictif** : ses UUID ne sont PAS ceux de FakePlant. Aucun fragment de mission n&#x27;est poussé à Orgo ou à un enfant; pas d&#x27;interactions sortantes. Les tâches sont des placeholders de prévisualisation, et leurs états ne sont pas des états Orgo attestés.
+
+La validation refuse les clés inconnues, références non canoniques, scope tenant/World/release absent ou mal formé, doublons, contenus personnels non prévus, JSON dupliqué, symlinks et payloads excessifs. Elle ne remplace pas une autorisation IAM : **ne jamais exposer ce moteur local à un réseau d&#x27;école**.
+
+## Étapes d&#x27;intégration ultérieures — hors de cette installation
+
+1. Orgo établit l&#x27;authentification effective, la portée tenant/World et la version de workflow; les écoles ne peuvent pas l&#x27;inférer d&#x27;en-têtes HTTP arbitraires.
+2. Le véritable adaptateur reçoit une projection filtrée et autorisée du Work/Case/Task Orgo via un transport authentifié; il vérifie identité, audience, release et fraîcheur.
+3. Ekole délivre uniquement les fragments permis à chaque élève connecté selon un mécanisme de session scolaire dédié; le preview enseignant ne peut jamais servir d&#x27;API élève.
+4. Les preuves d&#x27;apprentissage passent par revue et conservation appropriées; elles ne sont jamais égales au statut de Task.
+5. Vérifier supervision humaine, séparation de classes, confidentialité, identités mineures et non-publication par défaut des médias.
+
+## Qualification
+
+Test `python -m unittest tests.test_tandem_projection -v` autonome en Python stdlib, sans dépôts frères ni réseau externe. La suite `tests/test_launcher.py` exige les 202 cours du dépôt frère `ekole-quebec`; ne pas la présenter comme validée dans cette tournée si le dépôt n&#x27;est pas disponible. 
+</pre></body></html>

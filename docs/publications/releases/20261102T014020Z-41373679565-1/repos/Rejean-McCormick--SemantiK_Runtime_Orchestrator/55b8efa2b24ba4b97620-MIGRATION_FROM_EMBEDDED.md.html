@@ -1,0 +1,16 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK_Runtime_Orchestrator · docs/MIGRATION_FROM_EMBEDDED.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK_Runtime_Orchestrator · docs/MIGRATION_FROM_EMBEDDED.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK_Runtime_Orchestrator · 4e6a4fb58af8 · SHA-256 40000154b8fc0b07</small><br><a href='https://github.com/Rejean-McCormick/SemantiK_Runtime_Orchestrator/blob/4e6a4fb58af8f8dbe3acc2bdde50701b2b482b87/docs/MIGRATION_FROM_EMBEDDED.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Migration from the embedded SA prototype
+
+If the earlier embedded runtime-pipeline prototype was copied into SemantiK Architect, remove these paths from the SA repository after this independent repository is adopted:
+
+```text
+tools/build_sa_runtime.py
+src/semantik_architect/runtime_pipeline/
+tests/runtime_pipeline/
+docs/reference/RUNTIME_PIPELINE.md
+runtime_pipeline.config.example.json
+RUNTIME_PIPELINE_VALIDATION.md
+RUNTIME_PIPELINE_SHA256SUMS.txt
+```
+
+Do **not** remove SA-owned runtime contracts, conformance code, RuntimeReleaseValidator, runtime adapters, schemas, or `tools/build_runtime_manifest.py`. Those remain SemantiK Architect responsibilities.
+</pre></body></html>

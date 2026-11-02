@@ -1,0 +1,77 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · Home.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · Home.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 dedb4425c36c75e3</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/Home' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># SemantiK Architect
+
+**SemantiK Architect (SA)** is a deterministic multilingual **semantic-to-human communication engine**.
+
+It receives **structured meaning** selected by an upstream system and turns that meaning into faithful, context-appropriate communication in a requested language.
+
+&gt; **Core rule:** upstream systems decide **what must be communicated**; SemantiK Architect decides **how all of it is communicated**.
+
+## Canonical flow
+
+```text
+Upstream domain / Kristal / semantic source
+                  │
+                  ▼
+          CommunicationRequest
+     ┌────────────┼─────────────┐
+     │            │             │
+SemanticGraph  Obligations  CommunicationContext
+     └────────────┼─────────────┘
+                  ▼
+        CommunicationPlanner
+                  ▼
+          CommunicationPlan
+                  ▼
+      Lexical knowledge preflight
+                  ▼
+           LanguagePlanner
+                  ▼
+             LanguagePlan
+                  ▼
+          Exact lexical binding
+                  ▼
+       versioned SA ↔ GF bridge
+                  ▼
+              GF / PGF
+                  ▼
+        CommunicationResult
+         + coverage + runtime ID
+```
+
+## What SA owns
+
+SA owns articulation:
+
+- grouping and segmentation;
+- bounded multi-sentence communication;
+- lists when appropriate;
+- register, formality, politeness and audience adaptation;
+- target-language construction choice;
+- lexical orchestration;
+- lowering to GF through a versioned contract;
+- semantic coverage validation;
+- deterministic runtime identity.
+
+SA does **not** decide truth, relevance, priority, ethical correctness, workflow state, or which supplied facts may be discarded.
+
+## Current implementation status
+
+The v1 core is implemented: canonical semantic model, planners, lexical preflight/binding, RuntimeSets, capability profiles, strict SA↔GF bridge, PGF boundary, coverage, SDK/CLI/HTTP surfaces, conformance tooling and release validation.
+
+A production language is available only when its own immutable RuntimeSet is released with a real PGF grammar, bridge, lexical artifacts, capability profile and passing conformance evidence.
+
+## Start here
+
+1. [[Product Scope|Product-Scope]]
+2. [[Architecture]]
+3. [[Canonical Semantic Model|Canonical-Semantic-Model]]
+4. [[Communication Request|Communication-Request]]
+5. [[Communication Planning|Communication-Planning]]
+6. [[Language Planning|Language-Planning]]
+7. [[SA ↔ GF Contract|SA-GF-Contract]]
+8. [[RuntimeSets]]
+9. [[Correctness &amp; Faithfulness|Correctness-and-Faithfulness]]
+10. [[API, SDK &amp; CLI|API-SDK-CLI]]
+
+For language work, go directly to [[Add a Language|Add-a-Language]] and [[Language Profiles &amp; Conformance|Language-Profiles-and-Conformance]].
+</pre></body></html>

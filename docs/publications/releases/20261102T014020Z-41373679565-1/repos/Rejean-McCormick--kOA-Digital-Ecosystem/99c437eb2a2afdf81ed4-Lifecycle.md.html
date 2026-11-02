@@ -1,0 +1,68 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · Lifecycle.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · Lifecycle.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · dd52671208ae · SHA-256 cafb148a1d4b02a3</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/wiki/Lifecycle' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Lifecycle
+
+kOA coordinates several independent lifecycles.
+
+## Cross-system interaction
+
+Where Interaction Kernel is adopted:
+
+```text
+sender-owned state
+→ versioned Profile/Envelope
+→ receiver authentication/authorization/admission
+→ receiver-owned mutation/read
+→ Receipt / Event / QueryResult
+→ reconciliation
+```
+
+Current kOA-Linux internal/component communication remains governed by its own canonical contracts until explicitly mapped to IK.
+
+## Konnaxion decision → Orgo work
+
+```text
+Konnaxion deliberation/readings
+→ finalized DecisionRecord
+→ target cross-system handoff/Profile
+→ Orgo Signal / WorkflowVersion / Case / Tasks
+```
+
+## Kristal v5 epistemic lifecycle
+
+```text
+source / structured input
+→ Structured Epistemic State
+→ Working Exchange
+→ review / validation
+→ authority recognition when applicable
+→ Reference Exchange when recognized
+→ Runtime Pack under policy
+```
+
+## kOA-Linux release and Runtime Pack lifecycle
+
+```text
+Runtime Pack candidate
+→ knowledge release channel
+→ Release Set compatibility
+→ kristal_runtime verification/compatibility
+→ activation eligibility
+→ active_runtime_pack_record transition
+→ activation receipt / runtime health
+→ rollback receipt + last-valid restore when required
+```
+
+A kOA Node Agent operation is used only for the privileged host-facing transition required by profile/contract.
+
+## Koali Space lifecycle
+
+```text
+Space definition
+→ application/module admission
+→ runtime registration/readiness
+→ Space activation
+→ surface resolution/rendering
+→ rollback/deactivation
+```
+
+Koali Space activation is presentation lifecycle state and is not Runtime Pack activation.
+</pre></body></html>

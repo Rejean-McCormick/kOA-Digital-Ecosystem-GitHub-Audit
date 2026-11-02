@@ -1,0 +1,68 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Kristal-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Kristal-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 2724cf070655737e</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Kristal-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kristal v9
+
+**Historical v9 semantic-state version:** `9.0.0-draft.1` (the supplied Framework now uses v10 `10.0.0-draft.3`; see [[Kristal-v10]])  
+**Architecture name:** **Semantic State Architecture**
+
+Kristal v9 adds a representation-independent state and lifecycle layer above the existing v6/v7/v8 semantic stack.
+
+```text
+v6 portable epistemic state
++ v7 semantic identity / Kristall
++ v8 language + query/read models
++ v9 logical state / derivation / materialization / publication
+```
+
+## Why v9 exists
+
+Earlier versions already made strong distinctions between semantic authority and derived views. Large or structurally rich Kristals exposed one remaining coupling: logical knowledge was still too often tied to the physical JSON shape used to transport it.
+
+That creates unnecessary amplification:
+
+```text
+small logical update → large rewrite
+small query          → large parse/read surface
+repack               → accidental identity change
+index convenience    → duplicated pseudo-canon
+```
+
+V9 separates the **logical artifact** from its **materializations**.
+
+## What v9 standardizes
+
+- Logical Artifacts with domain-native payloads;
+- immutable State Snapshots;
+- Logical Commitments distinct from blob digests;
+- explicit Derivations/build lineage;
+- Materialization Manifests;
+- Exchange packaging;
+- Runtime/read-model separation;
+- Build / Publish / Activate lifecycle;
+- pinned federation references and coverage metadata;
+- compatibility with frozen v6/v7/v8 surfaces.
+
+## What v9 does not standardize
+
+V9 does not require:
+
+- RDF or triples;
+- a relational database;
+- a graph database;
+- Parquet or Arrow;
+- RocksDB;
+- IPFS;
+- a universal Merkle tree;
+- distributed consensus;
+- one universal domain schema.
+
+These may exist as materialization/runtime profiles without becoming semantic core requirements.
+
+## Key distinction
+
+```text
+WHAT THE KNOWLEDGE MEANS
+MUST NOT DEPEND ON
+HOW THE BYTES ARE PACKED
+```
+
+Continue with [[Architecture-v9]], [[Logical-Artifacts]] and [[Identity-and-Commitments-v9]].
+</pre></body></html>

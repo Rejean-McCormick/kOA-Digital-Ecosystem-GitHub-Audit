@@ -1,0 +1,39 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/03-routing-and-registry/11-routing-deep-links.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/03-routing-and-registry/11-routing-deep-links.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 f77ff5c132025434</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/03-routing-and-registry/11-routing-deep-links.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 11. Routing et deep links
+
+La route Koali publique reste :
+
+```text
+/apps/[moduleId]/[[...route]]
+```
+
+Cette route représente **la surface Koali**. Elle ne change pas l&#x27;identité des routes internes du module.
+
+Le mapping conceptuel est :
+
+```text
+Koali route
+/apps/konnaxion/ethikos/deliberate/...
+       |
+       v
+validated module contribution
+       |
+       v
+resolved owner path
+/ethikos/deliberate/...
+       |
+       v
+registered local Konnaxion surface
+```
+
+`LOCK-KS-SURF-039` — **Le module ID est stable et technique. Un alias public ne change pas l&#x27;identité technique.**
+
+`LOCK-KS-SURF-040` — **Les routes d&#x27;un module sont namespaced dans Koali.** Une route de module ne peut pas capturer `/settings`, `/health`, `/tasks`, `/search` ou d&#x27;autres routes shell réservées.
+
+`LOCK-KS-SURF-041` — **Aucune route ne peut résoudre `..`, un changement de schéma URL, un host externe ou une origine non enregistrée.**
+
+`LOCK-KS-SURF-042` — **Le mapping de route ne peut pas construire une URL à partir d&#x27;une chaîne arbitraire non validée provenant du navigateur.**
+
+`LOCK-KS-SURF-043` — **Les query parameters doivent être passés selon une politique explicite.** Les paramètres Koali internes ne doivent pas être transmis au module par défaut.
+
+---
+</pre></body></html>

@@ -1,0 +1,27 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Worlds · docs/status/2026-10-01-kristal-v6-boundary-v0.3.5.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Worlds · docs/status/2026-10-01-kristal-v6-boundary-v0.3.5.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Worlds · 0e8d47c147d1 · SHA-256 5505f505ba6fd098</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Worlds/blob/0e8d47c147d13a5721c5ae8e4b1dd7968def51fb/docs/status/2026-10-01-kristal-v6-boundary-v0.3.5.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konnaxion Worlds v0.3.5 — Kristal v6 boundary alignment
+
+**Date:** 2026-10-01
+
+This update aligns the Worlds engine/specification with Kristal Standard 6.0.0 while preserving all Konnaxion ownership and isolation invariants.
+
+## Changed
+
+- added a normative `22_KRISTAL_V6_BOUNDARY.md`;
+- added machine-readable `KRISTAL_V6_BOUNDARY.json`;
+- added ADR-WLD-022/023/024 for actionability, projection provenance and scope terminology;
+- added WLD-045..049 to the AI lock;
+- updated active cross-system terminology from v5 artifact language to Kristal v6 `kristal_state`, `record_role`, `applicability` and `actionability`;
+- added a stdlib-only boundary checker;
+- bumped package metadata to `0.3.5`.
+
+## Explicitly unchanged
+
+- Universe/World/WorldRelease data model;
+- routing and request pinning;
+- database schema isolation;
+- build/promotion behavior;
+- Konnaxion ownership of Worlds lifecycle mutations;
+- repository boundary forbidding a vendored host IK adapter.
+
+`actionability.mode = automatic` is automation eligibility only. It never grants execution authority.
+</pre></body></html>

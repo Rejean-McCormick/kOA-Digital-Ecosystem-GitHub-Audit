@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/kristal-v5/pinned-dependency.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/kristal-v5/pinned-dependency.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 d192d44882ce88c1</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/40-integration/kristal-v5/pinned-dependency.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kristal dependency and contract baselines
+
+kOA integrations must distinguish a **contract baseline** from an **immutable release pin**.
+
+## Historical v5 knowledge-contract baseline
+
+```text
+version                  5.0.0-rc.3
+status                   release-candidate
+referent registry        kristal.referent-registry/1.0.0
+knowledge-model bundle   sha256:07fe0527ab29a4b40870efdd0c9e0c67c91de919e5428047245b2a2c04f8ea98
+canonicalization         kristal.v5:jcs-rfc8785 / 1
+```
+
+The supplied rc.3 release metadata declared tag `v5.0.0-rc.3` but did **not** resolve it to an immutable commit SHA (`commit: null`). This historical boundary therefore froze the contract set without claiming rc.3 was a fully resolved published release. The active ecosystem baseline now uses Kristal Standard `6.0.0` pinned by content digest.
+
+## Existing immutable downstream locks
+
+Some downstream integrations may still pin an older immutable Kristal release. Those locks remain valid for their own scope until the owning integration explicitly updates and requalifies them. The new knowledge-projection baseline must not silently rewrite unrelated locks.
+
+## Rule
+
+For any conformance or release claim:
+
+1. identify the exact integration scope;
+2. identify the exact Kristal contract/release used by that scope;
+3. reject floating references such as `main`, `latest` or `5.x`;
+4. require tag + immutable commit for claims that depend on a published immutable release;
+5. record the contract-set/model digest where the boundary defines one.
+</pre></body></html>

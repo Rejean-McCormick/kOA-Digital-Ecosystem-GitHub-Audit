@@ -1,0 +1,19 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · README_FAKEPLANT_ACL_V1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · README_FAKEPLANT_ACL_V1.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · 381ab137d087 · SHA-256 f218cc4da35a9691</small><br><a href='https://github.com/Rejean-McCormick/Orgo/blob/381ab137d087794ffcb381532c7d2eabcdd60bb5/README_FAKEPLANT_ACL_V1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Orgo FakePlant — Diagnostic ACL (lecture seule)
+
+**Installer :** extraire l&#x27;archive dans `C:\mycode\Orgo\Orgo`.
+
+**Démarrer :** double-cliquer `DIAG_FAKEPLANT_ACL.cmd` ou utiliser PowerShell 7 :
+
+```powershell
+cd C:\mycode\Orgo\Orgo
+.\DIAG_FAKEPLANT_ACL.cmd
+```
+
+**Dépendances :** Docker Desktop démarré et service `api` Orgo en état running. La commande lit la base de données du conteneur API; elle n&#x27;emploie pas le `DATABASE_URL` de Windows.
+
+Le diagnostic impose une transaction PostgreSQL **READ ONLY** et vérifie l&#x27;UUID de l&#x27;organisation `fakeplant` avant d&#x27;interroger ses comptes et permissions. Il affiche des agrégats uniquement; aucun secret, courriel, mot de passe ni jeton.
+
+**Aucun texte de confirmation à saisir.** Il ne crée aucun rôle, jeton, identité, dossier, tâche, workflow ou liaison active, et n&#x27;active pas le SSO/IK.
+
+Les résultats représentent l&#x27;état constaté dans la base Orgo. Ils ne prouvent **pas** à eux seuls que les ACL de l&#x27;API, l&#x27;injecteur Orgo, l&#x27;Interaction Kernel ou le SSO sont fonctionnels. Un test API authentifié et isolé sera ensuite nécessaire.
+</pre></body></html>

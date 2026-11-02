@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Reference-Runtime-v8.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Reference-Runtime-v8.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 055af56566cf1b82</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Reference-Runtime-v8' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Reference Runtime v8
+
+&gt; **v9 note:** This page describes the v8 reference surface. The inherited reference runtime also implements v9 state/commitment/lifecycle behavior; see [[Reference-Runtime-v9]] and [[Reference-Runtime-v10]].
+
+
+The repository includes a **non-normative JavaScript reference runtime** targeting Kristal v8.0.0. The specification, schemas and TCK remain authoritative for conformance.
+
+## Implemented profiles / behavior
+
+The current reference runtime demonstrates local behavior for:
+
+- **V8-Reader** — v6, v7 and v8 artifact detection/adaptation without rewriting inherited artifacts;
+- **V8-Language** — BCP 47 parsing, deterministic lexicon-stack precedence, explicit missing/conflict handling;
+- **V8-Query** — exact identity lookup, neighborhood, semantic traversal, evidence closure, semantic slices and unknown-root inspection;
+- **V8-AI-Context** — deterministic semantic-atom selection, byte budgets, optional token estimates and `symbol_table_v1` compact payloads;
+- **V8-Integrity** — inherited byte fingerprints plus a documented reference semantic-fingerprint profile;
+- rebuildable query indexes for identity, incoming/outgoing edges, predicate use, assertions and evidence.
+
+## Current federation boundary
+
+The reference runtime **does not claim remote `V8-Federation` transport conformance**. It can query multiple local source artifacts, but remote shard coordination/availability is intentionally not simulated and its advertised capability reports federation as unavailable.
+
+## Key commands
+
+```text
+inspect-artifact
+v8-capabilities
+semantic-fingerprint
+resolve-lexicon
+query-v8
+build-query-index
+compile-ai-context
+```
+
+The runtime validates, adapts, indexes, queries and projects. It does not define factual truth, legal authority, organizational policy or execution permission.
+</pre></body></html>

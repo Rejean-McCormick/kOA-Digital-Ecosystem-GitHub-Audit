@@ -1,0 +1,49 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · UNESCO-Thesaurus-Classification-v11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · UNESCO-Thesaurus-Classification-v11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 66be614413379b77</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/UNESCO-Thesaurus-Classification-v11' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Classification thématique — Thésaurus UNESCO (profil compagnon v11)
+
+**Statut : politique d’intégration du Kristal-Manager et du générateur d’icônes, non-normative pour les contrats v6 à v11.** Le Framework v7 a déjà épinglé le **Thésaurus UNESCO** comme premier `reference_spine` pour la navigation par sujets. La référence conservée contient **7 domaines et 88 microthésaurus**. Il ne faut pas interpréter cette page comme une nouvelle version du Framework ou comme une certification des contenus par l’UNESCO.
+
+## Une classification de sujet, pas deux
+
+| Dimension | Référence | Fonction |
+| --- | --- | --- |
+| **Sujet / domaine / navigation** | **UNESCO Thesaurus** | Une seule source de classement thématique actif pour Manager et Icon Generator |
+| **Structure et usage** | **Arketype** (`ARK-*`, `PRF-*`) | Typologie du Kristal, indépendante de son sujet |
+| **Identité sémantique** | `KQ`, `KP`, `KA`, `KS`, `state_ref` | Identifiants internes qui ne changent jamais à cause d’une classification externe |
+
+Les codes **ISCED-F 2013** ne sont **plus une classification active**, ni une source des icônes. Ils peuvent subsister dans les documents historiques pour traçabilité, mais **aucune conversion automatique** `ISCED-F → Thésaurus UNESCO` n&#x27;est autorisée. Le Framework peut toujours représenter d’autres références KOS comme correspondances externes explicites, sans en faire des domaines actifs dans ces outils.
+
+## Écrire la correspondance
+
+Dans le `kristal.workspace.json`, on place les annotations explicites sous `classification.unesco_thesaurus` ; c’est une métadonnée de classification **non canonique** :
+
+```json
+{
+  &quot;classification&quot;: {
+    &quot;primary_archetype&quot;: &quot;ARK-04&quot;,
+    &quot;unesco_thesaurus&quot;: {
+      &quot;kos_id&quot;: &quot;kos:unesco-thesaurus&quot;,
+      &quot;domains&quot;: [&quot;3&quot;],
+      &quot;microthesauri&quot;: [&quot;3.20&quot;],
+      &quot;mapping_status&quot;: &quot;reviewed&quot;,
+      &quot;mapping_provenance&quot;: &quot;manual-local-review&quot;
+    }
+  }
+}
+```
+
+Ceci est un **fragment illustratif**, pas un workspace complet. Les notations UNESCO (comme `3`, `3.20`) doivent correspondre au profil épinglé, et chaque microthésaurus doit dépendre du domaine déclaré. Les vrais URI UNESCO, lorsqu’ils sont disponibles, sont à conserver. `reviewed` signifie **revu localement**, pas vérité certifiée ; `candidate` signifie **à revoir**, donc pas d’application automatique sur cette base. Une absence de classification reste `unmapped` : le nom du dossier, un ancien profil d’icône ou un code ISCED-F ne sont pas des preuves de correspondance.
+
+## Icônes et dossiers Windows
+
+`UT1` … `UT7` sont des **jetons de présentation propres au générateur d’icônes**, pas des codes ni des URI UNESCO. La génération utilise les domaines UNESCO explicitement déclarés et cohérents ; les microthésaurus donnent la granularité sémantique supplémentaire. Le Framework ne modifie **jamais** les icônes Windows. Dans Kristal-Manager, la personnalisation des icônes des dossiers sous `locals` est une action distincte, **désactivée par défaut**, exigeant une activation et une confirmation ; un scan ou un aperçu ne doit créer ni `.ico` ni `desktop.ini`.
+
+## Validation, autorité, migration
+
+- Référence : `spec/v7/UNESCO-Thesaurus-Alignment.md`, `spec/v7/reference-kos/unesco-thesaurus-profile.json` et baseline 7/88.
+- Profil compagnon : `profiles/unesco/README.md` et `profiles/unesco/kristal-unesco-classification.schema.json`.
+- Inspection facultative, en lecture seule : `python tools/v11/check_unesco_classification.py path/to/kristal.workspace.json --json`.
+- Les engagements, la version des schémas/TCK historiques, les identités internes et les sources canoniques ne changent pas.
+- Le **domaine 7** (« Countries and country groupings ») reste une facette géographique dans la navigation TOC par défaut, conformément à la référence v7.
+
+Voir [[Reader-Discovery-and-Arketype-v10]], [[Semantic-Identity-v11]], [[Ecosystem-Integration]] et [[Version-Stack-v6-v7-v8-v9-v10-v11]].
+</pre></body></html>

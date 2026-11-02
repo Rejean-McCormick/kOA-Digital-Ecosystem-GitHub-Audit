@@ -1,0 +1,31 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · Operations-and-Incidents.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · Operations-and-Incidents.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · ec94ee500739 · SHA-256 5f4112decf9c5049</small><br><a href='https://github.com/Rejean-McCormick/Kompose/wiki/Operations-and-Incidents' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Operations, Recovery, and Incidents
+
+These are **target procedures** for a future production service. In Tandem, the operational workflow and its audit/transaction guarantees must belong to **Orgo** (ADR 0008), not the KOMPOSE simulator. The local repository does not include monitoring, hosting, network logs, or a transactional database.
+
+## Session incidents
+
+| Incident | Expected response |
+|---|---|
+| Leaked or expired code | Revoke/rotate it; verify identity independently |
+| Disconnected student | Resume from authorized server state without duplicate enrollment |
+| Teacher pause | Stop active progression; restore previous state upon resumption |
+| Absent guardian | Propose reassignment or another access route |
+| Blocked mission | Display missing prerequisites; inspect dependencies |
+| No feasible casting | Block publication and privately explain hard-constraint conflicts |
+| Private information disclosed | Stop exposure, contain incident, preserve records, follow school procedure |
+| Incorrect or unauthorized source | Withdraw version, correct content, notify as required by editorial policy |
+
+## Target backup and consistency model
+
+Persist state, `session_version`, decisions, and events **atomically**, using an outbox, deduplication, and idempotent recovery. After reconnection, clients load an **audience-filtered projection**. Private data must have a retention policy separate from published documents.
+
+## Logging
+
+Do not place real names, rankings, aversions, private content, or raw diagnostics in general access logs. Sensitive operations should be auditable only by authorized staff.
+
+## Before a live pilot
+
+Define security ownership, support, restoration, incident notifications, content review, staff roles, retention periods, and session-shutdown procedures.
+
+[[Home|← Home]] · [[Security-Privacy-and-Fairness|Student protection →]]
+</pre></body></html>

@@ -1,0 +1,75 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontexte · docs/ekole-orgo/06_MEDIAS_IDENTITE_CONFIDENTIALITE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontexte · docs/ekole-orgo/06_MEDIAS_IDENTITE_CONFIDENTIALITE.md</h1><p class='meta'><small>Rejean-McCormick/Kontexte · da916882f789 · SHA-256 772af63537a5e762</small><br><a href='https://github.com/Rejean-McCormick/Kontexte/blob/da916882f789e4ac15d004871396fbd21300fe24/docs/ekole-orgo/06_MEDIAS_IDENTITE_CONFIDENTIALITE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 06 — Confidentialité, tags, médias et identité des enfants
+
+## Principe central : refus = absence de données publiques
+
+Un « voile de confidentialité » **n&#x27;est pas** un flou CSS sur une photo déjà téléchargée. Si un refus, une absence d&#x27;autorisation ou un retrait s&#x27;applique, le service public ne doit recevoir **ni le média source, ni miniature reconnaissable, ni tag révélateur, ni lien direct**. Les contrôles sont côté serveur/publicateur/stockage; le navigateur affiche seulement un emplacement neutre facultatif.
+
+## Classification des objets
+
+| Objet | Protection | Public autorisé ? |
+| --- | --- | --- |
+| Portrait ou voix d&#x27;un enfant | identifiant direct | non par défaut; approbations spécifiques requises |
+| Photo d&#x27;origami sans nom ni visage | création pédagogique | publication possible après vérification des droits, du contexte et des métadonnées |
+| `artifact_id -&gt; learner_ref` | correspondance identité privée | **jamais** dans un export public |
+| Preuve de maîtrise et adaptations | donnée scolaire confidentielle | **jamais** dans galerie publique |
+| Alias public d&#x27;auteur d&#x27;une œuvre | potentiellement identifiant indirect | optionnel et autorisé pour **chaque portée** |
+| Tags d&#x27;activité (« origami », « sorcière ») | thématiques non sensibles en elles-mêmes | si le regroupement ne révèle pas une personne protégée |
+
+## États proposés
+
+`permission_state`: `unknown` (défaut), `refused`, `granted`, `revoked`, `expired`.  
+`visibility_scope`: `private_teacher`, `class_group`, `school_internal`, `public`; portée maximale **autorisée**, pas consigne automatique de publier.  
+`media_state`: `quarantined`, `reviewed`, `publishable`, `published`, `suppressed`, `withdrawn`.
+
+Une publication suppose : autorisation du titulaire des droits + consentements/autorisations légalement applicables pour **chaque personne identifiable**, adéquation du public cible, vérification des métadonnées, revue humaine nécessaire, expéditeur habilité, preuve de version d&#x27;autorisation, durée, possibilité de révocation. Si une condition manque : **fail closed**.
+
+## Pipeline recommandé
+
+```text
+Prise de vue / import -&gt; Quarantaine privée -&gt; Extraction métadonnées EXIF
+       -&gt; Classification œuvre/personnes/voix/tags
+       -&gt; Consentement et revue -&gt; Produit dérivé autorisé + tags filtrés
+       -&gt; Prévisualisation responsable -&gt; Publication contrôlée
+       -&gt; Révocation -&gt; Retrait source publique, dérivés, index et caches maîtrisés
+```
+
+Ne jamais confondre **photo du chapeau** et **photo de l&#x27;enfant portant le chapeau**. Une permission pour partager l&#x27;œuvre n&#x27;accorde pas automatiquement une permission pour publier le visage ou le nom de l&#x27;auteur. L&#x27;enseignant peut documenter l&#x27;accomplissement sans diffuser la photo au public.
+
+## Schéma logique d&#x27;une production (identités en coffre séparé)
+
+```json
+{
+  &quot;artifact_id&quot;: &quot;work-origami-012&quot;,
+  &quot;kind&quot;: &quot;origami_hat&quot;,
+  &quot;mission_run_id&quot;: &quot;run-fete-001&quot;,
+  &quot;owner_ref_private&quot;: &quot;learner-opaque-0042&quot;,
+  &quot;media_ref_private&quot;: &quot;vault://media/opaque-123&quot;,
+  &quot;public_tags_candidate&quot;: [&quot;origami&quot;, &quot;chapeau&quot;, &quot;fete-etoiles&quot;],
+  &quot;permission_state&quot;: &quot;unknown&quot;,
+  &quot;visibility_scope&quot;: &quot;private_teacher&quot;,
+  &quot;media_state&quot;: &quot;quarantined&quot;,
+  &quot;public_url&quot;: null
+}
+```
+
+Les URL `vault://` sont purement **illustratives**, sans service existant garanti.
+
+## Sécurité pratique
+
+- Authentification et contrôle d&#x27;accès à **chaque téléchargement**, pas seulement à la page galerie.
+- Buckets/dossiers séparés privé/public, interdiction de « direct link » contournant les permissions.
+- Enfants tagués seulement sous identifiants opaques dans l&#x27;espace privé; noms de fichiers aléatoires; suppression EXIF (géolocalisation, identifiants d&#x27;appareil).
+- Limiter les recherches, vignettes, journaux, index et caches; vérifier les mélanges entre classes et Worlds.
+- Les équipes ne voient pas les profils de soutien; une photo ne sert pas de note automatique.
+- Historiser qui a approuvé ou refusé la diffusion; fournir un mécanisme de correction de tags et retrait par personnes habilitées.
+- L&#x27;archive destinée à durer reste subordonnée à une politique de conservation, d&#x27;effacement et de retrait; une publication publique ne peut pas être promise « éternelle ».
+- Les dispositions québécoises, obligations scolaires et fondements du consentement doivent être validés par l&#x27;établissement et son responsable de protection des renseignements personnels; cette architecture **n&#x27;est pas un avis juridique**.
+
+## Tests de non-divulgation critiques
+
+1. Inconnu/refusé/révoqué -&gt; HTTP/public export **ne contient pas** le fichier, miniature, URL, nom ou association d&#x27;auteur.
+2. Une personne visible dans une photo refuse -&gt; photo collective non publiée, même si les autres acceptent.
+3. Retrait après publication -&gt; suppression des dérivés, mise à jour des index, invalidation des caches sous contrôle et journal de l&#x27;opération.
+4. Dans l&#x27;export statique Élève, chercher tout `learner_ref`, note, tag nominatif, `media_ref_private`, secret/jeton; résultat attendu : aucune occurrence.
+5. Un utilisateur d&#x27;une autre classe/World ne peut pas lire une galerie privée ni deviner un objet par son ID.
+</pre></body></html>

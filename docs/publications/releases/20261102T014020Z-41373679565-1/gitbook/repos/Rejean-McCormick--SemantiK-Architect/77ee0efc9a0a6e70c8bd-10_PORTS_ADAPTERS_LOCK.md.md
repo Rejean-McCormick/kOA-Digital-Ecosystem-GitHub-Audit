@@ -1,0 +1,87 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/SemantiK-Architect/blob/74b07c42811dae0c68549d8554c00bc44a04298d/docs/10_PORTS_ADAPTERS_LOCK.md | commit: 74b07c42811dae0c68549d8554c00bc44a04298d | SHA-256: 796cd84df5ebb43e00ec52b92351744065185c912970dcd3c2b18689e5ca5350 -->
+
+# Ports and Adapters Lock
+
+Status: **LOCKED / normative**
+
+## Driving use cases
+
+The application exposes stable use-case ports:
+
+```text
+RenderCommunication
+ValidateRequest
+ListCapabilities
+ValidateRuntime
+ExplainGeneration   # diagnostics only, not epistemic authority
+```
+
+Transport adapters (Python SDK, HTTP, CLI, tests) call these use cases.
+
+## Driven ports
+
+### LexicalKnowledgePort
+
+Provides language-specific planning metadata without inflection.
+
+### LexicalBindingPort
+
+Binds selected semantic concepts to exact admitted runtime lexical entries.
+
+### RealizerPort
+
+Realizes a `LanguagePlan` with its immutable `LexicalBindingSet` through the versioned SA↔GF contract. Primary adapter: GF/PGF.
+
+### RuntimeCatalogPort
+
+Loads immutable runtime manifests/artifacts and resolves an admitted RuntimeSet.
+
+### CapabilityPort
+
+Answers whether a language/profile/operation combination is released for the selected RuntimeSet.
+
+### LocaleDataPort
+
+Provides deterministic locale data not delegated to GF.
+
+### TelemetryPort
+
+Emits operational telemetry without making telemetry availability a semantic dependency.
+
+## Anti-Corruption Layers
+
+Every external semantic model has an ACL/mapping layer:
+
+```text
+Kristal/Kristall -> portable v6 communication projection -> KristalV6Acl -> canonical request
+Orgo -> Orgo ACL -> canonical request
+eThikos -> eThikos ACL -> canonical request
+KeenKonnect/Konnaxion -> ACL -> canonical request
+Abstract-Wiki/ZObject optional -> ACL -> canonical request
+```
+
+ACLs may use upstream domain knowledge. The SA core must not.
+
+
+### Kristal portable-v6 ACL rule
+
+`KristalV6Acl` consumes only `semantik.kristal-v6.communication-projection/1.0`. Kristall v7 remains upstream semantic authority and may emit/reference v6-compatible projections; DaaT may transport/map a contract but MUST NOT choose communication obligations. It MUST reject raw-state-as-request shortcuts, untraceable selected assertions, unknown actionability modes, or attempts to infer obligations from valuations/actionability. Kristal metadata may be preserved as supporting context; only the explicit mapped `CommunicationRequest.obligations` controls what SA must say.
+
+## Adapter rules
+
+- adapters MAY depend on third-party frameworks;
+- adapters MUST satisfy reusable port contract tests;
+- one ecosystem adapter MUST NOT import another ecosystem adapter;
+- adapters MUST NOT mutate canonical semantics to “make generation easier”;
+- adapters MUST report unmappable required semantics explicitly;
+- no adapter may hide a remote dependency behind a supposedly offline core feature.
+
+## Network policy
+
+The canonical runtime path must function with network disabled when local artifacts are supplied. Optional network-backed adapters are explicit and must obey timeouts/retries/circuit-breaker policy.
+
+## MathKristal / Informath adapters
+
+`MathKristalFormulaAcl` is an ecosystem ACL. It terminates Formula IR at the boundary and maps it into `CommunicationRequest`.
+
+`InformathMathRealizer` implements `RealizerPort` for `math.informalize_formula`. `CompositeRealizer` performs explicit operation routing between the generic GF bridge and the Informath math bridge. Routing is determined only by planned operation identity; it is not a language fallback mechanism.

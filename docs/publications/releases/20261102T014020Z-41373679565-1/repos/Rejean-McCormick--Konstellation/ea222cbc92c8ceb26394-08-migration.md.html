@@ -1,0 +1,66 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/08-migration.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/08-migration.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 bf3740d9d7dc3efc</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/08-migration.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Migration v0.7 vers 1.0
+
+## 1. Principes
+
+La migration doit être additive autant que possible.
+
+- les anciens `recipeId` restent interprétables ;
+- les aliases `capabilities` sont lus mais réémis sous `affordances` ;
+- les explorations v0.7 sont migrées explicitement ;
+- les renderers génériques restent des fallbacks ;
+- aucune donnée canonique n&#x27;est réécrite par la migration.
+
+## 2. NavigationPlan
+
+La branche 1.0 émet `NavigationPlan` 1.0. La migration depuis le plan 0.2 a appliqué les règles suivantes :
+
+- garder `derived: true` ;
+- garder la sémantique `navigation-affordances-not-kristal-authority` ;
+- remplacer progressivement `renderer: adaptive` par des `rendererId` spécifiques ;
+- versionner les DTOs de projection.
+
+## 3. ExplorationState
+
+La migration doit convertir l&#x27;état sans changer la sélection :
+
+```text
+v0.7 exploration-state 0.2
+  + navigation.recipeId/mode
+  -&gt; v1.0 state
+     query inchangé
+     lensRef conservé
+     policy conservée
+     focus conservé si valide
+     navigation migrée
+```
+
+Si une recette sauvegardée n&#x27;existe plus, utiliser un fallback et enregistrer une explication de migration.
+
+## 4. navigationHints
+
+Entrées anciennes :
+
+- `capabilities`
+- `relationCapabilities`
+
+Entrées cibles :
+
+- `affordances`
+- `relationAffordances`
+
+Le parser 1.0 accepte les anciennes clés pendant la fenêtre de compatibilité, mais les contrats, la documentation et les nouveaux exports utilisent les nouvelles.
+
+## 5. Projections
+
+La branche 1.0 remplace les anciennes projections génériques par des DTOs spécialisés versionnés pour timeline/lignée, arbre, DAG/preuves, parcours, feedback causal, matrice/profil, états/action, traçabilité/divergences, multi-échelle et spatial. Cette migration ne modifie jamais la vérité source : les projections restent dérivées et reconstructibles.
+
+## 6. Dépréciations
+
+Toute dépréciation doit comporter :
+
+- version d&#x27;introduction ;
+- version de retrait prévue ;
+- migration automatique ou guide ;
+- tests de compatibilité ;
+- message opérateur explicite.
+</pre></body></html>

@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal-LevelUpDiag- · docs/ARCHITECTURE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal-LevelUpDiag- · docs/ARCHITECTURE.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal-LevelUpDiag- · ce1c0dead573 · SHA-256 fe67e5fb44f57024</small><br><a href='https://github.com/Rejean-McCormick/MediKristal-LevelUpDiag-/blob/ce1c0dead57361ef21f9e3fcd8043711124ba41d/docs/ARCHITECTURE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture
+
+LevelUpDiag-MediKristal is a standalone adaptation of the LevelUpDiag process-isolated diagnostics frame.
+
+```text
+CLI / ZIP launcher
+      ↓
+manifest + MediKristal profile config
+      ↓
+campaign scheduler
+      ↓  fresh process per level
+N* universal levels + MK* target levels
+      ↓
+read-only target observation / explicit validators / disposable-copy generators
+```
+
+The target is normally selected explicitly with `--target`, or extracted temporarily by `run_medikristal_zip.py`. Evidence is written under the target `.levelupdiag/` directory for an extracted repository; ZIP runs copy the finished run outside the temporary extraction.
+
+`N05` executes only declared read-oriented validators. Target-mutating canonical generators are not run in-place: `MK60` copies the repository and regenerates contracts, validation evidence, runtime assets, SBOM and manifest in that disposable copy.
+
+`parallel_safe: false` levels run exclusively. Synthetic blocked results are persisted to `result.json`, including fail-fast paths, so campaign summaries and `latest/` remain complete.
+</pre></body></html>

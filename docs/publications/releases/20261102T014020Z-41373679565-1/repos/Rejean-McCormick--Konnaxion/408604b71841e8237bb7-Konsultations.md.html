@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · Konsultations.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · Konsultations.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 62c3bb451bac · SHA-256 9ddae0a14418c0b4</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/wiki/Konsultations' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konsultations — Consultation and Formal Participation
+
+Konsultations is Konnaxion&#x27;s logical consultation/intake/formal-participation boundary.
+
+The current snapshot contains a dedicated frontend `konsultations` module and ethiKos demo-import structures for consultations and consultation votes. The architecture rule is more important than physical placement: **formal source participation must remain distinct from Smart Vote derived readings and from Korum topic stances.**
+
+## Responsibilities
+
+Konsultations covers product capabilities such as:
+
+- consultation intake and listing;
+- consultation detail;
+- suggestions;
+- formal participation/vote capture where the protocol calls for it;
+- result presentation;
+- impact/accountability timeline.
+
+## Source ownership
+
+A formal consultation ballot is a source fact of its consultation protocol.
+
+```text
+consultation ballot
+≠ EthikosStance
+≠ Smart Vote reading
+≠ Orgo Task
+```
+
+## Smart Vote relationship
+
+A consultation can be bound to Smart Vote through an explicit source/consultation mapping. Smart Vote may calculate a contextual reading, but the reading does not overwrite the source ballot.
+
+## Orgo relationship
+
+No active Orgo adapter is implemented in the current Konnaxion snapshot. A future workflow integration must treat Orgo Case/Task as external workflow objects, not as aliases for Konnaxion consultations.
+</pre></body></html>

@@ -1,0 +1,62 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontainer · File-Format.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontainer · File-Format.md</h1><p class='meta'><small>Rejean-McCormick/Kontainer · c9674410bf4a · SHA-256 76a0b2128c7a6534</small><br><a href='https://github.com/Rejean-McCormick/Kontainer/wiki/File-Format' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># File Format — Proposed Container v1
+
+**Status:** the `kristal.container/1` physical format is implemented by **Kristal-Container 1.0.0rc1** but is a **proposal for Kristal Framework adoption**, not an already adopted ecosystem standard. The repository&#x27;s `docs/FORMAT.md` and schema files in `contracts/` contain the precise authoritative *implementation contract*; this wiki is an overview.
+
+## The outer envelope
+
+```text
+Offset      Field
+0..7        ASCII &quot;KRISTAL&quot; + byte 0x01
+8..11       Canonical JSON header length, unsigned big-endian uint32
+12..        Canonical UTF-8 JSON header (1..65,536 bytes)
+remaining   Raw ZIP64 STORE payload (open) OR framed authenticated ciphertext
+```
+
+An open file has the canonical JSON header `{&quot;format&quot;:&quot;kristal.container/1&quot;,&quot;mode&quot;:&quot;open&quot;}`. An encrypted header declares `mode=encrypted`, the `xchacha20poly1305-secretstream-v1` profile, a random container ID, stream header, and a bounded list of key slots. Header JSON has strictly defined serialization and rejects unknown normative fields and duplicate keys. **It does not claim full RFC 8785/JCS compliance.**
+
+The outer envelope means that `.kristal` **cannot be treated directly as an ordinary ZIP**, even in open mode. Use the Kontainer reader or explicitly verified tools that understand the container protocol.
+
+## Inner archive
+
+The payload is a tightly constrained **ZIP64 STORE (no compression)** archive containing regular files, followed by `_kristal/manifest.json`:
+
+```text
+example.kristal
+  ├─ Kristal envelope + public header
+  └─ ZIP64 STORE payload (possibly encrypted)
+       ├─ state/snapshot.json
+       ├─ docs/README.md
+       └─ _kristal/manifest.json
+```
+
+The manifest records each member&#x27;s relative path, byte length, and SHA-256 digest, with an optional Ed25519 signature. Entries use canonical portable UTF-8 NFC paths with `/` separators. The parser rejects absolute/traversal paths, links, reserved Windows names, case collisions, unknown compression, and mismatched ZIP structures. ZIP CRC32 is **not** a cryptographic authenticity check; the manifest&#x27;s hashes and authenticated encryption/signature policies have different roles.
+
+A directory&#x27;s empty directories, original timestamps, ACLs, POSIX permissions, and extended attributes are **not preserved**. This is a portable content package, **not** a filesystem-image backup.
+
+## Encrypted profile
+
+The inner ZIP is encrypted as a whole by libsodium **XChaCha20-Poly1305 secretstream**, using a fresh random 32-byte content key. The file uses length-prefixed frames, normally with 1 MiB plaintext chunks, an authenticated outer header, and a mandatory final authenticated frame. This detects tampering and truncation. Opening validates the full stream and archive before exposing member names or contents.
+
+Password access uses **Argon2id** (64 MiB / 3 passes / parallelism 4), HKDF-SHA256, and an authenticated wrapping slot. Recipient access uses X25519 sealed boxes. Recovery and dual-secret slots are distinct. **Slots are OR alternatives**; within password-factor access, password **AND** factor are combined cryptographically.
+
+Encrypted headers still expose the total file size, encryption mode, access-slot types/counts, and recipient public-key identifiers; this profile has **no padding**. Private filenames and inner manifest are encrypted, not the existence and approximate size of the file.
+
+## Default resource limits
+
+| Limit | Default |
+| --- | ---: |
+| Member count | 10,000 |
+| Member size | 8 GiB |
+| Total member content | 16 GiB |
+| Manifest | 8 MiB |
+| Central directory | 16 MiB |
+| Direct API `read()` | 16 MiB |
+
+Applications can set `Limits` in Python; raising them increases resources committed to untrusted input. For large members, prefer `copy_to()` rather than `read()`.
+
+## Semantic boundaries
+
+The physical manifest attests to **bytes and paths**, not Kristal&#x27;s Logical Commitment, Reader Policy, provenance, recognition, or epistemic meaning. The kOA ecosystem&#x27;s **Kristal v6** semantic contracts remain owned by Kristal Framework. Its canonicalization rules (including RFC 8785/JCS in Kristal v6) must not be confused with the separate proposed envelope-JSON profile described here.
+
+See [Architecture](Architecture), [Protection and Access](Protection-and-Access), and [Ecosystem Integration](Ecosystem-Integration).
+</pre></body></html>

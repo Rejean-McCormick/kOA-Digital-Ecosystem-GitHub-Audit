@@ -1,0 +1,41 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · README_KONNAXION_TOUR_P1_V1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · README_KONNAXION_TOUR_P1_V1.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 b56f07fbebb32f77</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/README_KONNAXION_TOUR_P1_V1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tournée kOA Tandem — Konnaxion P1 V1
+
+**Cible**: `C:\mycode\Konnaxion\Konnaxion` (la racine qui contient `backend/`).
+
+## Lancement en PS7
+
+```powershell
+cd &#x27;C:\mycode\Konnaxion\Konnaxion&#x27;
+.\PREVIEW_KONNAXION_TOUR_P1.cmd
+.\INSTALL_KONNAXION_TOUR_P1.cmd
+.\VERIFY_KONNAXION_TOUR_P1.cmd
+```
+
+**Retour arrière**: `ROLLBACK_KONNAXION_TOUR_P1.cmd`.
+
+## Portée exacte
+
+- `COMMON_OIDC_ALLOW_AUTO_SIGNUP=false` : quand OIDC est activé plus tard, l&#x27;inscription sociale automatique est refusée par défaut. L&#x27;inscription Django locale reste gouvernée par `DJANGO_ACCOUNT_ALLOW_REGISTRATION`. Aucune fusion par email ni privilèges OIDC ajoutés.
+- `IK_ORGO_ALLOWED_ORGANIZATION` : borne facultative mais **nécessaire pour qualifier le token dans le profil FakePlant à tenant unique**. Une fois définie sur le UUID Orgo FakePlant dans le `.env` existant, les impacts d&#x27;une autre organisation sont refusés avant persistance. Le script d&#x27;installation **ne change pas** `.env`.
+- Tests Django natifs ajoutés (exécution différée jusqu&#x27;à environnement de test isolé).
+- Audit et handoff ajoutés à `docs/Technical-Reference/TANDEM_TOUR_KONNAXION_2026-10-18.md`.
+
+## Ce que le pack ne fait PAS
+
+N&#x27;active pas le SSO, n&#x27;inscrit aucun humain, ne connecte pas Konfid, ne rejoue pas l&#x27;IK, ne modifie ni Neon, ni Orgo, ni les 900 personas, ni Konnaxion_Worlds, ni le VPS. La qualification humaine/OIDC, ACL multi-World et intégration IK réelles ne sont pas déclarées terminées.
+
+## Vérification et sauvegardes
+
+SHA-256 des fichiers source avant remplacement, tests autonomes pré/post sur copie temporaire, snapshot du code original sous `C:\mycode\Konnaxion\Tandem_Local\konnaxion_tour_p1\backups`. Le rollback refuse de remplacer un fichier modifié après installation. En cas de dérive du snapshot, l&#x27;installation s&#x27;arrête.
+
+Sur machine de développement isolée **avec une base de test distincte** :
+
+```powershell
+cd &#x27;C:\mycode\Konnaxion\Konnaxion\backend&#x27;
+uv run --no-sync python -m pytest konnaxion/users/tests/test_tandem_oidc_guard.py konnaxion/ethikos/tests/test_tandem_ik_organization_scope.py
+```
+
+Ne pas lancer ces tests Django contre Neon ou la base de données courante sans config de test isolée. L&#x27;outil d&#x27;installation ne les lance pas.
+
+Pour la démo à tenant unique, régler manuellement `IK_ORGO_ALLOWED_ORGANIZATION` à l&#x27;UUID Orgo FakePlant **après validation de la configuration Orgo**, avant d&#x27;affirmer la qualification d&#x27;isolation d&#x27;un token IK. Cette restriction ne convient pas à un token multi-tenant sans délégation tenant spécifique.
+</pre></body></html>

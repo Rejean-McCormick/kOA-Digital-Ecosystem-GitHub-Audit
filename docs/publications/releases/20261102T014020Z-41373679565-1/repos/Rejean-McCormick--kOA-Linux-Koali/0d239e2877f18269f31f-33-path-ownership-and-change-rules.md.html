@@ -1,0 +1,184 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/02-system/code-and-filesystem-architecture/33-path-ownership-and-change-rules.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/02-system/code-and-filesystem-architecture/33-path-ownership-and-change-rules.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 87e8b2956ba57c49</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/02-system/code-and-filesystem-architecture/33-path-ownership-and-change-rules.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-SYS-033&quot;,
+  &quot;document_class&quot;: &quot;normative_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;system&quot;,
+  &quot;scope&quot;: [
+    &quot;global&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/system.contract.json&quot;,
+    &quot;contracts/ai-navigation.contract.json&quot;,
+    &quot;02-system/02-logical-architecture.md&quot;,
+    &quot;02-system/04-component-boundaries.md&quot;,
+    &quot;02-system/07-cross-component-communication.md&quot;,
+    &quot;02-system/19-release-and-artifact-identity.md&quot;,
+    &quot;04-components/04-subsystem-documentation-boundaries.md&quot;,
+    &quot;05-development/00-development-model.md&quot;,
+    &quot;06-lifecycle/02-release-model.md&quot;,
+    &quot;07-security/05-privilege-boundaries.md&quot;,
+    &quot;08-operations/00-operating-model.md&quot;,
+    &quot;contracts/subsystems/koa-spaces.subsystem.json&quot;,
+    &quot;02-system/23-code-and-filesystem-architecture.md&quot;,
+    &quot;00-governance/04-change-protocol.md&quot;,
+    &quot;00-governance/09-canonical-ownership.md&quot;,
+    &quot;01-constitution/07-component-separation.md&quot;
+  ],
+  &quot;decision_ids&quot;: [],
+  &quot;requirement_ids&quot;: [],
+  &quot;lock_ids&quot;: [
+    &quot;LOCK-CODE-FS-001&quot;,
+    &quot;LOCK-CODE-FS-002&quot;,
+    &quot;LOCK-CODE-FS-003&quot;,
+    &quot;LOCK-CODE-FS-004&quot;,
+    &quot;LOCK-CODE-FS-005&quot;,
+    &quot;LOCK-CODE-FS-006&quot;,
+    &quot;LOCK-CODE-FS-007&quot;,
+    &quot;LOCK-CODE-FS-008&quot;,
+    &quot;LOCK-CODE-FS-009&quot;,
+    &quot;LOCK-CODE-FS-010&quot;
+  ],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [
+    &quot;DOC-SYS-023&quot;,
+    &quot;DOC-GOV-004&quot;,
+    &quot;DOC-GOV-009&quot;,
+    &quot;DOC-CONST-007&quot;
+  ],
+  &quot;tags&quot;: [
+    &quot;path-ownership&quot;,
+    &quot;dependency-rules&quot;,
+    &quot;change-control&quot;,
+    &quot;naming&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# Path Ownership and Change Rules
+
+## 1. Purpose
+
+This document defines the rules that keep the frozen file architecture usable as implementation grows. It distinguishes an architectural change from an ordinary addition inside an admitted owner root.
+
+## 2. Ownership Matrix
+
+| Path | Owner | Prohibited content |
+| --- | --- | --- |
+| `docs/` | Documentation governance | Product source, secrets, mutable state, package payloads |
+| `components/&lt;component-id&gt;/` | Named internal component | Another component&#x27;s domain logic or migrations |
+| `host/` | Host platform integration | Business workflow, application state, subsystem internals |
+| `integrations/&lt;subsystem-id&gt;/` | kOA integration boundary | Vendored subsystem implementation or direct database mutation |
+| `interfaces/` | Transport and binding maintainers | Domain-authority redefinitions |
+| `assembly/` | System assembly | Component business rules or hand-maintained profile forks |
+| `profiles/` | Profile implementation settings | Canonical profile definitions or copied source trees |
+| `packaging/` | Packaging | Release-channel authority, signing secrets, business logic |
+| `release/` | Release engineering | Mutable component state or private signing keys |
+| `operations/` | Operations implementation | Canonical architecture or hidden business policy |
+| `tests/` | Cross-system conformance | Production implementation used only to make tests pass |
+| `tools/` | Repository tooling | Product runtime authority |
+| `dev/` | Local development | Production secrets or authoritative deployment manifests |
+| `ci/` | Reusable CI orchestration | Logic that cannot run locally |
+| `generated/` | Generators | Manually maintained source authority |
+
+## 3. Allowed Ordinary Additions
+
+A new source or test file is an ordinary implementation change when all of these conditions hold:
+
+1. it is inside an admitted leaf source, adapter, test, fixture, migration, or packaging directory;
+2. its owner is already declared by `path-ownership.json`;
+3. it does not introduce a new cross-component dependency;
+4. it does not move authority, persistent state, privilege, or release responsibility;
+5. it is registered by the owning `component.toml`, `integration.toml`, package metadata, or test manifest where applicable;
+6. it passes architecture, dependency, source-pin, generated-content, runtime-path, and conformance checks.
+
+Examples include adding a new use-case module under one component&#x27;s `application/`, a new adapter behind an existing port, a new migration owned by that component, or an additional test within an existing suite.
+
+## 4. Changes Requiring Architecture Revision
+
+An accepted major architecture decision is required before:
+
+- adding or renaming a top-level directory;
+- moving a component between internal and external ownership;
+- placing subsystem implementation code inside `koa-linux`;
+- creating a shared writable database root;
+- introducing a new privileged executable or broker operation class;
+- adding a new immutable, configuration, persistent, recovery, or secret root outside the installed filesystem layout;
+- making a generated directory manually authoritative;
+- creating a profile-specific source implementation tree;
+- granting kOA Spaces business, policy, resource, release, identity, or host authority;
+- changing a canonical path that is referenced by release, recovery, backup, or conformance evidence.
+
+## 5. Dependency Direction
+
+```text
+docs/contracts
+      ↓ generation
+generated bindings
+      ↓
+component domain and application
+      ↓ through ports
+component adapters and integration adapters
+      ↓
+host and assembly
+      ↓
+packaging and release
+```
+
+The following are prohibited:
+
+```text
+component private source → another component private source
+component domain         → host, profile, package, or integration implementation
+integration A            → integration B private source
+kOA Spaces               → privileged broker
+presentation manifest    → executable code loading
+profile settings         → copied component implementation
+release workflow         → undeclared live-state mutation
+```
+
+## 6. Naming Rules
+
+- directories and non-language configuration files use `kebab-case` unless an external standard requires another name;
+- Python packages use `snake_case` and remain under `src/`;
+- Rust modules use `snake_case` and binaries use stable `kebab-case` executable names;
+- identifiers in contracts remain stable even when public labels change;
+- files named `common`, `shared`, `helpers`, `misc`, or `utils` at a broad root are prohibited unless their exact narrow responsibility is documented;
+- generated files include generator and source-state metadata where the format permits it.
+
+## 7. File Size and Splitting
+
+A file SHALL represent one coherent responsibility. Review is mandatory when a source file exceeds 500 logical lines or a normative architecture file exceeds approximately 800 lines. A larger file is permitted only when splitting would obscure a generated table, schema, protocol, or atomic state machine. Otherwise it SHALL be split into responsibility-specific modules or a numbered documentation series.
+
+This architecture itself is split into a series to avoid one oversized inventory file.
+
+## 8. Prohibited Repository Content
+
+The source repository SHALL NOT contain:
+
+- `.git/` data inside release archives;
+- private keys, production credentials, access tokens, personal secrets, or decrypted recovery material;
+- runtime databases, media blobs, audit stores, backups, receipts, caches, or support bundles;
+- copied Konnaxion, Orgo, Ariane, kOA Spaces, SemantiK Architect, SenTient, or UCKK repositories;
+- unverified binary dependencies without source, digest, license, and provenance records;
+- package manager caches, virtual environments, build directories, container layers, or generated release payloads outside declared generated paths;
+- symbolic links that escape the owning repository or installed runtime root.
+
+## 9. Validation Contract
+
+`tools/src/koa_tools/checks/file_architecture.py` SHALL compare committed paths with the generated machine-readable lock derived from this series. The check SHALL fail on unknown top-level roots, ownerless structural files, prohibited generated content, subsystem vendoring, invalid runtime paths, private cross-component imports, or kOA Spaces authority expansion.
+
+A successful documentation validation confirms the consistency of this series. Implementation conformance additionally requires the code-repository checks defined here once the corresponding source scaffold exists.
+
+## Koali product UI modularity
+
+This document is interpreted with the Koali product-interface portability rule:
+
+- each independently packaged product owns its user interface and remains independently operable when its declared standalone mode is supported;
+- shared Koali shell and design-system code is reusable presentation infrastructure, not a mandatory product runtime and not a source of business authority;
+- an integrated composition host discovers installed and admitted product manifests dynamically rather than hard-coding a mandatory product list;
+- a surface profile is a projection of the same product routes, capabilities, commands, and contextual views, not a separately implemented frontend;
+- removing one product removes only that product&#x27;s admitted presentation contributions and SHALL NOT require source changes to unrelated products;
+- ordinary shell behavior SHALL NOT require private UI imports from another product; cross-product journeys use explicit public routes, commands, capabilities, or integration contracts.
+</pre></body></html>

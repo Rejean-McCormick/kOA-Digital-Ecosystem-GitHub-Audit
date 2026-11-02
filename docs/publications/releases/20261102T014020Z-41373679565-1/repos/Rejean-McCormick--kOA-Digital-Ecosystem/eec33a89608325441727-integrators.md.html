@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/60-guides/integrators.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/60-guides/integrators.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 ab5beedd2c9ae317</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/60-guides/integrators.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Integrator guide
+
+## Identify the owner
+
+Determine which product/component owns the state. Do not infer authority from hosting, rendering, process topology or transport.
+
+## Cross-system protocol
+
+Use an explicitly adopted Interaction Kernel Profile where available. Until product/platform adoption is published, do not relabel existing kOA-Linux internal/component contracts as IK.
+
+## Kristal
+
+Route ecosystem-facing Kristal work through the appropriate mapping boundary, preserve the exact Kristal Standard `6.0.0` content-digest pin, and preserve v6 `kristal_state` semantics (`valuations[]`, `coordinates`, `applicability`, `record_role`, `actionability`, validation/recognition and `artifact_status`). Treat Working/Reference only as declared v6 artifact-status concepts or explicitly defined derived artifacts.
+
+## kOA-Linux release/activation
+
+Reference Release Set/channel compatibility. For Runtime Packs, use `kristal_runtime` owner records. Use kOA Node Agent only for the narrow privileged node transition required by its contract.
+
+## Koali
+
+Treat Space/application activation as presentation composition. Never map it to Runtime Pack activation or product business authority.
+</pre></body></html>

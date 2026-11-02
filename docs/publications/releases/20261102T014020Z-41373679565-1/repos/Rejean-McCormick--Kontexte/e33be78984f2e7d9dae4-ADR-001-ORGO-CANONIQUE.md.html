@@ -1,0 +1,12 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontexte · docs/decisions/ADR-001-ORGO-CANONIQUE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontexte · docs/decisions/ADR-001-ORGO-CANONIQUE.md</h1><p class='meta'><small>Rejean-McCormick/Kontexte · da916882f789 · SHA-256 2df9638d9863948f</small><br><a href='https://github.com/Rejean-McCormick/Kontexte/blob/da916882f789e4ac15d004871396fbd21300fe24/docs/decisions/ADR-001-ORGO-CANONIQUE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR-001 — Orgo est l&#x27;unique orchestrateur
+
+**Acceptée, conception Kontexte v0.1.0.**
+
+Contexte : les scénarios pédagogiques doivent produire du travail solo et collectif, distribuer des fragments d&#x27;information, gérer leurs dépendances et parfois engendrer des quêtes. Ces mécaniques se transposent aux organisations et doivent renforcer Orgo, sans créer une seconde machine à états dans Ekole.
+
+Décision : Kontexte décrit, projette et adapte les expériences; Orgo conserve tout état opérationnel, notamment `Case`, `Task`, `Signal`, `WorkflowVersion`. Ekole conserve les connaissances et les preuves pédagogiques. Les propositions `joins`, dépendances et indices sont compilables **en intention**, mais leur exécution conditionnelle doit être confiée à Orgo une fois les primitives manquantes développées.
+
+Conséquences : un snapshot de démonstration ne déclenche qu&#x27;une Task de préparation. Tant que l&#x27;exécution complète n&#x27;est pas qualifiée, ne pas annoncer de missions coopératives opérationnelles auprès d&#x27;une classe.
+
+Référence : `docs/ekole-orgo/09_ADR_ORGO_GRAND_ORCHESTRATEUR.md`, archivée.
+</pre></body></html>

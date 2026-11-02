@@ -1,0 +1,41 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Integration-Interaction-Kernel.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Integration-Interaction-Kernel.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 dba0d1bc7b21ba92</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/1-Overview/Integration-Interaction-Kernel.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Integration — Interaction Kernel
+
+Interaction Kernel (IK) is the **selectively adopted system-of-systems protocol/Profile layer** for explicit cross-product boundaries. IK owns transport/profile semantics, not participant databases or epistemic state.
+
+## Adoption rule
+
+```text
+IK profile defined
+    ≠ profile adopted by every system
+    ≠ profile qualified in every deployment
+```
+
+kOA-Linux keeps its own canonical internal/component contracts unless an owner explicitly adopts/maps an IK profile.
+
+## Qualified Konnaxion ↔ Orgo profiles
+
+- `governance.decision.execute/1.0.0`;
+- `accountability.impact.publish/1.0.0`.
+
+The qualified boundary covers durable delivery, Signal→Workflow→Case→Task execution, durable impact return, idempotent replay and divergent replay rejection. See [`../2-Technical-Reference/40-integration/orgo-konnaxion/index.md`](../2-Technical-Reference/40-integration/orgo-konnaxion/index.md).
+
+## Knowledge-boundary profiles
+
+The current frozen knowledge-contract baseline uses:
+
+- `kristal.build.request/2.0.0`;
+- `kristal.artifact.ready/2.0.0`.
+
+These profiles connect EncyKlopedia/Da’at/Kristal/UCKK contract surfaces. Their use does not transfer acquisition, epistemic or projection authority to IK.
+
+## Rules
+
+- Konnaxion↔Orgo is direct by default; no forced Kristal hop.
+- Da’at remains the mapping/ACL boundary for IK-facing Kristal work.
+- Profile admission does not imply Kristal validation/recognition.
+- Source-owned artifacts remain source-owned; ArtifactRefs identify immutable boundary artifacts without moving the live database record.
+- IK must not create a distributed transaction spanning participant databases.
+- Durable interactions preserve idempotency identity and terminal receipt semantics.
+
+- `kristal.revision.request/2.0.0` is the aligned v6 revision boundary.
+</pre></body></html>

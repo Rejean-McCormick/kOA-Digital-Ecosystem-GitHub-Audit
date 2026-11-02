@@ -1,0 +1,122 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · Status-2026-09-12.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · Status-2026-09-12.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · dd52671208ae · SHA-256 89a9ebfcd16ed0d7</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/wiki/Status-2026-09-12' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&gt; **HISTORICAL — superseded by [Status — 2026-09-16](Status-2026-09-16).**
+
+# Status — 2026-09-12
+
+## Executive state
+
+The ecosystem has one newly validated integration direction and one architecture correction still to implement.
+
+| Capability | State | Evidence / consequence |
+|---|---|---|
+| Orgo → Konnaxion provider bridge | **PASS** | J30 redrive reached `SUCCEEDED`; Konnaxion returned final `succeeded` receipt |
+| Konnaxion J30 impact persistence | **PASS** | `impact:UCKK-A014:day30:v1`, `count = 1`, status `published` |
+| Retry/redrive without duplicate effect | **PASS for J30 recovery** | existing dead delivery was redriven; no second J30 business request created |
+| Konnaxion/eThikos → Orgo direct decision handoff | **NOT YET VALIDATED** | must be implemented/tested directly, without UCKK as a required intermediary |
+| UCKK as mandatory authority relay | **REJECTED AS TARGET ARCHITECTURE** | UCKK is optional publication/diffusion; decision authority stays in Konnaxion/eThikos |
+| J90 / R1 | **HOLD** | resume only after corrected inbound path is validated |
+
+---
+
+## Correct target flow
+
+```text
+Konnaxion / eThikos
+  deliberate + decide
+        ↓
+  direct governed handoff
+        ↓
+Orgo
+  Signal → WorkflowVersion → Case → Tasks
+        ↓
+  governed external publication
+        ↓
+Konnaxion
+  impact / observation
+
+UCKK
+  optional publication / diffusion surface
+```
+
+There is no required `Konnaxion → UCKK → Orgo` authority chain.
+
+---
+
+## J30 evidence now validated
+
+Existing Orgo operation:
+
+```text
+IntegrationOperation  6b8c5523-096e-4fc0-b6a9-be644240b497
+provider              konnaxion
+operation             publish
+transition            FAILED → RUNNING → SUCCEEDED
+```
+
+Konnaxion provider evidence:
+
+```text
+World                 uckk-a014
+Release               r1
+publish HTTP           200
+impact lookup HTTP     200
+count                  1
+impact id              1
+external_reference     impact:UCKK-A014:day30:v1
+checkpoint             day_30
+status                 published
+receipt.status         succeeded
+synthetic              true
+epistemic_status       synthetic_demo_fixture
+```
+
+The previous `PROVIDER_UNCONFIGURED` failure is therefore closed as a recovered delivery incident.
+
+---
+
+## Current architecture gap
+
+The previous A014 T0 implementation demonstrated Orgo ingestion and Case/Task creation using a UCKK-centered decision trigger. That evidence remains useful technically, but the authority model is now superseded.
+
+The next implementation must prove:
+
+```text
+Konnaxion/eThikos decision
+        ↓ direct
+Orgo Signal
+        ↓
+exactly one governed business consequence
+```
+
+with stable source identity, correlation, authentication, and replay-safe idempotency.
+
+The exact Konnaxion decision identifier is intentionally not invented in this status page; it must come from the actual implementation contract.
+
+---
+
+## Next actions
+
+1. Define the Konnaxion/eThikos decision envelope and stable external reference.
+2. Build or expose the direct Konnaxion/eThikos → Orgo adapter.
+3. Map it to the Orgo Signal ingestion boundary.
+4. Prove one decision creates exactly one Signal/Case consequence.
+5. Replay the identical decision and prove no duplicate consequence.
+6. Prove conflicting content under the same stable identity is rejected explicitly.
+7. Update the A014 T0 scenario to remove UCKK as the required authority relay.
+8. Resume J90 only after the inbound gate is PASS.
+9. Run R1/reconsideration on the corrected architecture.
+
+---
+
+## Safety / ownership invariants
+
+- Konnaxion/eThikos owns decisions made in Konnaxion/eThikos.
+- Orgo owns workflow orchestration, Case/Task state, and its IntegrationOperations.
+- Konnaxion owns Konnaxion mutations and provider receipts.
+- UCKK is optional for publication/diffusion in this integration.
+- Cross-system SQL is prohibited.
+- `accepted` is not terminal success when the contract is asynchronous.
+- Redrive reuses existing durable work and preserves idempotency.
+- Runtime secrets do not belong in docs, scenario packs, or audit payloads.
+
+See [Integration — Orgo ↔ Konnaxion](Integration-Orgo-Konnaxion) and [UCKK A014 validation snapshot — 2026-09-12](Validation-UCKK-A014-2026-09-12).
+</pre></body></html>

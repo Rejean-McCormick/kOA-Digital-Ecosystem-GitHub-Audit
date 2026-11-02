@@ -1,0 +1,77 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · How-Orgo-Works.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · How-Orgo-Works.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · b89ca31f268c · SHA-256 c62d68c72889bf38</small><br><a href='https://github.com/Rejean-McCormick/Orgo/wiki/How-Orgo-Works' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># How Orgo Works
+
+Orgo follows a simple operational loop:
+
+```text
+Listen → Understand → Organize → Route → Act → Review → Learn
+```
+
+## 1. Listen
+
+A **Signal** enters Orgo.
+
+A signal may be a request, report, message, form submission, API call, system event, offline input or scheduled trigger.
+
+A signal is only an input. Orgo does not assume every signal deserves a new Task.
+
+## 2. Understand
+
+Orgo evaluates the signal in the context of the Organization:
+
+- What kind of situation is this?
+- Does it belong to an existing Case?
+- Does it require action?
+- Which workflow rules apply?
+- How urgent is it?
+- Who or what area should receive it?
+
+## 3. Organize
+
+If durable context is needed, Orgo can use a **Case**.
+
+If action is required, Orgo creates one or more **Tasks**.
+
+```text
+Case = the situation / continuing context
+Task = a concrete unit of work
+```
+
+A Case may contain many Tasks over time.
+
+## 4. Route
+
+A Task can be classified and routed using an Orgo **Label**, organization roles and workflow rules.
+
+Routing is deterministic enough to be understood and reviewed. It is not meant to be a mysterious recommendation layer.
+
+## 5. Act
+
+The Task follows the common Orgo lifecycle. It can be assigned, started, paused, escalated, completed, failed or cancelled according to the core rules.
+
+Domain-specific information remains attached without replacing this common lifecycle.
+
+## 6. Review
+
+Orgo keeps the operational history needed to understand what happened:
+
+- task events;
+- assignments;
+- comments;
+- workflow transitions;
+- audit/security information where applicable.
+
+## 7. Learn
+
+The **Insights** layer can detect trends, recurring issues and operational pressure.
+
+A pattern is not automatically an instruction. When action is required, Orgo brings it back into the governed workflow:
+
+```text
+pattern
+→ explicit work proposal
+→ Case / Task
+→ normal routing and lifecycle
+```
+
+This closes the loop between day-to-day work and organizational learning.
+</pre></body></html>

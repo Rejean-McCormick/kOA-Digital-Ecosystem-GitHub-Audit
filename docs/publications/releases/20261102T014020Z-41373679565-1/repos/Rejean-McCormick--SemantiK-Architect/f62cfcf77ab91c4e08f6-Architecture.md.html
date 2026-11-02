@@ -1,0 +1,86 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · Architecture.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · Architecture.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 10e609950b13ff7f</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/Architecture' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture
+
+SemantiK Architect is a **hexagonal modular monolith**.
+
+The architecture is intentionally simple: one canonical render path, strict ports/adapters boundaries, immutable runtime artifacts, and explicit failures when semantic or linguistic correctness cannot be guaranteed.
+
+## Canonical runtime path
+
+```text
+Driving adapter
+   │
+   ▼
+ACL / canonical request mapper
+   │
+   ▼
+CommunicationRequest
+   │
+   ├── request validation
+   ▼
+CommunicationPlanner
+   │
+   ▼
+CommunicationPlan
+   │
+   ├── lexical knowledge preflight
+   ▼
+LanguagePlanner
+   │
+   ▼
+LanguagePlan
+   │
+   ├── lexical binding
+   ▼
+RealizerPort
+   │
+   ▼
+GF bridge adapter
+   │
+   ▼
+GF / PGF runtime
+   │
+   ▼
+Output assembly
+   │
+   ├── coverage validation
+   ▼
+CommunicationResult
+```
+
+## Dependency rule
+
+```text
+adapters  →  application  →  domain
+              ↑      │
+              │      ▼
+            ports  pure policies
+```
+
+The domain/application core does not import PGF, HTTP frameworks, databases, Wikidata protocols or product-specific models.
+
+## One canonical path
+
+There is no parallel grammar engine, family renderer, emergency template engine or automatic fallback language.
+
+If a requested released language/profile cannot realize the request correctly, generation fails.
+
+## Anti-Corruption Layers
+
+External systems end at explicit adapters:
+
+```text
+Kristal      ─┐
+Orgo         ─┤
+eThikos      ─┼─→ ACL → CommunicationRequest
+KeenKonnect  ─┤
+other systems ─┘
+```
+
+The core never needs to know an Orgo task schema or a Kristal wire format.
+
+## Runtime immutability
+
+A request is pinned to one immutable RuntimeSet. Grammar, lexical data, bridge contract and conformance identity cannot change mid-request.
+
+See [[RuntimeSets]].
+</pre></body></html>

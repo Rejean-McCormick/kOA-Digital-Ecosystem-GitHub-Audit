@@ -1,0 +1,50 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Compatibility-v6-v7-v8-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Compatibility-v6-v7-v8-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 545988cd479a65eb</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Compatibility-v6-v7-v8-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Compatibility: v6, v7, v8 and v9
+
+V9 is additive.
+
+```text
+v6 portable state ─┐
+v7 semantic core ──┼─&gt; preserved/frozen substrate
+v8 capabilities ───┘
+                     ↓
+                v9 state architecture
+```
+
+## Required behavior
+
+A v9 implementation must not silently redefine inherited semantics merely to make the new architecture easier to implement.
+
+Stable surfaces include:
+
+- v6 portable-state semantics and canonical identity rules;
+- v7 KQ/KP/KA/KS identity semantics;
+- v8 language/query/completeness boundaries;
+- epistemic provenance/valuation/applicability distinctions;
+- unresolved disagreement and scope.
+
+## Adoption without rewrite
+
+An unchanged `kristal_state/6.0` can participate as one Logical Artifact under its inherited contract.
+
+A domain-native v9 model may also produce a v6 projection for interoperability without declaring that projection to be its richer native canon.
+
+## Projection versus materialization
+
+These must be distinguished:
+
+```text
+same logical contract + different physical representation
+    = materialization
+
+different logical contract/view
+    = projection
+```
+
+A lossy/partial projection must not be mislabeled as a lossless materialization.
+
+## Downgrade
+
+A downgrade may lose v9 lifecycle/materialization capabilities, but must not rewrite semantic claims to simulate unavailable features.
+
+Historical pages remain available: [[Compatibility-v6-v7-v8]], [[Migration-v7-to-v8]] and [[Adapters-v6-v7]].
+</pre></body></html>

@@ -1,0 +1,38 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · docs/Technical-Reference/HowToStartAndEnter.txt</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · docs/Technical-Reference/HowToStartAndEnter.txt</h1><p class='meta'><small>Rejean-McCormick/Orgo · 381ab137d087 · SHA-256 6ee6b34a37c4cf69</small><br><a href='https://github.com/Rejean-McCormick/Orgo/blob/381ab137d087794ffcb381532c7d2eabcdd60bb5/docs/Technical-Reference/HowToStartAndEnter.txt' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>Orgo current local startup (2026-09-15)
+
+Requirements:
+- Node.js 22+
+- npm
+- PostgreSQL 16 when exercising database-backed behavior
+
+1. From the repository root:
+
+   npm ci
+
+2. Start the API in terminal A:
+
+   npm run dev:api
+
+   Default API port: 4000
+   API base: http://localhost:4000/api/v3
+   Readiness: http://localhost:4000/health/ready
+
+3. Start the web application in terminal B:
+
+   npm run dev:web
+
+   Web UI: http://localhost:3000/
+
+   When needed, set ORGO_API_URL=http://127.0.0.1:4000 for the web runtime before starting it.
+
+4. There is no active root `npm run dev` script in the current workspace. Use `dev:api` and `dev:web`, or run `npm run dev -w api` / `npm run dev -w web` directly.
+
+5. The active API does not currently expose Swagger at `/docs`. Use `docs/Technical-Reference/API_IMPLEMENTED.md` for the implemented route inventory.
+
+6. Validation:
+
+   Repository-local: npm run validate:local
+   Comprehensive external diagnostic: LevelUpDiag-Orgo `deep`, plus `browser` for Chromium acceptance.
+
+Historical Yarn Classic / Turborepo / NPS / port-5002 instructions do not describe the active Orgo workspace.
+</pre></body></html>

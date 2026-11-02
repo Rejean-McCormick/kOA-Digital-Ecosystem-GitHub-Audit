@@ -1,0 +1,68 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · docs/CONFIG_REFERENCE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · docs/CONFIG_REFERENCE.md</h1><p class='meta'><small>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · 4c8505150eae · SHA-256 a14af767555c42dd</small><br><a href='https://github.com/Rejean-McCormick/LevelUpDiag_SemantiK-Architect/blob/4c8505150eae36193bc32cff587ba0860d608f2f/docs/CONFIG_REFERENCE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Configuration reference
+
+Configuration is JSON. `levelupdiag.config.json` is committed. `levelupdiag.config.local.json`,
+when present, is recursively merged over it.
+
+## Core keys
+
+- `target_repo_root`: target SemantiK Architect checkout.
+- `control_dir`: generated evidence directory relative to target root.
+- `execution.*`: parallelism, timeouts, mutation/network policy and output bounds.
+- `scan.*`: bounded scanner limits and excluded directories.
+- `toolchain.*`: generic executable discovery.
+- `validators`: explicit additional target validators for the `deep` campaign; v2.1 also runs built-in adversarial S90–S120 probes independently of this list.
+- `security.*`: generic hygiene configuration.
+
+## SemantiK v1 keys
+
+- `python_executable`, `python_execution`: target interpreter selection.
+- `minimum_python`: required interpreter floor.
+- `python_path_entries`: entries injected into target probes (`src` by default).
+- `local_packages`: package roots considered local for import resolution.
+- `active_python_roots`: Python trees parsed by S20.
+- `required_paths`: locked SA v1 docs, schemas and implementation boundaries required by S10.
+- `forbidden_paths`, `forbidden_globs`: competing architectures/grammar-source paths rejected by S10.
+- `core_forbidden_import_prefixes`, `application_forbidden_import_prefixes`: dependency-direction policy for S20.
+- `schema_files`, `schema_example_pairs`: S30 contract set.
+- `runtime_root`, `runtime_manifest_globs`: S40 RuntimeSet discovery.
+- `required_operations`: S50 executable SA↔GF v1 operation registry.
+- `public_sdk_methods`, `cli_commands`, `http_paths`: S70 public surface.
+- `canonical_validator`: target-owned validator executed by S80.
+
+## Native target Python
+
+```json
+{
+  &quot;semantik&quot;: {
+    &quot;python_execution&quot;: &quot;native&quot;,
+    &quot;python_executable&quot;: &quot;python&quot;
+  }
+}
+```
+
+## WSL target Python
+
+```json
+{
+  &quot;semantik&quot;: {
+    &quot;python_execution&quot;: &quot;wsl&quot;,
+    &quot;wsl_distro&quot;: &quot;Debian&quot;,
+    &quot;python_executable&quot;: &quot;/home/user/.venvs/semantik/bin/python&quot;
+  }
+}
+```
+
+WSL mode converts the target checkout and absolute path arguments to `/mnt/&lt;drive&gt;/...` and
+builds a Linux `PYTHONPATH` for the configured `python_path_entries`.
+
+LevelUpDiag never installs the target dependencies itself.
+
+## Security scan scope
+
+`security.scan_untracked` controls whether N06 scans all bounded filesystem files or only Git-tracked files when the target is a Git repository.
+
+- `false` (SemantiK default): ignored/untracked local files such as a developer `.env` are outside diagnostic evidence; tracked sensitive files still generate warnings.
+- `true`: include untracked files in the security hygiene scan.
+
+If Git metadata is unavailable, N06 falls back to the bounded filesystem scan because tracked/untracked status cannot be established.
+</pre></body></html>

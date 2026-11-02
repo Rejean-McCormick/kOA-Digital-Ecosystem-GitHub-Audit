@@ -1,0 +1,24 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/11-decisions/0003-examinateur-independant.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/11-decisions/0003-examinateur-independant.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 c8c97bf888d5ecc8</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/11-decisions/0003-examinateur-independant.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR 0003 — KristalDiag est embarqué, mais reste indépendant
+
+**Date** : 2026-10-31 · **Statut** : PRINCIPE OBSERVÉ, extension CIBLE.
+
+## Contexte
+
+Le moteur Diag possède ses propres contrats v9/v10, vérificateurs et modèles de preuve. L&#x27;intégrer directement au domaine métier Manager risquerait de redéfinir ses conclusions ou de perdre l&#x27;indépendance requise pour examiner les sources.
+
+## Décision
+
+Distribuer une version contrôlée de Diag avec Manager, l&#x27;invoquer par subprocess sans shell, valider les fichiers de sortie et conserver les preuves natives. Manager ne modifie pas les verdicts du moteur; il ajoute fraîcheur, indexation, contexte et actions.
+
+## Conséquences
+
+Le moteur conserve ses tests et son release cycle. Les coûts de spawn et des interfaces de version sont assumés. L&#x27;absence de moteur est une erreur d&#x27;intégration, pas un `FAIL` du Kristal.
+
+## Alternative rejetée
+
+Copier K15/K16 dans le GUI ou transformer les erreurs de subprocess en faux verdicts de conformité. Autre option reportée : service externe permanent, non justifié à cette échelle.
+
+## Validation
+
+Comparer les mêmes fixtures en CLI Diag native et en Manager; mêmes verdicts et preuves, plus métadonnées de provenance Manager. Aucun `--allow-exec` caché.
+</pre></body></html>

@@ -1,0 +1,49 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · State-Snapshots-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · State-Snapshots-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 e3431501ea955f4a</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/State-Snapshots-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># State Snapshots
+
+A v9 **State Snapshot** is an immutable logical composition.
+
+```text
+STATE SNAPSHOT IS IMMUTABLE
+```
+
+A logical mutation creates a new snapshot; an existing published snapshot is never edited in place.
+
+## Members and references
+
+A snapshot can contain:
+
+```text
+owned logical members
++
+pinned external references
+```
+
+Owned membership does not require all members to share the same payload shape.
+
+Pinned references allow federation without copying child canon.
+
+## No mutable membership
+
+Selectors such as:
+
+```text
+HEAD
+main
+current
+latest
+```
+
+may be used during discovery/build, but a published snapshot must resolve them to exact immutable commitments.
+
+## Parent lineage
+
+Parent references record history/lineage. In the baseline v9 content-commitment profile, operational lineage is separate from logical content identity.
+
+Two independently produced snapshots may therefore have the same logical content commitment while retaining different histories.
+
+## Membership removal is not erasure
+
+If artifact `A` is present in snapshot `S1` and absent in `S2`, v9 does not imply that `A` never existed, was physically deleted, or was epistemically retracted. Those are separate domain/lifecycle operations.
+
+See [[Build-Publish-Activate-v9]] and [[Federation-and-Coverage-v9]].
+</pre></body></html>

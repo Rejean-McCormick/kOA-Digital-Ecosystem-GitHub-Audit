@@ -1,0 +1,90 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/05-execution.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/05-execution.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 f7d2c69b782fafc1</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/05-execution.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Exécution, projections et Renderer Registry
+
+## 1. Pipeline d&#x27;exécution
+
+```text
+QuerySpec + Reader Policy
+  -&gt; ResultSet visible
+  -&gt; NavigationPlan
+  -&gt; Projection request(recipeId, focus, query)
+  -&gt; versioned projection DTO
+  -&gt; Renderer Registry
+  -&gt; approved renderer
+```
+
+## 2. Séparation des responsabilités
+
+### Planner
+
+Décide **quoi proposer**.
+
+### Projection Service
+
+Décide **quelles données bornées fournir à la recette**.
+
+### Renderer
+
+Décide **comment représenter ces données**.
+
+Un renderer ne doit pas recalculer des règles de policy ni exécuter des requêtes cachées hors contrat.
+
+## 3. Renderer Registry 1.0 implémenté
+
+| Renderer | Recettes principales | État 1.0 RC |
+|---|---|---|
+| `list` | catalogue | implémenté |
+| `table` | table | implémenté |
+| `constellation` | constellation/arguments | implémenté, générique et sans branche domaine |
+| `timeline-lineage` | timeline/evolution | implémenté |
+| `tree` | hierarchy | implémenté |
+| `dag-proof` | dependencies/proofs | implémenté |
+| `flow-path` | path | implémenté |
+| `causal-feedback` | feedback | implémenté |
+| `matrix-profile` | dimensions | implémenté |
+| `state-flow` | states/action-context | implémenté ; `actionability` reste informatif |
+| `multiscale-layer` | multiscale/multiplex | implémenté |
+| `spatial` | spatial | implémenté |
+| `traceability` | traceability/divergences | implémenté |
+
+Chaque renderer spécialisé consomme un DTO de projection versionné et borné. La qualification navigateur complète reste un gate de release distinct de l’état d’implémentation source ; voir [VALIDATION-v1.0-RC.md](VALIDATION-v1.0-RC.md).
+
+## 4. Contrat RendererDefinition cible
+
+```json
+{
+  &quot;id&quot;: &quot;dag-proof&quot;,
+  &quot;supportedRecipes&quot;: [&quot;dependencies&quot;, &quot;proofs&quot;],
+  &quot;requiresAffordances&quot;: [&quot;dependency&quot;],
+  &quot;benefitsFrom&quot;: [&quot;proof&quot;, &quot;hierarchy&quot;],
+  &quot;maxRecommendedItems&quot;: 500,
+  &quot;projectionKind&quot;: &quot;dag&quot;,
+  &quot;accessibilityFallback&quot;: &quot;table&quot;,
+  &quot;supportsKeyboard&quot;: true,
+  &quot;supportsExport&quot;: true
+}
+```
+
+## 5. Règles de registry
+
+Le registry DOIT :
+
+- être défini dans le code ou une configuration opérateur de confiance ;
+- refuser un `rendererId` inconnu ;
+- déclarer son fallback ;
+- déclarer ses budgets ;
+- déclarer les recettes supportées ;
+- disposer d&#x27;un chemin accessible clavier/lecteur d&#x27;écran.
+
+## 6. Bornage
+
+Tout renderer réseau doit appliquer au moins une stratégie :
+
+- pagination ;
+- voisinage N-hops borné ;
+- top-K déterministe ;
+- agrégation ;
+- LOD selon zoom ;
+- virtualisation.
+
+Le frontend ne doit jamais demander « tout le graphe » sans limite.
+</pre></body></html>

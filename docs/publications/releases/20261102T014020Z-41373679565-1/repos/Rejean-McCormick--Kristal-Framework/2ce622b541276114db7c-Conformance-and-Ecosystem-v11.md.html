@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Conformance-and-Ecosystem-v11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Conformance-and-Ecosystem-v11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 c52fe805b94911b3</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Conformance-and-Ecosystem-v11' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Qualification v11 — Framework, diK et Authoring Kit
+
+**Niveaux de preuves distincts :** validation locale ≠ échange entre dépôts ≠ conformité normative ratifiée ≠ autorisation de publication.
+
+## Critères
+
+- **Framework `11.0.0-draft.4` :** `python tools/validate_all.py` vérifie localement schémas, fixtures, compatibilité historique, scripts de référence et précontrôle diK/Kit. Les schémas v11 et leurs TCK ont conservé les règles de draft.3; la version draft.4 met à jour l&#x27;outillage et les explications.
+- **diK `1.0.0-alpha.7` :** application distincte, importer/tester le snapshot de sortie avec les schémas v11 exacts; une réussite locale ne prouve pas ses performances sur le miroir complet.
+- **Authoring Kit `4.0.0-draft.3` :** sélection explicite d&#x27;un nouveau catalogue, création d&#x27;une révision de graphe seulement par producteur autorisé; le dépôt Framework ne commande ni état de production ni réseau.
+
+## Refus obligatoires
+
+Le contrôle doit **refuser** une mauvaise empreinte de couche, un namespace discordant, une référence KQ/KP absente du registre, une correspondance Wikidata non acceptée, une preuve KS non enregistrée, une incompatibilité de type Q/P, ainsi que les couches curatées importées par le chemin réservé au Kit. Les références en langue naturelle ne doivent pas occuper les positions canoniques KQ/KP.
+
+## Restant ouvert
+
+- Source Wikidata complète et deltas, multi-namespace, métriques de production, 300 langues peuplées, interopérabilité de tous les snapshots concrets.
+- Approbations cryptographiquement authentifiées et reprise après panne du système.
+- Contrôle des builds, engagements et publications sur les dépôts cibles et les machines cibles.
+
+**Outils :** [[Conformance-v11]] · [[diK-Authoring-Exchange-v11]] · [[Legacy-Migration-v11]].
+</pre></body></html>

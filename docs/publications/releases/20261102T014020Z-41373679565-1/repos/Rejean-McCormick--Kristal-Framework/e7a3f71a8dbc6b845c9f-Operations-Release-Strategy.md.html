@@ -1,0 +1,47 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Operations-Release-Strategy.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Operations-Release-Strategy.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 565465a8257a623a</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Operations-Release-Strategy' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Operations: Release Strategy
+
+A v9 release strategy treats **logical state**, **physical materialization** and **activation** as separate release concerns.
+
+## Release units may include
+
+- v9 State Snapshot;
+- Logical Artifact descriptors/content;
+- Derivation records;
+- Materialization Manifests and blobs;
+- Exchange manifest/package;
+- v6 portable projections;
+- v7 registries/Mesh/KOS material;
+- v8 lexical/query capability artifacts;
+- validation/recognition/trust material;
+- activation record/channel update.
+
+## Recommended stages
+
+1. validate inherited v6/v7/v8 contracts;
+2. validate domain Logical Artifacts;
+3. recompute Logical Commitments independently;
+4. build and verify materializations;
+5. construct/verify immutable State Snapshot;
+6. publish snapshot and Exchange artifacts;
+7. build/rebuild runtime indexes;
+8. canary query/language/runtime behavior;
+9. atomically activate the target State commitment;
+10. monitor and retain rollback targets.
+
+## Canary checks
+
+Verify:
+
+- inherited identity rules remain unchanged;
+- Logical Commitments match recomputation;
+- repack/recompression does not change logical identity;
+- indexes bind to the correct source state;
+- partial results are not treated as negatives;
+- external child refs remain pinned;
+- model output does not bypass authorization;
+- rollback can reselect a retained snapshot without rewriting history.
+
+## Release qualification
+
+Use the Framework&#x27;s native validators/TCK plus an independent examiner such as [[KristalDiag-v9]]. A disagreement must remain visible until explicitly resolved.
+</pre></body></html>

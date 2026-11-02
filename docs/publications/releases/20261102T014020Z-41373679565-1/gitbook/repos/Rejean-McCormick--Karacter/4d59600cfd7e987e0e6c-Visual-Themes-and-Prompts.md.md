@@ -1,0 +1,44 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Karacter/wiki/Visual-Themes-and-Prompts | commit: 04b4db906ad2da43e747669effb072f32fabcf18 | SHA-256: c2b5009d9cc3fc150f83422e8387056c07fc741ae04ec6b3e7dc74093c596808 -->
+
+# Visual Themes and Image Prompts
+
+**A visual theme changes representation, not personality.** A King Klown character can be illustrated in an alien, mythological or hockey-inspired setting without losing its underlying identity, relationships, or story memory.
+
+## Themes, styles and image modes
+
+- **Universe**: library membership (King Klown or Blank Universe).
+- **Visual theme**: reimagines a character's setting/species/visual treatment; Karacter ships preset themes and supports custom themes.
+- **Style**: the requested artistic treatment (for example storybook, game, comic, fantasy or photographic).
+- **Image mode**: the kind of image requested.
+
+| Image mode | Intended output | Use it for |
+|---|---|---|
+| **Portrait** | One recognizable square character portrait | Identity and gallery thumbnails |
+| **Expressions** | A sheet of four emotional expressions | Emotional range and acting reference |
+| **Action** | A character in a particular narrative situation | Showing personality through choices and context |
+
+Each character can retain separate images for each **theme + mode** combination.
+
+## Generate an external image
+
+1. In **Create**, choose the character, visual theme, image mode and style.
+2. Write an expressive **visual signature** plus stable identity anchors (such as distinctive hair, jacket, colors or symbols).
+3. Add **exclusions** for unwanted visual elements.
+4. Adjust the character's polarities under **Understand** if needed.
+5. Use **Regenerate** to produce a fresh prompt, then **Copy** or export it.
+6. Paste the prompt into ChatGPT/DALL·E or another image generator.
+7. Save the result as an image file and import it into Karacter.
+
+Karacter itself **does not generate image pixels** or call an external image API. It cannot promise that independent generators will draw the same face perfectly across themes.
+
+## What the prompt uses
+
+The prompt engine combines identity and visual anchors with theme, style, selected personality cues, and (for an action scene) narrative context. It does not treat visual appearance as proof of a personality trait. A character's visual signature is a *design brief*, not a psychological diagnosis.
+
+If you edit the prompt directly, your draft is preserved until you regenerate it. To apply newly changed axes to an edited prompt, use **Regenerate**.
+
+## Batch prompts
+
+The Create screen includes a batch-prompt export for multiple character prompts. Confirm the selected visual theme and check the generated text before sending it to an image provider. **Batch prompts** are text instructions, not generated artwork.
+
+**Next:** [Portrait Gallery](Portrait-Gallery) · [Personality Polarities](Personality-Polarities)

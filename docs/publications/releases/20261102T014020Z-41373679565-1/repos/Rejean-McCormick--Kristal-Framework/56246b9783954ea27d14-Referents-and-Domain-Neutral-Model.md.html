@@ -1,0 +1,24 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Referents-and-Domain-Neutral-Model.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Referents-and-Domain-Neutral-Model.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 444273a7b8a29d9e</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Referents-and-Domain-Neutral-Model' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Referents &amp; Domain-Neutral Model
+
+&gt; **v9 compatibility note:** This page documents the retained v6 portable-state semantics. V9 preserves the contract as a frozen substrate and may wrap/project it through Logical Artifacts without redefining it. See [[Version-Stack-v6-v7-v8-v9]].
+
+Kristal keeps **identity of what an assertion is about** separate from the assertion itself.
+
+A referent may represent a person, collective, place, work, document, concept, process, object, system or another stable domain entity.
+
+## Domain neutrality
+
+The core should remain shallow enough that consumers can build different navigation lenses without redefining referent identity.
+
+A botanical reader might navigate family → genus → species. An automotive reader might navigate manufacturer → platform → model → year. A historical reader might organize by technology → manifestation → occurrence.
+
+These are domain projections over stable identities.
+
+## External identifiers
+
+Wikidata, VIAF, provider IDs and similar identifiers are external anchors. They can aid matching and provenance; they do not replace the internal referent identity or establish the truth of assertions about it.
+
+## Taxon concept vs taxon name
+
+The same principle becomes especially important in domains with changing classification: the referent concept should not be confused with one current label or external identifier.
+</pre></body></html>

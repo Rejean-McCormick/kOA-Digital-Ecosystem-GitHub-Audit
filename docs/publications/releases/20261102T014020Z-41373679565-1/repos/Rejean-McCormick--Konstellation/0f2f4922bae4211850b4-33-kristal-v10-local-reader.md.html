@@ -1,0 +1,118 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/33-kristal-v10-local-reader.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/33-kristal-v10-local-reader.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 683e21ea4f514292</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/33-kristal-v10-local-reader.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konstellation — lecteur local Kristal v10 et diagnostic Manager alpha.14
+
+**Statut : intégration expérimentale et optionnelle, non homologuée.** Ce changement
+ne porte ni l&#x27;autorité épistémique du Framework ni les décisions de publication C2.
+
+## Contrats et responsabilité
+
+- **Framework 10.0.0-draft.3.2** : cadre de référence; la forme des états
+  sémantiques reste `schema_version: &quot;9.0&quot;`. v10 ajoute l&#x27;hébergement et les
+  surfaces de lecture. Un état v9 n&#x27;est donc pas une preuve de publication v10.
+- **Manager alpha.14** : inventorie localement et peut fournir un rapport
+  `kristal.manager-operational-assessment/0.2-candidate`, avec
+  `operational_result`, `discovery.status`, `framework_state_verification.status`.
+  Son export `kristal.manager-local-inventory/0.1-candidate`, **avec**
+  `--verify-sources`, transporte ces trois statuts, et rien d&#x27;autre
+  d&#x27;autoritatif. Le lecteur de Konstellation n&#x27;emploie pas ces valeurs
+  comme droits d&#x27;accès, certificats ou validation métier.
+- **Konstellation** : adapte ces observations à la vue `My Kristals`
+  après filtrage d&#x27;accès explicite, puis lit et vérifie les octets
+  consommés au moment d&#x27;ouvrir. Il ne fusionne pas les identités de Manager
+  et d&#x27;un lecteur hébergé sans vérifications distinctes.
+- **Arketype/Authoring Kit** : informations de classification et de lecture
+  consultatives; aucun code ou parseur suggéré n&#x27;est chargé automatiquement.
+- **Interaction Kernel v2.0-draft** : transporte des interactions et des
+  références. Son lock Kristal 6.0.0 portable et son baseline v7 sont
+  volontairement conservés. Aucun nouveau profil IK ni changement Daat
+  n&#x27;est requis pour la lecture locale Konstellation.
+
+## Installation Windows : Catho
+
+Placez les dossiers extraits côte à côte :
+
+```text
+poste/
+  Konstellation/
+    Ouvrir_Kristal_Catho_v10.cmd
+    examples/integrations/kristal-local-v10-catho.json
+  A-Kristal-Catho/
+    kristal.workspace.json
+    state/state-snapshot.json
+    build/v9/state-snapshot.json
+    derived/catho-graph/
+```
+
+Avec Node.js **&gt;=24.15** et npm installé, lancer
+`Ouvrir_Kristal_Catho_v10.cmd`. Le lanceur existant installe les
+dépendances au premier démarrage et construit l&#x27;interface; accès à
+`http://127.0.0.1:4321`. Autre méthode explicite :
+
+```powershell
+$env:KONSTELLATION_BACKEND_CONFIG = &#x27;C:\MonDossier\Konstellation\examples\integrations\kristal-local-v10-catho.json&#x27;
+$env:KONSTELLATION_DEPLOYMENT_PROFILE = &#x27;local&#x27;
+$env:HOST = &#x27;127.0.0.1&#x27;
+npm start
+```
+
+Ce profil lit un **workspace local explicitement sélectionné**. Le
+lecteur n&#x27;effectue aucun scan automatique de tous les Kristals. Il
+refuse le service en déploiement `public`, `lan` ou `shared`, ainsi
+que les modes anonymous/public readonly.
+
+## Ouvrir d&#x27;autres Kristals
+
+L&#x27;adaptateur `kristal-local-v10` accepte :
+
+- `directory` : emplacement du workspace spécifié par l&#x27;opérateur;
+- `state` : chemin relatif de l&#x27;état (facultatif); sinon
+  `state/state-snapshot.json`, ou `build/v9/state-snapshot.json` en repli;
+- `readModel` optionnel et **explicitement configuré** :
+  `type: node-edge-json/1`, `manifest`, `nodes`, `edges`.
+
+Sans `readModel`, la vue présente la **topologie des membres déclarés**
+de l&#x27;état v9; elle ne prétend pas décoder sémantiquement un type
+d&#x27;artefact logique arbitraire. Un modèle dérivé exploitable exige un
+manifeste `noncanonical=true`, `rebuildable=true`, et des empreintes
+SHA-256 des entrées canoniques vérifiées. Les relations identitaires
+candidates restent des assertions non validées.
+
+Si l&#x27;inventaire Discovery diverge (p.ex. tailles périmées dans
+Catho), la lecture générique n&#x27;est pas bloquée : la divergence
+est exposée avec `discoveryStatus: stale`. Le profil Discovery ne peut
+plus être utilisé comme preuve de fraîcheur. Le lecteur vérifie
+séparément les chemins déclarés, le format de l&#x27;état et les
+empreintes canoniques du graphe dérivé. Ces contrôles ne recalculent
+pas le State Commitment JCS v9 : `canonicalCommitmentVerified=false`.
+
+## Export Manager et permission distincte
+
+Dans l&#x27;environnement Manager alpha.14 :
+
+```powershell
+python -m kristal_manager export C:\mes-kristals --verify-sources --output C:\prive\manager.json
+```
+
+Créer ensuite un fichier privé de type
+`konstellation.manager-access-policy/0.1`, avec `state_ref`,
+`state_commitment`, `allowed_principals` et `allowed_roles` explicites,
+conformément à `examples/fleet/manager-access-policy.example.json`.
+Configurer `KONSTELLATION_ENABLE_MY_KRISTALS=true`,
+`KONSTELLATION_FLEET_EXPORT` et `KONSTELLATION_FLEET_POLICY`.
+Sans politique : aucun inventaire Manager brut ne peut être affiché.
+Les diagnostics Manager sont filtrés avant affichage, sans exposer
+`issues`, chemins locaux ou données sources. Un élément d&#x27;inventaire
+ne devient pas « openable » à partir du seul statut Manager.
+
+## Limites et qualification
+
+1. Lecteur dérivé et borné, pas décodeur universel de tous les types
+   d&#x27;artefacts v9/v10 ni certificat Framework.
+2. Aucune attestation de synchronisation, publication, activation,
+   intégrité de signature C1/C2/C3, ni correction automatique de Discovery.
+3. Le lecteur GitHub v10 demeure une vue technique de l&#x27;hébergement;
+   l&#x27;adaptateur local v10 est un mécanisme différent et explicite.
+4. Tests ciblés possibles avec le Node local; qualification complète
+   nécessite Node &gt;=24.15, dépendances, build, Svelte, Playwright et Windows.
+5. Interaction Kernel et Daat n&#x27;ont pas été modifiés. Toute évolution
+   IK exigerait une nouvelle négociation des profils et leur TCK.
+</pre></body></html>

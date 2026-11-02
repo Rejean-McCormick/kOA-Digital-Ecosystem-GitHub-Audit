@@ -1,0 +1,44 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · Quick-Start.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · Quick-Start.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 01bfc9126e06 · SHA-256 a157c1d507965c71</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/wiki/Quick-Start' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Quick Start
+
+## Goal
+
+Use **one launcher**, select a Kristal in the interface, and explore its knowledge without changing its files.
+
+## Requirements
+
+- Windows and PowerShell for the provided `.cmd` launcher.
+- Node.js **24.15 or newer** and npm.
+- A Konstellation archive containing `Konstellation.cmd`, `package.json`, and `config/local-catalog.json`.
+- One or more local Kristals, each in its own directory with a `kristal.workspace.json` file.
+
+## Steps
+
+1. Extract Konstellation, for example to `C:\mycode\Konstellation\Konstellation`.
+2. Keep the Kristals in their **existing directories**, for example `C:\mycode\Kristal\locals\A-Kristal-Catho`.
+3. Confirm that `config/local-catalog.json` points to the correct **parent directory** of your Kristals.
+4. Double-click **`Konstellation.cmd`**. On first launch it may install npm dependencies and run `astro build`.
+5. If necessary, open **http://127.0.0.1:4321** in a browser.
+6. In **My Kristals**, choose an available entry and click **Open in Explorer**.
+
+Neutral mode must not load Théophile or Catho implicitly. The interface waits for the user&#x27;s choice.
+
+## Example directory layout
+
+```text
+C:\mycode\
+├── Konstellation\Konstellation\
+│   ├── Konstellation.cmd
+│   ├── config\local-catalog.json
+│   ├── package.json
+│   └── server\ ...
+└── Kristal\locals\
+    ├── A-Kristal-Catho\kristal.workspace.json
+    └── Another-Kristal\kristal.workspace.json
+```
+
+## If the list is empty
+
+Check the `directory` field in `config/local-catalog.json`, confirm that the directory exists, and verify that `kristal.workspace.json` is located **directly in each immediate subdirectory**. Unsupported Kristals may be listed as unavailable. The application does not recursively scan every drive.
+
+See [[Windows Installation|Windows-Installation]], [[Selecting a Kristal|Selecting-a-Kristal]], and [[Troubleshooting|Troubleshooting]].
+</pre></body></html>

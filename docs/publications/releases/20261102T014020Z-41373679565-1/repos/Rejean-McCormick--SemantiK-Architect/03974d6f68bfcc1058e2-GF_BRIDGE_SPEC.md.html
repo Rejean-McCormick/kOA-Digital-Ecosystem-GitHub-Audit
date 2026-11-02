@@ -1,0 +1,47 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · docs/reference/GF_BRIDGE_SPEC.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · docs/reference/GF_BRIDGE_SPEC.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · 74b07c42811d · SHA-256 a74e86cf6fbcfc6c</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/blob/74b07c42811dae0c68549d8554c00bc44a04298d/docs/reference/GF_BRIDGE_SPEC.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># GF Bridge Specification
+
+Status: **normative adapter format for v1**
+
+A RuntimeSet contains exactly one hashed `other` artifact whose ID begins with `sa-gf-bridge`. The artifact maps SA↔GF operation IDs to expressions accepted by the exact PGF artifact.
+
+Example:
+
+```json
+{
+  &quot;schema_version&quot;: &quot;1.0&quot;,
+  &quot;contract_version&quot;: &quot;1.0&quot;,
+  &quot;feature_values&quot;: {
+    &quot;polarity&quot;: {
+      &quot;positive&quot;: &quot;positivePol&quot;,
+      &quot;negative&quot;: &quot;negativePol&quot;
+    }
+  },
+  &quot;operations&quot;: {
+    &quot;clause.transitive_event&quot;: {
+      &quot;variants&quot;: [
+        {
+          &quot;requires&quot;: [&quot;agent&quot;, &quot;predicate&quot;, &quot;patient&quot;],
+          &quot;when&quot;: {&quot;polarity&quot;: &quot;negative&quot;},
+          &quot;expression&quot;: &quot;SA_Transitive {agent} {predicate} {patient} {feature.polarity}&quot;,
+          &quot;consumes_features&quot;: []
+        }
+      ]
+    }
+  }
+}
+```
+
+## Fidelity rule
+
+For a variant to be admissible:
+
+1. all declared `requires` must be available;
+2. every expression placeholder must be bound;
+3. **every lexical slot in the `RealizationUnit` must appear in the expression**;
+4. every semantic feature must either appear as `{feature.&lt;name&gt;}` or be explicitly declared in `consumes_features`;
+5. every `when` condition must match exactly.
+
+If no variant satisfies these rules, realization fails with `SA-GF-001`. Extra semantic material is never silently ignored.
+
+`feature_values` may map canonical feature values to GF expressions/constructors. Values without an encoder are represented as deterministic GF string/primitive literals and therefore must be accepted intentionally by the bridge expression.
+</pre></body></html>

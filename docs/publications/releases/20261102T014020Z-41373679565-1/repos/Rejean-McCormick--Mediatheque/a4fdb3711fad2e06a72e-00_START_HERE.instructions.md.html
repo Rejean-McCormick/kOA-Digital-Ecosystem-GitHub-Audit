@@ -1,0 +1,86 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Mediatheque · docs/00_START_HERE.instructions.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Mediatheque · docs/00_START_HERE.instructions.md</h1><p class='meta'><small>Rejean-McCormick/Mediatheque · 21e8d732e669 · SHA-256 ace70206d8d3aaa4</small><br><a href='https://github.com/Rejean-McCormick/Mediatheque/blob/21e8d732e6690ab15ced87179eb5b152386fe716/docs/00_START_HERE.instructions.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 00 — START HERE
+
+**Project:** Médiathèque kOA  
+**Technical name:** `koa-mediatheque`  
+**Status:** AI-only final target specification  
+**Audience:** AI coding conversations only  
+**Rule:** All implementation conversations must start from `01_alignment_variables.md`.
+
+---
+
+## 1. Purpose
+
+This documentation set defines the final target behavior for **Médiathèque kOA**, a local media/document cataloging application.
+
+The app is intentionally simple from the user&#x27;s perspective:
+
+```text
+SQLite database that behaves like an Excel sheet
+PowerShell 7 writes controlled records
+small GUI reads, filters, previews, exports, imports
+ChatGPT produces classification JSON through a copied template
+XLSX round-trip allows bulk editing
+```
+
+The app is not a full UCKK system. It is a general local media/document library. Some records may target UCKK export; others may be non-UCKK, private, non-public, personal, third-party, uncertain, or not exportable.
+
+---
+
+## 2. Non-negotiable architecture
+
+```text
+Médiathèque kOA = local SQLite catalog + local file storage + ChatGPT intake + XLSX round-trip + small GUI.
+```
+
+SQLite is the source of truth.
+
+XLSX is a bulk-edit interface.
+
+The GUI is a viewer/controller, not a separate authority.
+
+ChatGPT produces structured metadata suggestions and local AI validation.
+
+The app recalculates technical facts locally: hashes, sizes, paths, MIME types, timestamps.
+
+---
+
+## 3. Required generation order
+
+Generate or inspect documents in this order:
+
+```text
+1. 01_alignment_variables.md
+2. 02_app_definition.md
+3. 03_folder_architecture.md
+4. 04_sqlite_data_model.md
+5. 05_library_row_schema.md
+6. 06_classification_taxonomy.md
+7. 07_chatgpt_intake.md
+8. 08_chatgpt_template.md
+9. 09_json_validation.md
+10. 10_ps7_contract.md
+11. 11_xlsx_roundtrip.md
+12. 12_gui_spec.md
+13. 13_storage_hashing_duplicates.md
+14. 14_manifest_export.md
+15. 15_audit_logs.md
+16. 16_ai_coding_rules.md
+17. 17_test_matrix.md
+```
+
+---
+
+## 4. Required alignment rule
+
+Every file in this documentation set must align with `01_alignment_variables.md`.
+
+If any document conflicts with `01_alignment_variables.md`, the other document is wrong and must be updated.
+
+---
+
+## 5. Scope boundary
+
+This documentation is for implementation and code generation. It is not user help, marketing copy, release notes, or a historical discussion.
+
+The documentation must remain descriptive and final-state oriented.
+</pre></body></html>

@@ -1,0 +1,177 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/02-system/code-and-filesystem-architecture/29-host-platform-files.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/02-system/code-and-filesystem-architecture/29-host-platform-files.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 4f97c302d634f41c</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/02-system/code-and-filesystem-architecture/29-host-platform-files.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-SYS-029&quot;,
+  &quot;document_class&quot;: &quot;normative_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;system&quot;,
+  &quot;scope&quot;: [
+    &quot;global&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/system.contract.json&quot;,
+    &quot;contracts/ai-navigation.contract.json&quot;,
+    &quot;02-system/02-logical-architecture.md&quot;,
+    &quot;02-system/04-component-boundaries.md&quot;,
+    &quot;02-system/07-cross-component-communication.md&quot;,
+    &quot;02-system/19-release-and-artifact-identity.md&quot;,
+    &quot;04-components/04-subsystem-documentation-boundaries.md&quot;,
+    &quot;05-development/00-development-model.md&quot;,
+    &quot;06-lifecycle/02-release-model.md&quot;,
+    &quot;07-security/05-privilege-boundaries.md&quot;,
+    &quot;08-operations/00-operating-model.md&quot;,
+    &quot;contracts/subsystems/koa-spaces.subsystem.json&quot;,
+    &quot;02-system/23-code-and-filesystem-architecture.md&quot;,
+    &quot;10-adrs/ADR-002-immutable-signed-os-image.md&quot;,
+    &quot;10-adrs/ADR-012-single-narrow-privileged-broker.md&quot;
+  ],
+  &quot;decision_ids&quot;: [],
+  &quot;requirement_ids&quot;: [],
+  &quot;lock_ids&quot;: [
+    &quot;LOCK-CODE-FS-001&quot;,
+    &quot;LOCK-CODE-FS-005&quot;,
+    &quot;LOCK-CODE-FS-008&quot;,
+    &quot;LOCK-CODE-FS-009&quot;
+  ],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [
+    &quot;DOC-SYS-023&quot;,
+    &quot;DOC-ADR-002&quot;,
+    &quot;DOC-ADR-012&quot;,
+    &quot;DOC-SEC-006&quot;
+  ],
+  &quot;tags&quot;: [
+    &quot;host&quot;,
+    &quot;linux&quot;,
+    &quot;systemd&quot;,
+    &quot;boot&quot;,
+    &quot;recovery&quot;,
+    &quot;security&quot;,
+    &quot;storage&quot;,
+    &quot;network&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# Host Platform Files
+
+## 1. Scope
+
+`host/` contains the Linux operating-system integration owned by kOA-Linux. It does not contain component business logic. Its files map admitted component descriptors and profile plans to boot, recovery, immutable image, systemd, Linux security, network, storage, device, and session mechanisms.
+
+## 2. Exact Host File Inventory
+
+```text
+host/README.md
+host/boot/boot-policy.toml
+host/boot/verify-release-set.py
+host/boot/select-release-slot.py
+host/boot/mark-boot-success.py
+host/boot/enter-last-known-good.py
+host/recovery/recovery-policy.toml
+host/recovery/recovery-entry.py
+host/recovery/restore-controller.py
+host/recovery/forward-repair.py
+host/recovery/collect-recovery-evidence.py
+host/image/base-packages.yaml
+host/image/package-sets/user-lightweight.yaml
+host/image/filesystem-layout.yaml
+host/image/partition-layout.yaml
+host/image/image-manifest.yaml
+host/image/build-rootfs.py
+host/image/materialize-rootfs.py
+host/image/build-boot-artifact.py
+host/image/build-recovery-artifact.py
+host/image/build-disk-image.py
+host/image/seal-image.py
+host/image/verify-image.py
+host/systemd/targets/koa-node.target
+host/systemd/targets/koa-core.target
+host/systemd/targets/koa-critical.target
+host/systemd/targets/koa-background.target
+host/systemd/targets/koa-optional.target
+host/systemd/targets/koa-activation.target
+host/systemd/targets/koa-recovery.target
+host/systemd/units/koa-node-agent.service
+host/systemd/units/koa-node-agent.socket
+host/systemd/units/koa-privileged-broker.service
+host/systemd/units/koa-privileged-broker.socket
+host/systemd/units/koa-release-set-verify.service
+host/systemd/units/koa-activation.service
+host/systemd/units/koa-health-aggregate.service
+host/systemd/units/koa-offline-import.path
+host/systemd/units/koa-offline-import.service
+host/systemd/units/koa-backup.service
+host/systemd/units/koa-backup.timer
+host/systemd/units/koa-maintenance.service
+host/systemd/units/koa-maintenance.timer
+host/systemd/templates/koa-component.service.in
+host/systemd/templates/koa-component.socket.in
+host/systemd/templates/koa-worker.service.in
+host/systemd/templates/koa-subsystem.service.in
+host/systemd/templates/koa-timer.timer.in
+host/systemd/sysusers/koa-components.conf
+host/systemd/sysusers/koa-privileged-broker.conf
+host/systemd/tmpfiles/koa-components.conf
+host/systemd/tmpfiles/koa-runtime.conf
+host/security/lsm/policy.yaml
+host/security/lsm/render-apparmor.py
+host/security/lsm/render-selinux.py
+host/security/seccomp/component-default.json
+host/security/seccomp/koa-node-agent.json
+host/security/seccomp/koa-privileged-broker.json
+host/security/seccomp/appliance-browser.json
+host/security/capabilities/catalog.json
+host/security/capabilities/component-defaults.json
+host/security/polkit/50-koa.rules
+host/security/sandboxing/defaults.toml
+host/security/trust-bootstrap/bootstrap-policy.toml
+host/networking/zones.toml
+host/networking/service-exposure.toml
+host/networking/offline-policy.toml
+host/networking/restricted-policy.toml
+host/networking/firewall.nft.in
+host/networking/render-firewall.py
+host/storage/layout.toml
+host/storage/mounts.toml
+host/storage/encryption.toml
+host/storage/quotas.toml
+host/storage/snapshot-policy.toml
+host/storage/render-mount-units.py
+host/devices/udev/90-koa-removable-media.rules
+host/devices/removable-media-policy.toml
+host/devices/device-policy.toml
+host/sessions/graphical-session.toml
+host/sessions/appliance-session.toml
+host/sessions/maintenance-session.toml
+host/sessions/recovery-session.toml
+host/sessions/koa-session-launcher.py
+host/sessions/native_workspace.py
+host/sessions/koa-native-workspace-broker.py
+host/sessions/native-workspace.toml
+host/sessions/session_runtime.py
+host/sessions/koa-appliance-session.py
+host/sessions/koa-maintenance-session.py
+host/sessions/koa-recovery-session.py
+host/adapters/README.md
+host/adapters/systemd.py
+host/adapters/podman.py
+host/adapters/filesystem.py
+host/adapters/network.py
+host/adapters/storage.py
+host/adapters/koa_spaces_unix_transport.py
+host/adapters/native_workspace_unix_transport.py
+host/adapters/koa_spaces_adapter_factory.py
+```
+
+## 3. Separation Rules
+
+- `boot/` verifies and selects already admitted releases; it does not build releases.
+- `recovery/` operates from a bounded recovery environment and writes recovery evidence.
+- `image/` creates immutable host images from release inputs and does not mutate live component data.
+- static systemd targets and the narrow Node Agent units are committed; profile-derived component and subsystem units are generated from templates.
+- security renderers may produce distribution-specific AppArmor or SELinux outputs from one policy source, but the generated outputs remain derived.
+- network files expose only profile-admitted services.
+- storage files define mount, encryption, quota, and snapshot mechanisms; component ownership remains defined by contracts.
+- session files launch graphical, appliance, maintenance, or recovery sessions. kOA Spaces may be the configured navigation interface, but session launch does not grant it host authority.
+</pre></body></html>

@@ -1,0 +1,90 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/20-observability.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/20-observability.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 41895b741b6dd501</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/20-observability.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Observabilité, fiabilité et exploitation
+
+## 1. Logs structurés
+
+Konstellation 1.0 produit des logs JSON structurés avec :
+
+- timestamp ;
+- level ;
+- request/correlation id ;
+- endpoint ;
+- durée ;
+- code erreur ;
+- contexte non sensible ;
+- version du service.
+
+Ne pas logger des payloads sensibles par défaut.
+
+## 2. Métriques
+
+Métriques minimales :
+
+- requêtes par endpoint ;
+- latence p50/p95/p99 ;
+- erreurs par code ;
+- taille result sets ;
+- temps de planification ;
+- temps de projection ;
+- taux de troncation ;
+- cache hit/miss ;
+- mémoire ;
+- temps de bootstrap/import ;
+- distribution des recettes utilisées.
+
+Les métriques d&#x27;usage ne doivent pas devenir une source de vérité épistémique.
+
+## 3. Health / readiness / version
+
+### `/api/health`
+
+Processus vivant.
+
+### `/api/ready`
+
+Service capable de traiter une requête avec corpus, registry, policy et index chargés.
+
+### `/api/version`
+
+Expose :
+
+- version Konstellation ;
+- build id ;
+- versions de schémas publics ;
+- SHA-256 du manifest source et nombre de fichiers ;
+- SHA-256 de l’artefact si le pipeline fournit `KONSTELLATION_ARTIFACT_SHA256` ;
+- identité du corpus seulement avec opt-in explicite.
+
+## 4. Dégradation contrôlée
+
+Si un renderer spécialisé échoue :
+
+1. logger l&#x27;erreur ;
+2. conserver le QuerySpec ;
+3. proposer un fallback ;
+4. expliquer que la vue spécialisée est indisponible ;
+5. ne jamais perdre l&#x27;état d&#x27;exploration.
+
+## 5. Corrélation
+
+Une erreur UI doit pouvoir être reliée à :
+
+- requête HTTP ;
+- plan de navigation ;
+- projection ;
+- version du corpus ;
+- version du service.
+
+## 6. Runbooks
+
+La production doit documenter :
+
+- démarrage ;
+- arrêt ;
+- rollback ;
+- corpus invalide ;
+- policy invalide ;
+- saturation mémoire ;
+- latence élevée ;
+- renderer dégradé ;
+- restauration de configuration.
+</pre></body></html>

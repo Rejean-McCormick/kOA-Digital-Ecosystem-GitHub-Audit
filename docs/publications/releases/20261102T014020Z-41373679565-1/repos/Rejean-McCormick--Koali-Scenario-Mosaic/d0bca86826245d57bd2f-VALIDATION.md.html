@@ -1,0 +1,45 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Scenario-Mosaic · docs/VALIDATION.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Scenario-Mosaic · docs/VALIDATION.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Scenario-Mosaic · 4ac4e787ef01 · SHA-256 79602fcabe06f0da</small><br><a href='https://github.com/Rejean-McCormick/Koali-Scenario-Mosaic/blob/4ac4e787ef01295c9100c73d8b5bbf9a19d9ef03/docs/VALIDATION.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Validation — v4.3.2
+
+## v4.3.4 brand checker
+
+`npm run validate` passes with the two-tone Koali checker (`#1e6864` / `#4a9690`) mapped A/B/A/B on the top row and B/A/B/A on the bottom row. The offline bilingual preview was regenerated. See `VALIDATION_V4_3_4.txt`.
+
+
+## Result
+
+The refreshed v4.3.1 scenario corpus and the v4.3 magnetic interface pass the repository validation contract together.
+
+Validated:
+
+- 120 shared scenario identities;
+- 120 English + 120 French editorial documents;
+- 120 unique titles, continuity gaps, and public impact summaries in each language;
+- two-sentence public impact copy for every scenario: problem first, Koali payoff second;
+- 30–50 words per impact summary and less than 45% meaningful title-token reuse in the Koali response;
+- synchronized titles, H1 headings, image alt text, and generated EN/FR previews;
+- bounded article-led title openings to prevent repetitive scanning rhythm;
+- all 240 localized scenario files exactly match the supplied v4.3.1 corpus;
+- `src/data/scenarios.json` exactly matches the supplied v4.3.1 corpus;
+- `src/i18n/fr-tags.json` exactly matches the supplied v4.3.1 corpus;
+- 20 × 6 regular honeycomb geometry;
+- 8 contiguous 5 × 3 territories;
+- 8 versioned magnetic territory anchors;
+- EN/FR magnetic territory labels;
+- GSAP/SplitText magnetic progressive-enhancement contract;
+- fine-pointer and reduced-motion gates;
+- adaptive short/medium/long title density for refreshed titles;
+- 31 PNG scenario images and 89 SVG fallbacks;
+- bilingual public scenario routes and selected-state pages;
+- internal governance markers excluded from generated public scenario bodies;
+- 2,422 generated offline local `href`/`src` references checked;
+- 0 broken local references;
+- canonical Koali branding and `#1e6864`.
+
+The editorial checks run through `npm run validate:editorial` and are included in the main `npm run validate` chain.
+
+See `VALIDATION_V4_3_2.txt` for command output.
+
+## Build caveat
+
+A fresh `npm install` attempt timed out in the generation environment before `node_modules` was created, so a full fresh Astro build is not claimed here. The production build command remains `npm run validate &amp;&amp; astro build`, and Netlify remains configured for Node 24.20.0.
+</pre></body></html>

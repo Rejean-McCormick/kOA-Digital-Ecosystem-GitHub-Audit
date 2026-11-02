@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/04-donnees/migration-sauvegardes-et-retention.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/04-donnees/migration-sauvegardes-et-retention.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 c15c230b27e1689c</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/04-donnees/migration-sauvegardes-et-retention.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Migrations, sauvegardes, rétention et réparation
+
+## Politique cible
+
+Toute migration SQLite est versionnée, transactionnelle et **non destructive sur le fichier original avant validation**. Empêcher l&#x27;ouverture d&#x27;une base avec un `user_version` supérieur à la version prise en charge, plutôt que de tenter un downgrade tacite.
+
+## Avant migration
+
+1. Fermer Manager et attendre la fin des processus diag.
+2. Capturer hash SHA-256 et taille de la DB opérations; exporter `PRAGMA integrity_check`, `user_version`, métriques de tables.
+3. Effectuer `Connection.backup()` vers une sauvegarde datée **hors `locals/`**.
+4. Vérifier espace disque, accès en écriture et absence de symlink de sortie.
+5. Copier un échantillon de rapports physiques associés aux observations.
+
+## Migration
+
+Appliquer `vN → vN+1` sur copie d&#x27;abord; respecter l&#x27;append-only logique des observations; gérer les doublons d&#x27;événements avec `INSERT OR IGNORE` seulement si les clés sont réellement identiques. Remapper séparément les anciens chemins vers les nouvelles instances par preuve, jamais uniquement par nom.
+
+## Postmigration
+
+Vérifier `integrity_check=ok`, nombre de workspaces, observations par `kind/profile`, proportion CURRENT/STALE/UNVERIFIED, existence des preuves, lignes manquantes, index de recherche, GUI puis CLI; archiver le log de migration.
+
+## Conservation
+
+- Workspaces/canons : **non gérés** par la rétention du Manager.
+- Base de contenu : cache reconstructible, supprimer/recréer uniquement par opération explicite.
+- Index opérationnel : restaurable depuis rapports et scans, mais l&#x27;historique unique doit être sauvegardé.
+- Preuves diag : conserver selon politique utilisateur; jamais écrasées sous un nom générique.
+- Imports erronés : enregistrer les causes et limiter la taille; ne pas laisser une archive corrompue bloquer l&#x27;ensemble.
+
+## Retour arrière
+
+Revenir au code précédent et restaurer la DB sauvegardée en bloc (avec ses journaux SQLite cohérents), ne pas tenter de supprimer au hasard des lignes d&#x27;historique. Documenter la procédure Windows dans [incidents](../07-exploitation/incidents-et-retour-arriere.md).
+</pre></body></html>

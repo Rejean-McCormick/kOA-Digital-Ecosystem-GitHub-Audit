@@ -1,0 +1,131 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/01-architecture.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/01-architecture.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 832f0940f92dd60f</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/01-architecture.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture système de Konstellation 1.0
+
+## 1. Vue d&#x27;ensemble
+
+```text
++----------------------------+
+|        Kristal v6          |
+|  état canonique + identité |
++-------------+--------------+
+              |
+              v
++----------------------------+
+| Adapter / Normalizer       |
+| validation + loss report   |
++-------------+--------------+
+              |
+              v
++----------------------------+
+| Query Service              |
+| - Reader Policy            |
+| - Query Engine             |
+| - Structural Introspector  |
+| - Navigation Planner       |
+| - Projection Service       |
++-------------+--------------+
+              |
+              | DTOs + NavigationPlan
+              v
++----------------------------+
+| Konstellation Shell        |
+| - recherche / facettes     |
+| - résultats / inspecteur   |
+| - historique / Lens        |
+| - Renderer Registry        |
++----------------------------+
+```
+
+## 2. Responsabilités
+
+### Kristal Adapter
+
+DOIT :
+
+- valider le schéma source ;
+- vérifier l&#x27;identité v6 lorsque disponible ;
+- construire les index de lecture nécessaires ;
+- préserver les métadonnées v6 utiles ;
+- déclarer toute perte de représentation.
+
+NE DOIT PAS :
+
+- inventer de faits ;
+- convertir silencieusement un type non représentable ;
+- remplacer l&#x27;identité canonique du Kristal par celle d&#x27;un pack local.
+
+### Query Engine
+
+DOIT :
+
+- valider QuerySpec ;
+- appliquer la Reader Policy avant toute sortie ;
+- exécuter sélection, facettes, compteurs et witnesses ;
+- produire un contexte stable et vérifiable.
+
+### Structural Introspector
+
+DOIT analyser la structure observable : types, relations, topologie, métadonnées v6, valeurs, coordonnées, cycles, densité, hiérarchie, temporalité et autres signaux.
+
+Ses résultats sont **dérivés**.
+
+### Navigation Planner
+
+DOIT :
+
+- combiner profils global/local, Lens, focus et hints ;
+- calculer l&#x27;applicabilité et le score des recettes ;
+- produire un `NavigationPlan` versionné ;
+- expliquer les raisons d&#x27;une recommandation.
+
+### Projection Service
+
+Produit des DTOs bornés propres à chaque famille de vue : timeline, tree, DAG, flow, etc. Une projection reste reconstructible à partir de l&#x27;état visible.
+
+### Renderer Registry
+
+Associe un `rendererId` connu à un composant UI approuvé, avec ses exigences, budgets et fallbacks.
+
+### Shell UI
+
+Le shell reste stable entre les Kristals : recherche, Lens, policy, facettes, résultats, surface principale, inspecteur, historique, provenance et navigation arrière/avant.
+
+## 3. Flux d&#x27;ouverture
+
+1. charger et valider la source ;
+2. résoudre Reader Policy et contexte ;
+3. construire les index ;
+4. produire le profil structurel global ;
+5. afficher immédiatement le fallback générique ;
+6. construire le `NavigationPlan` global ;
+7. recalculer localement lorsque Lens, QuerySpec ou focus changent.
+
+## 4. Flux de sélection d&#x27;une entité
+
+```text
+User -&gt; Shell: select entity
+Shell -&gt; Query Service: entity(entityId, context)
+Query Service -&gt; Policy: visibility
+Query Service -&gt; Profiler: FocusProfile
+Query Service -&gt; Planner: plan(context, lens, focus)
+Planner -&gt; Shell: NavigationPlan
+Shell -&gt; Projection Service: project(primaryRecipe)
+Projection Service -&gt; Shell: bounded DTO + explanation
+Shell -&gt; Renderer: render
+```
+
+Aucune mutation de QuerySpec n&#x27;a lieu tant que l&#x27;utilisateur ne déclenche pas explicitement un filtre ou un pivot.
+
+## 5. Dégradation gracieuse
+
+Un Kristal inconnu doit au minimum permettre :
+
+- recherche ;
+- facettes ;
+- liste ;
+- tableau ;
+- Constellation générique ;
+- inspecteur ;
+- provenance/evidence si disponible.
+
+Chaque structure supplémentaire découverte enrichit l&#x27;expérience, mais n&#x27;est jamais nécessaire pour rendre le corpus navigable.
+</pre></body></html>

@@ -1,0 +1,39 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Kompose/blob/a5a2d855584d55d7ee5553207cb2e2b95d9c823d/docs/16-orchestration-et-dependances.md | commit: a5a2d855584d55d7ee5553207cb2e2b95d9c823d | SHA-256: 24dd3f2e22fe578e12b906ff0ae072fc57e86b3deeaf4ed2253b03dfc8d6a45f -->
+
+# 16 — Orchestration, dépendances et rythme commun
+
+## Responsabilité centrale
+
+**Portée : simulation de référence seulement.** Ce chapitre décrit les états fictifs du module `lifecycle` et les contrats cibles, **pas** les transitions réelles de Tandem. L'[ADR 0008](adr/0008-tandem-orgo-operational-authority.md) confie exclusivement à **Orgo** l'exécution réelle, les Tasks/Case/Signal, la distribution, les droits et la réconciliation. Voir aussi [l'état vérifié du code](CURRENT_IMPLEMENTATION_AND_BOUNDARIES.md).
+
+Le moteur de KOMPOSE connaît l'**état simulé** et les **règles locales**; les interfaces partenaires, dont KOR si raccordé, choisissent leur présentation. Les événements du moteur servent aux interfaces, lecteurs de documents, services d'évaluation et notifications.
+
+## États
+
+`brouillon → pret → inscriptions → diagnostic → attribution → validation → aventure → terminee`, avec `suspendue` temporaire et `annulee` terminal. Le contrôleur de référence est `src/kompose/lifecycle.py`.
+
+Chaque commande documentée nécessite l'enseignant autorisé, une version attendue et certaines preuves préalables : `content_ready`, `diagnostics_reviewed`, `plan_checked`, puis validation finale et confirmation des règles fortes, de la couverture des rôles et de l'accessibilité. Ces booléens **ne sont pas des preuves réelles** : les services doivent les calculer et les conserver dans l'audit.
+
+## Phases d'aventure
+
+Une capsule définit ses points communs (`exploration`, `enquete`, `synthese` dans l'exemple). L'enseignant peut passer à la phase suivante lorsque les prérequis pédagogiques sont satisfaits; il peut déroger à un blocage pédagogique avec une justification auditée, **jamais** à une contrainte de sécurité, de confidentialité ou de droits.
+
+## Dépendances
+
+Chaque mission peut avoir `depends_on: [mission_id, ...]`. Le graphe doit être acyclique, valide et résilient aux absences. `ready_missions` révèle les missions dont les prérequis sont accomplis sans accéder aux profils des élèves. Les événements ne transportent pas les commentaires privés de l'enseignant.
+
+Le cas d'un gardien indisponible produit une **proposition** de transfert, sous approbation enseignante; le contenu du Kristal reste identique et aucun droit de lecture n'est automatiquement octroyé.
+
+## Contrat d'exécution requis en production (à implémenter par l'autorité opérationnelle Orgo)
+
+- Écrire état, numéro de version, événement et trace d'audit **dans une transaction atomique**.
+- Traiter des événements dupliqués de façon idempotente; utiliser `event_id`, `session_version`, `correlation_id`.
+- Si deux appareils déclenchent la même transition, un seul commit gagne; l'autre reçoit `409`.
+- Émettre des événements différés via un **outbox** durable et des consommateurs avec déduplication.
+- Projeter deux vues séparées : `student` ne voit que son rôle/mission; `teacher` voit les outils de coordination et seulement les données autorisées.
+- En pause, aucune nouvelle progression métier élève n'est enregistrée; les brouillons locaux peuvent être restaurés selon politique.
+- Reprendre à partir d'une session versionnée, et non de l'état affiché en cache sur le Chromebook.
+
+## Limites du code inclus
+
+Machine à états, graphe et choix de prompts sont des fonctions pures. Aucun broker, solveur d'affectation, stockage transactionnel, IAM, ou réel ordonnanceur n'est livré. Ne pas déployer comme serveur de production sans implémenter ces ports.

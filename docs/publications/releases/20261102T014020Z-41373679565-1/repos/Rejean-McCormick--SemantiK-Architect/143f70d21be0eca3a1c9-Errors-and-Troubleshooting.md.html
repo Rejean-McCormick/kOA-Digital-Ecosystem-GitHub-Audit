@@ -1,0 +1,65 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · Errors-and-Troubleshooting.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · Errors-and-Troubleshooting.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 b6acd245623938f1</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/Errors-and-Troubleshooting' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Errors &amp; Troubleshooting
+
+SA fails closed on semantic, language and runtime correctness.
+
+## Error envelope
+
+```json
+{
+  &quot;schema_version&quot;: &quot;1.0&quot;,
+  &quot;code&quot;: &quot;SA-LEX-002&quot;,
+  &quot;category&quot;: &quot;LEXICAL_BINDING_FAILED&quot;,
+  &quot;stage&quot;: &quot;lexical_binding&quot;,
+  &quot;message_safe&quot;: &quot;...&quot;,
+  &quot;retryable&quot;: false,
+  &quot;request_id&quot;: &quot;...&quot;,
+  &quot;runtime_set_id&quot;: &quot;...&quot;,
+  &quot;details&quot;: {}
+}
+```
+
+## Stable v1 codes
+
+| Code | Meaning |
+|---|---|
+| `SA-REQ-001` | invalid request |
+| `SA-SEM-001` | semantic content cannot be mapped |
+| `SA-SEM-002` | obligation/semantic coverage failure |
+| `SA-CON-001` | unsatisfiable presentation constraint |
+| `SA-LANG-001` | language unavailable |
+| `SA-LANG-002` | capability profile unavailable/not admitted |
+| `SA-LANG-003` | language planning failed |
+| `SA-LEX-001` | lexical knowledge missing/invalid |
+| `SA-LEX-002` | exact lexical binding failed |
+| `SA-GF-001` | SA↔GF contract/bridge incompatibility |
+| `SA-GF-002` | GF realization failed |
+| `SA-RUN-001` | RuntimeSet missing |
+| `SA-RUN-002` | runtime integrity failed |
+| `SA-RUN-003` | runtime not ready/ambiguous |
+| `SA-ADP-001` | adapter contract failed |
+| `SA-OPS-001` | deadline exceeded |
+| `SA-OPS-002` | request cancelled |
+| `SA-INT-001` | internal invariant broken |
+
+## Common diagnosis path
+
+### Language/profile unavailable
+
+Check the capability manifest and release state. Production calls require `RELEASED`.
+
+### Runtime integrity failed
+
+Recompute/check artifact hashes. Do not patch a released runtime in place.
+
+### Lexical binding failed
+
+The semantic concept has no exact admitted lexical binding for the requested runtime/language. Fix the lexical artifact and release a new RuntimeSet.
+
+### GF contract failure
+
+The bridge does not support the selected operation or does not consume all semantic slots/features. Fix the bridge/grammar and reconform.
+
+### Constraint unsatisfiable
+
+The requested format/length cannot be honored without semantic loss. Change the request constraints; SA will not truncate required meaning silently.
+</pre></body></html>

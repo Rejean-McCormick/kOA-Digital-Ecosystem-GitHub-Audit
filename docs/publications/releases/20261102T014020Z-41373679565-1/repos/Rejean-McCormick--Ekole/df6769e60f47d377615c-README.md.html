@@ -1,0 +1,45 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Ekole · README.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Ekole · README.md</h1><p class='meta'><small>Rejean-McCormick/Ekole · 0ae6f634e223 · SHA-256 1f628f662f7a4523</small><br><a href='https://github.com/Rejean-McCormick/Ekole/blob/0ae6f634e223b7e2fafd68faf6f151730578e490/README.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Ekole — moteur pédagogique neutralisé
+
+Ce dépôt est le moteur neutre et commun aux deux contenus `ekole-quebec` et `ecole-pastorale`. Il comprend portail, espace apprenant, éditeur textuel local, API JSON et code historique isolé sous `legacy/`. L&#x27;ensemble est prévu pour Python 3.10+ sans dépendances tierces.
+
+## Emplacement Windows
+
+```text
+C:\mycode\Ekole\
+  ekole\             (moteur)
+  ekole-quebec\      (202 cours scolaires conservés)
+  ecole-pastorale\   (32 cours candidats, 7 parcours (prototype non approuvé))
+```
+
+**Lancement recommandé :** double-cliquez sur `..\ekole-quebec\LANCER.bat` ou `..\ecole-pastorale\LANCER.bat`. Le choix du corpus ne demande aucune modification de configuration. Les deux lanceurs ouvrent des ports séparés (8765/8766 et 8775/8776 respectivement).
+
+Si seul le moteur doit être démarré : `LANCER_EKOLE.bat`, ou `python launcher.py --contenu none`.
+
+## Interfaces
+
+- Québec : `http://127.0.0.1:8765/`, apprenant à `.../eleve/` et éditeur sur port 8766 avec lien privé imprimé dans le terminal.
+- Pastorale : `http://127.0.0.1:8775/`, apprenant à `.../eleve/` et éditeur sur port 8776 avec lien privé imprimé dans le terminal.
+
+Les deux éditeurs sont **en lecture seule par défaut**. Ajouter `--edition` au lanceur pour autoriser la modification des textes de cours et créer des sauvegardes adjacentes. L&#x27;éditeur est local, non destiné à un usage public multiutilisateur.
+
+## Contrat d&#x27;interface
+
+Le moteur charge `pack.json` et `cours/&lt;id&gt;.json` depuis le dépôt sélectionné par `--contenu CHEMIN`, conformément à `contracts/content-pack.schema.json`. La valeur `--contenu auto` est refusée si les deux dépôts sont présents pour éviter toute sélection accidentelle.
+
+## Tests
+
+Depuis `ekole/` : `python -m unittest discover -s tests -v` (les deux dépôts frères doivent être présents) ou `python launcher.py --contenu ../ecole-pastorale --verifier`.
+
+## Tandem / Orgo — préparation locale P1
+
+Orgo reste le moteur canonique des activités interactives (solo ou groupe). Ekole prépare une **prévisualisation synthétique réservée à l’enseignant**, sans connexion Orgo ni identité d’élève : voir `docs/TANDEM_EKOLE_ORGO_PREVIEW_P1.md`. Le mode est **désactivé par défaut**. Ne pas utiliser pour des enfants réels ni comme mécanisme d’autorisation.
+
+## Limites
+
+Cette version exploite le portail Core, la vue apprenant et l&#x27;éditeur textuel; les visualisations historiques avancées et les anciens connecteurs Moodle restent archivés dans `legacy/`, pas encore portés sur ces surfaces. Les contenus présents sont candidats, non publiés et non certifiés. Aucune affiliation institutionnelle n&#x27;est présumée. Le service écoute uniquement sur 127.0.0.1.
+
+## Vérification des intégrations satellites (27 octobre 2026)
+
+Voir [le contrôle de compatibilité et les limites de qualification](docs/Integration-Verification-2026-10-27.md). Les versions et statuts externes doivent être vérifiés avant tout déploiement.
+
+</pre></body></html>

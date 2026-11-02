@@ -1,0 +1,19 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Worlds · docs/status/2026-09-30-universe-build-orchestrator-v0.3.1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Worlds · docs/status/2026-09-30-universe-build-orchestrator-v0.3.1.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Worlds · 0e8d47c147d1 · SHA-256 897a20a9278cd668</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Worlds/blob/0e8d47c147d13a5721c5ae8e4b1dd7968def51fb/docs/status/2026-09-30-universe-build-orchestrator-v0.3.1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Universe build orchestrator v0.3.1
+
+Follow-up hardening from real Lévis multi-process build testing.
+
+## Fixes
+
+- Migration search-path isolation is transaction-local and transaction-pooler safe.
+- One migration group is atomic, preventing committed partial DDL when a migration fails.
+- Build failure persistence reconnects after broken PostgreSQL transactions.
+- Local orchestrator fails fast on provider disk/project limits and DDL collisions instead of cascading through all pending jobs.
+- Pending never-started local jobs remain queued for resume.
+- Storage preflight estimates atomic-upgrade headroom when `neon.max_cluster_size` is exposed.
+- New `worlds_storage` and `worlds_gc` management commands.
+- World Manager exposes Storage and failed-release garbage collection actions.
+
+## Operational constraint
+
+Schema-per-release atomic Universe promotion temporarily requires old and new releases to coexist. Provider storage quotas are therefore a real build constraint; the orchestrator now exposes and checks this instead of discovering it late in migration DDL.
+</pre></body></html>

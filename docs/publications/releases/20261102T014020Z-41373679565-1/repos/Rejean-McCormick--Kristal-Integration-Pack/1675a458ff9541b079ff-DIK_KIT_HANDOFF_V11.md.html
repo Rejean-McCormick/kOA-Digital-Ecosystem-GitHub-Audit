@@ -1,0 +1,71 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · docs/DIK_KIT_HANDOFF_V11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · docs/DIK_KIT_HANDOFF_V11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · b7e08f384609 · SHA-256 ffa70f13b32c6037</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/blob/b7e08f38460917f6e23df59151b1a8b8e447b4f7/docs/DIK_KIT_HANDOFF_V11.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># diK alpha.7 → Integration Pack 0.3 → Authoring Kit draft.4 (lot 1 candidate)
+
+&gt; **Mise à jour documentaire du 27 octobre 2026.** L&#x27;Authoring Kit **`4.0.0-draft.4`** est désormais le candidat lot 1 selon [`LOT1_KIT_ALIGNMENT.md`](LOT1_KIT_ALIGNMENT.md), avec le même verrou Framework `11.0.0-draft.4` annoncé. Les essais croisés enregistrés le **17 octobre 2026** concernaient **l&#x27;Authoring Kit `4.0.0-draft.3`**, pas draft.4. Le snapshot du Pack ne contient ni le code du Kit draft.4 ni de nouvelle preuve de qualification croisée. Les étapes d&#x27;adoption ci-dessous restent des exemples **à vérifier sur le Kit autorisé**.
+
+## Périmètre et autorités
+
+**Framework v11 draft.4** : source de vérité pour les identifiants KQ/KP/KA/KS, les schémas, audits, lexiques et preuves de correspondances `accepted + exactMatch`.
+
+**diK 1.0.0-alpha.7** : fabrique des snapshots lexicaux et des propositions de correspondances. Le nouveau `sync import-large` produit `catalog.json`, des couches JSONL et `dik-job.json` (source SHA-256, crosswalk, registre, paramètres d&#x27;import). Un hash local n&#x27;authentifie pas la provenance des octets Wikidata.
+
+**Integration Pack 0.3.0-alpha.1** : **consommateur non canonique en lecture seule**. Son précontrôle appelle `tools/v11/interop_preflight.py` épinglé, puis vérifie facultativement le reçu alpha.7. Le Pack ne réécrit aucun dictionnaire, ne transforme aucun mot en identité, ne publie ni n&#x27;active de catalogues.
+
+**Authoring Kit `4.0.0-draft.4` (candidat lot 1 documenté)** : le Kit reste responsable de la validation du catalogue, de l&#x27;enregistrement des révisions et de leur sélection explicite. **`4.0.0-draft.3`** a servi à l&#x27;essai croisé historique d&#x27;octobre 17; cet essai ne valide pas automatiquement le candidat draft.4. Les corrections curatées historiques restent séparées des nouveaux lexiques Wikidata.
+
+## 1. Précontrôle de lecture sur un catalogue v11 déjà existant
+
+```bash
+FW=/chemin/vers/Kristal-Framework-v11.0.0-draft.4
+S=&quot;$FW/examples/v11&quot;
+python tools/v11_handoff.py --framework &quot;$FW&quot; \
+  --catalog &quot;$S/dictionaries/catalog.json&quot; \
+  --registry &quot;$S/identity-registry.example.json&quot; \
+  --crosswalk &quot;$S/external-crosswalk.example.json&quot; \
+  --graph &quot;$S/semantic-graph.example.json&quot; --locales fr-CA,en
+```
+
+Aucun des quatre originaux n’est modifié. Sans graphe, omettre `--graph` et `--locales`, et le rapport valide simplement les métadonnées de provenance et les dictionnaires.
+
+## 2. Précontrôle strict d&#x27;un nouvel import diK alpha.7
+
+```bash
+python tools/v11_handoff.py --framework &quot;$FW&quot; \
+  --catalog /nouveau-import/catalog.json \
+  --registry /projet/registry.json \
+  --crosswalk /projet/crosswalk.json \
+  --kit-import-candidate \
+  --dik-job /nouveau-import/dik-job.json \
+  --out /rapports/dik-kit-preflight.json
+```
+
+Ce mode exige un catalogue contenant **uniquement des couches entrantes de type `wikidata`**, et compare les SHA-256 du reçu avec celui du catalogue, du registre et du crosswalk. Il refuse les entrées à hash modifié, namespace incohérent et couches non admises. La source Wikidata et l&#x27;approbation effective de `exactMatch` doivent être vérifiées au-delà de ce reçu.
+
+Pour passer par Node : `node tools/kristal-bridge.mjs v11-handoff --framework ... --catalog ... --registry ... --crosswalk ... --kit-candidate yes --dik-job ...`.
+
+## 3. Adoption explicite **uniquement par l&#x27;Authoring Kit**
+
+Après revue, dans le dépôt du Kit :
+
+```bash
+python tools/kristal.py import-dik-catalog /workspace \
+  --catalog /nouveau-import/catalog.json --revision revison-humaine-001 \
+  --register --artifact-id urn:review:001 --contract-id projet.dictionary.v11
+python tools/kristal.py select-v11-catalog /workspace \
+  --catalog &lt;chemin-retourne-par-import-dik-catalog&gt;
+python tools/kristal.py check-v11 /workspace
+```
+
+Les chemins, droits et artefacts doivent être contrôlés par l&#x27;opérateur. Les commandes sont présentées comme un exemple de workflow, **pas** déclenchées par le Pack. En cas de crash Kit, utiliser les modes `recover-v11 status|finish|rollback` selon le journal; ne pas improviser une réparation à la main.
+
+## Sécurité et version
+
+- Le Pack verrouille **exactement Framework `11.0.0-draft.4`** et 13 fichiers du contrat/outillage v11 par SHA-256. Il rejette un Framework inattendu au lieu d&#x27;exécuter du code d&#x27;une autre version.
+- Les schémas v11 et les outils de lecture utilisés gardent les octets observés en draft.3 ; le précontrôle draft.4 est un ajout. **Historiquement**, le Kit draft.3 avait son propre pin Framework draft.3. Le candidat Kit draft.4 est déclaré aligné sur le pin draft.4 dans le lot 1 ; une comparaison indépendante des fichiers et une qualification croisée restent nécessaires sur le code Kit réel.
+- Le lecteur Node accepte les vues `read-view/v11.0-draft.1` générées depuis Framework draft.3 ou draft.4, **sans** confondre cette vérification structurelle avec une validation canonique.
+- Pas de réseau, de téléchargement de dump, d&#x27;agent partagé, de fusion de KQ, d&#x27;équivalence par libellé ni de modification Konstellation.
+- Le Pack **ne réinstalle pas** les overlays historiques sur une instance Konstellation déjà intégrée. Son installateur reste strict.
+
+## Qualification requise avant une release stable
+
+Déploiement autonome sur un Konstellation de test; politiques de lecteur C1/C2; intégration réelle avec un binaire diK alpha.7 et ses gros dumps; authentification des réviseurs; conditions de panne et concurrence Kit; TCK Framework complet; compatibilité Node/Astro/Svelte sous les versions d&#x27;exploitation cibles.
+</pre></body></html>

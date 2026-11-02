@@ -1,0 +1,31 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · FAQ.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · FAQ.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 8a0449d79b6b8388</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/FAQ' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Frequently Asked Questions
+
+### Does the Integration Pack install diK?
+No. It accepts eligible catalogs and can validate an alpha.7 job receipt. diK runs separately and the Kit adopts catalog revisions separately.
+
+### Can I use the Framework draft.3 checkout with Pack 0.3?
+Not for **new pinned v11 validation or handoff**. These commands require exact Framework `11.0.0-draft.4`. The Node read-view consumer can structurally read older derived draft.3 views; this is not equivalent to validating a draft.3 checkout as the active Framework.
+
+### Does a green `v11-handoff` report activate the catalog?
+No. Only a distinct, reviewed **Authoring Kit** action can register and then select the new revision.
+
+### Why are KQ and Wikidata Q not interchangeable?
+KQ is a Kristal semantic identity. Q is an external Wikidata identifier. `exactMatch` must be separately reviewed and accepted; matching a label does not create identity.
+
+### Can I overwrite a report file using `--out`?
+No. The v11 tools deliberately create reports exclusively and refuse an existing path.
+
+### Can I run `tools/install.py --apply` on the supplied Konstellation snapshot?
+No. It already contains a differing owner integration. The recorded status recommends `DO_NOT_REINSTALL_EXISTING_INTEGRATION`.
+
+### Does a successful C3 scan make an artifact public?
+No. It checks local structure only. C1 evidence, C2 authorization and actual remote release are separate decisions.
+
+### Is a Context Pack the same as a v11 canonical semantic graph?
+No. Context Packs and derived projections are reader surfaces, not immutable semantic commitments or an identity registry.
+
+### Was the diK alpha.7 binary tested with this Pack?
+The source qualification explicitly says **no**. It tested a synthetic receipt matching the documented contract and a real Kit demo handoff sequence.
+
+See [[Getting-Started]], [[Qualification-and-Testing]], and [[Glossary]].
+</pre></body></html>

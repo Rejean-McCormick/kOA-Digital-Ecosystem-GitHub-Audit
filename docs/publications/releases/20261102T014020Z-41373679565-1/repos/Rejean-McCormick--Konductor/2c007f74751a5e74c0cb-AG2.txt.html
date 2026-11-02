@@ -1,0 +1,865 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konductor · docs/References/AG2.txt</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konductor · docs/References/AG2.txt</h1><p class='meta'><small>Rejean-McCormick/Konductor · f69b57d02089 · SHA-256 caa50a41ef6165a9</small><br><a href='https://github.com/Rejean-McCormick/Konductor/blob/f69b57d0208973ee7508490d0dc221986d653b9c/docs/References/AG2.txt' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Final AG2 Architecture Report — Optimized for AI
+
+## 0. Core Conclusion
+
+AG2’s strongest architectural idea is **not “many agents talking.”**
+Its real strength is that it wraps LLM behavior inside multiple control layers:
+
+```yaml id=&quot;core_ag2_secret&quot;
+ag2_core_secret:
+  principle: &quot;LLM proposes; code validates; state constrains; fallback recovers.&quot;
+  runtime_model:
+    - conversation_as_execution_runtime
+    - agents_as_reply_pipelines
+    - routing_as_validated_selection
+    - tools_as_authorized_actions
+    - memory_as_curated_knowledge
+    - observers_as_runtime_sensors
+    - middleware_as_policy_layer
+    - compaction_as_context_budget_control
+    - aggregation_as_long_term_memory_creation
+```
+
+The key takeaway for your own AI:
+
+```text id=&quot;er342g&quot;
+Do not build an agent system where the LLM directly controls the next step.
+Build a system where the LLM suggests, but deterministic code validates, constrains, routes, records, and recovers.
+```
+
+---
+
+# 1. AG2 Architectural Identity
+
+AG2 is best understood as a **conversation-runtime framework**.
+
+CrewAI is centered around:
+
+```text id=&quot;6e07jf&quot;
+Agent → Task → Crew → Flow
+```
+
+AG2 is centered around:
+
+```text id=&quot;361g0n&quot;
+Message → Reply Pipeline → Speaker Selection → Handoff → Tool/Agent Action → Stream Event
+```
+
+AG2’s classic core uses `ConversableAgent`, group chat, reply handlers, hooks, tool execution, and speaker selection. Its newer beta architecture moves toward async agents, event streams, memory streams, middleware, dependency injection, AG-UI, observers, and knowledge assembly.
+
+This makes AG2 especially valuable for designing:
+
+```yaml id=&quot;ag2_best_use&quot;
+best_use:
+  - agent_to_agent_conversation
+  - multi_agent_routing
+  - group_chat_control
+  - handoff_logic
+  - subagent_delegation
+  - runtime_observability
+  - tool_authorization
+  - memory_and_context_management
+  - human_in_the_loop
+  - agent_evaluation
+```
+
+---
+
+# 2. Main Clever Tricks
+
+## 2.1 Speaker selection is a nested validation system
+
+AG2’s `auto` speaker selection is not just one LLM call. It creates a **speaker selector** and a **speaker validator** in a temporary nested chat. The selector proposes the next speaker, the validator checks that exactly one valid agent was selected, and AG2 can re-query or fall back if the result is invalid. 
+
+```yaml id=&quot;speaker_selection_trick&quot;
+speaker_selection:
+  input:
+    - group_chat_messages
+    - current_agent
+    - candidate_agents
+  process:
+    - selector_agent_proposes_next_speaker
+    - validator_agent_checks_result
+    - retry_if_zero_or_multiple_or_invalid
+    - fallback_if_exhausted
+  copy_this:
+    - &quot;Never trust one LLM routing answer.&quot;
+    - &quot;Route → validate → retry → fallback.&quot;
+```
+
+This is one of the most important tricks to copy.
+
+---
+
+## 2.2 Tool calls can route the next speaker
+
+AG2 uses `func_call_filter`: if the last message suggests a function/tool call, the next speaker is constrained to agents that can execute that function via their `function_map`. 
+
+```yaml id=&quot;tool_routing&quot;
+tool_routing:
+  rule: &quot;A requested tool determines the eligible executor agent.&quot;
+  implication:
+    - tool_ownership_is_runtime_routing_signal
+    - agents_do_not_need_to_guess_executor
+    - unauthorized_agents_are_filtered_out
+```
+
+For your AI:
+
+```text id=&quot;7rqo75&quot;
+If a tool is requested, route to the agent that owns or is authorized to execute that tool.
+```
+
+---
+
+## 2.3 Routing has multiple control modes
+
+AG2 supports `auto`, `manual`, `random`, `round_robin`, and custom callable speaker selection. A custom function can return a concrete agent, return a method such as `&quot;auto&quot;`, or return `None` to terminate. 
+
+Important detail: if custom speaker selection returns an agent directly, AG2 treats it as an explicit override rather than applying normal eligibility policies. 
+
+```yaml id=&quot;routing_modes&quot;
+routing_modes:
+  hard_control:
+    mechanism: custom_callable_returns_agent
+    use_for:
+      - production_workflows
+      - security_sensitive_paths
+      - deterministic_state_machines
+  constrained_control:
+    mechanism: transition_graph_or_allowed_speakers
+    use_for:
+      - multi_agent_workflows
+      - bounded_group_chat
+  soft_control:
+    mechanism: llm_auto_selection
+    use_for:
+      - exploratory_tasks
+      - brainstorming
+      - low_risk_agent_collaboration
+```
+
+---
+
+## 2.4 Transition graphs prevent agent chaos
+
+AG2 supports finite-state-machine-style group chat. The docs explain that as agent count grows, possible transitions grow quickly, creating token waste and bad routing risk. FSM constraints reduce this by restricting which agent can speak after which agent. 
+
+```yaml id=&quot;transition_graph&quot;
+transition_graph:
+  problem: &quot;All agents can talk to all agents.&quot;
+  failure_modes:
+    - token_waste
+    - circular_discussion
+    - irrelevant_agent_turns
+    - hallucinated_handoffs
+  solution:
+    - allowed_transitions
+    - disallowed_transitions
+    - stateful_speaker_policy
+```
+
+Recommended for your AI:
+
+```text id=&quot;4odps9&quot;
+User → Router
+Router → Planner | Specialist | Human
+Planner → Researcher | Coder
+Researcher → Critic
+Coder → ToolExecutor
+Critic → Planner | Finalizer
+Finalizer → User
+```
+
+---
+
+## 2.5 StateFlow separates process control from reasoning
+
+StateFlow separates **process grounding** from **sub-task solving**. The state and transitions control the task procedure; LLMs and tools solve the sub-task inside each state. 
+
+```yaml id=&quot;stateflow_model&quot;
+stateflow:
+  process_control:
+    - states
+    - transitions
+    - termination
+    - repair_paths
+  llm_work:
+    - plan_inside_state
+    - execute_inside_state
+    - critique_inside_state
+    - summarize_inside_state
+```
+
+For your AI, copy this:
+
+```text id=&quot;4ttkda&quot;
+Use code/state machines to control the process.
+Use LLMs only inside bounded states.
+```
+
+---
+
+# 3. Handoffs
+
+AG2 handoffs use a **priority ladder**:
+
+```yaml id=&quot;handoff_priority&quot;
+handoff_priority:
+  1_context_based_conditions: deterministic_and_free
+  2_llm_based_conditions: semantic_but_costly
+  3_tool_based_handoffs: action_result_routes_next_agent
+  4_after_work_fallback: safety_net
+```
+
+The docs describe this layered evaluation: deterministic checks first, LLM reasoning when needed, tool-based handoffs, and fallback for robustness. 
+
+Context-based handoffs run before the LLM and cost nothing; LLM-based handoffs are used when semantic judgment is needed.  
+
+For your AI:
+
+```yaml id=&quot;recommended_handoff_policy&quot;
+recommended_handoff_policy:
+  first:
+    - deterministic_context_rules
+    - user_role
+    - risk_level
+    - tool_result_status
+    - explicit_state
+  second:
+    - llm_semantic_router
+  third:
+    - tool_returned_target
+  always:
+    - fallback_to_safe_agent_or_human
+```
+
+---
+
+# 4. Agent Runtime Design
+
+## 4.1 Agents are reply pipelines, not simple LLM wrappers
+
+`register_reply()` lets AG2 register reply functions triggered by sender type, name, instance, callable, list, or `None`. Later-registered handlers can be checked earlier depending on position. 
+
+Nested chats can be registered as reply handlers too: AG2 can run a queue of nested chats, summarize their results, and return the summary as the parent reply. 
+
+```yaml id=&quot;agent_reply_pipeline&quot;
+agent_reply_pipeline:
+  incoming_message:
+    - check_termination
+    - check_human_input
+    - check_registered_reply_handlers
+    - maybe_run_nested_chat
+    - maybe_execute_tool
+    - maybe_call_llm
+    - return_reply
+```
+
+For your AI, implement agents like this:
+
+```python id=&quot;agent_pipeline_example&quot;
+class Agent:
+    reply_handlers = [
+        check_termination,
+        check_policy,
+        check_human_input,
+        run_nested_team_if_needed,
+        execute_tool_if_requested,
+        call_llm,
+    ]
+```
+
+---
+
+## 4.2 Hooks add capabilities without subclassing
+
+AG2 has hooks for methods such as:
+
+```yaml id=&quot;hooks&quot;
+hooks:
+  - update_agent_state
+  - process_all_messages_before_reply
+  - process_last_received_message
+  - safeguard_tool_inputs
+  - safeguard_tool_outputs
+```
+
+The code registers hooks by method name and calls them before replies or tool processing. 
+
+The last-message hook is careful: it avoids unsafe message types, avoids function-call messages, skips `exit`, and only replaces the last message if a hook actually changed it. 
+
+```yaml id=&quot;hook_principle&quot;
+hook_principle:
+  goal: &quot;Capabilities should be plugins.&quot;
+  avoid:
+    - subclassing_agent_for_every_feature
+    - modifying_core_runtime_for_memory_or_safety
+  use_hooks_for:
+    - teachability
+    - message_transforms
+    - tool_safeguards
+    - redaction
+    - memory_injection
+    - output_filtering
+```
+
+---
+
+# 5. Context and Memory
+
+## 5.1 Message transforms preserve system prompts
+
+AG2’s `TransformMessages` applies ordered transformations before reply generation. It protects the system message separately, transforms the rest, then reinserts the system message. 
+
+The history limiter can keep recent messages, preserve the first message, and exclude specific sender names. 
+
+```yaml id=&quot;message_transform_policy&quot;
+message_transform_policy:
+  protected:
+    - system_message
+  transformable:
+    - chat_history
+    - tool_noise
+    - old_messages
+    - long_documents
+  transforms:
+    - limit_history
+    - compress_text
+    - redact_sensitive_info
+    - filter_irrelevant_messages
+    - preserve_recent_context
+```
+
+Copy this rule:
+
+```text id=&quot;n2982a&quot;
+System prompt is protected. Conversation history is compressible.
+```
+
+---
+
+## 5.2 Teachability stores reusable lessons, not raw memory dumps
+
+AG2’s Teachability uses a `TextAnalyzerAgent` to decide whether a message contains useful memory. It extracts two useful memory types:
+
+```yaml id=&quot;teachability_memory_types&quot;
+teachability_memory_types:
+  - task_to_advice
+  - question_to_answer
+```
+
+It generalizes task advice before storage and retrieves relevant memos before future replies. 
+
+It also appends recalled teachings to the latest received message without propagating them into stored message history. 
+
+For your AI:
+
+```yaml id=&quot;memory_rules&quot;
+memory_rules:
+  do_not_store:
+    - every_message
+    - raw_chat_without_filter
+    - temporary_reasoning_noise
+  store:
+    - user_preferences
+    - task_advice_pairs
+    - question_answer_pairs
+    - verified_facts
+    - reusable_project_decisions
+  inject:
+    - temporarily
+    - only_when_relevant
+    - with_source_or_reason
+```
+
+---
+
+## 5.3 Beta separates aggregation from compaction
+
+AG2 Beta separates two concepts that many frameworks mix:
+
+```yaml id=&quot;aggregation_vs_compaction&quot;
+aggregation:
+  purpose: &quot;Create durable knowledge from events.&quot;
+  output:
+    - working_memory
+    - episodic_memory
+    - summaries
+    - knowledge_store_entries
+
+compaction:
+  purpose: &quot;Reduce active event history to fit context budget.&quot;
+  output:
+    - smaller_stream_history
+    - synthetic_summary_event
+    - tail_window
+```
+
+The docs describe aggregation as extracting structured knowledge from raw events and writing it to a `KnowledgeStore`; compaction reduces event history by event count or token budget.  
+
+Working memory can be stored as a rolling file, while conversation summaries can be timestamped episodic files. 
+
+The build-with-AG2 skill also shows `KnowledgeConfig` wiring compact strategy, aggregate strategy, triggers, bootstrap, and assembly policies; it notes that internal middleware is conditionally wired so you only pay for what you turn on. 
+
+Recommended architecture:
+
+```yaml id=&quot;memory_context_architecture&quot;
+memory_context_architecture:
+  event_stream:
+    writes_to:
+      - aggregation_pipeline
+      - compaction_pipeline
+
+  aggregation_pipeline:
+    triggers:
+      - every_n_turns
+      - on_end
+    writes:
+      - knowledge_store
+      - working_memory
+      - episodic_memory
+
+  compaction_pipeline:
+    triggers:
+      - max_events
+      - max_tokens
+    strategies:
+      - tail_window
+      - summarize_dropped_events
+
+  assembly_pipeline:
+    injects:
+      - working_memory
+      - recent_episodes
+      - alerts
+      - sliding_window_context
+```
+
+---
+
+# 6. Observability and Runtime Self-Monitoring
+
+AG2 Beta observers monitor agent behavior. Watches can trigger on event type, count, time, schedule, sequence, or composite conditions.  
+
+Built-in observers include `LoopDetector` and `TokenMonitor`; the LoopDetector detects repeated identical tool-call patterns, and the TokenMonitor emits warnings or critical alerts around token thresholds. 
+
+Important design point: observer alerts are persisted and emitted to the stream, but they are not automatically rendered back to the LLM unless middleware or assembly policy injects them. 
+
+```yaml id=&quot;observer_model&quot;
+observer_model:
+  monitors:
+    - loop_detection
+    - token_budget
+    - repeated_tool_failures
+    - unsafe_action_attempts
+    - latency
+    - cost
+  alert_policy:
+    default: &quot;alerts stay in stream&quot;
+    optional: &quot;inject alerts into LLM context only if policy says so&quot;
+```
+
+For your AI:
+
+```text id=&quot;t0ngtr&quot;
+Monitoring must not automatically contaminate LLM context.
+Observe first. Inject only when useful.
+```
+
+---
+
+# 7. Middleware and Tool Control
+
+AG2 Beta middleware can wrap the whole agent turn, LLM calls, tool execution, and human input requests. The docs list use cases including logging, retries, history trimming, request mutation, tool auditing, guardrails, policy enforcement, caching, and request deduplication. 
+
+Middleware can validate tool arguments, log usage, transform results, catch failures, return safe fallbacks, and enforce access control. 
+
+```yaml id=&quot;middleware_layers&quot;
+middleware_layers:
+  agent_turn:
+    - budget_control
+    - trace_context
+    - halt_checks
+  llm_call:
+    - retry
+    - caching
+    - prompt_sanitization
+    - history_trimming
+  tool_execution:
+    - argument_validation
+    - permission_check
+    - audit_log
+    - output_sanitization
+    - failure_fallback
+  human_input:
+    - timeout
+    - approval_gate
+    - denial_path
+```
+
+Core rule:
+
+```text id=&quot;hlap0c&quot;
+Policy belongs in middleware, not in prompts.
+```
+
+---
+
+# 8. Dependency Injection
+
+AG2 Beta dependency injection keeps internal services out of the LLM-facing tool schema. The build-with-AG2 dependency-injection guide states that `Context`, `Inject`, `Variable`, and `Depends` resolve values from execution context and do not appear in the LLM-facing schema. 
+
+```yaml id=&quot;dependency_injection&quot;
+dependency_injection:
+  llm_sees:
+    - tool_name
+    - natural_arguments
+  runtime_injects:
+    - db_session
+    - api_key
+    - user_id
+    - auth_context
+    - rate_limiter
+    - trace_id
+    - policy_object
+```
+
+Example design:
+
+```python id=&quot;di_example&quot;
+@tool
+def search_orders(order_id: str, db: Inject(&quot;readonly_db&quot;)) -&gt; str:
+    ...
+```
+
+The model should see only:
+
+```text id=&quot;8h0kro&quot;
+search_orders(order_id: str)
+```
+
+It should never see:
+
+```text id=&quot;ffeyt2&quot;
+database credentials
+tenant secrets
+auth handles
+policy internals
+```
+
+---
+
+# 9. Subagents as Tools
+
+AG2 Beta can expose an agent as a tool via `Agent.as_tool()`. A coordinator can call a specialist agent as if it were a function. Each subtask runs in an isolated stream with independent history; multiple tool calls can run concurrently, and each subtask receives its own copy of variables. 
+
+Subagent tools can also receive middleware such as approval gates. 
+
+```yaml id=&quot;subagent_as_tool&quot;
+subagent_as_tool:
+  parent_agent:
+    sees: &quot;researcher_tool(query)&quot;
+  runtime:
+    creates: &quot;isolated_subagent_stream&quot;
+    copies: &quot;variables&quot;
+    runs: &quot;specialist_agent&quot;
+    returns: &quot;summary/result&quot;
+  benefits:
+    - bounded_context
+    - reduced_cross_agent_contamination
+    - parallelism
+    - controllable_delegation
+```
+
+For your AI:
+
+```text id=&quot;9cuu5d&quot;
+Subagent = callable tool + isolated context + middleware + bounded result.
+```
+
+---
+
+# 10. Advanced AG2 Tricks
+
+## 10.1 Temporary expert teams
+
+CaptainAgent can create temporary expert groups via `seek_experts_help`, ask fewer than three expert roles, include a checker, run the expert group, then summarize conclusions. 
+
+It also requires verification when expert conclusions contradict each other or differ from previous results. 
+
+```yaml id=&quot;temporary_expert_team&quot;
+temporary_expert_team:
+  trigger: &quot;task too complex for current agent&quot;
+  build:
+    - expert_1
+    - expert_2
+    - checker
+  process:
+    - group_discussion
+    - contradiction_detection
+    - summary_returned_to_parent
+  cleanup:
+    - discard_local_chat
+    - keep_summary_only
+```
+
+## 10.2 Self-improving tool libraries
+
+AG2’s deprecated `AgentOptimizer` still reveals a useful idea: track failed tasks and revise the agent’s toolset. It includes actions for adding, revising, and removing functions. 
+
+The optimizer prompt focuses on failed tasks, repairing function implementations, removing useless functions, and adding generalized functions for future tasks. 
+
+```yaml id=&quot;tool_optimizer_pattern&quot;
+tool_optimizer_pattern:
+  collect:
+    - failed_tasks
+    - tool_errors
+    - low_quality_outputs
+  propose:
+    - add_tool
+    - revise_tool
+    - remove_tool
+  validate:
+    - sandbox_execution
+    - regression_tests
+    - evaluation_score
+  promote:
+    - only_if_improves_metric
+```
+
+---
+
+# 11. Recommended Architecture for Your AI
+
+```yaml id=&quot;recommended_ai_architecture&quot;
+recommended_ai_architecture:
+  runtime:
+    type: &quot;event-driven multi-agent runtime&quot;
+    principle: &quot;LLM proposes; code validates; state constrains.&quot;
+
+  main_components:
+    router:
+      responsibilities:
+        - classify_request
+        - apply_context_rules
+        - invoke_llm_router_if_needed
+        - validate_route
+        - fallback_on_invalid_route
+
+    state_machine:
+      responsibilities:
+        - control_process
+        - define_allowed_transitions
+        - prevent_invalid_agent_sequences
+        - manage_repair_loops
+
+    coordinator:
+      responsibilities:
+        - decompose_task
+        - call_subagents_as_tools
+        - merge_results
+        - request_evaluation
+        - produce_final_answer
+
+    agents:
+      design:
+        - reply_pipeline
+        - registered_handlers
+        - hooks
+        - middleware
+        - tool_permissions
+        - typed_outputs
+
+    tools:
+      design:
+        - explicit_schema
+        - runtime_dependency_injection
+        - permission_layer
+        - approval_layer_for_side_effects
+        - audit_log
+
+    memory:
+      short_term:
+        - current_event_stream
+        - sliding_window_context
+      working_memory:
+        - rolling_summary
+        - user_project_state
+      episodic_memory:
+        - timestamped_summaries
+      semantic_memory:
+        - retrieved_facts
+        - documents
+        - verified_knowledge
+
+    observability:
+      - event_stream
+      - trace_ids
+      - loop_detector
+      - token_monitor
+      - tool_error_monitor
+      - replay
+      - evaluation_logs
+
+    safety:
+      - route_validation
+      - tool_authorization
+      - sandboxing
+      - human_approval
+      - fallback_agent
+      - halt_conditions
+```
+
+---
+
+# 12. Minimal Implementation Blueprint
+
+Start with this instead of trying to copy all of AG2:
+
+```yaml id=&quot;mvp_blueprint&quot;
+mvp_multi_agent_ai:
+  objects:
+    - Agent
+    - Message
+    - EventStream
+    - Router
+    - RouteValidator
+    - StateMachine
+    - Tool
+    - Middleware
+    - Observer
+    - MemoryStore
+    - Evaluator
+
+  required_flows:
+    user_request_flow:
+      - receive_message
+      - classify_intent
+      - propose_route
+      - validate_route
+      - select_agent
+      - run_reply_pipeline
+      - execute_tools_if_needed
+      - emit_events
+      - compact_context_if_needed
+      - aggregate_memory_if_needed
+      - evaluate_output
+      - return_answer
+
+  first_patterns_to_implement:
+    - sequential_pipeline
+    - star_coordinator
+    - explicit_handoff
+    - redundant_agents_plus_evaluator
+
+  defer_until_later:
+    - fully_dynamic_group_chat
+    - self_modifying_tool_library
+    - automatic_expert_team_generation
+    - complex multi-level hierarchy
+```
+
+---
+
+# 13. AI-Readable Design Rules
+
+```yaml id=&quot;design_rules_for_ai&quot;
+design_rules:
+  routing:
+    - do_not_allow_unvalidated_llm_routing
+    - use_context_rules_before_llm_router
+    - validate_selected_agent
+    - retry_invalid_selection
+    - fallback_when_uncertain
+    - constrain_transitions_with_state_graph
+
+  agent_design:
+    - agent_is_reply_pipeline_not_llm_wrapper
+    - use_registered_handlers_for_behavior
+    - use_hooks_for_capabilities
+    - use_middleware_for_cross_cutting_policy
+    - keep_system_prompt_protected
+
+  tools:
+    - route_tool_calls_to_authorized_executor
+    - use_dependency_injection_for_secrets_and_services
+    - require_approval_for_side_effects
+    - audit_every_tool_call
+    - sanitize_tool_outputs
+
+  memory:
+    - do_not_store_raw_chat_by_default
+    - extract_reusable_lessons
+    - separate_aggregation_from_compaction
+    - inject_memory_temporarily
+    - preserve_source_or_reason_for_memory
+
+  observability:
+    - event_stream_everything
+    - detect_loops
+    - monitor_tokens
+    - persist_alerts
+    - inject_alerts_into_llm_only_by_policy
+
+  safety:
+    - use_hard_state_control_for_critical_workflows
+    - use_llm_judgment_only_inside_bounded_states
+    - keep_human_approval_for_dangerous_actions
+    - maintain_replayable_execution_logs
+```
+
+---
+
+# 14. Final Verdict
+
+AG2’s best tricks are:
+
+```yaml id=&quot;final_verdict&quot;
+best_ag2_tricks:
+  - nested_selector_plus_validator_for_speaker_selection
+  - function_call_filter_for_tool_executor_routing
+  - custom_speaker_selection_for_hard_control
+  - FSM_groupchat_to_constrain_agent_transitions
+  - stateflow_to_separate_process_control_from_reasoning
+  - priority_handoff_ladder
+  - register_reply_pipeline
+  - nested_chats_as_reply_handlers
+  - hookable_capabilities
+  - protected_system_prompt_during_message_transforms
+  - teachability_as_generalized_task_advice_memory
+  - aggregation_separate_from_compaction
+  - observers_and_watches_for_runtime_self_monitoring
+  - middleware_for_policy_and_retries
+  - dependency_injection_to_hide_infrastructure_from_llm
+  - subagents_as_isolated_tools
+  - temporary_expert_teams_with_checker_agents
+  - tool_optimizer_pattern_for_self_improvement
+```
+
+The final architecture you should build:
+
+```text id=&quot;dlw2bd&quot;
+User
+→ Input Classifier
+→ Deterministic Context Router
+→ LLM Router
+→ Route Validator
+→ State Machine
+→ Coordinator Agent
+→ Specialist Agents as Tools
+→ Tool Executor with DI + Middleware
+→ Observer Layer
+→ Memory Aggregation
+→ Context Compaction
+→ Critic/Evaluator
+→ Final Answer
+```
+
+The essential AG2 lesson:
+
+```text id=&quot;safpg2&quot;
+A strong multi-agent AI is not made by giving agents freedom.
+It is made by giving agents bounded freedom inside a validated runtime.
+```
+</pre></body></html>

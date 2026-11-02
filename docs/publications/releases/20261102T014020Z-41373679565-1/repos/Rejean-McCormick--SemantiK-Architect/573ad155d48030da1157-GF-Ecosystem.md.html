@@ -1,0 +1,77 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · GF-Ecosystem.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · GF-Ecosystem.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 8823ca94c1d7ecad</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/GF-Ecosystem' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># GF Ecosystem
+
+SemantiK Architect consumes released grammatical artifacts; it does not replace the GF language-development ecosystem.
+
+## Responsibility map
+
+```text
+GF/RGL language repository
+        │
+        │ language source, morphology, syntax
+        ▼
+GF Wordbench
+        │ build, diagnostics, validation, release workflow
+        ▼
+immutable grammar artifact / PGF
+        │
+        ├──────────────→ GF Observatory
+        │                 read-only observation / evidence / maturity views
+        │
+        └──────────────→ SemantiK Architect conformance
+                          │
+                          ▼
+                    RuntimeSet RELEASED
+                          │
+                          ▼
+                    production rendering
+```
+
+The **GF RGL AI Compendium** is a development/reference knowledge source for RGL engineering patterns and language-specific reasoning. It is not a production realizer dependency.
+
+## Language repositories
+
+A language repository owns the actual linguistic implementation. For example, an Albanian RGL repository can contain morphology, paradigms, syntax, constructions, dictionaries and tests.
+
+If a required Albanian construction fails in SA conformance, the fix belongs in the Albanian/GF development source (or its admitted bridge/lexical artifact), followed by rebuild and reconformance. SA core does not patch Albanian at runtime.
+
+## GF Wordbench
+
+Wordbench belongs on the development side of the boundary. It can support:
+
+- language source discovery;
+- GF compilation/PGF build;
+- diagnostics;
+- test/golden workflows;
+- release artifact production.
+
+SA consumes the resulting immutable artifacts; it does not embed the language-development workbench into its runtime path.
+
+## GF Observatory
+
+Observatory is an evidence/observation system, not the grammar authority used by a render request.
+
+Its views can help answer questions such as readiness, maturity, diagnostics and evidence history. The production authority inside SA remains the exact immutable RuntimeSet and its pinned conformance evidence.
+
+## GF RGL AI Compendium
+
+The Compendium captures engineering knowledge such as reusable morphology/morphosyntax patterns, diagnostics and language-family evidence.
+
+It can guide human/AI language development, but it does not replace:
+
+- the source language implementation;
+- GF compilation;
+- SA profile conformance;
+- immutable release evidence.
+
+## SA boundary
+
+SA expects a finished, validated grammatical capability:
+
+```text
+PGF + bridge + lexicon + profile + evidence
+```
+
+Once those artifacts are released, the runtime does not need Wordbench, Observatory or the Compendium to generate text.
+
+See [[Add a Language|Add-a-Language]], [[RuntimeSets]], and [[Language Profiles &amp; Conformance|Language-Profiles-and-Conformance]].
+</pre></body></html>

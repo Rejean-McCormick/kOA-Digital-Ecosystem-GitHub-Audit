@@ -1,0 +1,52 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Mediatheque · docs/20_kristal_source_validation_20261002.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Mediatheque · docs/20_kristal_source_validation_20261002.md</h1><p class='meta'><small>Rejean-McCormick/Mediatheque · 21e8d732e669 · SHA-256 f5b5ac17b0112773</small><br><a href='https://github.com/Rejean-McCormick/Mediatheque/blob/21e8d732e6690ab15ced87179eb5b152386fe716/docs/20_kristal_source_validation_20261002.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Validation du système de sources Kristal — snapshot 2026-10-02
+
+&gt; **Note historique.** Cette validation précède le schéma v4. Les mesures restent utiles, mais l&#x27;autorité source courante est désormais `source_*`; Kristal est représenté comme un consumer binding.
+
+Validation effectuée contre `SmartSnap(20261002-122632)` dans une base Médiathèque kOA jetable.
+
+## Librairies canoniques détectées
+
+| Kristal | Sources déclarées | Snapshots | Représentations déclarées dans source-store |
+|---|---:|---:|---:|
+| Kristal-HistoryTech | 200 | 200 | 564 |
+| Kristal-HumanBody | 119 | 0 | 0 |
+| Kristal-Math | 22 | 6 | 24 |
+| Kristal-ScolQc | 122 | 0 | 0 |
+
+`FoodBrands/external-source-library` ne contient actuellement qu&#x27;un README, donc aucun `source-store.json` à importer.
+
+`HospitalOps/knowledge-sources` et les dossiers `canonical-corpus`/`knowledge-base/corpus` ont été laissés hors migration automatique : ils contiennent des connaissances/corpus internes, pas la même classe de téléchargements externes.
+
+## Résultat d&#x27;import réel
+
+- Kristals enregistrés : **4**
+- liens Kristal ↔ source : **463**
+- sources logiques uniques après normalisation URL : **461**
+- snapshots enregistrés : **206**
+- snapshots disponibles : **125**
+- représentations effectivement liées : **588**
+- fichiers physiques uniques dans la Médiathèque : **582**
+- volume physique copié pour ce test : **243 418 083 octets**
+- fichiers réutilisés par déduplication SHA-256 : **6**
+- incohérences SHA-256 : **0**
+
+## Fichiers référencés mais absents du snapshot fourni
+
+Le catalogue source référence des fichiers qui ne sont pas présents dans le ZIP de snapshot :
+
+- HistoryTech : **120** absents (116 `rendered_pdf`, 4 `original`)
+- Math : **5** absents
+
+Le migrateur ne crée pas de faux fichiers. Les sources et snapshots sont conservés dans le catalogue; seules les représentations physiquement présentes et valides sont copiées.
+
+## Vérification après import
+
+`KoaKristalSources.py verify` :
+
+- fichiers physiques vérifiés : **582**
+- fichiers manquants dans le stockage kOA : **0**
+- SHA-256 incohérents dans le stockage kOA : **0**
+- état final : **OK**
+
+Des manifests de bindings ont aussi été générés pour les quatre Kristals importés avec des locators `koa-media://version/&lt;version_uuid&gt;`.
+</pre></body></html>

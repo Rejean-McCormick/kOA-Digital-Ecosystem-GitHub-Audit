@@ -1,0 +1,57 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontexte · docs/ekole-orgo/08_DECISIONS_OUVERTES_ET_RISQUES.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontexte · docs/ekole-orgo/08_DECISIONS_OUVERTES_ET_RISQUES.md</h1><p class='meta'><small>Rejean-McCormick/Kontexte · da916882f789 · SHA-256 cee43b7fe6009d06</small><br><a href='https://github.com/Rejean-McCormick/Kontexte/blob/da916882f789e4ac15d004871396fbd21300fe24/docs/ekole-orgo/08_DECISIONS_OUVERTES_ET_RISQUES.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 08 — Décisions ouvertes, risques et revue de gouvernance
+
+## Choix à trancher avant écriture de code
+
+| Décision | Proposition de départ | Validation requise |
+| --- | --- | --- |
+| Autorité des référentiels officiels | registre séparé, liens candidats jusqu&#x27;à revue humaine | spécialiste PFEQ / titulaire des contenus |
+| Identification des élèves | service local sécurisé + pseudonymes exportables | établissement et responsable de protection des données |
+| Orgo facultatif ou requis | **requis pour une mission orchestrée**, solo ou collective ; Ekole garde son portail de cours sans Orgo | architecture et capacité de l&#x27;école |
+| Granularité Orgo Task | mandat social significatif, pas un clic | équipe Orgo Work |
+| Niveau et adaptations | fonctions de soutien choisies au cas par cas et discrètes | enseignants + accessibilité + utilisateurs concernés |
+| Consignes bilingues | source unique de données + phrases traduites revues; aucune génération libre live | équipe linguistique (SemantiK quand qualifié) |
+| Calculs de taxes | simulation paramétrable non assimilée aux taux légaux | enseignant et concepteurs d&#x27;exercices |
+| Preuves/maîtrise | événements séparés + revue enseignante; aucune maîtrise automatique par simple participation | gouvernance pédagogique |
+| Publication d&#x27;œuvres | privé par défaut, consentement et autorisation explicites par portée | conseil scolaire/établissement + juridique |
+| Conservation des médias | pas de « permanence » irrévocable; politique de retrait/restauration | responsable données + archives |
+| Rapport institutionnel | agrégé et fondé sur mappings approuvés, non automatique | direction / autorités compétentes |
+| Licence des HTML/images | vérifier sources, licences, droits d&#x27;œuvres et textes | responsable contenu et juriste selon besoins |
+
+## Risques pédagogiques à surveiller
+
+- **Habillage superficiel** : le rôle change les noms, sans que l&#x27;enfant doive décider ou agir; imposer production et interaction véritable.
+- **Dépendance à un partenaire** : élève exclu si pair absent / non disponible; mode de secours indispensable.
+- **Évaluation gonflée** : une activité riche prétend certifier math, français, anglais, arts et CCQ sans critère pour chaque discipline; test de preuve unitaire.
+- **Jeu qui écrase l&#x27;apprentissage** : spectacle ou monnaie devient l&#x27;objectif principal; le bilan doit faire expliciter les stratégies apprises.
+- **Comparaison de niveaux** : adaptation rendue visible par badges; ne pas montrer les parcours de soutien au groupe.
+- **Tâches physiques mal calibrées** : déplacement/installation de chaises n&#x27;est pas automatiquement une compétence d&#x27;éducation physique; encadrement/sécurité requis.
+- **Confusion scolaire officielle** : les 202 cours candidats ne représentent pas une homologation québécoise; maintenir versions et statut des mappings.
+
+## Risques techniques et mesures de contrôle
+
+- Double propriété de `Task` Orgo : **interdit**; créer des liens de mission plutôt qu&#x27;un second cycle de Task.
+- Perte de contexte avec promotion d&#x27;une release : épingler la release au démarrage.
+- Export Élève trop large : refuser toute copie de `kristals/` ou données de suivi; rester sur liste blanche stricte.
+- Faux offline multiutilisateur : définir modes exploration et classe séparés.
+- Mélange de confidentialité : politiques serveur fail-closed, tags filtrés, audit du retrait.
+- Génération d&#x27;HTML incontrôlée : composants whitelist, sanitation, CSP, i18n et tests automatisés.
+- Résultat non déterministe : chiffres et verdicts calculés depuis contrats/verificateurs, jamais depuis phrases générées.
+- API/version changée : adaptateurs isolés et tests de contrat, ne pas écrire directement dans la DB d&#x27;Orgo.
+
+## Hypothèses explicitement non vérifiées
+
+- Aucune solution existante d&#x27;identité scolaire/registre des notes n&#x27;a été démontrée dans le snapshot étudié.
+- Les interfaces décrites ici (`EvidenceLog` pédagogique, `CurriculumMap`, publicateur média et adaptateurs de contenus) sont des **propositions**, pas des services présents. Le runtime canonique de mission est celui d’**Orgo**, et les extensions nécessaires doivent être qualifiées dans son noyau.
+- Ni les liens officiels cours↔ministère, ni les traductions anglaises, ni les règles fiscales pédagogiques ne sont approuvés par un organisme extérieur.
+- La documentation fournie n&#x27;autorise aucune conclusion sur les droits de diffusion des photographies des enfants; politique de l&#x27;établissement indispensable.
+
+## Définition de « upgrade réussi »
+
+1. L&#x27;élève peut vivre une quête avec plusieurs apprentissages sans changer manuellement de matière.
+2. Le même rôle peut être joué selon différents soutiens, sans exposition de ces différences.
+3. La mission déclenche des interactions de qualité, des preuves individuelles et des quêtes cohérentes.
+4. Un enseignant peut expliquer **exactement** pour chaque preuve : activité, compétence visée, source et version de référence, auteur/relecteur, degré d&#x27;autonomie, statut.
+5. Les rapports distinguent honnêtement activités pratiquées, compétences maîtrisées et celles dont la correspondance officielle reste à valider.
+6. Les données des mineurs demeurent protégées, y compris après révocation du partage.
+7. Les vues par matières et cours existantes continuent de fonctionner.
+</pre></body></html>

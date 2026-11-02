@@ -1,0 +1,13 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo-Worlds · docs/TANDEM_IDENTITE_KONNAXION_ORGO_V1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo-Worlds · docs/TANDEM_IDENTITE_KONNAXION_ORGO_V1.md</h1><p class='meta'><small>Rejean-McCormick/Orgo-Worlds · c2445db8abf7 · SHA-256 bc11fc3469949ceb</small><br><a href='https://github.com/Rejean-McCormick/Orgo-Worlds/blob/c2445db8abf78afcb647f22615ad3b9dd132bde8/docs/TANDEM_IDENTITE_KONNAXION_ORGO_V1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Contrat FakePlant / Konnaxion / Orgo — identités
+
+Le World Pack FakePlant utilise `world-packs/fakeplant/identity/koa-identity.json` pour documenter la source commune des **900 personnes synthétiques**. Ce fichier ne fournit aucun compte de connexion.
+
+- Le `id` de chaque employé est une référence synthétique stable partagée, vérifiée via SHA-256.
+- Orgo conserve son `UserAccount.id` (UUID applicatif), `PersonProfile.external_reference` pointe au `id` synthétique de la fixture.
+- Konnaxion gère ses membres et son propre utilisateur Django; aucune égalité des UUID internes n&#x27;est imposée.
+- Les véritables utilisateurs humains utilisent une identité OIDC `issuer + subject`, avec deux clients OIDC et autorisations distinctes.
+- Le tenant Orgo `fakeplant` exige la création/vérification explicite de `Organization.id` ; ce dépôt ne crée pas d&#x27;organisation en base.
+- Le scénario FakePlant reste à `world-packs/fakeplant` et la fixture historique non dupliquée à `fakeplant/fixture`, pour conserver les scripts existants; cela n&#x27;est pas un Universe imbriqué Konnaxion et ne remplace pas le catalogue canonique `Konnaxion_Worlds/universes`.
+
+**Validation :** `node tools/fakeplant/validate.mjs` (lecture seule). Aucun accès réseau, aucun seed appliqué.
+</pre></body></html>

@@ -1,0 +1,17 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/11-integrations/03-orgo.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/11-integrations/03-orgo.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 eefbe25c128eb0be</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/11-integrations/03-orgo.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Orgo
+
+**Classe : Boundary d’intégration**
+
+Orgo reste owner de ses Tasks, Cases, signals, workflows, multi-tenancy et UI.
+
+Koali peut héberger l’application Orgo et agréger des Task provider items explicitement exposés. L’agrégateur `/tasks` n’est pas le Task engine Orgo.
+
+Toute action modifiant un Task/Case passe par Orgo et son authorization path.
+
+
+## Surfaces Orgo
+
+Le gros **Orgo Control Panel** est la surface maximale de référence. Des surfaces telles que `my_work`, `operations`, `supervisor`, `intake`, `workflow_admin`, `executive` ou `embedded` doivent être des projections de la même UI Orgo et de ses mêmes routes/capabilities, pas des frontends indépendants.
+
+Le manifest Orgo peut donc publier plusieurs `surface_profiles` qui sélectionnent navigation, home route, widgets, commandes et inspector contextuel. Orgo reste fonctionnel standalone lorsque cette capacité est déclarée, et son retrait du registre Koali ne doit pas modifier Konnaxion ou les autres produits.
+</pre></body></html>

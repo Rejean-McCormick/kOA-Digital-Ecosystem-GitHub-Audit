@@ -1,0 +1,98 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · docs/14_COVERAGE_AND_PARTIAL_AVAILABILITY.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · docs/14_COVERAGE_AND_PARTIAL_AVAILABILITY.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · 68ba4c8ca9ff · SHA-256 fed52d85a9e8d168</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/blob/68ba4c8ca9fff5f410d005fc6142b8c018716eb7/docs/14_COVERAGE_AND_PARTIAL_AVAILABILITY.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Coverage and partial availability
+
+## 1. Purpose
+
+V8 already defines:
+
+```text
+PARTIAL RESULT != NEGATIVE RESULT
+OMISSION BY BUDGET != NEGATION
+```
+
+V9 provides the state/materialization metadata that makes those query guarantees practical when not all artifacts or segments are locally available.
+
+## 2. Coverage
+
+A materialization or runtime package may declare which logical scope it includes.
+
+Conceptual example:
+
+```json
+{
+  &quot;coverage&quot;: {
+    &quot;state&quot;: &quot;sha256:...&quot;,
+    &quot;included&quot;: [
+      &quot;pokemon.species&quot;,
+      &quot;pokemon.moves&quot;
+    ],
+    &quot;omitted&quot;: [
+      &quot;pokemon.encounters&quot;
+    ]
+  }
+}
+```
+
+Baseline coverage fields now exist in `schemas/v9/kristal-materialization-manifest.schema.json`; query-result completeness semantics remain owned by v8 KQP.
+
+## 3. Availability is not truth
+
+If `pokemon.encounters` is absent locally, a query for encounters cannot safely conclude:
+
+```text
+no encounter exists
+```
+
+It can conclude only that the available material did not provide a complete answer.
+
+```text
+NOT PRESENT LOCALLY != LOGICALLY ABSENT
+```
+
+## 4. Coverage dimensions
+
+Coverage may need to be expressed by:
+
+- artifact;
+- shard;
+- logical key range;
+- time/version scope;
+- query capability;
+- authority domain.
+
+A materialization profile should expose only dimensions it can state reliably.
+
+## 5. Complete versus partial
+
+A query engine can combine v9 coverage metadata with v8 query semantics to return statuses such as:
+
+```text
+complete
+partial
+truncated
+unsupported
+unknown
+```
+
+The query protocol remains a v8 responsibility. V9 supplies source coverage and material availability facts.
+
+## 6. Remote materialization
+
+A local runtime may hold only part of a state while a resolver knows where additional immutable blobs can be obtained.
+
+A missing local blob may therefore be:
+
+```text
+available remotely
+intentionally omitted
+not authorized
+unknown
+```
+
+Those states must not be collapsed into one generic `not found` when epistemic correctness depends on the difference.
+
+## 7. Partial verification
+
+A segmented exchange should allow a consumer to verify each retrieved blob against its physical digest and, where the applicable profile supports it, verify reconstruction against the logical artifact commitment.
+
+Advanced membership proofs may be added later; they are not required for the base architecture.
+</pre></body></html>

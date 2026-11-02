@@ -1,0 +1,48 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Operations-Observability-and-Troubleshooting.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Operations-Observability-and-Troubleshooting.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 ef1a5f1dbc70a348</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Operations-Observability-and-Troubleshooting' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Operations: Observability &amp; Troubleshooting
+
+## Identity / integrity failures
+
+Check standard/schema version, inherited canonicalization profile, content boundary, byte hash/signature inputs and — when used — the declared semantic-fingerprint profile. Do not compare a semantic fingerprint as if it were an inherited byte hash.
+
+## Query returns unexpected material
+
+Check:
+
+- resolved semantic roots;
+- normalized query plan;
+- traversal direction and property constraints;
+- source/shard scope;
+- v6 applicability / valuation / record-role filters where relevant;
+- evidence policy;
+- query-index source fingerprints;
+- conflicts / unresolved identities.
+
+## Query appears to say “nothing exists”
+
+First verify completeness. A `partial` result, exhausted budget, unavailable shard or continuation requirement cannot be treated as a negative factual answer.
+
+```text
+PARTIAL RESULT != NEGATIVE RESULT
+BUDGET EXHAUSTION != ABSENCE
+```
+
+## Continuation fails
+
+Check that the cursor still matches the normalized query, source fingerprint/snapshot set and ordering profile. A safe implementation should fail rather than resume against incompatible source state.
+
+## Missing / wrong lexicalization
+
+Check requested BCP 47 locale, lexicon-stack order, explicit fallback policy and conflicting equal-precedence entries. If no term resolves, preserve the semantic ID; do not synthesize a canonical label.
+
+## AI context seems incomplete
+
+Inspect the context bundle&#x27;s source fingerprints, semantic/evidence closure, omissions, selection policy and byte/token budgets. Verify that semantic atoms preserve the identities/provenance needed to interpret each selected claim/edge.
+
+## Automation unexpectedly blocked or attempted
+
+Check `actionability.mode`, human-validation requirements, missing inputs and downstream owner admission/authority policy. A valuation such as `high` never means “execute,” and model output does not grant execution authority.
+
+## Projection / index drift
+
+Rebuild the derived projection/index from the pinned source state and declared transform/profile. Derived stores should be disposable/reproducible where their contract promises determinism.
+</pre></body></html>

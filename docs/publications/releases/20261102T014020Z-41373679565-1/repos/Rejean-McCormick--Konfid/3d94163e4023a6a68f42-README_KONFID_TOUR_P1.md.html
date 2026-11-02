@@ -1,0 +1,23 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konfid · README_KONFID_TOUR_P1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konfid · README_KONFID_TOUR_P1.md</h1><p class='meta'><small>Rejean-McCormick/Konfid · e3d96da8e880 · SHA-256 1fde3338b34f53af</small><br><a href='https://github.com/Rejean-McCormick/Konfid/blob/e3d96da8e880815dc6e6d75e8662f2ab6e871bfc/README_KONFID_TOUR_P1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># KONFID — Tournée P1 3/8, patch kOA POLICY TTL
+
+Cible **exacte** selon ce snapshot : `C:\mycode\Konfid\konfid` (racine contenant `src/konfid`). Ne pas copier dans le dossier parent `C:\mycode\Konfid` sans le sous-dossier.
+
+Copier le contenu du ZIP à la racine réelle **sans copier directement les fichiers `payload` à leur destination** : le paquet les garde sous `tools/tandem_konfid_tour/payload`. Puis exécuter sous PS7 :
+
+```powershell
+cd &#x27;C:\mycode\Konfid\konfid&#x27;
+.\PREVIEW_KONFID_TOUR_P1.cmd
+.\INSTALL_KONFID_TOUR_P1.cmd
+.\VERIFY_KONFID_TOUR_P1.cmd
+```
+
+`ROLLBACK_KONFID_TOUR_P1.cmd` revient à la sauvegarde locale si aucun fichier patché n&#x27;a été modifié depuis. Les fichiers `tools/tandem_konfid_tour` sont des outils permanents.
+
+## Objectif / limites
+
+Le client de politique kOA refuse désormais les `ALLOW` sans date d&#x27;expiration, expirés, en temps local non qualifié (naive) ou valables plus de 60 secondes; il retourne `BLOCKED`, en conservant les autres décisions. Il s&#x27;agit d&#x27;un correctif au code source de Konfid, pas d&#x27;une intégration réelle de kOA/Konnaxion/Orgo ou d&#x27;une qualification de production. Aucun secret, `.env`, base, migration ni conteneur n&#x27;est modifié.
+
+L&#x27;installateur vérifie les empreintes du snapshot; les tests natifs sont exécutés sur **une copie temporaire isolée** si l&#x27;interpréteur possède `pytest` et les dépendances Konfid. Sinon, il réalise les contrôles portables et inscrit explicitement `[ATTENTE]` pour les tests natifs, sans proclamer leur réussite. Sur le snapshot de référence dans l&#x27;environnement de génération : **47 PASS / 2 SKIPPED (PostgreSQL)**.
+
+En cas de `DRIFT` ou d&#x27;erreur, ne pas forcer; renvoyer le diagnostic. La sauvegarde est écrite hors du dépôt dans `C:\mycode\Konfid\Tandem_Local\konfid_tour_p1\backups`.
+</pre></body></html>

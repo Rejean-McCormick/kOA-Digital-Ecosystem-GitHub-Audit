@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/22-telemetrie-audit.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/22-telemetrie-audit.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 ce067dab7070c675</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/04-runtime-and-security/22-telemetrie-audit.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 22. Télémétrie et audit de présentation
+
+Koali peut journaliser des événements de présentation bornés :
+
+```text
+surface_resolve_started
+surface_resolve_succeeded
+surface_resolve_failed
+surface_load_started
+surface_ready
+surface_degraded
+surface_unavailable
+surface_enter_immersive
+surface_exit_immersive
+```
+
+Les événements doivent contenir uniquement les métadonnées nécessaires :
+
+- module ID ;
+- route key/path normalisé ;
+- type de surface ;
+- état ;
+- durée ;
+- correlation ID technique si disponible ;
+- code d&#x27;erreur borné.
+
+`LOCK-KS-SURF-076` — **La télémétrie Koali ne collecte pas le contenu métier de l&#x27;application hostée.**
+
+`LOCK-KS-SURF-077` — **Aucun contenu d&#x27;iframe n&#x27;est capturé pour le logging général.**
+
+`LOCK-KS-SURF-078` — **Les événements de présentation ne deviennent pas une preuve d&#x27;exécution d&#x27;une action métier.**
+
+---
+</pre></body></html>

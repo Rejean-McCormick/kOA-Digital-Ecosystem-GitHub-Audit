@@ -1,0 +1,35 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kolor · Home.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kolor · Home.md</h1><p class='meta'><small>Rejean-McCormick/Kolor · a0c1ee2fbd91 · SHA-256 dc72647404b3658d</small><br><a href='https://github.com/Rejean-McCormick/Kolor/wiki/Home' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kolor Studio — Wiki
+
+Kolor Studio is a desktop tool for producing and managing **38 character roles** for Kolor and the Ekole / Kontexte legacy catalog. Each character is shown four times on a single square sheet; skin tone and clothing/accessory colors can be changed independently while black outlines remain black.
+
+**UI languages:** French and English (select in the top-right corner). **Documentation language:** English.
+
+## Navigation
+
+1. [Getting Started](Getting-Started.md) — install, launch and first export.
+2. [Bilingual Interface](Bilingual-Interface.md) — switch languages and understand persistent settings.
+3. [Character Sheets](Character-Sheets.md) — 2 × 2 layout, crop behavior and source colors.
+4. [Palettes and Skin Tones](Palettes-and-Skin-Tones.md) — mixed-color clothes, independent skin tones and locked line art.
+5. [Exports and Integration](Exports-and-Integration.md) — output directories, manifests and legacy dimensions.
+6. [Command-Line Reference](Command-Line-Reference.md) — import, export, preset and per-channel commands.
+7. [Troubleshooting](Troubleshooting.md) — common setup and artwork issues.
+
+## Key principles
+
+- **Identity consistency:** the four images are the same character in different poses.
+- **Resolution independence:** source sheets use a square 1:1 aspect ratio; pixel dimensions are not specified in prompts.
+- **Non-destructive workflow:** originals are retained; previews and exports use selected colors.
+- **Color isolation:** skin, hair, top, bottom, shoes, and accessories have separate technical region codes.
+- **Outlines stay black:** exact `#000000` pixels and exact white background pixels `#FFFFFF` are preserved.
+- **Review is still required:** import and color checks do not replace visual quality review.
+
+## Where the data lives
+
+- `data/roles.json`: the canonical 38 role identifiers.
+- `data/palettes.json`: editable palette and skin-tone presets.
+- `projet/etat.json`: per-role pose selection, review and color settings.
+- `projet/preferences.json`: chosen UI language.
+- `projet/exports/`: outputs for other apps.
+
+Return to [README](../README.md).
+</pre></body></html>
