@@ -1,0 +1,71 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Architecture-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Architecture-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 a6291eba909f9e51</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Architecture-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># v9 Architecture
+
+## Layer model
+
+```text
+                 ┌────────────────────────┐
+                 │   LOGICAL STATE        │
+                 │ immutable snapshot     │
+                 │ logical artifacts      │
+                 │ pinned references      │
+                 └───────────┬────────────┘
+                             │
+                             ▼
+                 ┌────────────────────────┐
+                 │   DERIVATION GRAPH     │
+                 │ declared inputs        │
+                 │ transforms / policies  │
+                 └───────────┬────────────┘
+                             │
+                             ▼
+                 ┌────────────────────────┐
+                 │ MATERIALIZATION LAYER  │
+                 │ manifests / segments   │
+                 │ dictionaries / codecs  │
+                 └───────────┬────────────┘
+                             │
+                    ┌────────┴────────┐
+                    ▼                 ▼
+              ┌──────────┐      ┌──────────┐
+              │ EXCHANGE │      │ RUNTIME  │
+              │ portable │      │ optimized│
+              └──────────┘      └──────────┘
+```
+
+## Logical state
+
+The logical state defines **what logical content participates in a snapshot**. It is not defined by segment boundaries, compression or storage URI.
+
+## Derivation graph
+
+Derivation records explain how artifacts were computed from declared inputs. Build provenance does not become epistemic authority.
+
+## Materialization layer
+
+A logical artifact may have one or several physical representations:
+
+```text
+inline JSON
+native blob
+segmented JSONL
+columnar representation
+encrypted envelope
+runtime database
+```
+
+The selected profile is explicit.
+
+## Exchange
+
+Exchange packages state descriptors, materialization manifests and blobs for portable distribution. Two different Exchange packages may represent the same logical state.
+
+## Runtime
+
+Runtime packs, indexes and caches optimize access. They must identify their source logical commitments and remain rebuildable when the profile claims reconstructability.
+
+## Anti-corruption boundary
+
+A storage engine cannot redefine domain semantics. An ordered AST remains ordered. A graph can remain cyclic. A local dictionary integer never becomes semantic identity.
+
+See [[Logical-Artifacts]], [[Materialization-v9]] and [[Exchange-and-Runtime-v9]].
+</pre></body></html>

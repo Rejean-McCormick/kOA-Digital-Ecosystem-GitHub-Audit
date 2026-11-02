@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · docs/UI_LAUNCHER.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · docs/UI_LAUNCHER.md</h1><p class='meta'><small>Rejean-McCormick/LevelUpDiag_SemantiK-Architect · 4c8505150eae · SHA-256 980a1de75fae1654</small><br><a href='https://github.com/Rejean-McCormick/LevelUpDiag_SemantiK-Architect/blob/4c8505150eae36193bc32cff587ba0860d608f2f/docs/UI_LAUNCHER.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># LevelUpDiag Windows UI
+
+`LevelUpDiag_UI.pyw` is a thin desktop shell over the existing LevelUpDiag CLI. It does not duplicate diagnostic logic.
+
+## Launch
+
+Double-click `RUN_LEVELUPDIAG_UI.vbs`.
+
+The VBS launcher uses Windows Script Host, prefers `pythonw.exe`, and falls back to a hidden `python.exe`. The UI pack does not ship a batch-file UI launcher because a `.bat` file itself can flash `cmd.exe` when double-clicked.
+
+## Behavior
+
+The UI starts `levelupdiag.py` as a subprocess. This preserves the CLI&#x27;s worker isolation and report format. Output is streamed into the UI. The selected target is passed using the existing global `--target` option.
+
+Campaign results are read from:
+
+```text
+&lt;TARGET&gt;/.levelupdiag/latest/summary.json
+&lt;TARGET&gt;/.levelupdiag/runs/&lt;RUN_ID&gt;/...
+```
+
+The UI does not install Python packages, does not use uv, does not start SemantiK Architect services, and does not modify tracked target files.
+
+## Stop
+
+On Windows, Stop uses `taskkill /T /F` for the active LevelUpDiag process tree. This is intentionally limited to the PID started by the UI.
+
+## UI state
+
+The launcher remembers target, campaign, jobs, and fail-fast in `.levelupdiag_ui.json` beside the tool. This file is gitignored.
+
+
+## No-console Windows mode
+
+Double-click `RUN_LEVELUPDIAG_UI.vbs` for the silent desktop launcher. It prefers `pythonw.exe` and falls back to a hidden `python.exe`. Windows subprocesses launched by the UI and diagnostic engine use `CREATE_NO_WINDOW`, preventing console flashes during Doctor, campaigns, workers, Git checks, tests, and process termination.
+</pre></body></html>

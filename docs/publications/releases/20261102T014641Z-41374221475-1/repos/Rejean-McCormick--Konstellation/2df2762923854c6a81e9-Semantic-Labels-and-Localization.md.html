@@ -1,0 +1,47 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · Semantic-Labels-and-Localization.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · Semantic-Labels-and-Localization.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 01bfc9126e06 · SHA-256 357d026d787dbfb7</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/wiki/Semantic-Labels-and-Localization' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Semantic Labels and Localization
+
+&gt; **Readably presented does not mean semantically verified.** This page documents the October 17, 2026 **French-display patch** to Konstellation; it is written in English to match this wiki.
+
+## Why the display layer exists
+
+Kristals, derived graph packs, and Wikidata legitimately use stable machine identifiers (`P138`, `Q…`, `academicien_sur_liste_publiee`, `not_evaluated`). These codes should remain available for provenance, but most exploration surfaces should show grounded, readable labels.
+
+The current implementation is in **`src/lib/semantic-display.mjs`**, used by the local v10 reader and the user interface. It adds a **bounded, explicit French mapping**, not an automatic translation service or a new semantic contract. All original predicates, entity references, statuses, and underlying assertions remain unchanged.
+
+## Examples from the patch
+
+| Source identifier or status | Current French display | Meaning / caveat |
+| --- | --- | --- |
+| `P138` | **Nommé d’après** | Explicit Wikidata property mapping |
+| `P50` | **Auteur** | Explicit Wikidata property mapping |
+| `academicien_sur_liste_publiee` | **Source attestant une inscription sur une liste d’académiciens** | Source-oriented; not independent certification of membership |
+| `saintete_reconnue` | **Source relative à la sainteté reconnue** | Does not turn a source into an authenticated fact |
+| `historic_author_reference` | **Référence d’auteur historique** | Domain predicate label |
+| `pontificat_recense` | **Pontificat recensé** | Domain predicate label |
+| `wikidata_identity · Albert le Grand` (open research hypothesis) | **Identité Wikidata proposée · Albert le Grand** | Still **unverified**; display change only |
+| `not_evaluated` | **Non évalué** | Status text; not upgraded to validated |
+| `unspecified` | **Non précisé** | Missing/unspecified status |
+| `read_only_local_projection` | **Projection locale en lecture seule** | Access/presentation mode |
+
+**Unknown codes remain unresolved.** For example, an unknown `P9745` becomes **« Propriété Wikidata P9745 (libellé indisponible) »**. A bare `Q…` is not automatically converted to a person&#x27;s name: its fallback is **« Élément Wikidata Q… (libellé indisponible) »**. An unfamiliar domain predicate may receive a readable formatting fallback, but **not a guessed definition**.
+
+## Where the changes appear
+
+- **Relationships:** labels in the derived Catho relation registry use explicit French display names while preserving their original predicates and upstream references.
+- **Facets:** empty facets and the routine `v9:node_kind` facet are hidden during normal exploration; an already-active filter is kept visible.
+- **Entity inspector:** human-readable status strings appear in ordinary view. Technical references remain accessible under the provenance / technical-details disclosure, subject to Reader Policy.
+- **Constellation:** `v9:node_kind` metadata no longer dominates recommended conceptual relationship groups. The underlying metadata and assertions are not deleted.
+- **Open-research items:** known diagnostic prefixes receive non-assertive wording, explicitly preserving their candidate nature.
+
+## Localization boundary
+
+**This is not full multilingual support.** The dictionary currently targets French relation and status display. Wikidata work titles, source-language names, unknown properties, and domain-specific values may remain in English, Spanish, Latin, or as unresolved codes. There is no claim of a global locale switch or automatic translation of every Kristal.
+
+A trustworthy longer-term approach would rely on **versioned, source-backed localized labels** and clear language fallback, but that remains a **future direction**, not a feature certified in this patch. Arketype, Manager, and Discovery do not automatically authorize or validate a translation.
+
+## Validation and boundaries
+
+The October 17 test report records **15/15 targeted tests passing**. In Catho, 4,527 entities and 13,217 assertions were preserved, and two observed `P138` edges displayed **« Nommé d’après »**. These checks do **not** establish historical truth, completeness of translations, full Windows UI qualification, or semantic identity equivalence.
+
+See [[Astrolabe and Search|Astrolabe-and-Search]], [[Kristal Catho|Kristal-Catho]], [[Architecture|Architecture]], and [[Testing and Qualification|Testing-and-Qualification]].
+</pre></body></html>

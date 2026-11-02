@@ -1,0 +1,48 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Record-Roles.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Record-Roles.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 f6e64a8b2991cf66</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Record-Roles' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Record Roles
+
+&gt; **v9 compatibility note:** This page documents the retained v6 portable-state semantics. V9 preserves the contract as a frozen substrate and may wrap/project it through Logical Artifacts without redefining it. See [[Version-Stack-v6-v7-v8-v9]].
+
+`record_role` identifies the functional role of an assertion or record in a Kristal State.
+
+This is essential when one artifact contains different kinds of information that must not be confused.
+
+## Common roles
+
+### authoritative_constraint
+
+External rule or constraint whose authority comes from a source outside Kristal: law, regulation, official procedure, standard, manufacturer requirement.
+
+The role does **not** make it authoritative by itself. Provenance and authority recognition must point to the actual authority.
+
+### observed_state
+
+Neutral observation or captured state: a document arrived, a value was measured, a symptom occurred, a status changed.
+
+### organizational_rule
+
+Rule, threshold or policy chosen by the organization: escalation condition, preferred diagnostic sequence, internal definition of “ready”.
+
+### reference_knowledge
+
+Reusable descriptive/domain knowledge.
+
+### derived_state
+
+Machine- or rule-derived conclusion built from other assertions.
+
+### decision
+
+Recorded choice or adjudication, ideally with actor/policy/provenance.
+
+### action
+
+Action candidate, instruction or completed action representation.
+
+### structural_record
+
+Identity/navigation/structural material for which domain valuations may be `not_applicable`.
+
+## Role is not ownership
+
+An application can export an `observed_state` into Kristal without giving Kristal ownership of its operational database. Likewise, a law represented as `authoritative_constraint` remains authoritative because of its legal source, not because Kristal stored it.
+</pre></body></html>

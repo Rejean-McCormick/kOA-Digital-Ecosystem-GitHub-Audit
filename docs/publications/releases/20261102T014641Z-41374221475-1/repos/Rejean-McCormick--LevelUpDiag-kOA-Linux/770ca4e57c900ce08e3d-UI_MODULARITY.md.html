@@ -1,0 +1,62 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/LevelUpDiag-kOA-Linux · docs/UI_MODULARITY.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/LevelUpDiag-kOA-Linux · docs/UI_MODULARITY.md</h1><p class='meta'><small>Rejean-McCormick/LevelUpDiag-kOA-Linux · 5a7d7c51dbbb · SHA-256 0ef0d3068065a42f</small><br><a href='https://github.com/Rejean-McCormick/LevelUpDiag-kOA-Linux/blob/5a7d7c51dbbb9591c153323a6f7ab3248c36f2f5/docs/UI_MODULARITY.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Modular product UI diagnostics
+
+LevelUpDiag-Koali treats modular product UI behavior as an **integration diagnostic**, not as a definition of Koali user-interface architecture.
+
+## Authority boundary
+
+Koali canonical documentation and each product&#x27;s admitted public contract define what counts as its standalone entry point, integrated contribution, commands, routes, surfaces, inspector declarations, or other UI assets. LevelUpDiag only evaluates explicit diagnostic configuration.
+
+It MUST NOT:
+
+- make kOA Spaces a mandatory runtime for a product UI;
+- make Konnaxion, Orgo, Kristal, or another product a mandatory UI dependency of another product;
+- invent a universal product-manifest filename;
+- copy product business semantics into diagnostic code;
+- treat an intentionally removed optional product as a Koali core failure.
+
+## Configuration
+
+The optional `ui_modularity` object is read from the normal LevelUpDiag configuration merge.
+
+```json
+{
+  &quot;ui_modularity&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;base_root&quot;: &quot;..&quot;,
+    &quot;products&quot;: [
+      {
+        &quot;id&quot;: &quot;product-id&quot;,
+        &quot;root&quot;: &quot;product-repository&quot;,
+        &quot;required&quot;: false,
+        &quot;standalone_markers&quot;: [&quot;path/declared/by/product&quot;],
+        &quot;integration_markers&quot;: [&quot;path/declared/by/integration-contract&quot;],
+        &quot;scan_files&quot;: [&quot;package-or-source-file&quot;],
+        &quot;forbidden_private_ui_tokens&quot;: [&quot;private-import-token&quot;]
+      }
+    ]
+  }
+}
+```
+
+`base_root` is resolved relative to the LevelUpDiag tool root. Product roots can be absolute or relative to that base. Marker and scan paths are product-relative and cannot escape the configured product repository.
+
+## Verdicts
+
+- optional product absent: `PASS` — removal is accepted;
+- required product absent: `BLOCKED`;
+- available product with configured markers present: `PASS`;
+- configured marker missing: `FAIL`;
+- configured forbidden private UI token found: `FAIL`;
+- invalid paths or malformed configuration: `CONFIG_ERROR`;
+- unreadable configured scan input: `INFRA_ERROR`.
+
+A `PASS` for an absent optional product means only that the removal state is permitted. It is not positive functional evidence for that product.
+
+## Campaign placement
+
+The check runs from N06 Integrations. The default `stabilization` campaign remains N00/N01/N04/N05 and therefore does not depend on UI products. Broader `debug`, `validation`, and `release` selections can include N06 according to their existing policies.
+
+## Security and boundedness
+
+The check is read-only. It reads only explicit marker paths and explicit scan files. Each scan file is bounded to 512 KiB of text and only reports configured token/path metadata, not arbitrary source content.
+</pre></body></html>

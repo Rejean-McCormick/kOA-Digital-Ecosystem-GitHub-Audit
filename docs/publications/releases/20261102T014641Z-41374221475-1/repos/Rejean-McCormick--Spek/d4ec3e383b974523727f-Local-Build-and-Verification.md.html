@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Local-Build-and-Verification.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Local-Build-and-Verification.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 4eb78305f912 · SHA-256 b32b16929278dc06</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Local-Build-and-Verification' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Local Build and Verification
+
+## Commands
+
+```bash
+python -m spek check
+python -m spek build --out dist --formats html,pdf,tex
+python -m spek verify-site dist
+```
+
+The build generates a landing page, a per-language article page, TeX sources, and PDFs (if selected). Output is staged locally and replaced as an integral directory rather than silently mixed with older builds.
+
+## Manifest
+
+`dist/manifest.json` records:
+
+- Build mode: `demonstration` or `production_candidate`.
+- Article ID and ordered languages.
+- Layout IDs and versions.
+- Hashes of the input article, realization bundle, and layout definitions.
+- SHA-256 checksums for every emitted file except the manifest itself.
+- A status explicitly stating that the material is **built, not published or activated**.
+
+Run `verify-site` before distributing a site. It refuses unknown extra files, altered checksums, symlinks and unsafe manifest paths.
+
+## Rendering limitations
+
+PDF uses ReportLab; `.tex` is generated separately and can be typeset using XeLaTeX. Cross-format visual parity is reviewed manually; a matching checksum is not an assertion that the scientific text is correct.
+
+## Reproducibility
+
+Given unchanged inputs, renderers should produce repeatable files. Keep versions of the compiler, environment, font availability, and upstream realization bundles when preserving research releases.
+
+## Private Wiki drafts (separate, optional code overlay)
+
+After installing the Spek/Arketype Wiki extension, `python -m spek build-wiki` emits Markdown plus a distinct draft `manifest.json`; `python -m spek verify-wiki &lt;output&gt;` checks its inventory. This verifies local file consistency, **not** SemantiK/GF attestations, signed C1/C2/C3 approvals, Wiki activation or public deployment. See [[Wiki Draft Workflow]].
+</pre></body></html>

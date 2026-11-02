@@ -1,0 +1,65 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · Architecture.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · Architecture.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · ec94ee500739 · SHA-256 a1e9e7bb316bb013</small><br><a href='https://github.com/Rejean-McCormick/Kompose/wiki/Architecture' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture — Source of Truth and Operational Boundaries
+
+## Implemented vs. proposed
+
+KOMPOSE is a standalone **design, validation, and simulation reference**. Its pure Python functions model educational session states and dependencies; **they do not manage real Tandem operations**. KOR remains an optional client application, and Orgo remains the sole operational authority. See source ADRs **0006** and **0008**.
+
+```mermaid
+flowchart TB
+  subgraph Source[Source definitions]
+    K[Kontexte mission and role definitions]
+    C[Versioned capsule examples / contracts]
+  end
+  subgraph Kompose[KOMPOSE — local only]
+    B[B6 compile_preview and role projections]
+    R[Pure rule and lifecycle simulations]
+    E[Ekole P1 JSON shape verifier]
+  end
+  subgraph Authority[External operational systems — NOT connected in this repo]
+    O[Orgo: real Cases, Tasks, transitions, dispatch, permissions]
+    W[Orgo_Worlds: tenant, World, release]
+    ED[Ekole: authorized educational projections]
+    I[School identity and content services]
+    U[KOR or other optional UI]
+  end
+  K --&gt; B
+  C --&gt; R
+  B -. reviewed future handoff .-&gt; O
+  ED -. synthetic fixture only .-&gt; E
+  E -. no admission or rights proof .-&gt; O
+  O --&gt; W
+  O --&gt; ED
+  O --&gt; U
+  I -. proposed adapters .-&gt; O
+```
+
+**No arrow above labelled as a proposed or fixture-based connection is a deployed API integration.**
+
+## Source modules
+
+| Local module | Implemented role | Explicit limit |
+|---|---|---|
+| `lifecycle.py`, `coordination.py`, `entry.py` | Pure demonstration transitions, prerequisites, join checks, dependencies and guardian-transfer proposals | No persistence, IAM, or Orgo operations |
+| `reader.py`, `events.py`, `validation.py` | Deterministic, synthetic document lookup, prompt selection, capsule checks | No real content approvals or audience service |
+| `kontexte_preview.py` | B6 non-executable preview, role projection and fallback proposal | Never assigns students, remaps course IDs or creates Cases/Tasks |
+| `mission_replay.py` | Ordered, idempotent **fictional** Orgo receipt replay | Fixture assertions are not signed teacher approval |
+| `tandem_handoff.py` | Strict Ekole P1 JSON file shape verifier | No permission, WorldRelease, identity, or operational admission check |
+| `cli.py` | Local access to the demonstrators | No server |
+
+## Proposed ports, not installed adapters
+
+The design discusses identity, diagnostics, role allocation, source content, persistence, audit, presentation, and events. The **OpenAPI `/v1` routes are specifications, not endpoints**. A future adapter must document who owns each operation and its authorization, tenancy, versioning, and rollback checks.
+
+## Authority matrix
+
+| Data/operation | Canonical authority | KOMPOSE role |
+|---|---|---|
+| Kontexte scenario definitions | Kontexte | Local validation and safe plan preview |
+| Real operational Case / Task / Signal | **Orgo** | No mutation |
+| Tenant, World, WorldRelease | Orgo_Worlds / authoritative services | Syntax only in P1 fixtures |
+| Teacher-facing learning projection | Ekole / authorized school services | Synthetic preview format check |
+| Narrative rendering | KOR or another authorized client | Optional example manifest only |
+| Editorially approved Kristals | Content/editorial authority | Local demo reader and contract rules |
+
+[[Home|← Home]] · [[Tandem-Orgo-Boundary|Boundary details]] · [[API-and-Contracts|Contracts →]]
+</pre></body></html>

@@ -1,0 +1,43 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/tandem-vps-capsule-agent/README.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/tandem-vps-capsule-agent/README.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 d1271e686c551d5d</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/40-integration/tandem-vps-capsule-agent/README.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tandem Konnaxion ↔ Orgo — prioritized VPS Linux / Docker / Capsule Agent profile
+
+**C0 coordination decision, 2026-10-18.** [Machine-readable profile](deployment-profile.json) · [Owner gates](acceptance.md) · [Evidence and limits](evidence-ledger.md) · [Decisions](decision-log.md).
+
+**Owner:** kOA Digital Ecosystem records the decision and dependencies; **it does not deploy, admit, activate or authorize a release.** The user selected a **Linux VPS running Docker with the Konnaxion Capsule Agent** as the **first target**. This is *not* a declaration that the VPS, agent, domains, IdP or ReleaseSet have been configured. kOA-Linux is an optional alternative/additional profile, not a compulsory dependency for this first tandem delivery.
+
+## Expected deployment boundary
+
+```text
+ operator / Capsule Manager  ── authenticated, typed operations ──▶ VPS Linux Capsule Agent (privileged PEP)
+                                                                      │
+ build &amp; native diag evidence ── signed exact ReleaseSet ─────────────┤ measure target state independently
+ KonnaxionDiag 4.2.5 verify-activation (trusted Ed25519 keys/policy) ◀──┤ deny missing/bad/expired proofs
+                                                                      │ only after ADMIT
+                                       Docker / Compose-owned staged Konnaxion and Orgo
+                                           ├── Konnaxion data/services (owner)
+                                           ├── Orgo data/services (owner)
+                                           └── independent durable backup/restore, outbox fencing
+```
+
+The Manager requests; the **Agent decides at its actual privileged activation point**. The Agent must derive the target ReleaseSet and `sha256:` measurement from **Agent-controlled trusted installed inventory (manifest, OCI image digests, policy/versions)**. It must not accept a Manager-supplied `--measured-digest`, or simply copy a field from the signed verdict. **`verify-activation` verifies the measurement supplied to it; it does not measure runtime artifacts on behalf of the Agent.** The local Lot 1A guard remains mandatory, including rejection of `run_security_gate=false` and `SUCCEEDED`/`SKIPPED` combinations.
+
+## Deployment stages and boundaries
+
+1. **Inventory / pin**: exact source commits, immutable OCI digests, migrations, secrets source, host/kernel/Docker Compose capabilities, trusted Ed25519 public keys and active policy.
+2. **Build**: reproducible Konnaxion/Orgo components, SBOM/provenance, owner contracts; neither generic tarball nor a mutable tag acts as proof.
+3. **Stage**: place signed composite candidate in private staging; keep active Last-Known-Good and independent DB backups.
+4. **Admit**: Agent-owned measured inventory + fresh `PASS` KonnaxionDiag authorization + correct policy/signing authority + protected action scope. No self-sign/override.
+5. **Apply**: typed Docker/Compose operations; compatible migrations and reversible orchestration; never claim an atomic transaction across Neon/Orgo databases.
+6. **Verify &amp; promote**: exact healthy services, scoped IK receipts, human ACL checks where adopted, durable audit evidence.
+7. **Reconcile / rollback**: stop or fence workers first, distinguish `UNKNOWN` from `FAILED`, compensate only known effects, verify trust and restore. Preserve prior valid state.
+
+**Not in scope:** automatic production exposure, onboarding a new OIDC IdP, duplicating Konfid policy engines, direct mutation of other tenants, re-running the FakePlant E2E Apply action, changing kOA-Linux Runtime Pack authority, or replacing owner documentation.
+
+## Current evidenced state vs pending integration
+
+- **User-run LOCAL-E2E:** FakePlant decision 1 → Orgo Signal → Workflow V2 → Case/Task → Konnaxion impact 2, report `complete=true`, without duplicates. This is not VPS deployment evidence.
+- **Lot 1A:** Windows local Capsule Manager/Agent source guard installed and 40 targeted tests passed. **Remote VPS Agent not updated.**
+- **Lot 1B:** Windows local KonnaxionDiag 4.2.5 `verify-activation` installed and 71 tests passed. **Capsule Agent does not yet consume its PEP result.**
+- **Lot 1C: BLOCKED/PENDING:** implement the real Agent PEP invocation and independent measurement, then perform Linux VPS negative/positive tests. No inference of production admission from local green checks.
+
+See [acceptance.md](acceptance.md) before attempting any protected deployment; every gate G0–G8 is still open for the VPS target.
+</pre></body></html>

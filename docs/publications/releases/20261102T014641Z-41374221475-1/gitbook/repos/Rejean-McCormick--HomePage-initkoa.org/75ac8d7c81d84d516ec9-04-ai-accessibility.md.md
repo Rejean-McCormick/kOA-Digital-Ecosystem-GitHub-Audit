@@ -1,0 +1,849 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/HomePage-initkoa.org/blob/3b952d1da199b8ff827141022576775e8c8c9f34/docs/reading-db-upgrade/04-ai-accessibility.md | commit: 3b952d1da199b8ff827141022576775e8c8c9f34 | SHA-256: aa46cf79b9e6618095b6bb86222e9c0a8010a96adffa9ec82823a2054f767c13 -->
+
+---
+
+docSet: "reading-db-upgrade"
+docStatus: "draft"
+project: "initkOA"
+canonicalTermsVersion: "2026-05-25"
+title: "AI Accessibility"
+description: "How the Reading DB upgrade makes full-text documents accessible to AI systems, search engines, and internal corpus tooling."
+docPath: "docs/reading-db-upgrade/04-ai-accessibility.md"
+dependsOn:
+
+* "docs/reading-db-upgrade/00-overview.md"
+* "docs/reading-db-upgrade/01-data-model.md"
+* "docs/reading-db-upgrade/02-import-pipeline.md"
+* "docs/reading-db-upgrade/03-nextjs-reading-ui.md"
+  relatedDocs:
+* "docs/reading-db-upgrade/00-overview.md"
+* "docs/reading-db-upgrade/01-data-model.md"
+* "docs/reading-db-upgrade/02-import-pipeline.md"
+* "docs/reading-db-upgrade/03-nextjs-reading-ui.md"
+* "docs/reading-db-upgrade/99-ai-drift-guardrails.md"
+
+---
+
+# AI Accessibility
+
+## Purpose
+
+The Reading DB upgrade must make initkOA’s full-text documents accessible to:
+
+* human readers;
+* search engines;
+* AI crawlers;
+* internal AI tooling;
+* future semantic search and retrieval systems.
+
+The current `/play` section is a resource catalog. It can list Medium articles, books, videos, podcasts, and external links, but it does not provide full-text document access.
+
+The new `/reading` section is the canonical full-text document library.
+
+```txt
+/play    = resource catalog
+/reading = full-text document library
+```
+
+## Core rule
+
+Published documents must be rendered as server-accessible HTML pages.
+
+A document should not require client-side JavaScript to become readable.
+
+```txt
+Good:
+/reading/cartographer-of-ideas
+→ server-rendered HTML with full document text
+
+Bad:
+/reading/cartographer-of-ideas
+→ empty shell
+→ client-side fetch
+→ text appears only after React hydration
+```
+
+## Target routes
+
+```txt
+/reading
+/reading/[slug]
+/reading/source/[source]
+/reading/topic/[topic]
+```
+
+The most important route is:
+
+```txt
+/reading/[slug]
+```
+
+Each published document must have one stable internal URL.
+
+## Source of truth
+
+The source of truth is Supabase Postgres.
+
+Primary table:
+
+```txt
+documents
+```
+
+Supporting tables:
+
+```txt
+document_topics
+document_versions
+document_chunks
+document_assets
+import_runs
+import_items
+```
+
+The `documents` table stores the public document body:
+
+```txt
+title
+slug
+description
+body_markdown
+body_text
+source
+canonical_url
+language
+status
+published_at
+created_at
+updated_at
+```
+
+Only documents with:
+
+```txt
+status = "published"
+```
+
+should be publicly visible.
+
+## Canonical document model
+
+A published document has one canonical internal reading route:
+
+```txt
+/reading/[slug]
+```
+
+In the database, this is represented as:
+
+```txt
+internal_path = /reading/{slug}
+```
+
+If the document was imported from an external source, the original source URL is preserved separately:
+
+```txt
+canonical_url = original external source, if applicable
+```
+
+For Medium imports:
+
+```txt
+source = medium
+canonical_url = https://medium.com/...
+internal_path = /reading/{slug}
+```
+
+The internal initkOA page is the readable copy.
+
+The `canonical_url` field preserves attribution and source traceability. It does not replace the internal reading route.
+
+SEO canonical policy may vary by source:
+
+```txt
+original initkOA documents → canonical page is /reading/[slug]
+copied Medium documents   → canonical_url may be used as rel=canonical if duplicate-content policy requires it
+```
+
+For AI accessibility, the stable internal route remains:
+
+```txt
+/reading/[slug]
+```
+
+## AI visibility requirements
+
+A document is AI-accessible when all of the following are true:
+
+1. The document has `status = "published"`.
+2. The document has a stable `slug`.
+3. The route `/reading/[slug]` renders the full text server-side.
+4. The document body is visible in the initial HTML response.
+5. The document is discoverable from `/reading`.
+6. The document is eventually referenced by AI discovery artifacts.
+
+## AI discovery artifacts
+
+The site should continue to generate multiple AI and machine-readable artifacts.
+
+There is one primary public entrypoint:
+
+```txt
+/llms.txt
+```
+
+Other artifacts are auxiliary. They may remain public and fetchable, but they should not be treated as separate human-facing navigation items.
+
+Generated artifacts:
+
+```txt
+/llms.txt
+/llms-full.txt
+/ai-corpus.txt
+/ai-sitemap.json
+/md-manifest.json
+/md-sitemap.xml
+/reading/ai-index.json
+/context-packs/index.json
+/context-packs/sitemap.xml
+/context-packs/*.txt
+```
+
+Default behavior:
+
+```txt
+/llms.txt
+→ primary AI entrypoint
+→ human-readable and agent-readable
+→ points to the reading library, manifests, corpus files, and important routes
+
+/reading/ai-index.json
+→ machine-readable index of published Reading documents
+→ generated from Supabase before general AI assets
+→ includes metadata, topics, source, language, URLs, and discovery fields
+
+/ai-corpus.txt
+→ discovery-oriented corpus
+→ includes page/document records, summaries, metadata, and stable links
+→ should not become the main full-text archive
+
+/llms-full.txt
+→ auxiliary curated full-context artifact
+→ may include selected full-text or expanded page content when size limits allow
+→ should remain noindex/fetchable and should not be the only AI access path
+
+/md-manifest.json
+→ indexes markdown mirrors, routes, titles, summaries, sources, and generated metadata
+
+/md-sitemap.xml
+→ exposes markdown/document mirrors if implemented
+
+/ai-sitemap.json
+→ machine-readable sitemap for AI tooling and internal indexing
+```
+
+### Context Pack delivery contract
+
+Context Packs are specialized machine-readable artifacts behind the primary `/llms.txt` entrypoint. Their public delivery contract is:
+
+```txt
+/llms.txt
+→ links the authoritative Context Pack catalog and current packs
+
+/context-packs/index.json
+→ authoritative machine-readable catalog of currently published packs
+
+/context-packs/sitemap.xml
+→ crawler discovery surface for current stable pack URLs
+
+/context-packs/*.txt
+→ public, fetchable, indexable technical reference bundles with noarchive
+```
+
+Published Context Pack URLs are public machine contracts. A filename that has already been published must not silently become a 404 when naming changes. Historical published names must use permanent redirects to the current stable URL.
+
+`robots.txt` should advertise both the human sitemap and the Context Pack sitemap. Context Pack responses should explicitly provide appropriate content type, cross-origin fetch permission, and bounded cache headers so agents do not depend on stale discovery documents for long periods.
+
+The Context Pack corpus itself is governed separately by:
+
+```txt
+docs/context-packs/corpus-policy.md
+tools/context_pack_policy.json
+```
+
+Primary full-text access should remain the individual document page:
+
+```txt
+/reading/[slug]
+```
+
+The default AI artifact policy is:
+
+```txt
+all published documents → discoverable through /reading
+all published documents → indexed in /reading/ai-index.json
+published reading routes → referenced by md-manifest.json where markdown mirrors exist
+all published documents → summarized or described in ai-corpus.txt
+selected high-value docs → optionally included in llms-full.txt
+all long documents → chunked internally through document_chunks
+```
+
+## Public entrypoint and footer policy
+
+The public site should not expose every generated AI artifact as a visible footer link.
+
+Footer rule:
+
+```txt
+Visible footer link:
+AI access → /llms.txt
+```
+
+The footer should not list all auxiliary files individually.
+
+Avoid visible footer lists like:
+
+```txt
+llms.txt
+llms-full.txt
+ai-corpus.txt
+md-manifest.json
+md-sitemap.xml
+index.html.md
+```
+
+Those files may remain discoverable through:
+
+```txt
+/llms.txt
+HTML <head> discovery links
+robots/sitemap policy where applicable
+direct fetch by agents
+internal documentation
+```
+
+The goal is:
+
+```txt
+humans see one clear AI access link
+agents can still discover the full artifact set
+technical artifacts remain stable and fetchable
+```
+
+## Public vs private content
+
+Only public documents should be exposed to AI systems.
+
+```txt
+draft     = not public, not in AI artifacts
+published = public, included in /reading and AI artifacts
+archived  = retained but hidden from normal browsing
+```
+
+Rules:
+
+* `draft` documents must not appear in `/reading`.
+* `draft` documents must not appear in `ai-corpus.txt`.
+* `draft` documents must not appear in `/reading/ai-index.json`.
+* `archived` documents may remain accessible only if explicitly allowed.
+* private source files must not be exposed through public routes.
+* auxiliary AI artifacts must follow the same visibility policy as public routes.
+
+## Rendering rule
+
+The document page should load the document server-side from Postgres.
+
+Example target behavior:
+
+```tsx
+// app/reading/[slug]/page.tsx
+
+export default async function ReadingDocumentPage({ params }) {
+  const document = await getPublishedDocumentBySlug(params.slug);
+
+  if (!document) {
+    notFound();
+  }
+
+  return (
+    <article>
+      <h1>{document.title}</h1>
+      <DocumentBody markdown={document.body_markdown} />
+    </article>
+  );
+}
+```
+
+The rendered HTML must contain the readable text.
+
+## Metadata rule
+
+Each document page should expose metadata:
+
+```txt
+title
+description
+canonical URL
+published date
+author
+language
+source
+topics
+```
+
+Expected metadata behavior:
+
+```txt
+<title>{document.title} | initkOA Reading</title>
+<meta name="description" content="{document.description}" />
+```
+
+Canonical/source policy:
+
+* The internal `/reading/[slug]` page is the stable initkOA reading route.
+* The original Medium or external source remains stored as `canonical_url`.
+* A visible "Original source" link should use `canonical_url` when present.
+* The SEO `<link rel="canonical">` may point to either the internal route or the external `canonical_url`, depending on source-specific duplicate-content policy.
+
+Topic policy:
+
+```txt
+topics use snake_case subject keys
+topics describe what the document is about
+topics do not describe file format or source type
+```
+
+Good topic examples:
+
+```txt
+governance
+semantic_systems
+knowledge_infrastructure
+data_sovereignty
+social_cohesion
+```
+
+Avoid topic examples:
+
+```txt
+medium_article
+pdf
+markdown
+```
+
+Those belong in:
+
+```txt
+documents.source
+documents.metadata
+/play resource type
+```
+
+## Chunking for AI
+
+Long documents should be split into chunks for AI and search workflows.
+
+Table:
+
+```txt
+document_chunks
+```
+
+Recommended fields:
+
+```txt
+id
+document_id
+chunk_index
+heading_path
+content
+content_tokens
+embedding
+created_at
+updated_at
+```
+
+Initial phase:
+
+```txt
+document_chunks.content = plain text chunk
+embedding = null
+```
+
+Future phase:
+
+```txt
+embedding = pgvector embedding
+```
+
+Chunking should preserve document order.
+
+Suggested chunk size:
+
+```txt
+800 to 1,500 words
+```
+
+Hard requirements:
+
+* chunks must reference `document_id`;
+* chunks must preserve `chunk_index`;
+* chunks must be regenerated when `body_markdown` changes;
+* chunks must not exist for unpublished private documents unless access controls are implemented.
+
+## Search phases
+
+### Phase 1 — Postgres full-text search
+
+Search over:
+
+```txt
+title
+description
+body_text
+topics
+source
+author
+```
+
+### Phase 2 — Chunk search
+
+Search over:
+
+```txt
+document_chunks.content
+```
+
+### Phase 3 — Semantic search
+
+Use `pgvector` embeddings on:
+
+```txt
+document_chunks.embedding
+```
+
+### Phase 4 — Hybrid search
+
+Combine:
+
+```txt
+metadata filters
+full-text search
+vector similarity
+document status
+source
+language
+topics
+```
+
+## Relationship with `/play`
+
+`/play` remains a resource catalog.
+
+Medium articles and other resources may still appear in `/play`, but if a readable internal copy exists, the preferred URL should become:
+
+```txt
+/reading/[slug]
+```
+
+The original external link should remain available as:
+
+```txt
+canonical_url
+source_url
+external_url
+```
+
+Recommended behavior:
+
+```txt
+/play item click
+→ /reading/[slug]
+
+reading page
+→ includes "Original source" link to Medium or the external source
+```
+
+## AI corpus inclusion policy
+
+Not every document must be included in every AI artifact.
+
+Recommended levels:
+
+```txt
+Level 1: discoverable
+- included in /reading
+- included in /reading/ai-index.json
+
+Level 2: manifest-visible
+- included in md-manifest.json when a markdown mirror exists
+- included in md-sitemap.xml when a markdown mirror exists
+
+Level 3: summarized
+- title, description, topics, source, language, and /reading/[slug] URL included in ai-corpus.txt
+
+Level 4: full-text page
+- complete body is available at the individual /reading/[slug] page
+
+Level 5: curated full-context artifact
+- selected body_text, body_markdown, or rendered page text included in llms-full.txt when size limits allow
+
+Level 6: chunked
+- document_chunks available for retrieval/search
+```
+
+Default policy:
+
+```txt
+published documents = Level 1 + Level 3 + Level 4
+high-value documents = optional Level 5
+all long documents = Level 6 internally
+```
+
+Do not treat `ai-corpus.txt` as the main full-text archive.
+
+Do not treat `llms-full.txt` as the only AI-readable source.
+
+The full-text source of truth for public reading should remain:
+
+```txt
+/reading/[slug]
+```
+
+## Size limits
+
+Documents may be 1 to 100 pages.
+
+The system must avoid building one massive page or one massive AI corpus file.
+
+Rules:
+
+* `/reading` index should include metadata only.
+* `/reading/[slug]` should include one full document.
+* `/reading/ai-index.json` should include metadata and discovery records, not large full-text bodies by default.
+* `ai-corpus.txt` should default to discovery records, summaries, and stable links.
+* `llms.txt` should remain the clean primary entrypoint.
+* `llms-full.txt` may include selected full texts, but should remain curated and manageable.
+* Long documents should be chunked internally.
+
+## Import pipeline requirements
+
+The import pipeline must produce:
+
+```txt
+body_markdown
+body_text
+description
+slug
+source
+canonical_url
+status
+topics
+```
+
+For Medium:
+
+```txt
+source = medium
+canonical_url = original Medium URL
+body_markdown = converted article body
+body_text = plain text body
+```
+
+For Markdown:
+
+```txt
+source = markdown
+body_markdown = original markdown
+body_text = markdown stripped to text
+```
+
+For PDF:
+
+```txt
+source = pdf
+body_text = extracted text
+body_markdown = normalized extracted text, required even if basic/plain
+asset = original PDF
+```
+
+PDF imports must always generate `body_markdown` because the `documents` table requires it.
+
+## Access control
+
+Initial phase:
+
+```txt
+all published documents are public
+all draft documents are private by omission
+```
+
+Future phase:
+
+```txt
+visibility = public | unlisted | private
+```
+
+Child table AI/public access must follow the parent document.
+
+```txt
+document_topics  → readable only when parent document is published
+document_assets  → readable only when parent document is published and asset is public
+document_chunks  → readable only when parent document is published and AI access allows it
+```
+
+Service-role imports may write all tables server-side.
+
+Never expose `SUPABASE_SERVICE_ROLE_KEY` to the browser.
+
+Possible future fields:
+
+```txt
+visibility
+access_group
+is_ai_accessible
+is_search_indexed
+```
+
+## Robots and indexing
+
+Default:
+
+```txt
+published documents are indexable
+draft documents are not routed
+archived documents are hidden unless explicitly exposed
+```
+
+Future per-document controls:
+
+```txt
+robots: index | noindex
+aiAccess: allowed | disallowed | summary-only
+```
+
+Artifact indexing policy:
+
+```txt
+/llms.txt          → indexable AI entrypoint
+/llms-full.txt     → noindex, fetchable
+/ai-corpus.txt     → noindex, fetchable
+/ai-sitemap.json   → noindex, fetchable
+/md-manifest.json  → noindex, fetchable
+/md-sitemap.xml    → noindex or sitemap-specific policy, fetchable
+/reading/ai-index.json → noindex, fetchable
+/context-packs/index.json → noindex, fetchable
+/context-packs/sitemap.xml → sitemap/discovery artifact
+/context-packs/*.txt → indexable, fetchable, noarchive
+```
+
+This preserves `/llms.txt` as the primary AI entrypoint while allowing stable Context Pack resources to be indexed directly as an additional discovery path. `noarchive` avoids search-engine archive copies of the technical bundles.
+
+## Acceptance criteria
+
+The AI accessibility upgrade is complete when:
+
+* `/reading` lists published documents from the DB.
+* `/reading/[slug]` renders full document text server-side.
+* Medium articles copied into the DB are readable internally.
+* `/play` can link to internal reading pages when a copy exists.
+* Draft documents are not publicly visible.
+* Published documents have stable slugs.
+* Published documents expose title, description, source, language, and topics.
+* `body_text` exists for search.
+* `document_chunks` can be generated for long documents.
+* `/reading/ai-index.json` exposes published Reading documents as machine-readable discovery records.
+* `/llms.txt` is the single visible AI entrypoint.
+* Auxiliary AI artifacts remain fetchable but are not all listed as footer navigation.
+* `/context-packs/index.json` is the authoritative Context Pack catalog.
+* `/context-packs/sitemap.xml` exposes the current stable Context Pack URLs to crawlers.
+* Previously published Context Pack URLs remain resolvable through permanent redirects when names change.
+* Context Pack responses are explicitly fetchable machine artifacts with bounded cache behavior.
+* AI discovery artifacts can reference published reading documents through metadata, summaries, manifests, and stable `/reading/[slug]` URLs.
+
+## Non-goals for phase 1
+
+Phase 1 does not require:
+
+* semantic vector search;
+* embeddings;
+* private user accounts;
+* full admin editing UI;
+* PDF OCR;
+* automatic summarization;
+* multi-author permissions;
+* paid access control.
+
+These can be added later.
+
+## Phase plan
+
+### Phase 1 — Public readable documents
+
+```txt
+documents table
+/reading
+/reading/[slug]
+server-rendered Markdown
+published-only visibility
+```
+
+### Phase 2 — Imports
+
+```txt
+Medium HTML → documents
+Markdown files → documents
+existing catalog links → internal reading links
+```
+
+### Phase 3 — AI artifacts
+
+```txt
+/llms.txt as the primary visible AI entrypoint
+/reading/ai-index.json for Reading document discovery
+reading document metadata in md-manifest.json where markdown mirrors exist
+reading summaries/discovery records in ai-corpus.txt
+selected full texts or expanded context in llms-full.txt when size limits allow
+full text remains primarily available at /reading/[slug]
+footer exposes only AI access → /llms.txt
+```
+
+### Phase 4 — Search
+
+```txt
+Postgres full-text search
+topic/source/language filters
+```
+
+### Phase 5 — Chunks and embeddings
+
+```txt
+document_chunks
+pgvector embeddings
+hybrid search
+retrieval API
+```
+
+## Guiding principle
+
+The Reading DB upgrade should make initkOA’s knowledge base readable at three levels:
+
+```txt
+human-readable page
+machine-readable metadata
+AI-readable corpus/chunks
+```
+
+The central rule remains:
+
+```txt
+If a document is important enough to preserve, it should have a stable /reading/[slug] page with server-rendered full text.
+```
+
+The AI artifact rule is:
+
+```txt
+Expose one clear AI entrypoint publicly.
+Keep specialized machine artifacts available behind that entrypoint.
+Do not collapse the whole system into one monolithic file.
+```

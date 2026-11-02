@@ -1,0 +1,68 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · Add-a-Language.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · Add-a-Language.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 7b98afc755cacb87</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/Add-a-Language' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Add a Language
+
+Adding a production language is primarily a **GF/RGL + RuntimeSet release workflow**, not a new SA core implementation.
+
+## Target flow
+
+```text
+GF language development
+      ↓
+build + test
+      ↓
+PGF grammar artifact
+      ↓
+SA↔GF bridge artifact
+      ↓
+lexical/locale artifacts
+      ↓
+capability profile
+      ↓
+SA conformance suite
+      ↓
+immutable evidence
+      ↓
+RuntimeSet RELEASED
+      ↓
+activation
+```
+
+## 1. Develop the language in GF
+
+Morphology, agreement, syntax and language-specific grammar belong in the GF language repository/RGL work.
+
+GF Wordbench can be used for build, diagnostics and language-development workflows. SA does not patch grammar gaps at runtime. See [[GF Ecosystem|GF-Ecosystem]].
+
+## 2. Build the PGF
+
+Produce an immutable PGF artifact for the concrete language.
+
+## 3. Implement the SA↔GF bridge
+
+Map the SA operations required by the profile to the grammar&#x27;s admitted GF functions/expressions.
+
+The bridge must consume all semantic slots/features for a unit or fail.
+
+## 4. Build lexical artifacts
+
+Provide exact bindings for semantic concepts required by the profile/workload.
+
+## 5. Define the capability profile
+
+Declare the operation/block/register requirements applications may rely on.
+
+## 6. Run conformance
+
+The exact grammar + bridge + lexicon composition must pass the profile suite completely.
+
+## 7. Release a RuntimeSet
+
+Hash all artifacts, pin conformance evidence and mark the language/profile `RELEASED` only after the gate passes.
+
+## 8. Activate
+
+If more than one released RuntimeSet exists for the same language/profile, explicitly activate one or pin it in the request.
+
+## Scaling rule
+
+The 300th language should require new validated artifacts and conformance evidence, **not a new branch in SA core**.
+</pre></body></html>

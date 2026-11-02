@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Toolchain-v10.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Toolchain-v10.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 bab5220b2ebd02f9</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Toolchain-v10' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Toolchain Responsibilities — v10 / draft.3
+
+| Component (snapshot) | Responsibility | Boundary |
+| --- | --- | --- |
+| **Kristal Framework** `10.0.0-draft.3.2` | Normative contracts, reference JS, v10 GitHub profile, Reader Discovery companion | Does not make hosting part of semantic state |
+| **Local/Authoring Kit** `3.3.0` | Workspace, canon, sources, validation, v9 builds, optional AI capsule and exact `read-surface` output and noncanonical reader discovery/size profiles | Does not own GitHub node publication/activation |
+| **Kristal Manager** `0.1.0-alpha.11` | Local inventory/validation and exact GitHub reader Sync; derived collection index | `SYNC != PUBLICATION` |
+| **GitHub Bootstrap / Setup** `1.1.0-alpha.10` | Declarative node/collection infrastructure, qualify, immutable publish, activate | Does not define v9 logical commitments |
+| **KristalDiag** (v10 examiner snapshot) | Independent read-only conformance and release qualification | PASS is evidence only; snapshot README pinned to draft.2 |
+| **Kompiler** (optional) | Read/query/context compilation | No semantic authoring or canonical lifecycle authority |
+
+## One workflow, different authorities
+
+```text
+sources → Local Kit [canon, state, local validation]
+                       │
+               Manager [GitHub read sync]
+                       │
+         Bootstrap/Setup [qualify / publish / activate]
+                       │
+           Reader/Kompiler [read/query/context]
+
+KristalDiag independently examines contracts/evidence.
+```
+
+Source adoption is explicit: a source repository or library is not automatically canonical knowledge.
+
+**Snapshot caution:** documentation and pinned tool builds can lag the Framework proposed standard. Confirm actual profile coverage for your target version; do not infer full draft.3 conformance from a draft.2 lock.
+
+See [[Workflow-GitHub-v10]], [[Conformance-v10]] and [[Status-v10]].
+
+Additional reader-discovery path: Arketype 1.4 -&gt; Local Kit 3.3.0 -&gt; Framework 10.0.0-draft.3.2 -&gt; external parser adapter. See [[Reader-Discovery-and-Arketype-v10]].
+</pre></body></html>

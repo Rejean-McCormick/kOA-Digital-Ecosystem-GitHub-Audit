@@ -1,0 +1,35 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · README_KONNAXION_NESTED_V3_1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · README_KONNAXION_NESTED_V3_1.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 b0464847a63899c2</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/README_KONNAXION_NESTED_V3_1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konnaxion — V3.1 host + docs (nested Universes)
+
+Ce ZIP **cible uniquement** `C:\mycode\Konnaxion\Konnaxion`.
+Base documentaire : snapshot `znapshot_Konnaxion_10161624.zip`.
+
+Inclus : les **4 fichiers** techniques de l&#x27;overlay hôte V3 inchangés et
+les six documents Konnaxion mis à jour (dont un guide opérationnel neuf).
+Le code technique correspond au V3 précédent, sans modification du moteur
+propriétaire `Konnaxion_Worlds`.
+
+**Prérequis obligatoire :** overlay sibling Konnaxion_Worlds V3 avec 6 Universes,
+55 Worlds et distribution moteur **0.3.7**, et sauvegarde des modifications
+locales éventuelles. `WORLD_ENGINE.lock.json` correspond au moteur publié dans
+cet overlay; ne l&#x27;appliquer jamais sans le sibling assorti.
+
+L&#x27;extraction remplace `WORLD_ENGINE.lock.json`, `README.md`, `AGENTS.md`,
+`FAKEPLANT_LIRE_MOI.md` et deux documents techniques existants ; faire une
+sauvegarde ou inspecter `git diff` avant d&#x27;extraire si les fichiers ont évolué
+depuis le snapshot. L&#x27;installateur de démarrage fait ses **propres sauvegardes**
+avant de modifier `RUN_backend_local.bat` et `local.py`.
+
+```powershell
+cd C:\mycode\Konnaxion\Konnaxion
+# AVANT TOUTE MODIFICATION DE CONFIGURATION : prévisualisation
+pwsh -NoProfile -File .\INSTALL_NESTED_UNIVERSES.ps1
+# après inspection : configure le lanceur et settings local, PAS la base
+pwsh -NoProfile -File .\INSTALL_NESTED_UNIVERSES.ps1 -Apply
+# vérifier la configuration sans autochargement en DB
+$env:KX_AUTOLOAD_NEW_UNIVERSES=&#x27;0&#x27;
+.\RUN_backend_local.bat
+```
+
+Guide à jour : `docs/Technical-Reference/UNIVERSES_NESTED_LOCAL_V3.md`.
+Aucun Universe n&#x27;est chargé par l&#x27;extraction de ce ZIP.
+</pre></body></html>

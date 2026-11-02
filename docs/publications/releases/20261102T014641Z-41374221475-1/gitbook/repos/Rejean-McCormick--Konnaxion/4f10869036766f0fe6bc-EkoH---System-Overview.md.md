@@ -1,0 +1,74 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/EkoH%20Smart%20Vote/EkoH%20-%20System%20Overview.md | commit: 59601fb9cd74fb8f9d8037ed97a0441f285242a1 | SHA-256: 14566eb81ee2068431a7063d5cba0bc631e1dc213349893d3338c7e8886b2452 -->
+
+# EkoH — System Overview
+
+## Purpose
+
+EkoH is Konnaxion's contextual expertise, ethics/reliability and rating-access domain.
+
+It answers questions such as:
+
+- what expertise domains are demonstrated by a participant;
+- what evidence/rules produced a score;
+- what rating detail a viewer is allowed to see;
+- what contextual snapshot may be used by a declared Smart Vote reading.
+
+EkoH does **not** decide civic outcomes and does not own source ballots or ethiKos stances.
+
+## Canonical backend
+
+```text
+backend/konnaxion/ekoh/
+```
+
+Canonical model families:
+
+- expertise taxonomy;
+- per-user/domain expertise score;
+- ethics/reliability context;
+- score configuration/history;
+- confidentiality;
+- rating visibility/access scopes/grants;
+- contextual analysis log.
+
+## Expertise taxonomy
+
+The canonical EkoH domain hierarchy is version-pinned to **UNESCO ISCED-F 2013 / CITE-F 2013**. EkoH uses a domain-bearing profile of **10 broad / 26 narrow / 77 detailed fields (113 categories total)**, rather than a flat “26 ISO-based domains” list.
+
+The full ISCED-F classification itself contains 11 broad / 29 narrow / about 80 detailed fields; EkoH excludes generic/unknown/special coding buckets from default expertise scoring. See `EkoH - Expertise Taxonomy (ISCED-F 2013).md`.
+
+## Expertise
+
+Expertise is domain-bounded. A score in one domain does not create universal authority in another.
+
+The current scoring service normalizes evidence axes to `0..1` and computes a domain score. Absence of expertise is neutral, not negative merit.
+
+## Context analysis
+
+The current code correctly treats AI-assisted contextual analysis as a proposal/analysis record. It does not directly mutate authoritative expertise scores.
+
+## Privacy and rating access
+
+Identity confidentiality and rating visibility are separate.
+
+`resolve_rating_access()` is the current server-side disclosure authority and resolves:
+
+1. self;
+2. staff;
+3. scoped access grants;
+4. public policy;
+5. deny.
+
+## Relationship to Smart Vote
+
+```text
+EkoH context
+   ↓
+explicit snapshot / current contextual input
+   ↓
+Smart Vote lens
+   ↓
+derived reading
+```
+
+EkoH supplies context. Smart Vote owns the reading. The source civic domain owns the source participation event.

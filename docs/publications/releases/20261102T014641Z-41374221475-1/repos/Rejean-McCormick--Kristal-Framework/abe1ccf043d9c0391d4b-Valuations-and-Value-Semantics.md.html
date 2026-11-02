@@ -1,0 +1,87 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Valuations-and-Value-Semantics.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Valuations-and-Value-Semantics.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 6a90e216699fe14c</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Valuations-and-Value-Semantics' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Valuations &amp; Value Semantics
+
+&gt; **v9 compatibility note:** This page documents the retained v6 portable-state semantics. V9 preserves the contract as a frozen substrate and may wrap/project it through Logical Artifacts without redefining it. See [[Version-Stack-v6-v7-v8-v9]].
+
+Kristal v6 replaces the old assumption of one universal `certainty_level` with **typed valuations**.
+
+A valuation answers two separate questions:
+
+1. **Which dimension is being measured?**
+2. **What kind of value represents that dimension?**
+
+## Supported semantic families
+
+Typical value semantics include:
+
+| Semantics | Example |
+|---|---|
+| boolean | document received: true/false |
+| categorical | native / introduced / cultivated |
+| set | applicable dimensions: {energy, information} |
+| ordinal | low &lt; medium &lt; high |
+| scalar | wear = 0.72 |
+| interval | expected pressure = 350–400 kPa |
+| probability | P(cause \| observations) = 0.72 |
+| distribution | competing diagnostic hypotheses |
+| vector | support + severity + cost + testability |
+| partial_order | alternatives incomparable without preferences |
+| state | draft → review → approved |
+| temporal | instant, interval, duration, recurrence |
+
+## Value state is separate from value
+
+These are not numbers:
+
+```text
+unknown
+not_applicable
+indeterminate
+not_measured
+```
+
+In particular:
+
+```text
+unknown ≠ 0
+not_applicable ≠ low
+```
+
+## Ordinal “grayscale”
+
+The old certainty vocabulary was best understood as an ordinal grayscale: values were ordered, but distances were not necessarily equal.
+
+In v6 an ordinal scale can still be used, but the dimension must be explicit. For example:
+
+```text
+dimension = diagnostic_support
+value_semantics = ordinal
+value = high
+```
+
+is not equivalent to:
+
+```text
+dimension = intervention_necessity
+value = high
+```
+
+## Measurement is not policy threshold
+
+A continuous or ordinal measurement should preserve nuance. Policy can later derive an action boundary:
+
+```text
+risk &lt; 0.20       → automatic path allowed
+0.20 ≤ risk &lt; .60 → human review
+risk ≥ .60        → specialist decision
+```
+
+The threshold belongs to policy/actionability. It does not redefine the underlying measurement.
+
+## Avoid fake precision
+
+Do not convert qualitative review into `0.83` just because a scalar field exists. Use a measurement type only when the domain has a defensible interpretation and method.
+
+## Scaling and operational boundaries
+
+A rich measurement may later be projected to a simple action boundary, but the measurement and the policy threshold remain separate. See [[Measurement-Scaling-and-Decision-Boundaries]] for binary projections, continuous measures, vectors, partial orders and legacy down-projection.
+</pre></body></html>

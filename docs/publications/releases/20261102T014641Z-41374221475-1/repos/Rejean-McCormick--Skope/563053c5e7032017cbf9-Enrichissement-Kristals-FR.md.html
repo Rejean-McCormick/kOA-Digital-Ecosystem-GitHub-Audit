@@ -1,0 +1,57 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Enrichissement-Kristals-FR.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Enrichissement-Kristals-FR.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 c4c17a70d7e12192</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Enrichissement-Kristals-FR' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Enrichissement des Kristals — Skope 0.15.0-alpha.1
+
+**Skope peut désormais préparer nativement un portefeuille de Kristals v11** pour rechercher des concepts dans la base Wikidata locale, récupérer leurs fiches complètes et générer des propositions de faits. Ce n&#x27;est plus un pont logiciel séparé. Le parcours est **en ligne de commande** dans cette version alpha ; le tableau de bord spécialisé n&#x27;existe pas encore.
+
+&gt; **Attention :** une correspondance trouvée par nom n&#x27;est pas une identité approuvée ; une fiche Wikidata, même complète, n&#x27;est pas une preuve indépendante de la véracité des faits ; une proposition Skope n&#x27;est pas une assertion canonique Kristal.
+
+## Qui fait quoi ?
+
+| Composant | Responsabilité |
+| --- | --- |
+| **Skope** | Inventorier les KQ/KP, découvrir les candidats Q/P, extraire les faits Wikidata complets et préparer des propositions |
+| **diK** | Qualifier les identités `(namespace, KQ/KP)`, les dictionnaires et les correspondances externes |
+| **Authoring Kit** | Valider et publier un nouveau Kristal canonique v11 |
+
+Skope **ne modifie pas** les canons des Kristals et ne crée pas automatiquement de KA. Un QID de Wikidata n&#x27;est jamais substitué à une identité KQ.
+
+## Première recherche automatique sur Windows
+
+Depuis le dossier Skope mis à jour, il est possible de glisser un ZIP de Kristals v11 sur `Run_Portfolio_Prepare.cmd`. Le lanceur utilise Python 3.12 et l&#x27;index `D:\EncyKlopedia\30_working\wikidata\wikidata.compact.sqlite` préconfiguré. Il écrit les fichiers de travail sous `portfolio-work/`, notamment le CSV des candidats à examiner. Il ne télécharge **pas** de dump et n&#x27;intègre aucun fait au canon.
+
+En PowerShell :
+
+```powershell
+$py = &quot;$env:LOCALAPPDATA\Programs\Python\Python312\python.exe&quot;
+$zip = &quot;C:\Kristals\Kristals-v11-normalized-batch104-candidate.2.zip&quot;
+$db = &quot;D:\EncyKlopedia\30_working\wikidata\wikidata.compact.sqlite&quot;
+$work = &quot;D:\EncyKlopedia\30_working\skope-portfolios\batch104&quot;
+
+&amp; $py -m skope portfolio prepare --input $zip --work $work --db $db `
+  --review-out &quot;$work\candidats.csv&quot; --max-queries 10000 --suggest-draft
+&amp; $py -m skope portfolio status --work $work
+```
+
+`--suggest-draft` propose seulement des appariements de libellés uniques parmi les **résultats limités** de recherche. Ils restent **non vérifiés**, ne créent pas de `exactMatch` et excluent automatiquement les `A-Kristal`. On peut réexaminer les candidats documentés dans le CSV, puis enregistrer des décisions de travail avec `approve-review`.
+
+## Enrichir réellement avec des faits Wikidata
+
+La recherche par index ne suffit pas : elle ne contient pas les déclarations d&#x27;origine avec leurs références et qualificatifs. Pour obtenir cela, il faut utiliser `skope portfolio acquire` avec un profil d&#x27;extraction dont le dump original a déjà été vérifié et dont l&#x27;index d&#x27;accès rapide existe. Ensuite `skope portfolio propose` génère les propositions.
+
+Les déclarations conservent leurs `mainsnak`, `qualifiers`, `references`, `rank`, identifiant de déclaration et provenance. Les propriétés P sans KP approuvé restent externes et les QID connexes sont placés dans une liste de découverte séparée. **Aucun nouvel identifiant KQ/KP n&#x27;est inventé par Skope.**
+
+Le fichier d&#x27;aide anglais [Portfolio Enrichment](Portfolio-Enrichment) contient les commandes complètes de collecte et la distinction entre les candidats de brouillon (`--include-draft`) et les décisions documentées. Voir aussi [CLI du portefeuille](Portfolio-CLI-Reference).
+
+## Résultat sur le lot de 104 Kristals fourni
+
+L&#x27;inventaire testé par Skope 0.15.0-alpha.1 a trouvé **104 projets**, dont **23 avec vocabulaire métier exploitable** : 6 945 libellés français (6 566 KQ, 379 KP). Les **81 autres** ont besoin de nouvelles racines de domaine, de profils ou d&#x27;autres sources pour obtenir des amorces de recherche pertinentes. **L&#x27;enrichissement sur le dump réel du PC Windows n&#x27;a pas encore été exécuté.**
+
+## Limites actuelles
+
+1. Pas de publication automatique par diK ou l&#x27;Authoring Kit ; la transaction de transfert reste à développer.
+2. Pas de tableau de bord Web pour le portefeuille en alpha.1.
+3. Pas de téléchargement automatique de la base Wikidata ni de création d&#x27;un nouvel index/locator.
+4. Pas encore de benchmark sur le dump Wikidata de production du poste Windows.
+5. Les appariements de brouillon ne doivent **jamais** être employés comme équivalences sûres, surtout pour les `A-Kristal`.
+
+Pour commencer : [Démarrage rapide](Demarrage-Rapide-FR), [Commandes du portefeuille](Portfolio-CLI-Reference), [Limites](Known-Limitations).
+</pre></body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/SEMANTIK_WIKI_HOOK.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/SEMANTIK_WIKI_HOOK.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 ca25c2bd566fd067</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/SEMANTIK_WIKI_HOOK.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Publication Wiki avec SemantiK Architect
+
+Dans la fenêtre du Manager **Publier sur GitHub**, le quatrième bouton appelle désormais
+`kristal-public/tools/wiki_export.py` avec les trois dépendances explicites :
+
+- `SemantiK Architect` (racine du dépôt Python/SDK) ;
+- `RuntimeSet SemantiK` (racine des runtimes qualifiés) ;
+- `Projections privées SA` (un `&lt;slug&gt;.json` vérifiable par Kristal du commit publié).
+
+Chemins proposés :
+
+```text
+C:\mycode\Kristal\SemantiK-Architect
+C:\mycode\Kristal\SemantiK-Architect\runtime
+%LOCALAPPDATA%\Kristal\private-candidates\wiki-semantic-projections
+```
+
+La génération refuse les profils manquants / non qualifiés, les assertions sans
+provenance, les obligations non couvertes, les digests C3 divergents et les commits
+non confirmés. Elle ne crée jamais de preuves de publication, ne déploie pas le Wiki
+GitHub et ne copie pas `locals` dans le dépôt public.
+
+**Statut important :** le raccordement logiciel est préparé, mais les cinq Kristals
+ne possèdent pas encore dans les artefacts fournis de projections de communication
+au contrat SemantiK ni de RuntimeSets qualifiés pour leurs domaines. Le brouillon
+Wiki en prose ne peut donc pas être annoncé prêt à publier. Le Manager doit recevoir
+ces projections depuis la couche sémantique propriétaire, pas les deviner.
+
+Voir également `kristal-public/docs/SEMANTIK_WIKI.md`.
+</pre></body></html>

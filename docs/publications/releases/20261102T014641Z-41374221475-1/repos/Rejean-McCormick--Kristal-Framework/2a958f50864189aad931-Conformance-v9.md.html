@@ -1,0 +1,54 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Conformance-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Conformance-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 7aa7d548036d8444</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Conformance-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># v9 Conformance
+
+V9 conformance is capability-based.
+
+## V9-State-Reader
+
+Must:
+
+- validate Logical Artifacts and State Snapshots;
+- reproduce normative commitment vectors;
+- reject false declared commitments;
+- preserve semantic ID versus Logical Commitment distinction;
+- preserve pinned reference/ownership boundaries.
+
+## V9-Builder
+
+Adds:
+
+- Derivation validation;
+- exact-input discipline;
+- deterministic build claims;
+- verified output commitments.
+
+## V9-Materializer
+
+Adds:
+
+- Materialization Manifest validation;
+- exact source commitment binding;
+- reconstruction/losslessness checks;
+- repack/resegmentation invariance.
+
+## V9-Publisher
+
+Adds:
+
+- immutable publication;
+- Build/Publish/Activate separation;
+- atomic activation within the claimed transport/profile;
+- crash-safe previous-state preservation;
+- rollback by selecting retained snapshots.
+
+## V9-Full
+
+Combines all v9 profiles plus inherited v6/v7/v8 compatibility.
+
+## Polymorphism gate
+
+Conformance must not be demonstrated only with a large relation. Reference workloads cover relations, procedure DAGs, multiplex graphs, formal ASTs, epistemic corpora and federated state composition.
+
+## Qualification boundary
+
+A conformance PASS demonstrates contract behavior. It does not grant epistemic authority, deployment authorization, recognition or factual truth.
+</pre></body></html>

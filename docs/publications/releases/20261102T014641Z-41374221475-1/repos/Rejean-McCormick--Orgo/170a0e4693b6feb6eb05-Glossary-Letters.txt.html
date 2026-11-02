@@ -1,0 +1,70 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · docs/Technical-Reference/Glossary-Letters.txt</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · docs/Technical-Reference/Glossary-Letters.txt</h1><p class='meta'><small>Rejean-McCormick/Orgo · 381ab137d087 · SHA-256 9d1f14201c10fcd8</small><br><a href='https://github.com/Rejean-McCormick/Orgo/blob/381ab137d087794ffcb381532c7d2eabcdd60bb5/docs/Technical-Reference/Glossary-Letters.txt' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Orgo System Reference Chart
+
+## 1\. Graph Identifiers (The &quot;Letters&quot;)
+
+Used in JSON files (`general.json`, `care.json`) to define **what** things are and **how** they relate.
+
+| Prefix | Name | Format | Origin | Definition |
+| :--- | :--- | :--- | :--- | :--- |
+| **Q** | **Concept (Item)** | `Q####` | Wikidata | A universal object or concept (e.g., `Q43229` Organization). Reused directly from Wikidata. |
+| **P** | **Universal Property** | `P####` | Wikidata | A standard relation reused &quot;as-is&quot; (e.g., `P31` instance of, `P361` part of). |
+| **R** | **Refinement** | `R####NNN` | Orgo | A specific workflow relation based on a P-property.&lt;br&gt;**Format:** `R` + [Base P] + [3-digits].&lt;br&gt;*(e.g., `R710002` &quot;assigned to&quot; is a specific type of `P710` &quot;participant&quot;)* |
+| **S** | **Orgo Property** | `S####NNN` | Orgo | A property exclusive to Orgo (no direct Wikidata match).&lt;br&gt;**Format:** `S` + [Base P OR 0000] + [3-digits].&lt;br&gt;*(e.g., `S1552001` &quot;priority\_level&quot;)* |
+
+-----
+
+## 2\. Routing Labels (The &quot;Numbers&quot;)
+
+Used on Cases and Tasks to define **routing**, **broadcast scope**, and **intent**.
+
+**Format:** `&lt;BASE&gt;.&lt;CATEGORY&gt;&lt;SUBCATEGORY&gt;.&lt;HORIZONTAL_ROLE&gt;`
+*(Example: `100.94.Operations.Safety`)*
+
+### A. Vertical Base (Who is in scope?)
+
+The integer before the first dot defines the hierarchy or broadcast level.
+
+| Code | Level / Scope | Note |
+| :--- | :--- | :--- |
+| **1** | CEO / Top Individual | Specific individual scope. |
+| **10** | **Executive Broadcast** | Informational broadcast to top leadership. |
+| **11** | Department Head | Specific individual scope. |
+| **100** | **Department Broadcast** | Informational broadcast to all dept heads. |
+| **1000** | **Staff Broadcast** | Informational broadcast to all staff. |
+
+### B. Category (1st Decimal - What type of info?)
+
+The first digit after the dot (1–9).
+
+| Code | Meaning |
+| :--- | :--- |
+| **.1** | Operational information |
+| **.2** | Strategic information |
+| **.3** | Compliance &amp; reporting |
+| **.4** | Customer / client information |
+| **.5** | Training &amp; development |
+| **.6** | Communication &amp; coordination |
+| **.7** | Financial information |
+| **.8** | Technical &amp; infrastructure |
+| **.9** | **Crisis &amp; emergency** |
+
+### C. Subcategory (2nd Decimal - What is the intent?)
+
+The second digit after the dot (1–5).
+
+| Code | Intent | Behavior |
+| :--- | :--- | :--- |
+| **.1** | **Request** | Asks for resources/action. Spawns Tasks. |
+| **.2** | **Update** | Informational flow. Usually no Tasks. |
+| **.3** | **Decision** | Approval/Rejection/Directive. |
+| **.4** | **Report** | Structured data (incident/audit). Feeds Analytics. |
+| **.5** | **Distribution** | Pure broadcast. No Tasks. |
+
+### D. Horizontal Role (Text)
+
+Functional routing labels (Examples):
+
+  * `Ops.Maintenance`
+  * `HR.Recruitment`
+  * `IT.Support`
+  * `Finance.Audit`</pre></body></html>

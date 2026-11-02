@@ -1,0 +1,29 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/05-moteurs/arketype-unesco-prf-wikidata.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/05-moteurs/arketype-unesco-prf-wikidata.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 148f8f5ad2a3dd33</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/05-moteurs/arketype-unesco-prf-wikidata.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Évaluation sémantique, ARK / PRF / UNESCO / Wikidata
+
+## Entrées disponibles
+
+Les workspaces locaux disposent de propositions de classification et de profils descriptifs; `RAPPORT_ARKETYPE_STRUCTURE(1).json` apporte une comparaison structurelle de 127 modèles. Des matrices UNESCO et des recoupements Wikidata Q/P ont été produits, avec statuts de provenance variables. **Ces différentes observations ne sont pas automatiquement homologues.**
+
+## Arketype : lecture correcte du rapport
+
+`declared_level` mesure au plus 3 critères de forme. Une `suggestion` avec score 3/3 n&#x27;est pas automatiquement meilleure que la déclaration actuelle : le scanner dit explicitement n&#x27;avoir inspecté que noms des champs, chemins et récurrence des structures, **jamais le sens des valeurs**. Sur le rapport fourni, 36 cas ont plusieurs candidats, 81 candidats non validés et 10 aucun candidat probant (`ambiguity`).
+
+## UNESCO : deux contrôles distincts
+
+1. **Contrat** : le code, URI, domaine et microthésaurus appartiennent au référentiel.
+2. **Sémantique** : ces codes décrivent effectivement le contenu d&#x27;un Kristal.
+
+La correction du lecteur UNESCO portait principalement sur des objets de mapping plutôt que de simples chaînes. La présence d&#x27;une proposition reconnue doit mener à `PROPOSED`, pas à 127 avertissements de conformité technique.
+
+## PRF : profil d&#x27;usage
+
+Les 96 `PRF-20` antérieurs sont des classifications générales et doivent rester identifiables comme telles. L&#x27;amélioration ne consiste pas à remplacer tous les PRF par un autre code aléatoire, mais à annoter `confidence`, justification, structures et cas d&#x27;usage effectifs, puis à proposer une revue documentée.
+
+## Wikidata
+
+Les QID/PID sont des alignements externes, pas des identités locales interchangeables. Conserver `source`, `mapping_status`, méthode, date, ambiguïtés, collisions et possibilité de rejet. Les conflits de QID partagés entre Kristals ne sont pas résolus par une simple correspondance lexicale.
+
+## Pipeline cible
+
+Lecture → observations → propositions avec preuves → regroupement des conflits → revue/approbation → plan de modification autorisé (Kit) → nouveau Discovery → nouveau scan/diag. **Aucun scan n&#x27;applique le plan automatiquement.**
+</pre></body></html>

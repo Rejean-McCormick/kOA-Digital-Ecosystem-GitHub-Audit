@@ -1,0 +1,104 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/UCKK-Ops-Console · docs/13_SWITCHER_MULTI_FACADES.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/UCKK-Ops-Console · docs/13_SWITCHER_MULTI_FACADES.md</h1><p class='meta'><small>Rejean-McCormick/UCKK-Ops-Console · 84e85c41f428 · SHA-256 874f3f3dd58823c3</small><br><a href='https://github.com/Rejean-McCormick/UCKK-Ops-Console/blob/84e85c41f42817bc68ff596bf8de6cd2c76c77a3/docs/13_SWITCHER_MULTI_FACADES.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 13 — Switcher multi-façades UCKK / UCC / Math
+
+## 1. But
+
+L&#x27;Ops Console exploite une seule instance Moodle qui expose trois façades publiques :
+
+- **UCKK** → thème Moodle `uckk` ;
+- **UCC — Univers-Cité Catho** → thème Moodle `ucc` ;
+- **Math — Univers-Cité des mathématiques** → thème Moodle `ucmath`.
+
+Le choix de façade repose sur le mécanisme Moodle de changement de thème par URL/session. L&#x27;Ops Console ne crée ni cookie parallèle, ni base parallèle, ni registre de session propre.
+
+## 2. Configuration
+
+Les façades sont décrites dans `publicFacades.sites`.
+
+Chaque entrée contient :
+
+- `id` : identifiant Ops Console ;
+- `label` : texte UI ;
+- `theme` : shortname du thème Moodle ;
+- `expectedMarker` : texte attendu sur la page d&#x27;accueil pour confirmer que le contenu a basculé.
+
+Les pages HTTP de diagnostic sont dans `publicFacades.testPaths`.
+
+## 3. Préparation locale
+
+Le bouton **Préparer local et ouvrir Moodle** exécute :
+
+1. Vérifier la configuration ;
+2. Vérifier les chemins locaux ;
+3. Synchroniser `uckk-moodle` vers le runtime Moodle local ;
+4. Exécuter `admin/cli/upgrade.php --non-interactive` ;
+5. Purger les caches Moodle locaux ;
+6. Démarrer Moodle local ;
+7. Ouvrir la façade UCKK.
+
+L&#x27;étape 4 peut modifier la base Moodle locale. Le workflow demande donc une confirmation unique avant de démarrer.
+
+## 4. Navigation
+
+L&#x27;onglet **Local** expose :
+
+- Ouvrir UCKK ;
+- Ouvrir UCC ;
+- Ouvrir Math.
+
+Les URLs sont dérivées de `urls.localBase` :
+
+```text
+/?theme=uckk
+/?theme=ucc
+/?theme=ucmath
+```
+
+Aucune URL locale n&#x27;est codée en dur dans les handlers.
+
+## 5. Diagnostic du switcher
+
+L&#x27;action **Tester switcher UCKK / UCC / Math** :
+
+- teste chaque façade avec son paramètre `theme` ;
+- teste les principales pages publiques configurées ;
+- exige un statut HTTP 2xx/3xx ;
+- sur l&#x27;accueil, cherche `expectedMarker` pour détecter le cas où Moodle ignore `?theme=`.
+
+Si UCC ou Math retourne l&#x27;identité UCKK, vérifier dans Moodle :
+
+**Administration du site → Apparence → Thèmes → Réglages des thèmes → Autoriser le changement de thème dans l&#x27;URL.**
+
+Puis purger les caches et relancer le test.
+
+## 6. Frontière architecturale
+
+Le switcher ne change pas la propriété des données :
+
+- code/source versionnée → `uckk-moodle` ;
+- état actif → base Moodle ;
+- fichiers → moodledata ;
+- les trois façades partagent les mêmes services Moodle et permissions.
+
+Les thèmes sont des frontières de présentation, pas des frontières de sécurité.
+
+## 7. Publication serveur
+
+Le workflow serveur reste protégé par confirmation. L&#x27;ajout du switcher ne transforme pas l&#x27;Ops Console en système de multitenancy.
+
+L&#x27;action **Vérifier uckk.org — UCKK / UCC / Math** teste également :
+
+```text
+/?theme=uckk
+/?theme=ucc
+/?theme=ucmath
+```
+
+et confirme le marqueur d&#x27;identité attendu de chaque façade. Si le serveur ignore `?theme=`, la vérification échoue volontairement.
+
+Avant publication :
+
+1. valider les trois façades localement ;
+2. vérifier Git ;
+3. publier avec le workflow serveur ;
+4. exécuter la vérification des trois façades sur le serveur.
+</pre></body></html>

@@ -1,0 +1,50 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kristal-public · docs/UPDATE_REPORT.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kristal-public · docs/UPDATE_REPORT.md</h1><p class='meta'><small>Rejean-McCormick/kristal-public · 88d3e2035d1e · SHA-256 13ee2e1bee99ce40</small><br><a href='https://github.com/Rejean-McCormick/kristal-public/blob/88d3e2035d1eedc9234d5c7c2c4bc6694a07311a/docs/UPDATE_REPORT.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># C3 repository update — verification report (2026-10-12)
+
+## Input and status
+
+- Source: supplied `Code_snapshot_kristal-public(1).zip`; status limited to that archive, **not** GitHub remote HEAD.
+- Planning source: supplied `Kristal_v10_Plan_Harmonisation_2026-10-12(1).zip`, `repos/05_kristal-public.md` (C3-01..C3-06).
+- Changes apply to the standalone `kristal-public` **source**. This package is a local candidate for integration review and does not publish anything.
+
+## Execution evidence
+
+| Check | Outcome | Meaning |
+| --- | --- | --- |
+| `python -m unittest discover -s tests -v` | **19/19 PASS** | Safe local fixture regression tests; not C1/C2 or full E2E qualification |
+| Framework draft.3.1 JS `verify-node-v10` | **PASS** | Existing node descriptor structurally accepted |
+| Framework draft.3.1 JS `verify-github-binding-v10` | **PASS** | Existing host binding structurally accepted |
+| Framework draft.3.1 JS `verify-state-v9` on root and Zoology | **PASS, both** | Their existing logical State Commitments structurally validate; not factual correctness |
+| `python tools/c3_collection.py --repo . scan` | **BLOCKED** | `kristals/index.json` absent; expected fail-closed result |
+| `python tools/repository_audit.py --repo .` | **BLOCKED / DRIFT** | All five Bootstrap-managed SHA records disagree with supplied current bytes |
+| C1 independent qualification + C2 public authorization | **NOT VERIFIED** | Must be proved externally for the exact revision and scope |
+| Real v10 hosted read-surface synchronization | **NOT PERFORMED** | Missing actual Manager-generated Zoology manifest and AI entrypoint |
+
+## Compatibility and ownership
+
+- **C3-01:** original publication workflow remains `contents: read` and always exits blocked. Neither it nor the managed qualify workflow was edited.
+- **C3-02:** did **not** fabricate missing `kristals/index.json`, `kristals/zoology/.kristal/sync-manifest.json` or reader files. A genuinely sourced staging ingestion is documented.
+- **C3-03:** Bootstrap-managed hash drift was detected, **not** auto-fixed. Framework pins are documented for owner review; no guessed SHA changes.
+- **C3-04:** local validator and tests hardened; this does not replace Framework v9 structural validation or independent C1.
+- **C3-05:** added a separate read-only fixtures CI job. Branch protection and trusted C1/C2 gates require GitHub account-owner work outside the repository.
+- **C3-06:** README and docs distinguish structural PASS from authorized public publication.
+
+## Files protected from changes
+
+`.kristal/node.json`, `.kristal/bindings/github.json`, `.kristal/capabilities.json`, `.kristal/bootstrap-state.json`, `state/state-snapshot.json`, `kristals/zoology/state/state-snapshot.json`, `.github/workflows/kristal-qualify.yml`, `.github/workflows/kristal-publish.yml`.
+
+## Outstanding blockers (before any public write)
+
+1. Approved immutable Framework commit/compatibility lock and checked CLI (F-01/B-01).
+2. Complete and trusted Manager runtime; Kit-generated, ready Zoology read surface, Manager sync-manifest and index (M-01/M-03/C3-02).
+3. Bootstrap-managed-file ownership reconciliation, with no silent adoption/overwrite (B-01/C3-03).
+4. Real independent C1 qualification and separate revocable C2 approval **before public sync**, plus secured GitHub rulesets/Environments (D-01/B-02/M-02/C3-05).
+5. Qualified immutable C3 publication/release and separately authorized C4 reader intake (C3-01/C3-06).
+
+## Recommended safe integration
+
+Review the diff against **actual remote HEAD** and account-level GitHub policy. Keep Bootstrap-managed workflows untouched unless C0/C2 authorizes reconciliation. Merge source-only changes with minimal privileges. Do not mark the hosted collection green or create a public release just because the new unit tests pass.
+
+## Additional fail-closed safeguard
+
+The inherited `GitSink.bat` script formerly staged **all** repository files, committed them, and immediately pushed them on execution. This is unsafe for a public collection while C1/C2 authorization is unverified. The updated `GitSink.bat` exits `BLOCKED` without staging, committing, or pushing; publication must use an approved gated process. This file was **not** Bootstrap-managed. The obsolete `SMARTDUMP_INDEX.txt` (a transport ZIP index) is not shipped as if it were an accurate source-tree inventory.
+</pre></body></html>

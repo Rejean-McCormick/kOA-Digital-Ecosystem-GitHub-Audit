@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/orchestration-c0/decisions-and-gates.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/orchestration-c0/decisions-and-gates.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 90865538b0c1 · SHA-256 d16f34c50ba3a15f</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/90865538b0c16be08423843208f4c5e6785a7523/docs/2-Technical-Reference/40-integration/orchestration-c0/decisions-and-gates.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># C0 — Publication and authority gates
+
+**D-001 — Accepted policy (user decision).** After an **initial human authorization for one specific Kristal**, future revisions may publish automatically **within that authorization&#x27;s explicit public scope**, provided **every revision passes qualification**. This is a policy decision, **not an implemented mechanism**.
+
+**D-002 — Preserve ownership.** EncyK acquires evidence; Médiathèque stores durable sources; Da’at maps/admission where explicitly adopted; Kristal controls semantics; Authoring builds; KristalDiag independently verifies; Manager synchronizes; Bootstrap qualifies/publishes/activates; Konstellation explores; Kompiler compiles read-only context. C0 only coordinates interface evidence.
+
+**D-003 — No silent v1/v2, v6/v9/v10 upgrade.** Historical knowledge projection JSON stays frozen. EncyK v2 source-storage handoff is not equivalent to historical v1. v10 hosting is distinct from v9 semantic identity.
+
+**D-004 — Pilot Zoology.** Zoology is the test fixture. Its local structural tests passed in C0 investigation. Independent qualification and *specific publication authorization* have not yet been supplied. Do not expose additional Zoology bytes publicly merely because state metadata already exists publicly.
+
+## Minimum release gating sequence (proposal; not deployed)
+
+```text
+candidate built in private / local context
+   -&gt; owner validation, coverage and source rights checked
+   -&gt; independent qualification against EXACT inputs/commit and bytes
+   -&gt; per-Kristal authorization active AND exact files within allowed scope
+   -&gt; publish immutable release at pinned commit (no silent overwrite)
+   -&gt; verify release, record receipt
+   -&gt; authenticated downstream rebuild of Konstellation Light catalogue
+   -&gt; smoke test site; on failure preserve previously valid site
+
+Activation = separate explicit decision; never inferred from publication.
+```
+
+**Critical security property:** writes or pull requests to a *public* GitHub repository expose their contents. Therefore approval + qualification must occur **before any public push/PR**, not just before creating a GitHub Release. On new file categories or expanded audience, require renewed human authorization. If an approval is revoked, stop future releases; already-published bytes are not secret again.
+
+## Mandatory reject cases
+
+- Missing, expired or revoked per-Kristal authorization; scope path mismatch; new unreviewed data category.
+- Missing independent qualification, or any mismatch between verified bytes/commit and publish candidate.
+- Unsigned / unverifiable / ambiguous source refs where integrity is required by the owner contract.
+- Inconsistent release tag/content; divergent replay; publication callback untrusted or unpinned.
+- Missing required manifest or mismatching digests for Konstellation and Kompiler reads.
+- Redacted/private source content reachable from a public artifact.
+
+**Current gate status for Zoology:** blocked for new public content. General policy decision is approved; *specific Zoology authorization and qualified release evidence remain pending*.
+
+## D-005 — Global navigation decision (2026-10-12)
+
+Konstellation is the sole Kristal fleet and in-Kristal navigator. Manager is the operational instance-inventory owner, Arketype the non-normative archetype/pattern library, and Kompiler a read-only context producer. Implementation has **not** been qualified and does not relax any C1/C2/C3 or Reader Policy gate. See [decisions and blockers](../kristal-v10-alignment/decisions.md).
+</pre></body></html>

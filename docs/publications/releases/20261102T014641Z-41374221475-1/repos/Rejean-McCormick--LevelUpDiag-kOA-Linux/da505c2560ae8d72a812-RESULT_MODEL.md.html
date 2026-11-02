@@ -1,0 +1,32 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/LevelUpDiag-kOA-Linux · docs/RESULT_MODEL.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/LevelUpDiag-kOA-Linux · docs/RESULT_MODEL.md</h1><p class='meta'><small>Rejean-McCormick/LevelUpDiag-kOA-Linux · 5a7d7c51dbbb · SHA-256 9b4497138697abd4</small><br><a href='https://github.com/Rejean-McCormick/LevelUpDiag-kOA-Linux/blob/5a7d7c51dbbb9591c153323a6f7ab3248c36f2f5/docs/RESULT_MODEL.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Result model
+
+Level verdicts remain:
+
+`PASS`, `WARN`, `FAIL`, `SKIP`, `BLOCKED`, `PARTIAL`, `ERROR`, `INFRA_ERROR`, `CONFIG_ERROR`.
+
+Their meaning is local to a level. `BLOCKED` means that level could not establish its intended evidence because a prerequisite was unavailable. It does not mean every independent diagnostic must stop.
+
+Campaign summaries add:
+
+- `diagnostic_mode`: `debug`, `validation`, or `release`;
+- `execution_verdict`: whether the diagnostic machinery completed without `ERROR`/`INFRA_ERROR`;
+- `testability`: `COMPLETE` or `PARTIAL`;
+- `conformance_verdict`: `NOT_EVALUATED` in DEBUG, otherwise the strict campaign verdict.
+
+## DEBUG aggregation
+
+- any `ERROR`/`INFRA_ERROR` -&gt; campaign `ERROR`;
+- any other non-PASS local verdict -&gt; campaign `WARN`;
+- otherwise -&gt; `PASS`.
+
+Thus target failures and missing prerequisites remain visible without turning routine development diagnosis into a global `BLOCKED` state.
+
+## VALIDATION / RELEASE aggregation
+
+Strict evidence semantics are preserved. `FAIL` remains failure, required unavailable evidence can block completion, and configuration/diagnostic errors are not accepted as success.
+
+
+## Optional product removal evidence
+
+An explicitly configured UI product with `required: false` can be absent and still produce a local `PASS` observation in the N06 UI-modularity diagnostic. This represents the intended independent-removal property, not a claim that the product was tested. A configured required product that is absent reports `BLOCKED`; missing configured markers on an available product report `FAIL`; invalid diagnostic configuration reports `CONFIG_ERROR`.
+</pre></body></html>

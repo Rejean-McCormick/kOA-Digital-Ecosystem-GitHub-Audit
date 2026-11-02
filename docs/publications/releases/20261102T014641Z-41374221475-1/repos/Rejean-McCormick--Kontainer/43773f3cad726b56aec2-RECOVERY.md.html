@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontainer · docs/RECOVERY.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontainer · docs/RECOVERY.md</h1><p class='meta'><small>Rejean-McCormick/Kontainer · 0d9c208942ff · SHA-256 191a28a8d0ef8f32</small><br><a href='https://github.com/Rejean-McCormick/Kontainer/blob/0d9c208942ff9bd23fa7c601e1a455949f03fe67/docs/RECOVERY.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Recovery, rotation and incidents
+
+## Before losing access
+
+1. Generate an independent recovery secret (`keygen recovery`).
+2. Explicitly add it when creating the container.
+3. Copy the container to a test location and verify it opens **using recovery alone**.
+4. Keep the recovery secret elsewhere with a separate protected backup.
+5. Document who may use it; it allows decryption without the normal password or factor.
+
+Both a container backup and a secret backup are required. The engine cannot recover lost bytes if every copy of the file is gone.
+
+## Forgotten password or lost factor
+
+Open using `--unlock-recovery`, then `rewrap` into a new file with new protection. Verify the new file using both the normal and recovery paths before changing operational references. Retain source/previous copies according to policy; do not claim automatic secure erasure.
+
+## Broken device
+
+The engine exposes an external factor interface but does not ship native TPM locking. When a qualified hardware provider is used, its normal access path must include a tested recovery slot **before** activation. Replacing a device creates a new envelope and new access parameters; the Logical Commitment remains unchanged.
+
+No system ID, MAC, serial number or universal shared fallback secret is used. Recovery is controlled by the owner or organizational policy, never a hidden software backdoor.
+
+## Compromise
+
+- Suspected opening-secret compromise: create a new content key via `rewrap`, and distribute the new version to authorized users.
+- Compromised recipient identity: remove that recipient from the new envelope; create a new identity if needed.
+- Compromised signing key: revoke its trust in readers; qualify and sign new content with a different key. `rewrap` preserves an existing signature and is therefore not a new signature.
+- Compromised recovery method: create independent new recovery material and a new file.
+
+Encryption cannot revoke knowledge already obtained. Old copies and exported data may remain readable. A key service may reject **new** key deliveries but cannot erase keys already retrieved by a client.
+
+## Organizations and quorum
+
+Konfid may govern decisions; Orgo may gather approvals; a KMS/HSM performs cryptographic operations; Interaction Kernel maintains execution boundaries and receipts. User passwords, recovery secrets and content must not enter audit events.
+
+An approval quorum is not cryptographic secret sharing. A 2-of-3 scheme is not implemented here: use a proven solution with renewal, custodian management and recovery tests before claiming that assurance.
+</pre></body></html>

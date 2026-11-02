@@ -1,0 +1,82 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kristal-public · docs/SEMANTIK_WIKI.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kristal-public · docs/SEMANTIK_WIKI.md</h1><p class='meta'><small>Rejean-McCormick/kristal-public · 88d3e2035d1e · SHA-256 e59258e8e55cd2ad</small><br><a href='https://github.com/Rejean-McCormick/kristal-public/blob/88d3e2035d1eedc9234d5c7c2c4bc6694a07311a/docs/SEMANTIK_WIKI.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Wiki Kristal : articulation via SemantiK Architect
+
+## Règle d&#x27;architecture
+
+Ce Wiki est **une projection de publication**, pas une base de connaissance autonome.
+
+- `locals/` : autorité sémantique et sources canoniques (jamais de lien symbolique dans le repo public).
+- Kristal-Manager : sélection explicite, préparation privée, contrôle C3 et publication C1/C2.
+- SemantiK Architect : articulation *fidèle* des seules assertions sélectionnées par l&#x27;amont, sous un profil linguistique et RuntimeSet réellement `RELEASED`.
+- `tools/wiki_export.py` : structure Markdown, navigation, liens immuables vers les surfaces publiques et preuve de génération ; **aucune formulation de faits par templates**.
+- `kristal-public.wiki.git` : hébergement GitHub Wiki distinct, après activation dans les réglages GitHub et contrôle indépendant de publication. Ce patch ne le pousse jamais.
+
+Référence SA : `semantik.kristal-v6.communication-projection/1.0` et `CommunicationRequest/1.0`. Ce contrat consomme une projection v6 explicite ; il ne se branche **pas directement** sur un index v9/C3. Un adaptateur/projection sémantique amont est donc nécessaire pour chaque page et reste responsable de la sélection des faits.
+
+## Préconditions
+
+1. Le commit contenant les surfaces publiques a été confirmé sur GitHub par le Manager, avec qualification C1 et autorisation C2.
+2. Chaque Kristal destiné au Wiki a une projection de communication **privée**, revue et rattachée à l&#x27;état logique exact, à la surface C3 et au SHA publié.
+3. `C:\mycode\Kristal\SemantiK-Architect` possède le SDK Python installable et un RuntimeSet de langue/profil **réellement qualifié**. Le dépôt GitHub SA seul ne garantit pas la présence d&#x27;un `.pgf` de production : ne pas confondre le profil de démonstration et un runtime qualifié pour les sujets publiés.
+4. Tous les blocs ont une provenance (`source_refs`) et toutes les obligations sont couvertes.
+
+## Format privé des projections
+
+Dans un dossier hors Git, par exemple `%LOCALAPPDATA%\Kristal\private-candidates\wiki-semantic-projections\`, créer **un fichier `&lt;slug&gt;.json` par Kristal**. Ne jamais placer ce dossier dans `kristal-public`.
+
+```json
+{
+  &quot;format&quot;: &quot;kristal.semantik-wiki-page/1.0&quot;,
+  &quot;binding&quot;: {
+    &quot;slug&quot;: &quot;kristal-ai&quot;,
+    &quot;state_ref&quot;: &quot;&lt;state_ref EXACT de kristals/index.json&gt;&quot;,
+    &quot;state_logical_commitment&quot;: &quot;sha256:&lt;digest EXACT de l&#x27;index&gt;&quot;,
+    &quot;surface_digest&quot;: &quot;sha256:&lt;digest EXACT de l&#x27;index&gt;&quot;,
+    &quot;published_revision&quot;: &quot;&lt;SHA git 40 hex EXACT&gt;&quot;
+  },
+  &quot;language&quot;: &quot;fr&quot;,
+  &quot;locale&quot;: &quot;fr-CA&quot;,
+  &quot;capability_profile&quot;: &quot;&lt;profil réellement RELEASED pour ce domaine&gt;&quot;,
+  &quot;projection&quot;: {
+    &quot;contract&quot;: &quot;semantik.kristal-v6.communication-projection/1.0&quot;,
+    &quot;kristal_standard&quot;: &quot;6.0.0&quot;,
+    &quot;state_ref&quot;: {&quot;state_id&quot;:&quot;&lt;identifiant état portable v6&gt;&quot;,&quot;artifact_type&quot;:&quot;kristal_state&quot;,&quot;schema_version&quot;:&quot;6.0&quot;},
+    &quot;selected_assertions&quot;: [{&quot;assertion_id&quot;:&quot;&lt;ID assertion autorisée&gt;&quot;}],
+    &quot;communication_request&quot;: {
+      &quot;schema_version&quot;: &quot;1.0&quot;,
+      &quot;request_id&quot;: &quot;&lt;ID stable&gt;&quot;,
+      &quot;semantic_graph&quot;: {&quot;graph_id&quot;:&quot;&lt;ID&gt;&quot;,&quot;nodes&quot;:[],&quot;statements&quot;:[]},
+      &quot;obligations&quot;: [],
+      &quot;supporting_context&quot;: [],
+      &quot;context&quot;: {&quot;target_language&quot;:&quot;fr&quot;,&quot;target_locale&quot;:&quot;fr-CA&quot;,&quot;channel&quot;:&quot;offline-build&quot;},
+      &quot;constraints&quot;: {&quot;allowed_block_kinds&quot;:[&quot;utterance&quot;],&quot;opening_policy&quot;:&quot;forbidden&quot;,&quot;closing_policy&quot;:&quot;forbidden&quot;,&quot;list_policy&quot;:&quot;forbidden&quot;,&quot;output_format&quot;:&quot;structured&quot;},
+      &quot;capability_profile&quot;: &quot;&lt;même profil RELEASED&gt;&quot;,
+      &quot;runtime_selector&quot;: {&quot;runtime_set_id&quot;:&quot;&lt;RuntimeSet qualifié exact&gt;&quot;}
+    }
+  }
+}
+```
+
+Les champs entre chevrons et les tableaux vides sont des **placeholders non exécutables**. L&#x27;amont doit les remplir à partir d&#x27;assertions réellement sélectionnées ; l&#x27;outil rejette les obligations absentes et les assertions non traçables. Ne pas inventer un profil ou un runtime pour satisfaire le schéma.
+
+## Export local
+
+```powershell
+python C:\mycode\Kristal\kristal-public\tools\wiki_export.py `
+  --collection C:\mycode\Kristal\kristal-public `
+  --repository Rejean-McCormick/kristal-public `
+  --revision &lt;SHA_COMPLET_DU_COMMIT_PUBLIE&gt; `
+  --projections &quot;$env:LOCALAPPDATA\Kristal\private-candidates\wiki-semantic-projections&quot; `
+  --semantik-root C:\mycode\Kristal\SemantiK-Architect `
+  --runtime-root C:\mycode\Kristal\SemantiK-Architect\runtime `
+  --output &quot;$env:LOCALAPPDATA\Kristal\private-candidates\wiki-projet-001&quot; `
+  --write
+```
+
+Cette commande crée un **candidat privé**, avec `Home.md`, `_Sidebar.md`, une page par Kristal et `SEMANTIK_EVIDENCE.json` (IDs de résultats, digests et RuntimeSets). Elle ne publie rien sur Internet. L&#x27;export échoue en l&#x27;absence d&#x27;un profil réellement réalisable par SA, d&#x27;une projection explicite, d&#x27;une preuve de couverture ou d&#x27;une correspondance exacte de révision.
+
+La publication du Wiki natif nécessite une autorisation de diffusion *supplémentaire* portant sur les pages réellement générées, puis une synchronisation du dépôt Wiki. Elle ne fait pas partie de cet adaptateur.
+
+## Limitations du moteur SemantiK
+
+La documentation normative SA exclut la sélection automatique de faits, la génération de chapitres éditoriaux longs et l&#x27;interprétation des fichiers JSON bruts. Le présent raccordement produit des **communications bornées** dans une page Wiki ; la structure des articles/sections demeure la responsabilité du générateur et du propriétaire sémantique amont. Il ne faut pas promettre une encyclopédie entièrement rédigée à partir des index C3 tant que ces projections et profils linguistiques ne sont pas construits et qualifiés.
+</pre></body></html>

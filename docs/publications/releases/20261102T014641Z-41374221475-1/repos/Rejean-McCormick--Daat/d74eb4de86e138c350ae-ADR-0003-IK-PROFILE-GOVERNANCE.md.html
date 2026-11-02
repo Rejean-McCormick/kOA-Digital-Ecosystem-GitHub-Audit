@@ -1,0 +1,16 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Daat · docs/decisions/ADR-0003-IK-PROFILE-GOVERNANCE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Daat · docs/decisions/ADR-0003-IK-PROFILE-GOVERNANCE.md</h1><p class='meta'><small>Rejean-McCormick/Daat · 24d288b040d3 · SHA-256 b191b7fe7b66c6cc</small><br><a href='https://github.com/Rejean-McCormick/Daat/blob/24d288b040d345405c508eb650d40a6c8856cf2a/docs/decisions/ADR-0003-IK-PROFILE-GOVERNANCE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR-0003 — Preserve owner contracts; version generic external profiles
+
+**Status:** Proposed for review · **Date:** 2026-10-12
+
+## Decision proposed
+
+Keep IK `kristal.build.request/2.0.0` and `kristal.artifact.ready/2.0.0` as the existing **portable Kristal v6** interaction surface. Do not widen their semantics. New external capabilities (e.g. non-Kristal `inventory.read`) require separately named, owner-approved IK profiles with explicit security, authority, output and receipt obligations.
+
+## Compatibility note
+
+The IK snapshot&#x27;s v7 pin is draft.3.1; Kristal Framework reports draft.3.2. Those must be reconciled through explicit contract owner tests and pin releases, not silent downgrades/upgrades. Portable v6 remains unchanged.
+
+## Dependency
+
+Approval by Interaction Kernel and any receiving domain owner before implementation of live generic external IK exchange.
+</pre></body></html>

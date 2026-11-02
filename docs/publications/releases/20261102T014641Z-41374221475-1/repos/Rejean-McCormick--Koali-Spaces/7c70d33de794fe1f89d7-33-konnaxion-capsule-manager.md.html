@@ -1,0 +1,16 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/05-integrations/33-konnaxion-capsule-manager.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/05-integrations/33-konnaxion-capsule-manager.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 9e52d051bba8c287</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/05-integrations/33-konnaxion-capsule-manager.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 33. Konnaxion Capsule Manager
+
+Le Konnaxion Capsule Manager est une surface opérateur distincte de l&#x27;application Konnaxion utilisateur.
+
+Il possède son propre modèle Manager/Agent/Builder et des opérations sensibles de lifecycle, réseau, backup, restore et Security Gate.
+
+Règles Koali :
+
+- l&#x27;UI Manager peut être hostée uniquement dans un contexte opérateur autorisé ;
+- Koali ne remplace pas ses gates de sécurité ;
+- la surface ne transforme jamais ses boutons en appels Docker directs depuis Koali ;
+- les opérations privilégiées restent chez le Manager/Agent propriétaire ;
+- son onboarding doit déclarer explicitement les restrictions de réseau et de permissions browser.
+
+Cette surface ne doit pas apparaître comme une page normale d&#x27;un Space utilisateur général par simple découverte automatique.
+</pre></body></html>

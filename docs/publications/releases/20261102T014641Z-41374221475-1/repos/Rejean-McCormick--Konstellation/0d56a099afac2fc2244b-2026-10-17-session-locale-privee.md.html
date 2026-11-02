@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/patches/2026-10-17-session-locale-privee.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/patches/2026-10-17-session-locale-privee.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 ea14e7448c83b590</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/patches/2026-10-17-session-locale-privee.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Correctif — Sélecteur neutre / session locale privée
+
+## Symptôme
+
+`AppError: Le catalogue local nécessite une session locale privée.` lors du lancement de `Konstellation.cmd`, avant l’ouverture de la page.
+
+## Cause
+
+`server/config.mjs` utilise `local` lorsque `KONSTELLATION_DEPLOYMENT_PROFILE` est absent, mais l’ancien `server/integrations/local-catalog.mjs` exigeait `process.env.KONSTELLATION_DEPLOYMENT_PROFILE === &quot;local&quot;`. Le lanceur neutre n’exportait pas cette variable.
+
+## Correctif
+
+- Le catalogue s’appuie maintenant sur `loadConfig()` et ses paramètres normalisés, identiques au serveur.
+- Le lanceur définit explicitement `KONSTELLATION_DEPLOYMENT_PROFILE=local`, `HOST=127.0.0.1` et désactive les options de lecture publique héritées.
+- Les protections refusant un service public, une écoute non locale ou une session anonyme restent en place.
+- Aucun changement aux Kristals, au Framework, à Manager, à Daat ni à Interaction Kernel.
+
+## Installation Windows
+
+1. Arrêter Konstellation, puis sauvegarder `C:\mycode\Konstellation\Konstellation`.
+2. Extraire le présent ZIP dans ce dossier en conservant l’arborescence et en remplaçant les trois fichiers existants.
+3. Double-cliquer sur `Konstellation.cmd`.
+4. Visiter `http://127.0.0.1:4321` et sélectionner `A-Kristal-Catho` dans « Mes Kristals ».
+
+Catho reste à `C:\mycode\Kristal\locals\A-Kristal-Catho`.
+
+## Contrôles effectués dans l’environnement de préparation
+
+- 15/15 tests ciblés réussis (`neutral-local-catalog` et `kristal-local-v10`).
+- Sur l’archive fournie de Catho : entrée disponible dans le catalogue, 4 527 entités et 13 217 assertions chargées par `loadLocalCatalog()`.
+- Les modes public, anonyme et hors loopback sont toujours refusés.
+
+Le démarrage complet de l’interface sur Windows/Node 24 reste à confirmer localement.
+</pre></body></html>

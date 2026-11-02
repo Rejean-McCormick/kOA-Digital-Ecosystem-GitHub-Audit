@@ -1,0 +1,51 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/00-governance/00-documentation-architecture.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/00-governance/00-documentation-architecture.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 145cf0723f43bada</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/00-governance/00-documentation-architecture.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-GOV-000&quot;,
+  &quot;document_class&quot;: &quot;normative_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;governance&quot;,
+  &quot;scope&quot;: [
+    &quot;global&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/ai-navigation.contract.json&quot;
+  ],
+  &quot;decision_ids&quot;: [],
+  &quot;requirement_ids&quot;: [],
+  &quot;lock_ids&quot;: [],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [],
+  &quot;tags&quot;: [
+    &quot;contract-first&quot;,
+    &quot;final-architecture&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# Documentation Architecture
+
+## 1. Purpose
+
+The documentation system is contract-first. Source contracts and focused explanatory documents own facts; generated indexes provide navigation.
+
+## 2. Source Model
+
+Canonical sources are governance documents, system contracts, internal component contracts, subsystem boundary contracts, profile contracts, integration contracts, toolchain contracts, artifact schemas, and the small set of accepted ADRs that preserve non-obvious regression-prone implementation choices.
+
+## 3. Generated Model
+
+Catalogs, indexes, matrices, manifests, and AI context packages are generated. They are disposable projections and have no independent authority.
+
+## 4. Discovery
+
+AI_CONTEXT.md is the single AI entry point. Source files are discovered through metadata, schemas, and contract globs rather than manually synchronized inventories.
+
+## 5. Subsystem Documentation
+
+Ariane, Konnaxion, Orgo, SenTient, SemantiK Architect, and UCKK retain authority over their internal behavior. kOA documents only operating-environment and integration boundaries.
+
+## 6. Validation
+
+A release validates source syntax, identities, schemas, references, boundaries, generated consistency, and greenfield constraints before activation.
+</pre></body></html>

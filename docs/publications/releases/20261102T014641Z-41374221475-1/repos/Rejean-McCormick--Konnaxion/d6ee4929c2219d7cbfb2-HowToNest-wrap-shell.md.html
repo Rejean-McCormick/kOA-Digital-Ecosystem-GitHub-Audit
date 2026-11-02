@@ -1,0 +1,498 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · docs/Technical-Reference/HowToNest-wrap-shell.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · docs/Technical-Reference/HowToNest-wrap-shell.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 de14a3778f86768b</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/HowToNest-wrap-shell.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Layout shells — How to nest Konnaxion product domains
+
+Objectif :
+Standardiser le layout des pages dans les 5 modules principaux, en utilisant **un shell par module** :
+
+* KeenKonnect → `KeenPageShell`
+* Ekoh → `EkohPageShell`
+* Ethikos → `EthikosPageShell`
+* KonnectED → `KonnectedPageShell`
+* Kreative → `KreativePageShell`
+
+Chaque page d’un module doit :
+
+1. Être enveloppée par le **shell du module**.
+2. Ne **pas** redéfinir son propre “gros header” (`h1`, titre principal, etc.) en dehors du shell.
+3. Ne **pas** gérer de breadcrumb local (géré par le layout global, si nécessaire).
+
+---
+
+## 1. Récap des shells par module
+
+### 1.1. KeenKonnect
+
+* **Fichier** : `app/keenkonnect/KeenPageShell.tsx`
+* **Composant** : `KeenPageShell` (export par défaut)
+* **Usage typique dans une page** :
+
+```tsx
+import KeenPageShell from &#x27;@/app/keenkonnect/KeenPageShell&#x27;;
+
+export default function SomeKeenPage() {
+  return (
+    &lt;KeenPageShell
+      title=&quot;My KeenKonnect Page&quot;
+      description=&quot;One-line description of what this page does.&quot;
+      toolbar={(
+        /* optionnel : boutons d’action à droite du titre */
+      )}
+    &gt;
+      {/* contenu de la page */}
+    &lt;/KeenPageShell&gt;
+  );
+}
+```
+
+### 1.2. Ekoh
+
+* **Fichier** : `app/ekoh/EkohPageShell.tsx` (nom exact à vérifier dans le repo, mais pattern = `EkohPageShell`)
+* **Composant** : `EkohPageShell` (export par défaut)
+* **Usage typique** :
+
+```tsx
+import EkohPageShell from &#x27;@/app/ekoh/EkohPageShell&#x27;;
+
+export default function EkohSomethingPage() {
+  return (
+    &lt;EkohPageShell
+      title=&quot;Ekoh · Voting Influence&quot;
+      description=&quot;View and understand your current voting weight in Ekoh.&quot;
+    &gt;
+      {/* contenu Ekoh (PageContainer, Card, ProCard, etc.) */}
+    &lt;/EkohPageShell&gt;
+  );
+}
+```
+
+### 1.3. Ethikos
+
+* **Fichier** : `app/ethikos/EthikosPageShell.tsx`
+* **Composant** : `EthikosPageShell`
+* **Usage** :
+
+```tsx
+import EthikosPageShell from &#x27;@/app/ethikos/EthikosPageShell&#x27;;
+
+export default function EthikosAnalyticsPage() {
+  return (
+    &lt;EthikosPageShell
+      title=&quot;Ethikos Analytics&quot;
+      description=&quot;Ethical impact analytics and scorecards.&quot;
+    &gt;
+      {/* contenu Ethikos */}
+    &lt;/EthikosPageShell&gt;
+  );
+}
+```
+
+### 1.4. KonnectED
+
+* **Fichier** : `app/konnected/KonnectedPageShell.tsx`
+* **Composant** : `KonnectedPageShell`
+* **Usage** :
+
+```tsx
+import KonnectedPageShell from &#x27;@/app/konnected/KonnectedPageShell&#x27;;
+
+export default function KonnectedDashboardPage() {
+  return (
+    &lt;KonnectedPageShell
+      title=&quot;KonnectED Dashboard&quot;
+      description=&quot;Overview of learning journeys and cohorts.&quot;
+    &gt;
+      {/* contenu KonnectED */}
+    &lt;/KonnectedPageShell&gt;
+  );
+}
+```
+
+### 1.5. Kreative
+
+* **Fichier** : `app/kreative/KreativePageShell.tsx`
+* **Composant** : `KreativePageShell`
+* **Usage** :
+
+```tsx
+import KreativePageShell from &#x27;@/app/kreative/KreativePageShell&#x27;;
+
+export default function KreativeSpacePage() {
+  return (
+    &lt;KreativePageShell
+      title=&quot;Collaborative Spaces&quot;
+      description=&quot;Find or start creative collaboration spaces.&quot;
+    &gt;
+      {/* contenu Kreative */}
+    &lt;/KreativePageShell&gt;
+  );
+}
+```
+
+---
+
+## 2. Implémentation de référence – KeenKonnect (`KeenPageShell`)
+
+Pour KeenKonnect, le shell est un **layout central** déjà présent sous `app/keenkonnect/KeenPageShell.tsx`.
+Il gère :
+
+* le `&lt;title&gt;` dans l’onglet navigateur,
+* le gros `&lt;h1&gt;`,
+* la description sous le titre,
+* la toolbar à droite,
+* la largeur/padding du contenu.
+
+Exemple d’implémentation (référence, à garder alignée avec ton fichier réel) :
+
+```tsx
+// app/keenkonnect/KeenPageShell.tsx
+&#x27;use client&#x27;;
+
+import React from &#x27;react&#x27;;
+import Head from &#x27;next/head&#x27;;
+import usePageTitle from &#x27;@/hooks/usePageTitle&#x27;;
+
+export type KeenPageShellProps = {
+  /** Gros titre de la page, affiché en &lt;h1&gt; */
+  title: string;
+
+  /** Sous-titre / description sous le titre */
+  description?: string;
+
+  /** Titre &lt;title&gt; du navigateur. Si non fourni, on génère &quot;KeenKonnect · {title}&quot; */
+  metaTitle?: string;
+
+  /** Contenu principal de la page */
+  children: React.ReactNode;
+
+  /**
+   * Élément(s) à droite du titre (boutons d’action, filtres, etc.)
+   * ex: &lt;Button type=&quot;primary&quot;&gt;New&lt;/Button&gt;
+   */
+  toolbar?: React.ReactNode;
+
+  /** Largeur max de la zone centrale */
+  maxWidth?: number | string;
+};
+
+export default function KeenPageShell({
+  title,
+  description,
+  metaTitle,
+  children,
+  toolbar,
+  maxWidth = 1200,
+}: KeenPageShellProps) {
+  const finalMetaTitle = metaTitle ?? `KeenKonnect · ${title}`;
+
+  // Synchronise le titre de l’onglet (hook existant dans ton codebase)
+  usePageTitle(finalMetaTitle);
+
+  return (
+    &lt;&gt;
+      &lt;Head&gt;
+        &lt;title&gt;{finalMetaTitle}&lt;/title&gt;
+      &lt;/Head&gt;
+
+      &lt;div className=&quot;container mx-auto p-5&quot; style={{ maxWidth }}&gt;
+        {/* Header de page standardisé */}
+        &lt;div className=&quot;mb-4 flex flex-wrap items-center justify-between gap-3&quot;&gt;
+          &lt;div&gt;
+            &lt;h1 className=&quot;text-2xl font-bold&quot;&gt;{title}&lt;/h1&gt;
+            {description &amp;&amp; (
+              &lt;p className=&quot;mt-1 text-gray-500&quot;&gt;{description}&lt;/p&gt;
+            )}
+          &lt;/div&gt;
+
+          {toolbar &amp;&amp; &lt;div className=&quot;flex items-center gap-2&quot;&gt;{toolbar}&lt;/div&gt;}
+        &lt;/div&gt;
+
+        {/* Contenu spécifique à la page */}
+        {children}
+      &lt;/div&gt;
+    &lt;/&gt;
+  );
+}
+```
+
+**Règles associées (KeenKonnect)** :
+
+* ✅ **Toujours** utiliser `KeenPageShell` pour les pages KeenKonnect (sauf cas ultra-spéciaux type page système).
+* ✅ Titre principal **toujours** en `h1.text-2xl.font-bold` (fourni par le shell).
+* ✅ Padding global **toujours** `container mx-auto p-5`.
+* ✅ Toolbar → prop `toolbar`.
+* 🚫 **Pas** de breadcrumb local (géré au niveau `app/keenkonnect/layout.tsx` si nécessaire).
+* 🚫 **Pas** de `&lt;Head&gt;` local ni de `usePageTitle` local dans les pages KeenKonnect.
+
+---
+
+## 3. Page de référence KeenKonnect
+
+Exemple basé sur `knowledge/search-filter-documents` :
+
+```tsx
+&#x27;use client&#x27;;
+
+import React from &#x27;react&#x27;;
+import { Card, Alert } from &#x27;antd&#x27;;
+import type { PaginationProps } from &#x27;antd&#x27;;
+import {
+  ProTable,
+  QueryFilter,
+  ProFormText,
+  ProFormSelect,
+  ProFormDateRangePicker,
+} from &#x27;@ant-design/pro-components&#x27;;
+import KeenPageShell from &#x27;@/app/keenkonnect/KeenPageShell&#x27;;
+
+// ... types + données (DocumentResource, sampleDocuments, etc.)
+
+export default function SearchFilterDocumentsPage(): JSX.Element {
+  // ... state, filtres, useMemo, columns, paginationProps, etc.
+
+  return (
+    &lt;KeenPageShell
+      title=&quot;Search &amp; Filter Documents&quot;
+      description=&quot;Advanced search and filtering for knowledge documents in KeenKonnect.&quot;
+    &gt;
+      {/* Bloc filtres */}
+      &lt;Card className=&quot;mb-4&quot;&gt;
+        &lt;QueryFilter
+          onFinish={handleFilterFinish}
+          onReset={handleFilterReset}
+          labelWidth=&quot;auto&quot;
+          defaultCollapsed={false}
+          span={8}
+          initialValues={{ sort: DEFAULT_SORT }}
+        &gt;
+          {/* ... champs de filtre */}
+        &lt;/QueryFilter&gt;
+      &lt;/Card&gt;
+
+      {/* Résumé + table */}
+      &lt;Alert /* ...props */ className=&quot;mb-4&quot; /&gt;
+
+      &lt;Card&gt;
+        &lt;ProTable
+          /* ...props */
+        /&gt;
+        {/* Pagination externe */}
+      &lt;/Card&gt;
+    &lt;/KeenPageShell&gt;
+  );
+}
+```
+
+👉 C’est ce pattern qu’il faut viser pour **toutes les pages KeenKonnect**.
+
+---
+
+## 4. Patterns par type de page (communs aux 5 modules)
+
+Les types de pages sont similaires dans les 5 modules, seul le shell change (`KeenPageShell`, `EkohPageShell`, etc.).
+
+### 4.1. Pages “form wizard” (StepsForm)
+
+Ex :
+
+* KeenKonnect : `create-new-project`, `submit-impact-reports`, `match-preferences`
+* Kreative : `create-new-idea`
+* KonnectED : onboarding / course setup
+
+Pattern :
+
+```tsx
+&lt;KeenPageShell
+  title=&quot;Create New Project&quot;
+  description=&quot;Use this guided wizard to describe your project and configure the team.&quot;
+&gt;
+  &lt;Card&gt;
+    &lt;StepsForm
+      onFinish={...}
+      formProps={{ layout: &#x27;vertical&#x27; }}
+    &gt;
+      {/* StepForm ... */}
+    &lt;/StepsForm&gt;
+  &lt;/Card&gt;
+&lt;/KeenPageShell&gt;
+```
+
+Même chose pour Ekoh/Kreative/etc. en remplaçant le shell :
+
+```tsx
+&lt;EkohPageShell title=&quot;…&quot; description=&quot;…&quot;&gt;
+  {/* StepsForm dans un Card */}
+&lt;/EkohPageShell&gt;
+```
+
+### 4.2. Pages “tableau &amp; filtres” (list, ProTable)
+
+Ex :
+
+* KeenKonnect : `knowledge/search-filter-documents`, `projects/my-projects`, `workspaces/my-workspaces`, `knowledge/document-management`.
+* Kreative : listes d’espaces, projets, idées.
+* Ethikos / Ekoh : listes de contributions, événements, votes.
+
+Pattern :
+
+```tsx
+&lt;KeenPageShell
+  title=&quot;My Projects&quot;
+  description=&quot;Browse and manage your KeenKonnect projects.&quot;
+  toolbar={(
+    &lt;Button type=&quot;primary&quot;&gt;New project&lt;/Button&gt;
+  )}
+&gt;
+  &lt;Card className=&quot;mb-4&quot;&gt;
+    {/* Filtres / QueryFilter / search bar */}
+  &lt;/Card&gt;
+
+  &lt;Card&gt;
+    &lt;ProTable /* ... */ /&gt;
+  &lt;/Card&gt;
+&lt;/KeenPageShell&gt;
+```
+
+### 4.3. Pages “dashboard / analytics”
+
+Ex :
+
+* KeenKonnect : `sustainability-impact/sustainability-dashboard`, `track-project-impact`.
+* Ekoh/Ethikos : dashboards de scores, indices.
+* KonnectED : dashboard de progression.
+
+Pattern :
+
+```tsx
+&lt;KeenPageShell
+  title=&quot;Sustainability Impact Dashboard&quot;
+  description=&quot;High-level dashboard aggregating sustainability impact across projects.&quot;
+&gt;
+  &lt;Row gutter={[16, 16]}&gt;
+    &lt;Col xs={24} md={12}&gt;
+      &lt;Card title=&quot;CO₂ saved&quot;&gt;
+        {/* Graph / KPI */}
+      &lt;/Card&gt;
+    &lt;/Col&gt;
+    {/* ... autres cards */}
+  &lt;/Row&gt;
+&lt;/KeenPageShell&gt;
+```
+
+Même logique pour les autres modules, avec leur shell respectif.
+
+---
+
+## 5. Migration / refactor – règles concrètes
+
+### 5.1. Fix central
+
+Pour chaque module :
+
+1. S’assurer que le shell existe (`KeenPageShell`, `EkohPageShell`, etc.) et expose :
+
+   * `title`
+   * `description?`
+   * `metaTitle?` (optionnel, selon le module)
+   * `toolbar?`
+   * `children`
+
+2. Vérifier que le shell gère :
+
+   * le `&lt;title&gt;` navigateur (ou au moins `usePageTitle`),
+   * le `&lt;h1&gt;` et la description,
+   * la largeur/padding du container principal.
+
+### 5.2. Fix “par page” (ce que tu vas appliquer aux 20 fichiers KeenKonnect)
+
+Pour chaque page du module :
+
+1. **Import du shell**
+
+   ```tsx
+   import KeenPageShell from &#x27;@/app/keenkonnect/KeenPageShell&#x27;;
+   ```
+
+   (et équivalent pour les autres modules.)
+
+2. **Wrapper racine**
+
+   * Avant :
+
+     ```tsx
+     export default function MyPage() {
+       return (
+         &lt;div className=&quot;container mx-auto p-5&quot;&gt;
+           &lt;h1&gt;My Page&lt;/h1&gt;
+           {/* ... */}
+         &lt;/div&gt;
+       );
+     }
+     ```
+
+     ou
+
+     ```tsx
+     return (
+       &lt;PageContainer title=&quot;My Page&quot;&gt;
+         {/* ... */}
+       &lt;/PageContainer&gt;
+     );
+     ```
+
+   * Après :
+
+     ```tsx
+     export default function MyPage() {
+       return (
+         &lt;KeenPageShell
+           title=&quot;My Page&quot;
+           description=&quot;One-line description.&quot;
+           toolbar={/* optionnel */}
+         &gt;
+           {/* Ancien contenu, SANS le h1, SANS le PageContainer header */}
+         &lt;/KeenPageShell&gt;
+       );
+     }
+     ```
+
+3. **Supprimer** :
+
+   * `&lt;h1&gt;` / `Typography.Title` principaux (le shell gère le titre).
+   * Breadcrumbs locaux (`&lt;Breadcrumb&gt;`, `breadcrumb` dans `PageContainer`).
+   * `usePageTitle` dans la page (géré par le shell).
+   * `&lt;Head&gt;` local (sauf cas très particulier, meta custom).
+
+4. **Garder / Replacer** à l’intérieur du shell :
+
+   * `Card`, `ProTable`, `StepsForm`, `Tabs`, `PageContainer` (mais sans header/breadcrumb).
+   * Sous-sections : utiliser `Card title=&quot;…&quot;`, ou `h2`/`h3` tailwind (`text-lg font-semibold`, etc.).
+
+---
+
+## 6. TL;DR pour les 5 modules
+
+* Un **shell par module** :
+
+  * KeenKonnect → `KeenPageShell`
+  * Ekoh → `EkohPageShell`
+  * Ethikos → `EthikosPageShell`
+  * KonnectED → `KonnectedPageShell`
+  * Kreative → `KreativePageShell`
+
+* Chaque page de module :
+
+  ```tsx
+  import XxxPageShell from &#x27;@/app/xxx/XxxPageShell&#x27;;
+
+  export default function SomePage() {
+    return (
+      &lt;XxxPageShell title=&quot;…&quot; description=&quot;…&quot; toolbar={…}&gt;
+        {/* contenu */}
+      &lt;/XxxPageShell&gt;
+    );
+  }
+  ```
+
+* **Aucun** gros header local (`h1`, breadcrumb) dans les pages.
+
+* Tout le layout de haut niveau (titre, description, toolbar, padding) est géré par le shell.
+</pre></body></html>

@@ -1,0 +1,49 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/KonnaxionDiag · docs/MIGRATION_V4.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/KonnaxionDiag · docs/MIGRATION_V4.md</h1><p class='meta'><small>Rejean-McCormick/KonnaxionDiag · 6d058a178fba · SHA-256 0afea25b27c0f925</small><br><a href='https://github.com/Rejean-McCormick/KonnaxionDiag/blob/6d058a178fbaab7dd5e11cdd4310a22295021b65/docs/MIGRATION_V4.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Migration LevelUpDiag + SecurityDiag -&gt; KonnaxionDiag v4
+
+## Ce qui fusionne
+
+Le runner, l&#x27;isolation worker, la configuration, le manifeste, la rétention d&#x27;evidence, la redaction, le reporting, la corrélation et l&#x27;interface graphique deviennent des services de `diagcore`.
+
+## Ce qui reste séparé
+
+Les niveaux `Nxx` restent le profil fonctionnel LevelUp. Les niveaux `Sxx` restent le profil sécurité et gardent leur pouvoir de blocage autonome. Les IDs ne sont pas renumérotés.
+
+## Changement S04W
+
+Le `S04` de SecurityDiag 1.3.0 contenait déjà les contrôles Web Trust. v4 les extrait dans `S04W` sans réécrire leurs règles. Le helper de qualification reste partagé avec S04 pour éviter de dupliquer la logique, mais seul `S04W` l&#x27;exécute.
+
+## Changement N07
+
+L&#x27;intégration historique où N07 lançait `SecurityDiag S04` et lisait `.securitydiag/latest` est désactivée en mode unifié. Cela supprime le runner imbriqué, la récursion potentielle et le second arbre d&#x27;evidence.
+
+## Arbre d&#x27;evidence
+
+Les anciens roots `.levelupdiag` et `.securitydiag` deviennent `.konnaxiondiag`. `N11` lit directement `current/levels/Nxx/result.json`; `S14` lit le même run pour `Sxx`.
+
+## Campagnes
+
+Les campagnes LevelUp historiques restent présentes. Les campagnes SecurityDiag exactes sont exposées comme `security-repo`, `security-host`, `security-external`, `security-incident`, `security-predeploy`, `security-release`. Les nouveaux workflows opératoires sont `developer`, `precommit`, `predeploy`, `incident` et `release-all`.
+
+## WARN sécurité dispositionné
+
+Un WARN n&#x27;est pas implicitement accepté. Pour une exception temporaire :
+
+```json
+{
+  &quot;release_gate&quot;: {
+    &quot;security_warn_dispositions&quot;: {
+      &quot;finding.id&quot;: {
+        &quot;status&quot;: &quot;accepted&quot;,
+        &quot;rationale&quot;: &quot;Justification revue et bornée.&quot;
+      }
+    }
+  }
+}
+```
+
+Une entrée vide, un statut non accepté ou l&#x27;absence de justification ne dispositionne pas le WARN.
+
+## Capsule Manager / Agent
+
+La frontière reste inchangée : KonnaxionDiag qualifie, Capsule Manager orchestre et l&#x27;Agent conserve la frontière privilégiée. KonnaxionDiag n&#x27;effectue aucune remédiation privilégiée.
+</pre></body></html>

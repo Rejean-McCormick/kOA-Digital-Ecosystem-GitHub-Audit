@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · README.txt</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · README.txt</h1><p class='meta'><small>Rejean-McCormick/Spek · dddfcac3e354 · SHA-256 132403b59b7687db</small><br><a href='https://github.com/Rejean-McCormick/Spek/blob/dddfcac3e3547890e1ac7b025bb3cbcd0ba6596e/README.txt' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>SPEK - PERMANENT WINDOWS LAUNCHER
+=================================
+
+No hardcoded Spek version: launchers are intentionally named START_SPEK.bat.
+
+INSTALL:
+1. Extract this ZIP into the ROOT of the Spek repository (the folder that has
+   requirements.txt and the spek/ Python package).
+2. Keep START_SPEK.bat and scripts/launch_spek.py together.
+3. Double-click START_SPEK.bat (or run it in PowerShell).
+
+BEHAVIOR:
+- Detects whether the installed Spek CLI supports educational import.
+- Prefers the bundled curated Ekole fixture if available.
+- Otherwise falls back to a standard Spek example (unless --mode ekole is used).
+- Compiles and verifies a FRESH local build in dist-spek-launcher/run-*/site.
+- Opens http://127.0.0.1:8050/fr/ or the next free port.
+- Does not kill the old server, modify canonical Kristals or publish anything.
+
+OPTIONS:
+  START_SPEK.bat --mode ekole
+  START_SPEK.bat --mode standalone
+  START_SPEK.bat --ekole-file C:\path\to\curated-preview.json
+  START_SPEK.bat --lang en
+  START_SPEK.bat --port 8070
+  START_SPEK.bat --no-browser
+  START_SPEK.bat --no-server
+
+NOTE: This launcher is forward-compatible with Spek releases that preserve the
+current CLI contracts: &#x27;build&#x27;, &#x27;verify-site&#x27; and optionally &#x27;import-educational&#x27;.
+If a future release breaks those commands, the launcher reports the incompatibility
+rather than claiming all future versions are guaranteed to work.
+
+Local-only: avoid publishing any private educational data. Even a curated export
+must be authorized for its intended audience. The bundled example is fictional.
+</pre></body></html>

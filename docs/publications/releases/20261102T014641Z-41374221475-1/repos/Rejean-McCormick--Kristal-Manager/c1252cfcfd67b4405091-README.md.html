@@ -1,0 +1,36 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/13-implementation-vnext/README.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/13-implementation-vnext/README.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 a6da529d5b633951</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/13-implementation-vnext/README.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Implémentation Manager vNext — 31 octobre 2026
+
+Cette section porte sur **le code effectivement livré**. La vision d&#x27;ensemble
+et les futurs travaux restent décrits dans les sections 00–12.
+
+## Modules opérationnels
+
+| Module | Contrat effectif |
+|---|---|
+| `kristal_manager/unified/domain.py` | statuts, limites de taille, modèle pur |
+| `unified/repository.py` | SQLite v2 additif, runs, observations, décisions, historique, sauvegardes |
+| `unified/service.py` | inventaire, analyse, batch Diag V9, import ARK, import JSON historique |
+| `unified/dashboard_ui.py` | vue de suivi, historique, exécution non bloquante, arrêt coopératif |
+| `unified/cli.py` | mêmes actions sans Tk; JSON de sortie |
+| `central_store.py` | API v1 maintenue; double écriture transactionnelle v1/v2 |
+| `diagnostics_batch.py` | vrais runs, progression, erreurs, preuve immédiate, NOT_APPLICABLE |
+| `diag_bridge.py` | exécution en sous-processus du moteur KristalDiag fourni, sans shell |
+
+## Existant conservé
+
+Manager (`gui.py`), ancien centre global, audit et triage, registre de revues,
+classification Arketype/UNESCO/PRF, index lourd de contenu, moteur KristalDiag
+version fourni et tous les panneaux avancés. Aucun canon local touché.
+
+## Non couvert dans cette livraison
+
+- Diagnostic sémantique complet v11 et natif (profil V9 seulement en batch).
+- Certification C1/C2/C3 ou validation exhaustive des 20 733 crosswalks.
+- Pipeline de publication, signature ou activation.
+- Recherche/renommage GitHub et outils automatisés de synchronisation.
+- Migration des classifications proposées vers des tags canoniques approuvés.
+- Optimisations de tous les anciens écrans (certaines vues avancées restent historiques).
+
+Une exécution `NOT_APPLICABLE` ou une observation `PARTIAL_SCOPE` ne sont **jamais**
+converties en `PASS` par l&#x27;interface.
+</pre></body></html>

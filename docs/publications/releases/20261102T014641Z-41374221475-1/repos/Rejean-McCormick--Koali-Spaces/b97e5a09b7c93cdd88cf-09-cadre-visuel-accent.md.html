@@ -1,0 +1,35 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/02-host-experience/09-cadre-visuel-accent.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/02-host-experience/09-cadre-visuel-accent.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 d82f4b8d4421e0f5</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/02-host-experience/09-cadre-visuel-accent.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 9. Cadre visuel et accent de contexte
+
+Le snapshot Koali actuel conserve un accent global principal `#1e6864` et des surfaces neutres. La demande d&#x27;une différence de couleur par application est donc implémentée comme **accent de contexte**, pas comme un nouveau design system global.
+
+Le contexte MAY afficher :
+
+- un trait/bordure d&#x27;accent ;
+- un badge ou label de module ;
+- un petit marqueur dans l&#x27;entête du cadre ;
+- un focus ring cohérent ;
+- un indicateur de contexte dans le module selector.
+
+Il MUST NOT recolorer l&#x27;UI interne de l&#x27;application hostée.
+
+```ts
+interface ResolvedSurfacePresentation {
+  displayModes: Array&lt;&quot;framed&quot; | &quot;immersive&quot;&gt;;
+  defaultDisplayMode: &quot;framed&quot; | &quot;immersive&quot;;
+  contextAccentToken?: string;
+  contextLabel: string;
+}
+```
+
+`LOCK-KS-SURF-030` — **L&#x27;accent de contexte est strictement visuel.** Il ne signale ni autorité, ni sécurité, ni validation, ni statut de confiance.
+
+`LOCK-KS-SURF-031` — **L&#x27;accent de contexte ne remplace pas les couleurs sémantiques de statut.**
+
+`LOCK-KS-SURF-032` — **Koali ne crée pas un deuxième thème interne pour les applications hostées.**
+
+`LOCK-KS-SURF-033` — **L&#x27;application propriétaire reste propriétaire de son design system.**
+
+`LOCK-KS-SURF-034` — **La couleur ne doit jamais être l&#x27;unique moyen d&#x27;identifier le contexte.** Le nom du module doit rester exposé de manière accessible.
+
+---
+</pre></body></html>

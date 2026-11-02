@@ -1,0 +1,16 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Capsule-Manager · README_TANDEM_ORGO_IDENTITE_DIAG_V2_1_2.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Capsule-Manager · README_TANDEM_ORGO_IDENTITE_DIAG_V2_1_2.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Capsule-Manager · a137f3c1ab5e · SHA-256 e60aadbcf06452ad</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Capsule-Manager/blob/a137f3c1ab5e7a79887074560b11a2a6b0a70518/README_TANDEM_ORGO_IDENTITE_DIAG_V2_1_2.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Tandem — diagnostic Orgo FakePlant V2.1.2 (diagnostic seul)
+
+**Dépôt cible uniquement :** `C:\mycode\Konnaxion\Konnaxion_Capsule_Manager`
+
+Fermer la fenêtre du diagnostic, extraire ce ZIP à la racine du dépôt (remplacer les deux fichiers), puis double-cliquer sur **`START_TANDEM_ORGO_IDENTITE_DIAG.cmd`** (le lanceur `.cmd` existant V2.1.1 n&#x27;est pas remplacé).
+
+Le rapport signale maintenant un `error_kind` et une `error_stage` lorsque Prisma ne peut interroger Orgo. L&#x27;ancien `QUERY_FAILED` était trop vague. Aucun message d&#x27;exception, DSN, mot de passe, secret ou jeton n&#x27;est affiché.
+
+Catégories possibles : `PRISMA_CLIENT_NOT_GENERATED`, `PRISMA_MODULE_MISSING`, `PRISMA_SCHEMA_MISMATCH`, `DATABASE_UNREACHABLE`, `DATABASE_AUTH_FAILED`, `SCHEMA_NOT_ALIGNED`, `READ_ONLY_PROBE_REJECTED`, `UNCLASSIFIED`.
+
+**Lecture seule** : transaction Prisma avec `SET TRANSACTION READ ONLY`, aucune commande d&#x27;import, seed ou migration, aucun appel au déploiement. Le script sonde d&#x27;abord l&#x27;API Docker Orgo lorsqu&#x27;elle fonctionne, sinon le Node local et son `.env`. Attention : la base locale peut être différente de la base du serveur Orgo.
+
+**Important :** la réussite du diagnostic confirme l&#x27;identité dans la base interrogée, et non les droits d&#x27;accès ni la liaison IK. L&#x27;Agent composite et GO LIVE restent bloqués.
+
+En cas d&#x27;erreur, transmettre uniquement `Mode`, `Code`, `Cause categorisee`, `Etape`, `Action`; ne jamais partager le contenu de `.env` ou `DATABASE_URL`.
+</pre></body></html>

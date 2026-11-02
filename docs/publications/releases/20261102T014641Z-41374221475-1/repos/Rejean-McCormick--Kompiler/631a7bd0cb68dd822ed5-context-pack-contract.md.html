@@ -1,0 +1,157 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/02-protocol/context-pack-contract.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/02-protocol/context-pack-contract.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 e98bf142fc1ad095</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/02-protocol/context-pack-contract.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Context Pack Contract
+
+`kompiler.context-pack/1.1` is the primary product of a successful run.
+
+## Goals
+
+A Context Pack SHOULD be:
+
+- self-describing;
+- bounded;
+- provenance-rich;
+- epistemically faithful to source Kristals;
+- easy for an LLM to consume;
+- suitable for continued conversation and follow-up queries.
+
+## Envelope
+
+```json
+{
+  &quot;protocol&quot;: &quot;kompiler.context-pack&quot;,
+  &quot;version&quot;: &quot;1.1&quot;,
+  &quot;context_pack_id&quot;: &quot;ctx:sha256:...&quot;,
+  &quot;semantic_hash&quot;: &quot;ctx:sha256:...&quot;,
+  &quot;artifact_hash&quot;: &quot;artifact:sha256:...&quot;,
+  &quot;request_id&quot;: &quot;pollution-001&quot;,
+  &quot;parent_context_pack_id&quot;: null,
+  &quot;generated_at&quot;: &quot;2026-10-02T15:01:10Z&quot;,
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;topic&quot;: &quot;pollution&quot;,
+  &quot;summary&quot;: {},
+  &quot;referents&quot;: [],
+  &quot;records&quot;: [],
+  &quot;relations&quot;: [],
+  &quot;derived&quot;: [],
+  &quot;conflicts&quot;: [],
+  &quot;gaps&quot;: [],
+  &quot;sources&quot;: [],
+  &quot;execution&quot;: {},
+  &quot;provenance&quot;: {}
+}
+```
+
+## Record envelope
+
+Kompiler does not force all Kristal versions into one false epistemic model. Instead, normalized records use a common wrapper plus a source-semantic payload.
+
+```json
+{
+  &quot;record_id&quot;: &quot;kr:...&quot;,
+  &quot;kind&quot;: &quot;assertion&quot;,
+  &quot;referent_ids&quot;: [&quot;...&quot;],
+  &quot;statement&quot;: {
+    &quot;subject&quot;: &quot;...&quot;,
+    &quot;predicate&quot;: &quot;...&quot;,
+    &quot;object&quot;: &quot;...&quot;
+  },
+  &quot;epistemics&quot;: {
+    &quot;assertion_status&quot;: &quot;sourced&quot;,
+    &quot;valuations&quot;: [],
+    &quot;certainty_level_legacy&quot;: null,
+    &quot;validation&quot;: null,
+    &quot;authority_recognition&quot;: null,
+    &quot;record_role&quot;: &quot;reference_knowledge&quot;,
+    &quot;actionability&quot;: &quot;not_applicable&quot;
+  },
+  &quot;coordinates&quot;: {},
+  &quot;applicability&quot;: {},
+  &quot;provenance_refs&quot;: [&quot;prov:...&quot;],
+  &quot;source_record_ref&quot;: &quot;...&quot;
+}
+```
+
+For v6 sources, typed valuations/value states MUST be preserved when present. For v5 sources, `certainty_level_legacy`, validation, authority channel, reader policy, and related fields MUST be preserved when present. Adapters MUST NOT manufacture equivalence between a v5 certainty level and an arbitrary v6 valuation dimension unless a documented mapping profile explicitly defines it.
+
+## Derived items
+
+Derived items MUST declare their transform and inputs:
+
+```json
+{
+  &quot;derived_id&quot;: &quot;drv:...&quot;,
+  &quot;kind&quot;: &quot;aggregate&quot;,
+  &quot;value&quot;: 17,
+  &quot;transform&quot;: &quot;count_distinct_referents/1.0&quot;,
+  &quot;input_refs&quot;: [&quot;kr:a&quot;, &quot;kr:b&quot;]
+}
+```
+
+A derived item is not a source assertion and MUST be labeled accordingly.
+
+## Conflicts
+
+Conflicts identify incompatible or tension-bearing records without selecting a winner unless an explicit deterministic policy does so.
+
+```json
+{
+  &quot;conflict_id&quot;: &quot;conf:...&quot;,
+  &quot;record_refs&quot;: [&quot;kr:a&quot;, &quot;kr:b&quot;],
+  &quot;basis&quot;: &quot;incompatible_values&quot;,
+  &quot;resolution&quot;: &quot;unresolved&quot;
+}
+```
+
+## Gaps
+
+Gaps are explicit missing-context markers:
+
+```json
+{
+  &quot;gap_id&quot;: &quot;gap:...&quot;,
+  &quot;question&quot;: &quot;What evidence exists for long-term effects in children?&quot;,
+  &quot;basis&quot;: &quot;requested_dimension_uncovered&quot;,
+  &quot;suggested_targets&quot;: [&quot;HumanBody&quot;]
+}
+```
+
+## Execution metadata
+
+The pack MUST include enough information to identify:
+
+- Kompiler version;
+- capability snapshot;
+- normalized Query Plan hash;
+- adapter versions;
+- source Kristal state/artifact IDs when available;
+- policies and budgets;
+- partial failures;
+- deterministic/non-deterministic declarations.
+
+## Status
+
+Allowed v1 values:
+
+- `success` — requested plan completed within declared policy;
+- `partial` — at least one useful result exists but one or more operations failed or were truncated;
+- `empty` — execution succeeded but produced no visible records.
+
+`context_pack_id` is the semantic identity and equals `semantic_hash` in the reference implementation. `artifact_hash` identifies the concrete serialized run artifact including audit metadata such as `request_id`, run ID, timestamps, durations, and cache-hit state. This separation permits reproducible semantic identity across independent reruns without overwriting concrete retained artifacts.
+
+`parent_context_pack_id`, when present, links a follow-up compilation to the semantic Context Pack that motivated it. It does not imply automatic merging or inherited trust.
+
+## Protocol 1.1: v7 meta-plane collections
+
+A Context Pack may additionally contain:
+
+```text
+subjects
+axes
+assertion_families
+resonance
+surfaces
+```
+
+These collections are separate by design. They MUST NOT be flattened into factual `records` merely to simplify downstream consumption. `relations` also preserve v7 `edge_semantics`, status, source-assertion references, derivation record IDs, and resonance references when available.
+
+`NormalizedRecord.semantic_role` distinguishes `source_assertion`, `derived_assertion`, `structural_relation`, `similarity_signal`, `hypothesis`, `path`, `entity`, and generic `record` material.
+</pre></body></html>

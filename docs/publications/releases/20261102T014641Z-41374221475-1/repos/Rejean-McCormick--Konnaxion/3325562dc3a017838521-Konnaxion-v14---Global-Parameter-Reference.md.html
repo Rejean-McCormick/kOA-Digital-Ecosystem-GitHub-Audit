@@ -1,0 +1,190 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · docs/Technical-Reference/DocV14/Konnaxion v14 - Global Parameter Reference.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · docs/Technical-Reference/DocV14/Konnaxion v14 - Global Parameter Reference.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 3714041ff721ab2c</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/DocV14/Konnaxion%20v14%20-%20Global%20Parameter%20Reference.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>
+
+[0  Global / Core (shared by all apps)](#0  global-/-core-\(shared-by-all-apps\))
+
+[1  Kollective Intelligence](#1  kollective intelligence)
+
+[1.1 EkoH (engine)](#1.1 ekoh \(engine\))
+
+[1.2 Smart Vote (engine)](#1.2 smart vote \(engine\))
+
+[2  ethiKos](#2  ethikos)
+
+[3  keenKonnect](#3  keenkonnect)
+
+[4  KonnectED](#4  konnected)
+
+[5  Kreative](#5  kreative)
+
+[6  Navigation &amp; Route Invariants](#6  navigation-&amp;-route-invariants)
+
+[7  Environment‑variable Matrix (cookiecutter‑compatible)](#7  environment‑variable-matrix-\(cookiecutter‑compatible\))
+
+[How this document will be maintained](#how-this-document-will-be-maintained)
+
+**Konnaxion Platform – Definitive Parameter Reference (v14‑stable)**  
+ *All TBD values are now fixed; names follow Cookiecutter‑Django conventions (UPPER\_SNAKE for `settings.py`, `DJANGO_…`/`APP_…` for `.envs` files, `choices=` enums in models). Nothing here adds new tables, routes or functions – it only freezes configuration knobs already implied in the v14 spec.*
+
+---
+
+## **0  Global / Core (shared by all apps)** {#0  global-/-core-(shared-by-all-apps)}
+
+| Parameter | Location | Final value | Rationale |
+| ----- | ----- | ----- | ----- |
+| `SEARCH_BACKEND` | `settings.BASE` | `&quot;postgres&quot;` | Choose PostgreSQL `tsvector`‑based full‑text search as the default; ElasticSearch can be added later if needed  |
+| `CHANNEL_LAYERS[&quot;default&quot;][&quot;BACKEND&quot;]` | `settings.local` | `&quot;channels_redis.core.RedisChannelLayer&quot;` | Re‑uses the Redis container already present in the Cookiecutter stack |
+| `DEFAULT_FROM_EMAIL` | `.envs/.local/.django` | `noreply@konnaxion.local` | Aligns with cookiecutter pattern |
+| `MEDIA_ROOT` | `settings.BASE` | `/app/media/` | Single bucket mount for all modules |
+| `STATICFILES_STORAGE` | `settings.production` | `&quot;whitenoise.storage.CompressedManifestStaticFilesStorage&quot;` | Matches cookiecutter production preset |
+| `LANGUAGES` | `settings.BASE` | `en`, `fr`, `es`, `ar` | Four‑language baseline for i18n  |
+| `TIME_ZONE` | `settings.BASE` | `&quot;UTC&quot;` | Keeps server‑side consistency (users set own TZ) |
+
+---
+
+## **1  Kollective Intelligence** {#1  kollective intelligence}
+
+### **1.1 EkoH (engine)** {#1.1 ekoh (engine)}
+
+| Parameter | Model / Setting | Type / Range | Default |
+| ----- | ----- | ----- | ----- |
+| `raw_weight_quality` | `ScoreConfiguration` | `Decimal(4,3)` | **1.000** |
+| `raw_weight_expertise` | `ScoreConfiguration` | `Decimal(4,3)` | **1.500** |
+| `raw_weight_frequency` | `ScoreConfiguration` | `Decimal(4,3)` | **0.750** |
+| `ethical_multiplier_floor` | `settings.EKOH` | float 0‑1 | **0.20** |
+| `ethical_multiplier_cap` | `settings.EKOH` | float 1‑2 | **1.50** |
+| EkoH expertise taxonomy | `ExpertiseCategory` + `fixtures/isced_f_2013.json` | ISCED-F 2013 profile: 10 broad / 26 narrow / 77 detailed = 113 categories | synchronized by `python manage.py load_isced` |
+
+These weights are the initial coefficients for the **multidimensional\_scoring** service and correspond 1‑for‑1 with “quality, frequency, relevance, expertise” axes defined in the functionality inventory .
+
+### **1.2 Smart Vote (engine)** {#1.2 smart vote (engine)}
+
+| Parameter | Setting | Value / Enum |
+| ----- | ----- | ----- |
+| `VOTE_MODALITY_CHOICES` | `VoteModality` | `&quot;approval&quot;`, `&quot;ranking&quot;`, `&quot;rating&quot;`, `&quot;preferential&quot;` |
+| `EMERGING_EXPERT_THRESHOLD` | `settings.SMART_VOTE` | **\+15 % Ekoh delta over 30 days** |
+| `CONSENSUS_STRONG_THRESHOLD` | `settings.SMART_VOTE` | **≥ 75 % weighted agreement** |
+
+---
+
+## **2  ethiKos** {#2  ethikos}
+
+| Parameter | Location | Final value |
+| ----- | ----- | ----- |
+| **Stance scale mapping** | `EthikosStance.stance_value` | int **‑3 … \+3** (“strongly against” → “strongly for”); 0 \= neutral |
+| **Minimum expert votes for result display** | `settings.ETHIKOS` | **12 distinct experts** (Ekoh \&gt; 75th percentile in topic domain) |
+| **Moderation auto‑hide threshold** | `DebateArgument.is_hidden` flag | **3 independent reports** |
+| **AI clone training batch size** | `.envs/.local/.django` → `ETHIKOS_AI_BATCH` | **128** |
+
+These close every “TBD” noted in the ethiKos spec (stance granularity, expert quorum, moderation trigger) .
+
+---
+
+## **3  keenKonnect** {#3  keenkonnect}
+
+| Parameter | Location | Final value |
+| ----- | ----- | ----- |
+| `MAX_BLUEPRINT_UPLOAD_MB` | `settings.STORAGE` | **150 MB** |
+| `ALLOWED_BLUEPRINT_TYPES` | constant in `ProjectResource` | `[&quot;.pdf&quot;, &quot;.png&quot;, &quot;.jpg&quot;, &quot;.glb&quot;, &quot;.gltf&quot;, &quot;.stl&quot;]` |
+| `COLLAB_SPACE_MEMBER_CAP` | `CollaborationSpace` | **40** |
+| `AI_SUGGESTION_TOP_N` | `settings.KEENKONNECT` | **8** user suggestions per request |
+| `VIDEO_SESSION_PROVIDER` | env var `KC_VIDEO_PROVIDER` | `&quot;livekit&quot;` (self‑hosted) |
+
+All map directly to features in the technical spec and functionalities table .
+
+---
+
+## **4  KonnectED** {#4  konnected}
+
+| Parameter | Location | Final value |
+| ----- | ----- | ----- |
+| `OFFLINE_PACKAGE_CRON` | Celery Beat | `0 3 * * SUN` (every Sunday at 03:00 UTC) |
+| `CERT_PASS_PERCENT` | `CertificationPath` | **80 %** |
+| `QUIZ_RETRY_COOLDOWN_MIN` | `settings.KONNECTED` | **30** minutes |
+| `CONTENT_TYPES_ALLOWED` | `KnowledgeResource.type` enum | `&quot;article&quot;`, `&quot;video&quot;`, `&quot;lesson&quot;`, `&quot;quiz&quot;`, `&quot;dataset&quot;` |
+| `MAX_CONTRIBUTION_DRAFTS` | per user | **10** pending submissions |
+
+---
+
+## **5  Kreative** {#5  kreative}
+
+| Parameter | Location | Final value |
+| ----- | ----- | ----- |
+| `ARTWORK_MAX_IMAGE_MB` | `settings.KREATIVE` | **50 MB** |
+| `ARTWORK_RESOLUTIONS` | image processing task | `[256, 1024, 2048]` px longest side |
+| `VIRTUAL_GALLERY_CAPACITY` | `VirtualExhibition` | **24 artworks / room** |
+| `COLLAB_CANVAS_MAX_USERS` | `CollabSession` | **6** simultaneous editors |
+| `NSFW_FLAG_REQUIRED` | upload form | boolean, default `False` |
+
+---
+
+## **6  Navigation &amp; Route Invariants** {#6  navigation-&amp;-route-invariants}
+
+Navigation ownership is defined by `../NAVIGATION_AND_SHELL_CONTRACT.md`. Route namespace, sidebar ownership and backend state ownership are distinct.
+
+### Suite registry
+
+| Technical suite key | Visible label | Landing route | Switcher group |
+| --- | --- | --- | --- |
+| `ethikos` | **ethiKos** | `/ethikos/insights` | Core experiences |
+| `keenkonnect` | **keenKonnect** | `/keenkonnect/dashboard` | Core experiences |
+| `konnected` | **KonnectED** | `/konnected/dashboard` | Core experiences |
+| `kreative` | **Kreative** | `/kreative/dashboard` | Core experiences |
+| `ekoh` | **EkoH** | `/ekoh/dashboard` | Shared capabilities |
+| `teambuilder` | **Team Builder** | `/teambuilder` | Shared capabilities |
+| `reports` | **Insights** | `/reports` | Operations |
+| `kontrol` | **KonTrol** | `/kontrol/dashboard` | Operations |
+
+### Route-to-sidebar invariants
+
+| Route prefix | Default product sidebar | Notes |
+| --- | --- | --- |
+| `/ethikos/*` | ethiKos | canonical civic surface |
+| `/konsensus/*` | ethiKos | technical namespace is separate; product-owned by `ethiKos &gt; Decide` |
+| `/ekoh/*` | EkoH | contextual expertise/reputation only; no Konsensus/Reports ownership |
+| `/keenkonnect/*` | keenKonnect | projects/workspaces/matching/knowledge/impact/reputation |
+| `/konnected/*` | KonnectED | learning/certification/discussion/collaboration |
+| `/kreative/*` | Kreative | creative hub/incubator/spaces/showcases |
+| `/teambuilder/*` | Team Builder | shared team-composition capability |
+| `/reports/*` | Insights | technical key is `reports`; visible label is Insights |
+| `/kontrol/*` | KonTrol | administration/governance; no Reports group |
+
+Additional invariants:
+
+- the canonical visible brand spelling is **ethiKos**; code identifiers remain `ethikos` / `Ethikos*` as applicable;
+- `/konsensus/admin` is compatibility debt and should resolve to `/kontrol/konsensus`;
+- `/konnected/teams-collaboration/team-builder` keeps its URL but is labeled **Create team** in KonnectED;
+- a valid explicit `?sidebar=&lt;suite-key&gt;` may preserve a selected suite for cross-mounted navigation;
+- suite keys, labels and landing routes should have one frontend source of truth rather than independent copies in MainLayout/switcher/breadcrumb code;
+- the exhaustive route inventory is maintained in `Konnaxion v14 - Site Navigation Map.md`; do not freeze a stale numeric route count here.
+
+---
+
+## **7  Environment‑variable Matrix (cookiecutter‑compatible)** {#7  environment‑variable-matrix-(cookiecutter‑compatible)}
+
+| Env var | Used by | Default (.local) | Notes |
+| ----- | ----- | ----- | ----- |
+| `DJANGO_SECRET_KEY` | all | autogenerated | cookiecutter standard |
+| `DJANGO_ALLOWED_HOSTS` | nginx \+ Django | `localhost, 127.0.0.1` | extend per environment |
+| `DATABASE_URL` | Postgres | `postgres://konnaxion@postgres:5432/konnaxion` | set by cookiecutter |
+| `REDIS_URL` | Celery, Channels | `redis://redis:6379/0` | — |
+| `SEARCH_BACKEND` | core search | `postgres` | see section 0 |
+| `EKOH_MIN_MULTIPLIER` | Ekoh engine | `0.20` | editable in prod |
+| `EKOH_MAX_MULTIPLIER` | Ekoh engine | `1.50` | — |
+| `KC_VIDEO_PROVIDER` | keenKonnect | `livekit` | adjust if using Jitsi |
+| `OFFLINE_PACKAGE_CRON` | KonnectED | `0 3 * * SUN` | must stay UTC |
+
+Add these to `.envs/.local/.django`; production overrides live in `.envs/.production/.django`.
+
+---
+
+### **How this document will be maintained** {#how-this-document-will-be-maintained}
+
+* **Immutable commit rule:** Once merged into `docs/parameter_reference.md`, changes require a pull‑request labelled **“param‑change”** and approval from both backend &amp; frontend leads.
+
+* **CI guard:** A lint step asserts that `settings.*` and model enums keep the values defined here.
+
+* **Version tag:** Each future alteration bumps a `PARAM_VERSION` env var so containers can invalidate caches.
+
+---
+
+</pre></body></html>

@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/11-integrations/09-linked-snapshot-components.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/11-integrations/09-linked-snapshot-components.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 4f78d14cc5942afc</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/11-integrations/09-linked-snapshot-components.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Composants intégrés du snapshot
+
+**Classe : Boundary d&#x27;intégration**
+
+Koali intègre les composants fournis par **contrats propriétaires, supervision locale et qualification explicite**, sans copier leur état métier ni transférer leur autorité interne au shell.
+
+## Exclusions
+
+Les composants de diagnostic autonomes (`LevelUpDiag-*`, `KorDiag` et autres produits `*Diag*`) ne sont pas onboardés. Le **Kristal Framework** est `reference_only` : ses diagrammes et sa théorie ne sont pas importés dans Koali et sa présence n&#x27;est pas une condition de bootstrap.
+
+## Topologie retenue
+
+| Composant | Rôle Koali | Mode final |
+|---|---|---|
+| Orgo | application propriétaire principale | surface web supervisée + API/worker + PGlite local |
+| Orgo Worlds | application propriétaire complémentaire | surface web supervisée + API, lancée en parallèle d&#x27;Orgo |
+| SemantiK Architect | capacité sémantique | service headless supervisé |
+| Konfid | plan de contrôle sécurité | API + worker headless supervisés |
+| Kor | boundary humain/mobile | service headless supervisé; UI Android conservée propriétaire |
+| Interaction Kernel | protocole d&#x27;interopérabilité | runtime Python + runtime TypeScript + adaptateur Orgo qualifiés |
+| SemantiK Runtime Orchestrator | release/activation de RuntimeSets | CLI qualifié, pas de faux serveur |
+| kOA-Linux | autorité plateforme | CLI qualifié |
+| kOA Digital Ecosystem | carte système / inventaire | source opérationnelle qualifiée |
+| Koali Control Panel | orchestration de développement | self-test qualifié |
+| Kristal Framework | référence | référence seulement, non requise |
+
+## Readiness
+
+Le profil complet est fail-closed. Tous les produits et sources opérationnels fournis sont `requiredForBootstrap`. Le shell ne démarre qu&#x27;après qualification des sources et readiness de toutes les applications/services supervisés. Kristal est explicitement exclu de cette condition.
+
+## Invariants
+
+- Une source sans UI officielle n&#x27;est pas transformée artificiellement en module browser.
+- Orgo et Orgo Worlds sont deux surfaces distinctes; Worlds ne remplace plus Orgo.
+- Kor se lie à Orgo local au démarrage via le profil IK épinglé par Kor.
+- Interaction Kernel conserve son autorité de protocole et ses locks propres.
+- Les chemins locaux, tokens et commandes de processus ne sont pas projetés vers le navigateur.
+- Les composants diagnostiques ne deviennent pas des produits Koali.
+- La théorie Kristal ne devient ni logique métier, ni modèle d&#x27;autorité, ni dépendance de démarrage de Koali.
+</pre></body></html>

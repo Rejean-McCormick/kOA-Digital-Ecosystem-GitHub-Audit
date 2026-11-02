@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · AI-Compact-Encoding.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · AI-Compact-Encoding.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 de22d6d2585adb5a</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/AI-Compact-Encoding' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># AI Compact Encoding
+
+**Profile:** `kristal-ai-compact/1.0`
+
+Expanded JSON is interoperable but can waste AI context by repeating long IDs and field names. v8 therefore defines an optional compact projection for AI transport.
+
+## Symbol table
+
+A compact bundle may assign local symbols:
+
+```text
+0 → KQ847291
+1 → KP31
+2 → KS9021
+```
+
+Semantic atoms can then reference `0`, `1`, `2`. These local symbols exist only inside the bundle and never become persistent semantic identities.
+
+## Determinism
+
+Deterministic compact output should assign symbols by first canonical occurrence after stable atom ordering. Enough metadata must remain to expand losslessly to the source semantic IDs.
+
+## No semantic compression
+
+Compact encoding may remove syntactic repetition. It must not:
+
+- merge distinct assertions;
+- erase provenance;
+- turn uncertainty into certainty;
+- replace unresolved identities with guessed labels.
+
+Processors that do not support compact encoding can request `expanded_json`.
+</pre></body></html>

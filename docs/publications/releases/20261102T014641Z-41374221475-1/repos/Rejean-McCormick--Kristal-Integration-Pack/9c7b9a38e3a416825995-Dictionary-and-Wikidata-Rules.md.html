@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · Dictionary-and-Wikidata-Rules.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · Dictionary-and-Wikidata-Rules.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 adb87e7d9e296449</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/Dictionary-and-Wikidata-Rules' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Dictionaries, Wikidata and Identity Rules
+
+Kristal Framework v11 keeps semantic identities apart from language and outside references.
+
+| Layer | Example identifier | Rule |
+| --- | --- | --- |
+| Canonical entity | `KQ1001` | Stable internal entity ID, interpreted with its namespace |
+| Canonical property | `KP2001` | Stable internal property ID |
+| Assertion / source | `KA…` / `KS…` | Explicit semantic assertion and evidence references |
+| Wikidata item/property | `Q8018` / `P50` | **External identifiers only**, not interchangeable with KQ/KP |
+| Human labels | A preferred term or alias | Lexical data, never an identity or automatic match |
+
+## Approved external identity links
+
+Only an **accepted `exactMatch`** that has passed the Framework&#x27;s crosswalk checks may be surfaced as an accepted external exact reference. Suggested matches, fuzzy term similarity, `closeMatch`, unreviewed redirects, and data-import existence do not establish semantic equivalence.
+
+## Catalog validation
+
+The Pack delegates to Framework v11 for:
+
+- Catalog namespace and language declarations.
+- SHA-256 checks of the lexicon layers actually referenced by the catalog.
+- Crosswalk and registry coherence, including required external evidence.
+- Declared precedence, fallbacks and lexical record validation.
+
+A diK alpha.7 `import-large` job may produce a valid catalog from approved mappings, but its own SHA-256 of dump bytes **does not prove their Wikidata origin**. The Integration Pack does not authenticate review signatures or inspect the complete original dump.
+
+## Import and selection are separate
+
+The Pack only verifies the handoff. The **Authoring Kit** must separately register a revision and explicitly select it. The Framework&#x27;s canonical IDs and existing curated lexical layers must not be silently overwritten by incoming Wikidata text.
+
+See [[diK-to-Authoring-Kit-Handoff]] and [[diK-Alpha7-Receipts]].
+</pre></body></html>

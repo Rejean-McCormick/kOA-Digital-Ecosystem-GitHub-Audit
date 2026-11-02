@@ -1,0 +1,31 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Publishing-the-Wiki.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Publishing-the-Wiki.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 4eb78305f912 · SHA-256 8bb523b3a0cde227</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Publishing-the-Wiki' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Publishing the Wiki
+
+**Important:** This page documents two different targets. Neither a ZIP update nor a local Spek compilation performs a GitHub push.
+
+## A. Spek software documentation Wiki (this Wiki)
+
+Its editable source is in the **Spek main repository** under `wiki/*.md`; GitHub serves the live Wiki from the separate `OWNER/Spek.wiki.git` repository. To publish documentation changes:
+
+1. Review the proposed Markdown diffs in a local Spek checkout.
+2. Enable **Wikis** for the Spek repository if not already enabled.
+3. Create a `Home` page using the GitHub Wiki UI if the Wiki Git repository does not exist.
+4. Update the source `wiki/` pages in the main repository.
+5. Use the existing sync script first **without** `--push` to inspect the local diff, then with `--push` only after review.
+
+```bash
+./scripts/sync-wiki.sh OWNER/Spek
+./scripts/sync-wiki.sh OWNER/Spek --push
+```
+
+Do **not** extract an archived `.git/` directory over an existing local clone: it can overwrite branch metadata or the origin remote. The updated documentation ZIP intentionally excludes `.git/`.
+
+## B. Kristal knowledge Wiki (distinct repository)
+
+The public Kristal knowledge Wiki is intended for `Rejean-McCormick/kristal-public.wiki.git`, **not** Spek&#x27;s documentation Wiki. Its Markdown pages are built from approved Kristal semantic projections via **SemantiK Architect and Spek&#x27;s optional Arketype Wiki overlay**.
+
+A Wiki draft is not a publication: it must be reviewed, C1/C2/C3 gates must pass, and the target repository Wiki must be enabled/initialized before an authorized Git push. The current overlay deliberately does **not** automate that final push.
+
+See [[Wiki Draft Workflow]] and [[Epistemic and Security Boundaries]].
+
+GitHub documentation: &lt;https://docs.github.com/en/communities/documenting-your-project-with-wikis/adding-or-editing-wiki-pages&gt;.
+</pre></body></html>

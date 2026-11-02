@@ -1,0 +1,177 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · docs/10_MATERIALIZATION.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · docs/10_MATERIALIZATION.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · 68ba4c8ca9ff · SHA-256 b1b83be202808881</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/blob/68ba4c8ca9fff5f410d005fc6142b8c018716eb7/docs/10_MATERIALIZATION.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Materialization
+
+## 1. Definition
+
+A **materialization** is a physical representation of a logical artifact.
+
+```text
+Logical Artifact
+      ↓
+Materialization Profile
+      ↓
+Physical Representation
+```
+
+The purpose of v9 materialization is to allow storage and access optimization without changing logical identity.
+
+## 2. Explicit profile
+
+Every non-trivial materialization must identify the profile that explains how its bytes reconstruct logical content.
+
+Examples of possible profiles:
+
+```text
+kristal.materialization/inline-json/1
+kristal.materialization/native-blob/1
+kristal.materialization/segmented-jsonl/1
+kristal.materialization/kristal-state-v6/1
+```
+
+Additional profiles can be added independently from the core Standard.
+
+## 3. Inline materialization
+
+Small artifacts should normally remain simple.
+
+An inline profile stores one artifact in one directly readable representation.
+
+It is appropriate for:
+
+- small epistemic corpora;
+- contracts;
+- small registries;
+- procedure graphs of modest size;
+- manifests and metadata.
+
+V9 must not require segmentation because segmentation exists.
+
+## 4. Segmented materialization
+
+Large artifacts may be divided into immutable physical segments.
+
+Segments can improve:
+
+- partial reads;
+- parallel validation;
+- incremental rebuilds;
+- cache reuse;
+- partial distribution;
+- localized corruption recovery.
+
+Segment boundaries are physical and must not redefine semantic identity.
+
+## 5. Factorization
+
+Factorization stores shared logical information once while preserving its effective presence for each member.
+
+For example, if 600,000 claims share:
+
+```text
+record_role = reference_knowledge
+assertion_status = sourced
+actionability = not_applicable
+provenance = source X
+```
+
+a materialization may store that envelope once and associate member records with it.
+
+The reconstructed logical records must still expose those values.
+
+```text
+DEFAULTED METADATA != LOST METADATA
+```
+
+## 6. Dictionaries
+
+Repeated semantic identifiers may be represented by local ordinals inside a physical segment.
+
+Example:
+
+```text
+421 → urn:kristal:pokemon:pokemon:1
+```
+
+The local value `421` must never become an externally stable semantic identity.
+
+```text
+LOCAL ORDINAL != SEMANTIC IDENTITY
+```
+
+## 7. Columnar representation
+
+A homogeneous relation may be represented column-wise when that improves compression and query access.
+
+This is especially suitable when many records share shape and only a few fields vary.
+
+Columnar storage is a profile-level optimization. It is not a core semantic requirement.
+
+## 8. Native graph/AST materialization
+
+A graph or AST may remain physically graph-/tree-oriented.
+
+V9 must not convert a mathematical AST, diagnostic multiplex graph or procedural DAG into rows merely because relational storage is available.
+
+## 9. Compression
+
+Compression is orthogonal to logical materialization.
+
+A profile may permit codecs such as gzip or Zstandard, but changing codec alone must not change logical commitment.
+
+## 10. Encryption
+
+Encryption is also a physical envelope unless the logical contract makes ciphertext itself the knowledge object.
+
+Re-encryption can change blob bytes while preserving logical commitment when the security profile allows logical comparison.
+
+## 11. Materialization manifest
+
+A manifest links a logical artifact commitment to one or more physical blobs.
+
+Conceptual example:
+
+```json
+{
+  &quot;contract&quot;: &quot;kristal.materialization/9.0&quot;,
+  &quot;source&quot;: {
+    &quot;artifact_id&quot;: &quot;urn:kristal:pokemon:learnsets&quot;,
+    &quot;logical_commitment&quot;: &quot;sha256:...&quot;
+  },
+  &quot;profile&quot;: &quot;kristal.materialization/segmented-jsonl/1&quot;,
+  &quot;segments&quot;: [
+    {
+      &quot;segment_key&quot;: &quot;subject-bucket:00&quot;,
+      &quot;blob&quot;: {
+        &quot;media_type&quot;: &quot;application/vnd.kristal.segment+jsonl&quot;,
+        &quot;digest&quot;: &quot;sha256:...&quot;,
+        &quot;size&quot;: 182732
+      }
+    }
+  ]
+}
+```
+
+## 12. Hidden physical partitioning
+
+Clients should query logical keys, not physical bucket names.
+
+A materialization may change from 256 to 1024 buckets without changing the logical contract.
+
+```text
+LOGICAL QUERY != PHYSICAL PARTITION
+```
+
+## 13. Planner boundary
+
+The Standard defines valid materialization contracts, not a mandatory optimizer.
+
+A tool may recommend a materialization after examining:
+
+- cardinality;
+- repetition;
+- update locality;
+- query locality;
+- entropy;
+- structure type.
+
+The selected profile remains explicit in the produced artifact.
+</pre></body></html>

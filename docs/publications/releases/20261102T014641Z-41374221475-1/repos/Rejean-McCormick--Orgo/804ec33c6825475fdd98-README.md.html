@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · docs/screenshots/README.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · docs/screenshots/README.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · 381ab137d087 · SHA-256 29b41a910719292b</small><br><a href='https://github.com/Rejean-McCormick/Orgo/blob/381ab137d087794ffcb381532c7d2eabcdd60bb5/docs/screenshots/README.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Orgo UI screenshots
+
+This directory contains dated screenshots used in Orgo documentation.
+
+Generate the current set from the repository root:
+
+```text
+npm run docs:screenshots
+```
+
+One-time Playwright/Chromium setup:
+
+```text
+npm run docs:screenshots:setup
+```
+
+Output convention:
+
+```text
+docs/screenshots/
+  YYYY-MM-DD/
+    01-today.png
+    02-my-work.png
+    03-workrooms.png
+    04-workroom-overview.png
+    ...
+    README.md
+    manifest.json
+```
+
+The generator captures the OIM user surfaces and, when the local dataset contains a Workroom, its principal lenses. It also captures Supervisor surfaces and the Full Control Panel when the authenticated actor is authorized.
+
+These images are **documentation artifacts only**. They do not replace browser tests or acceptance evidence. Generate them only from documentation-safe/demo data.
+</pre></body></html>

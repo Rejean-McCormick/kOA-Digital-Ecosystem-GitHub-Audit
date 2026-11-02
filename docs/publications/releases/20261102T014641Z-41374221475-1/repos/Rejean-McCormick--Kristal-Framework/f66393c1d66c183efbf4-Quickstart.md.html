@@ -1,0 +1,60 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Quickstart.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Quickstart.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 e6d004ed5faf4972</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Quickstart' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>**v11 note:** the active *proposed* standard is [[Kristal-v11]] (`11.0.0-draft.4`). This document retains the foundational v9/v10 workflow; for a new strict KQ/KP graph use [[Authoring-Kit-v11]] and [[Dictionary-Management-v11]]. For older text-identified graphs use [[Legacy-Migration-v11]], never a global word replacement.
+
+---
+
+# Quickstart — v9 semantic state + optional v10 network
+
+**Current hosted-network baseline:** v10 `10.0.0-draft.3.2`. For GitHub, use [[Workflow-GitHub-v10]] and [[GitHub-Reference-Profile-v10]]. The workflow below is the **minimal inherited v9 semantic-state path** and remains valid.
+
+The smallest v9 deployment can keep existing canonical bytes and add only the new state envelope.
+
+## Minimal architecture
+
+```text
+existing canonical artifact
+        │
+        ├── Logical Artifact descriptor + commitment
+        │
+        └── State Snapshot
+                 │
+                 ├── existing v8 query/language companions
+                 └── optional materialization/runtime profiles
+```
+
+## Existing v6 state
+
+An unchanged `kristal_state/6.0` may be adopted as one Logical Artifact. You do not need to decompose it simply because v9 exists.
+
+## Domain-native canon
+
+If the domain already has a richer native canon — for example a recipe ProcedureGraph — preserve it as the Logical Artifact and keep the v6 state as a declared projection.
+
+## Logical commitment
+
+The commitment identifies normalized logical content, not the filename, compression or storage URI.
+
+## State Snapshot
+
+Compose exact artifact commitments. External dependencies are pinned, not `latest`.
+
+## Runtime/query
+
+Reuse the v8 rule:
+
+```text
+READ MODEL != CANONICAL STATE
+```
+
+## Lifecycle
+
+Build candidate → validate → publish immutable snapshot → atomically activate.
+
+## Next steps
+
+- [[Version-Stack-v6-v7-v8-v9]]
+- [[Logical-Artifacts]]
+- [[State-Snapshots-v9]]
+- [[Identity-and-Commitments-v9]]
+- [[Materialization-v9]]
+- [[Conformance-v9]]
+</pre></body></html>

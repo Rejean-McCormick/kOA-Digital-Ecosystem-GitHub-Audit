@@ -1,0 +1,26 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · README-WIKI-SOURCE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · README-WIKI-SOURCE.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · ec94ee500739 · SHA-256 51e66437a15bd41f</small><br><a href='https://github.com/Rejean-McCormick/Kompose/wiki/README-WIKI-SOURCE' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># KOMPOSE GitHub Wiki Source
+
+This folder is the **English-language local wiki source updated against the supplied v0.2.0 code snapshot on 2026-10-27**. It is **not** an independently verified, published GitHub wiki or a new software release. These Markdown pages can be imported into GitHub&#x27;s separate wiki Git repository, usually `&lt;OWNER&gt;/&lt;REPO&gt;.wiki.git`, after creating and enabling the wiki.
+
+- `Home.md`: homepage.
+- `_Sidebar.md`: sidebar navigation.
+- `_Footer.md`: persistent footer.
+- `Tandem-Orgo-Boundary.md`, `Kontexte-B6-Preview.md`, and `Ekole-P1-Preview.md`: current operational boundary and safe local example guides.
+- Remaining `*.md` files: topic pages.
+
+## Synchronization
+
+A GitHub wiki uses a **separate Git repository** from the project&#x27;s source code. Changes must be synchronized intentionally. Avoid `git push --force` on any collaboratively edited wiki.
+
+Wiki page links use GitHub&#x27;s double-bracket page-link syntax (page name and optional display label). The normative source of structural contracts remains `contracts/`: this wiki explains the system and links to paths in the code repository.
+
+## Publish after creating the GitHub repository
+
+1. Publish the KOMPOSE source to a GitHub repository under appropriate access permissions.
+2. Enable the **Wiki** feature and create its first page.
+3. Clone the wiki using the URL shown by GitHub (`git clone https://github.com/OWNER/REPO.wiki.git`).
+4. Copy the reviewed `*.md` pages from this directory to the wiki checkout (including `_Sidebar.md` and `_Footer.md`); omit `README-WIKI-SOURCE.md` if you do not want it published as a wiki page. Preserve unrelated wiki files.
+5. Run `git add . &amp;&amp; git commit -m &quot;docs: publish English KOMPOSE wiki&quot; &amp;&amp; git push`.
+
+Publication and GitHub permissions remain with the repository owner. **No online wiki is created by the provided archives.**
+</pre></body></html>

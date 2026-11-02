@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · docs/Technical-Reference/TANDEM_TOUR_KONNAXION_2026-10-18.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · docs/Technical-Reference/TANDEM_TOUR_KONNAXION_2026-10-18.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 59601fb9cd74 · SHA-256 f8f8a9b243081553</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/blob/59601fb9cd74fb8f9d8037ed97a0441f285242a1/docs/Technical-Reference/TANDEM_TOUR_KONNAXION_2026-10-18.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konnaxion — tournée Tandem, étape 1/8 (18 octobre 2026)
+
+## Autorité et limites
+
+- **Konnaxion** : produit, identité de session locale, contrôles et autorisations métier, pont IK.
+- **Konnaxion_Worlds** : source unique de la mécanique Universe/World/WorldRelease, de la résolution et de l&#x27;isolation. Aucun fork local.
+- **Orgo** : actions opérationnelles, Signal/Case/Task; aucune écriture directe dans ses bases.
+- **Konfid / kOA** : frontières de confiance et décisions gouvernées selon contrats, sans substitution aux autorisations locales.
+- **Interaction Kernel** : contrat de transport, pas base de données métier.
+
+## Correctifs de sécurité (sûrs et désactivés par défaut)
+
+1. `COMMON_OIDC_ALLOW_AUTO_SIGNUP=false` (nouveau; garde-fou lorsque `COMMON_OIDC_ENABLED=true`). `ACCOUNT_ALLOW_REGISTRATION` continue de contrôler **séparément** les inscriptions locales. Les `SocialAccount` déjà **explicitement liés** peuvent se connecter via OIDC; aucune fusion par email n&#x27;est ajoutée.
+2. `IK_ORGO_ALLOWED_ORGANIZATION` (nouveau). Lorsqu&#x27;il est configuré avec un UUID, les publications d&#x27;impact dont `source.organization` ne correspond pas sont refusées par 403, **avant** persistance. Cette mesure limite la portée d&#x27;un jeton partagé de démo à un tenant; elle ne remplace pas une authentification et des jetons délégués distincts en environnement multi-tenant.
+
+Aucun paramètre `.env` réel n&#x27;est modifié; ni OIDC ni Konfid ne sont activés.
+
+## Qualification (preuves distinctes)
+
+- Déjà établi dans le parcours FakePlant antérieur: 900 personas synthétiques, 6 Worlds, transport Konnaxion→Orgo et retour impact E2E technique.
+- Snapshot actuel: `users.User.can_interactive_login`, contrôle de connexion interactive par adaptateurs allauth, SocialAccount sans auto-association email, IK outbox/redrive, contrôles de World et release préexistants.
+- Le correctif **ne prouve pas** une connexion OIDC humaine réelle, les permissions de tous les endpoints/Worlds, la configuration effective du tenant Orgo, les décisions Konfid, ni une qualification de conformité IK totale.
+- Les tests statiques sans dépendances s&#x27;exécutent au moment d&#x27;installation. Les tests Django et d&#x27;intégration inclus exigent l&#x27;environnement backend et une base de test isolée. Ne pas les exécuter sur Neon ou les bases opérationnelles.
+
+## Suite dans la tournée
+
+- Orgo : qualification OIDC / RBAC, lien tenant et retour d&#x27;impact.
+- Konfid : Principals / IdentityBindings, assertions et politiques.
+- Interaction Kernel : versions de contrats, TCK et conformité.
+- Worlds : isolation réelle entre tenants/releases et permissions.
+- LevelUpDiag-Orgo : campagnes indépendantes.
+
+Ce correctif est un **durcissement de code Konnaxion**, pas une attestation de déploiement ni un GO LIVE.
+</pre></body></html>

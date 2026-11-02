@@ -1,0 +1,99 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · docs/reference/MULTILINGUAL_CANDIDATE_MATRIX.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · docs/reference/MULTILINGUAL_CANDIDATE_MATRIX.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · 74b07c42811d · SHA-256 fd6d79389af7da4d</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/blob/74b07c42811dae0c68549d8554c00bc44a04298d/docs/reference/MULTILINGUAL_CANDIDATE_MATRIX.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Multilingual Candidate Matrix
+
+Status: **informative implementation reference**
+
+## Purpose
+
+`CandidateMatrixConformance` runs the same SemantiK Architect candidate-conformance path across multiple immutable language/profile candidate bundles and produces one review result per language.
+
+It exists to support cross-language development and evidence gathering without moving GF/RGL language construction into SA.
+
+## Boundary
+
+The matrix **consumes** candidate bundles that already contain:
+
+- `grammar.pgf`;
+- `bridge.json`;
+- `lexicon.json`;
+- `profile.json`;
+- `conformance.suite.json`;
+- `pipeline.lock.json`.
+
+It does **not** compile a GF language, edit RGL sources, create a production RuntimeSet, write release evidence, or activate a runtime.
+
+The authority flow therefore remains:
+
+```text
+GF/RGL language source
+  -&gt; external build
+  -&gt; immutable SA candidate bundle
+  -&gt; CandidateMatrixConformance
+  -&gt; review result
+  -&gt; normal release gate (separate)
+```
+
+## API
+
+```python
+from semantik_architect.conformance import CandidateMatrixConformance
+
+report = CandidateMatrixConformance().run([
+    {
+        &quot;candidate_root&quot;: &quot;state/candidates/Fre/semantik-core-fr-lab-1&quot;,
+        &quot;runtime_set_id&quot;: &quot;semantik-core-fr-lab-1&quot;,
+        &quot;metadata&quot;: {&quot;rgl_code&quot;: &quot;Fre&quot;},
+    },
+    {
+        &quot;candidate_root&quot;: &quot;state/candidates/Eng/semantik-core-en-lab-1&quot;,
+        &quot;runtime_set_id&quot;: &quot;semantik-core-en-lab-1&quot;,
+        &quot;metadata&quot;: {&quot;rgl_code&quot;: &quot;Eng&quot;},
+    },
+])
+```
+
+For each suite case the matrix records:
+
+- pass/fail;
+- realized `plain_text`;
+- the SA↔GF operation IDs selected by the validated `LanguagePlan`;
+- a deterministic error string when the case fails.
+
+## Identity checks
+
+Before running a candidate, the matrix requires the suite language, capability profile and runtime-set identity to match `pipeline.lock.json`. Candidate artifact integrity remains enforced by `CandidateConformance`.
+
+## Release semantics
+
+A matrix `PASS` is development evidence only. It is **not** equivalent to `RELEASED` under the Language Conformance Lock. Production release still requires all release gates, immutable evidence pinning and an admitted RuntimeSet.
+
+
+## Candidate extension capabilities (SA 1.2.1)
+
+A candidate `pipeline.lock.json` may declare an additive `extension_capabilities` array.
+Each entry must be a known SA↔GF operation ID. The operations are admitted in addition
+to the selected profile&#x27;s `required_operations` for **candidate conformance only**.
+
+This mirrors the production capability-manifest model already consumed by
+`ManifestCapabilityAdapter.require_plan`: a stable common profile plus explicit
+per-language extensions. It does not weaken the binary release semantics of the base profile.
+
+Example:
+
+```json
+{
+  &quot;profile_id&quot;: &quot;semantik-multilingual-core-1&quot;,
+  &quot;extension_capabilities&quot;: [&quot;clause.passive_event&quot;]
+}
+```
+
+Rules are fail-closed:
+
+- the field, when present, must be an array;
+- every operation ID must exist in the SA↔GF v1 operation catalog;
+- duplicates are rejected;
+- the matrix report exposes the admitted extensions for each language;
+- absence of the field remains backward compatible and means no extensions.
+
+The field never releases or activates an operation. It only lets an immutable candidate
+prove that operation through the existing SA planning, lexical binding and GF bridge path.
+</pre></body></html>

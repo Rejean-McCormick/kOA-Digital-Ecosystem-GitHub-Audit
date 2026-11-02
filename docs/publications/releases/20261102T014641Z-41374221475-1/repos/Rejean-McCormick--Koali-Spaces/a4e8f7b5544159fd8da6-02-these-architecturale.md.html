@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/02-these-architecturale.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/02-these-architecturale.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 9667fdaf929c0018</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/01-core-architecture/02-these-architecturale.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 2. Thèse architecturale verrouillée
+
+Koali Spaces est le **bureau commun / experience layer**. Une application intégrée reste l&#x27;application propriétaire de son expérience interne.
+
+Le modèle est :
+
+```text
+Koali Spaces
+  ├─ sélectionne le module actif
+  ├─ compose la navigation de contexte
+  ├─ vérifie la disponibilité de la surface
+  ├─ résout une surface admise
+  ├─ encadre visuellement l&#x27;application
+  ├─ peut retirer son propre chrome en mode immersif
+  └─ n&#x27;absorbe jamais l&#x27;autorité métier de l&#x27;application
+
+Application propriétaire
+  ├─ conserve ses routes internes
+  ├─ conserve son UI
+  ├─ conserve sa navigation interne
+  ├─ conserve son authentification/session
+  ├─ conserve ses données
+  ├─ conserve ses permissions métier
+  └─ conserve ses workflows et décisions
+```
+
+`LOCK-KS-SURF-003` — **Koali Spaces est une couche de présentation non autoritative.**
+
+`LOCK-KS-SURF-004` — **La présentation n&#x27;accorde jamais une autorité.** Être visible dans un menu, être rendu dans une surface ou être actif dans un Space ne constitue pas une autorisation métier.
+
+`LOCK-KS-SURF-005` — **Koali Spaces ne possède pas les données métier représentées par les modules.**
+
+`LOCK-KS-SURF-006` — **Koali Spaces ne possède pas le workflow interne, l&#x27;état métier, les permissions métier ou la validation spécifique d&#x27;un module.**
+
+`LOCK-KS-SURF-007` — **Les écritures directes inter-sous-systèmes restent interdites.** Toute mutation passe par l&#x27;interface autorisée du propriétaire.
+
+`LOCK-KS-SURF-008` — **Un module hosté ne devient pas un sous-module interne de Koali par le seul fait d&#x27;être visible dans Koali.**
+
+---
+</pre></body></html>

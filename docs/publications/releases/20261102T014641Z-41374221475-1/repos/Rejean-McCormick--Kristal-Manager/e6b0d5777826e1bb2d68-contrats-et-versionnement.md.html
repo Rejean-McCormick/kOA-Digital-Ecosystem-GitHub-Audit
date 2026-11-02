@@ -1,0 +1,39 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/03-modele/contrats-et-versionnement.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/03-modele/contrats-et-versionnement.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 6c3198d56158d663</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/03-modele/contrats-et-versionnement.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Contrats d&#x27;échange et versionnement
+
+## Principe
+
+Une observation est enregistrée en un format Manager versionné, mais **conserve le rapport natif du moteur** via une référence, un digest et une provenance. L&#x27;adaptateur est une *anti-corruption layer*, non une conversion qui détruit les champs spécifiques.
+
+## Enveloppe cible `kristal.manager.observation/2.0` (proposition)
+
+```json
+{
+  &quot;format&quot;: &quot;kristal.manager.observation/2.0&quot;,
+  &quot;observation_id&quot;: &quot;sha256:...&quot;,
+  &quot;run_id&quot;: &quot;run-...&quot;,
+  &quot;workspace&quot;: {&quot;state_ref&quot;: &quot;urn:kristal:state:physics&quot;, &quot;path&quot;: &quot;C:\\mycode\\Kristal\\locals\\Kristal-Physics&quot;},
+  &quot;kind&quot;: &quot;diagnostic&quot;,
+  &quot;source&quot;: {&quot;engine&quot;: &quot;KristalDiag&quot;, &quot;version&quot;: &quot;recorded&quot;, &quot;profile&quot;: &quot;V9-State-Reader&quot;, &quot;contract_pin&quot;: &quot;recorded&quot;},
+  &quot;input&quot;: {&quot;fingerprint_scope&quot;: &quot;v9-known-files/1&quot;, &quot;fingerprint&quot;: &quot;sha256:...&quot;},
+  &quot;execution&quot;: {&quot;started_at&quot;: &quot;2026-10-31T12:00:00Z&quot;, &quot;ended_at&quot;: &quot;2026-10-31T12:00:08Z&quot;, &quot;status&quot;: &quot;DONE&quot;},
+  &quot;result&quot;: {&quot;verdict&quot;: &quot;PASS&quot;, &quot;qualification&quot;: &quot;NOT_ESTABLISHED&quot;},
+  &quot;evidence&quot;: {&quot;uri&quot;: &quot;file:///.../summary.json&quot;, &quot;sha256&quot;: &quot;...&quot;},
+  &quot;freshness&quot;: &quot;CURRENT&quot;
+}
+```
+
+**Remarque** : les `...` sont des espaces réservés dans ce contrat cible; aucun objet contenant ces valeurs ne doit être accepté en production.
+
+## Identité/idempotence
+
+`observation_id = sha256(canonical_json(workspace_instance, kind, engine, profile, input_fingerprint, evidence_digest, schema_version))`. Une exécution distincte a son propre `run_id`; deux événements identiques rejoués ne doublonnent pas. Une nouvelle exécution sur les mêmes entrées peut produire un `run_id` distinct, sans écraser l&#x27;ancienne.
+
+## Compatibilité
+
+- **Lecture ascendante** : importeurs `0.1`/`1.0` séparés et testés; pas de renommage silencieux des verdicts.
+- **Écriture** : seule la version active du contrat est émise; un ancien client reçoit une erreur claire de version.
+- **Payload** : borner volume; preuves détaillées stockées hors SQLite, référencées par digest.
+- **Horodatage** : UTC et chaîne ISO explicite; ne pas utiliser l&#x27;heure de l&#x27;import pour prétendre dater l&#x27;analyse historique.
+
+Pour l&#x27;existant, voir [stockage](../04-donnees/stockage-sqlite.md) et [exemple ancien](../12-references/exemples-de-resultats.md).
+</pre></body></html>

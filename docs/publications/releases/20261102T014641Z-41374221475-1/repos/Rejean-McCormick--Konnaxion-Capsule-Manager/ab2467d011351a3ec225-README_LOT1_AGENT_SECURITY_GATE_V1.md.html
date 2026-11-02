@@ -1,0 +1,59 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Capsule-Manager · README_LOT1_AGENT_SECURITY_GATE_V1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Capsule-Manager · README_LOT1_AGENT_SECURITY_GATE_V1.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Capsule-Manager · a137f3c1ab5e · SHA-256 252f884c7e90751f</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Capsule-Manager/blob/a137f3c1ab5e7a79887074560b11a2a6b0a70518/README_LOT1_AGENT_SECURITY_GATE_V1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konnaxion Capsule Manager — Lot 1, admission Security Gate fail-closed
+
+**Cible :** `C:\mycode\Konnaxion\Konnaxion_Capsule_Manager`  
+**Source exacte :** `Konnaxion_Capsule_Manager_Code_snapshot.zip` du 18 octobre 2026, 21:28.  
+**Périmètre :** patch de code **local** pour le démarrage d&#x27;instances (pas d&#x27;activation de release distante).
+
+Ce pack s&#x27;ajoute au dépôt. On conserve l&#x27;orchestrateur Tandem FakePlant existant, les preuves IK `complete=true` et les comptes synthétiques : ils ne sont jamais touchés.
+
+## Installation sécurisée
+
+Extraire le ZIP directement dans le dépôt `C:\mycode\Konnaxion\Konnaxion_Capsule_Manager`, puis, dans PowerShell 7 :
+
+```powershell
+cd C:\mycode\Konnaxion\Konnaxion_Capsule_Manager
+.\PREVIEW_LOT1_SECURITY_GATE.cmd
+.\INSTALL_LOT1_SECURITY_GATE.cmd
+.\VERIFIER_LOT1_SECURITY_GATE.cmd
+```
+
+L&#x27;aperçu est en **lecture seule**. L&#x27;installation :
+
+- vérifie les empreintes SHA-256 **des trois sources** du snapshot et du test ajouté, et l&#x27;intégrité des payloads;
+- refuse tout fichier local déjà modifié ou installation partielle (pas de `--force`);
+- sauvegarde les trois sources dans `C:\mycode\Konnaxion\Tandem_Local\lot1_security_gate\backups\&lt;horodatage&gt;`;
+- remplace de manière atomique **uniquement** `kx_agent/actions.py`, `kx_agent/api.py`, `kx_manager/services/deploy.py`, et ajoute `tests/test_agent_security_gate_failclosed_lot1.py`;
+- lance automatiquement **40 tests ciblés**, sans démarrage d&#x27;Agent ni accès à Neon/Orgo. En cas d&#x27;échec des tests, l&#x27;ancien code est remis en place automatiquement si les empreintes correspondent;
+- consigne les résultats dans `Tandem_Local\lot1_security_gate\backups\&lt;horodatage&gt;\tests.log`.
+
+**Si l&#x27;aperçu affiche `UNEXPECTED`, ne pas installer.** Le dépôt a changé depuis le snapshot; il faut préparer un patch recalculé, sans écraser les changements.
+
+Relancer l&#x27;installation après succès est **idempotent**. On peut vérifier avec `VERIFIER_LOT1_SECURITY_GATE.cmd`. En cas de besoin, `ROLLBACK_LOT1_SECURITY_GATE.cmd` ne restaure que si les fichiers sont toujours exactement ceux installés et si les sauvegardes sont intactes; aucun remplacement à l&#x27;aveugle.
+
+## Correctifs apportés
+
+1. `instance.start` dans **l&#x27;Agent** refuse `run_security_gate=false` et `ActionRequest.require_security_gate=false` **avant** toute opération Docker/migration.
+2. Un résultat du contrôle ne permet un démarrage que si son statut Agent est **SUCCEEDED**, son statut de sécurité est **PASS** ou **WARN**, et son fichier de preuve est présent (créé par le contrôle réel). `SUCCEEDED` avec `SKIPPED`, `UNKNOWN` ou preuve manquante est bloquant.
+3. Quand le runtime Compose n&#x27;existe pas, un contrôle `blocking=true` donne **BLOCKED** au lieu de `SUCCEEDED/SKIPPED`. Le contrôle d&#x27;information `blocking=false` peut encore signaler `SKIPPED` sans autoriser un démarrage.
+4. L&#x27;API Pydantic rejette explicitement `run_security_gate=false` pour `InstanceStartRequest`.
+5. Le Manager rejette `BaseDeployRequest.run_security_gate=false` et transmet **toujours** `run_security_gate=true` à `instance.start`.
+
+La protection finale doit être appliquée **à l&#x27;Agent réellement installé sur la machine qui déploie**; installer le correctif dans les sources Windows ne met pas à jour automatiquement un éventuel Agent Linux sur VPS.
+
+## Qualification locale effectuée
+
+- Snapshot original : **19/19 tests ciblés de référence**.
+- Correctif : **40/40 tests ciblés**.
+- Cycle installateur sur copie du snapshot : **aperçu → installation → vérification → relance idempotente → rollback → aperçu** réussi.
+- Suite globale sur cet environnement Linux : **109 échecs préexistants**, identiques avant et après correctif; **1021 tests passés + 2 ignorés avant**, **1042 tests passés + 2 ignorés après**. Les échecs restent à investiguer lors de la qualification multiplateforme (chemins Linux/Windows, UI et autres contrats). **Ce lot n&#x27;est pas une certification GA ni une campagne KonnaxionDiag.**
+
+## Étapes suivantes du programme directeur
+
+1. Raccorder à l&#x27;Agent réellement déployé la **vérification cryptographique de l&#x27;autorisation signée** de KonnaxionDiag pour le ReleaseSet exact. Ce contrôle est **non implémenté par ce correctif**.
+2. Vérifier tous les chemins d&#x27;activation et de restauration de l&#x27;Agent, les interfaces de déploiement et le profil d&#x27;hébergement final. Réparer les tests historiques avant toute qualification de production.
+3. Étendre l&#x27;admission à la release composite Konnaxion + Orgo, avec rollback et réconciliation coordonnés.
+
+## Aucune modification cachée
+
+Ce pack n&#x27;appelle aucune API de Konnaxion, Orgo, Konfid ni IK. Il ne touche à aucune base PostgreSQL, à aucun tenant ou persona, et ne redémarre pas les serveurs. L&#x27;installation se limite aux quatre fichiers source/test ci-dessus et aux sauvegardes locales. Les `.cmd` ne sont pas signés; examiner les scripts si leur provenance est incertaine.
+</pre></body></html>

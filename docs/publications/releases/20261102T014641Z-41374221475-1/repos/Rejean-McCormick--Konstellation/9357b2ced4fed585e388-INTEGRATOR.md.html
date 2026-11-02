@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/guides/INTEGRATOR.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/guides/INTEGRATOR.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 8ccd44d29144919a</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/guides/INTEGRATOR.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Guide intégrateur Kristal
+
+## Chemin recommandé
+
+1. publier un Kristal v6 valide ;
+2. vérifier son identité ;
+3. fournir une Reader Policy ;
+4. tester l&#x27;import dans Konstellation ;
+5. ajouter une Lens seulement si nécessaire ;
+6. ajouter des navigationHints seulement pour clarifier la structure ;
+7. créer des golden tests.
+
+## Hints
+
+Préférer :
+
+```json
+{
+  &quot;schemaVersion&quot;: &quot;0.1&quot;,
+  &quot;affordances&quot;: {&quot;temporal&quot;: 1},
+  &quot;relationAffordances&quot;: {&quot;precedes&quot;: [&quot;temporal&quot;, &quot;sequence&quot;]}
+}
+```
+
+Ne fournissez jamais de code UI.
+
+## Critère de réussite
+
+Un nouveau Kristal doit être utile en mode générique avant toute personnalisation : recherche, facettes, liste/tableau/Constellation et inspecteur.
+</pre></body></html>

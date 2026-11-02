@@ -1,0 +1,20 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · README_KOMPOSE_TANDEM_INTEROP_P1_V3.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · README_KOMPOSE_TANDEM_INTEROP_P1_V3.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · a5a2d855584d · SHA-256 17044a378d76c178</small><br><a href='https://github.com/Rejean-McCormick/Kompose/blob/a5a2d855584d55d7ee5553207cb2e2b95d9c823d/README_KOMPOSE_TANDEM_INTEROP_P1_V3.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kompose Tandem P1 V3 — Interop + Sécurité
+
+**Pourquoi V3?** Les V1/V2 ont échoué au test de documentation wiki; la V2 a été refusée avant installation. Ce lot ne dépend plus de `Kompose.wiki`. Aucun changement du wiki et aucune condition requise à son existence.
+
+## Installation
+
+Extraire ce ZIP dans `C:\mycode\Ekole\Kompose`.
+
+1. `PREVIEW_KOMPOSE_TANDEM_INTEROP_P1_V3.cmd`
+2. `INSTALL_KOMPOSE_TANDEM_INTEROP_P1_V3.cmd`
+3. `VERIFY_KOMPOSE_TANDEM_INTEROP_P1_V3.cmd`
+
+Pour restaurer : `ROLLBACK_KOMPOSE_TANDEM_INTEROP_P1_V3.cmd`. Sauvegardes : `C:\mycode\Ekole\Tandem_Local\kompose_tandem_interop_p1_v3\backups`. Contrôle SHA256 avant modification, pas de DB/VPS/réseau.
+
+## Couverture réelle
+
+Le pré-contrôle exécute la compilation, les tests Python **hors les 5 tests de wiki et un test des liens documentaires** (signalés comme différés), la validation du JSON Ekole et la validation de capsule. Il ne lance ni Orgo, ni authentification scolaire, ni élèves réels. Les chaînes JSON sont limitées, les doublons rejetés, les données privées inattendues refusées. L’accès enseignant appartient à Ekole; l’affectation et le workflow réel appartiennent à Orgo.
+
+**Aucun nouveau fichier n&#x27;est copié par simple extraction** (sauf scripts, manifeste, payload). Le correctif ne modifie pas `Kompose.wiki`.
+</pre></body></html>

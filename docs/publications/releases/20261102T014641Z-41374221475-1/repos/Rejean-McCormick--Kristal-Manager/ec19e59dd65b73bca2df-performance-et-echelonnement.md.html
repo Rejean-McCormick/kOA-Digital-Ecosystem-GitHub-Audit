@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/05-moteurs/performance-et-echelonnement.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/05-moteurs/performance-et-echelonnement.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 02ca5c223aefcad4</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/05-moteurs/performance-et-echelonnement.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Performance, cache et opérations sur 127 Kristals
+
+## Objectif
+
+Réduire le coût du travail répétitif et rendre les gros lots récupérables, sans sacrifier la fraîcheur ni les preuves. Les seuils chiffrés seront établis après benchmark Windows, pas prescrits arbitrairement.
+
+## Principaux coûts constatés
+
+- Énumération récursive et hachage de gros corpus.
+- Variantes multiples de graphes v11 (anciens `wikidata-...`, `v11-1`, `v11-2`).
+- Catalogue global potentiellement très volumineux (~189 Mo sur un poste ancien).
+- Exécution d&#x27;un subprocess KristalDiag par workspace.
+- Rendu de colonnes Treeview et tri/filtre des 127 sans modèle de données partagé.
+
+## Optimisations sûres
+
+1. Mise en cache **par entrée et portée**; contenu réutilisé uniquement si hash/digest fiable et version de lecteur identique.
+2. Scan « léger » pour métadonnées courantes, analyse « lourde » explicite.
+3. Pools bornés, par défaut 1 subprocess Diag; mesurer avant d&#x27;autoriser davantage de concurrence.
+4. Écrire un résumé incrémental après chaque Kristal; reprise en cas d&#x27;interruption sans refaire ceux dont le résultat reste courant.
+5. Mémoriser dimensions et totaux de graphe sans charger leurs objets en entier dans l&#x27;UI.
+6. Pagination de l&#x27;historique et des findings; rechercher par SQLite/index dédié.
+7. Isoler mises à jour GUI via file de messages; ne jamais appeler `subprocess.run()` sur le thread Tk.
+8. Sauvegarder les empreintes d&#x27;entrée par lot pour distinguer vrais changements du simple changement de date.
+
+## Mesures à produire
+
+Temps p50/p95 par moteur, taux de cache, bytes hachés, peak RSS, temps de réponse GUI pendant batch, nombre de fichiers/répertoires observés, taux d&#x27;erreur, taille des preuves, temps reprise après arrêt.
+
+## Limites
+
+Il est interdit de sauter un contrôle requis parce qu&#x27;il est lent tout en conservant un verdict `PASS`; les sorties partielles doivent indiquer `PARTIAL`/`UNVERIFIED` selon le contrat approprié.
+</pre></body></html>

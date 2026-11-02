@@ -1,0 +1,85 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/06-operations/configuration.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/06-operations/configuration.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 ab485e015a15c89e</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/06-operations/configuration.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Configuration
+
+## Precedence
+
+Reference precedence from lowest to highest:
+
+```text
+built-in defaults
+→ system config
+→ user config
+→ project config
+→ environment variables
+→ CLI flags
+→ request values bounded by admin limits
+```
+
+## Example `kompiler.toml`
+
+```toml
+[runtime]
+max_parallelism = 4
+default_timeout_ms = 30000
+max_stdout_bytes = 8000000
+max_join_items = 20000
+strict_protocol = true
+network_default = &quot;deny&quot;
+
+[budgets]
+max_items = 5000
+max_bytes = 10000000
+max_target_tokens = 250000
+
+[storage]
+database = &quot;~/.local/share/kompiler/kompiler.db&quot;
+retention = &quot;metadata&quot;
+cache = true
+
+[logging]
+level = &quot;INFO&quot;
+format = &quot;json&quot;
+
+[api]
+enabled = true
+host = &quot;127.0.0.1&quot;
+port = 7788
+
+[adapters.scolqc]
+manifest = &quot;~/.config/kompiler/adapters/scolqc.toml&quot;
+```
+
+## Configuration hashing
+
+Semantic configuration that can affect output MUST be included in the run&#x27;s configuration hash. UI preferences and log formatting MUST NOT affect the semantic hash.
+
+## Paths
+
+All user-configurable paths are expanded and canonicalized before policy checks. Adapter roots SHOULD be absolute after resolution.
+
+## Environment variables
+
+Recommended prefix: `KOMPILER_`.
+
+Examples:
+
+```text
+KOMPILER_LOG_LEVEL
+KOMPILER_API_PORT
+KOMPILER_DB_PATH
+```
+
+Secret-bearing variables MUST NOT be echoed into logs or Context Packs.
+
+## Generated adapter configuration
+
+`kompiler adapters bootstrap` writes manifests under `~/.config/kompiler/adapters/` by default and emits `~/.config/kompiler/adapters.generated.toml`. That generated fragment is part of the normal default configuration search path, after the main user config and before project config.
+
+## Policy values
+
+The reference runtime validates:
+
+- `runtime.network_default`: `deny` or `allow`;
+- `storage.retention`: `none`, `metadata`, `packs`, or `full`.
+
+Capabilities declaring `semantics.network=true` are rejected at admission when the runtime policy is `deny`.
+</pre></body></html>

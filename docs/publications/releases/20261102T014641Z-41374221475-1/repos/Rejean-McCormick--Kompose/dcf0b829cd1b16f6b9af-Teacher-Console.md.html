@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · Teacher-Console.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · Teacher-Console.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · ec94ee500739 · SHA-256 9a0c50770842b9cb</small><br><a href='https://github.com/Rejean-McCormick/Kompose/wiki/Teacher-Console' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Teacher Console and Supervision
+
+The console is a **target interface**, not a working frontend in v0.2.0. In any real Tandem flow, its operational commands must go through **Orgo**, not a parallel KOMPOSE task engine (ADR 0008). It is designed to configure and protect sessions through their complete lifecycle.
+
+## Recommended views
+
+| View | Responsibilities |
+|---|---|
+| Preparation | Capsule, content, role capacities, accessibility, assignment policy |
+| Enrollment | Attendance, resumption, admissions, overall state |
+| Diagnostic | Validity and comparability, accommodations, private educational decisions |
+| Casting | Allocation preview, conflicts, changes, publication |
+| Adventure | Missions, phases, guardians, access, deadlock alerts, interventions |
+| Closure | Reflection, deletion, minimal authorized exports, archival |
+
+## Social constraints
+
+An affinity must not automatically force students together. An aversion is a **temporary signal** whose use requires justification and proportionality. Safety-related separation is a hard constraint; desirable collaboration is a soft preference.
+
+**Never expose to classmates:** reasons for incompatibilities, diagnostic scores, sensitive personal details, or peer rankings. Indirect narrative messages must not reveal them either.
+
+## Human interventions
+
+- Revise an assignment and record the reason privately.
+- Pause and resume **from the previous state**.
+- Reassign an absent guardian without changing the Kristal or silently granting new access.
+- Unblock a mission through a suitable alternative **without bypassing safety rules**.
+- Complete or cancel a capsule and provide appropriate feedback.
+
+Reference commands use an **expected session version**; future services must verify actor identity, school scope, and authorization. The proposed API includes `/teacher/sessions/{sessionId}/commands`, but no server exists yet.
+
+[[Home|← Home]] · [[Security-Privacy-and-Fairness|Security →]]
+</pre></body></html>

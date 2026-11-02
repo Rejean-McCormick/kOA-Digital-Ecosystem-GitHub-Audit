@@ -1,0 +1,98 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/05-architecture-renderer.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/01-core-architecture/05-architecture-renderer.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 261251cd268e3c82</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/01-core-architecture/05-architecture-renderer.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 5. Architecture cible du renderer
+
+```text
+/apps/[moduleId]/[[...route]]
+            |
+            v
+     request normalization
+            |
+            v
+  SERVER / CONTROL SIDE
+            |
+     Active Space
+     validated manifest
+     capability projection
+     runtime registration
+     lifecycle/readiness
+            |
+            v
+ SurfaceResolutionService
+            |
+            v
+ ResolvedSurfaceInternal
+            |
+    minimize / project
+            |
+            v
+ SurfaceDescriptorPublic
+            |
+  ---------------- browser boundary ----------------
+            |
+            v
+     SurfaceRenderer
+     /      |       \
+    /       |        \
+local   registered   module
+shell   component    application
+page    surface      surface
+                    |
+                    v
+              ApplicationHost
+               /          \
+            framed       immersive
+```
+
+Le renderer navigateur ne reçoit pas un manifest brut et ne résout pas un runtime.
+
+Concept serveur :
+
+```ts
+interface ResolvedSurfaceInternal {
+  kind: SurfaceKind;
+  spaceId: string;
+  moduleId: string;
+  routeId: string;
+  routePath: string;
+  runtime?: {
+    registrationId: string;
+    runtimeRef: string;
+    healthRef?: string;
+    lifecycleProfileRef?: string;
+    transportProfileRef?: string;
+  };
+  status: SurfaceStatus;
+  presentation: SurfacePresentationPolicy;
+}
+```
+
+Projection navigateur :
+
+```ts
+interface SurfaceDescriptorPublic {
+  surfaceId: string;
+  moduleId: string;
+  routeId: string;
+  kind: SurfaceKind;
+  status: SurfaceStatus;
+  presentation: {
+    label: string;
+    accentTokenRef?: string;
+    immersiveAllowed: boolean;
+    defaultMode?: &quot;framed&quot; | &quot;immersive&quot;;
+  };
+  target?: {
+    embedSrc: string;
+    iframeTitle: string;
+    sandboxTokens: string[];
+    browserPermissions: string[];
+    bridgeProtocolRef?: string;
+  };
+}
+```
+
+`LOCK-KS-SURF-015` — **SurfaceRenderer est un dispatcher de présentation.** Il ne fait pas de requêtes métier spécifiques à Konnaxion, Orgo, UCKK, etc.
+
+`LOCK-KS-SURF-016` — **Les manifests bruts ne sont pas passés directement aux composants d&#x27;affichage comme source de confiance.** Ils sont validés, résolus et projetés dans une structure runtime bornée.
+
+`LOCK-KS-SURF-017` — **La résolution d&#x27;autorisation reste distincte de la résolution d&#x27;affichage.** Une capability projetée peut décider qu&#x27;une route n&#x27;est pas présentable ; le renderer ne peut pas créer une permission.
+</pre></body></html>

@@ -1,0 +1,19 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/02-host-experience/10-navigation-outer-inner.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/02-host-experience/10-navigation-outer-inner.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 072720502e170cd2</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/02-host-experience/10-navigation-outer-inner.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 10. Navigation : outer navigation vs inner navigation
+
+Deux navigations peuvent coexister en mode framed :
+
+1. **Outer navigation** Koali : sélection de module, navigation de Space, raccourcis de contexte.
+2. **Inner navigation** : navigation native de l&#x27;application hostée.
+
+Cette duplication visuelle est acceptée par design. Elle est préférable à la fusion artificielle des responsabilités.
+
+`LOCK-KS-SURF-035` — **La sidebar Koali est une contribution de présentation, pas l&#x27;autorité des routes internes du module.**
+
+`LOCK-KS-SURF-036` — **Le module selector choisit un contexte de surface ; il n&#x27;accorde pas une permission applicative.**
+
+`LOCK-KS-SURF-037` — **Koali ne déduit pas automatiquement toute la navigation interne d&#x27;une application par scraping ou introspection DOM.**
+
+`LOCK-KS-SURF-038` — **Une navigation Koali vers une sous-route de module n&#x27;est valide que si cette route est déclarée/admise par le contrat de présentation applicable.**
+
+---
+</pre></body></html>

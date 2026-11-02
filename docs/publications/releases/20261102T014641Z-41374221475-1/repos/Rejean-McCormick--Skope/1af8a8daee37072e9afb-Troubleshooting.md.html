@@ -1,0 +1,65 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Troubleshooting.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Troubleshooting.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 337298165771b6ae</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Troubleshooting' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Troubleshooting and diagnostics
+
+## Server will not start
+
+**Symptom:** missing SQLite or incompatible schema. **Check:** `--db` points to a pre-existing finalized `30_working/wikidata/*.sqlite` with `entity`, `name`, `entity_edge`, `meta` and `complete=1`. **Do not** make Skope fabricate or silently rebuild a replacement index.
+
+**Symptom:** browsing over IPv6 `http://[::1]:8767` returns a loopback Host error. **Check:** the current Host parser mishandles bracketed IPv6 authorities; use `http://127.0.0.1:8767` until fixed.
+
+**Symptom:** port `8767` already in use. **Check:** stop the previous local Skope/EncyK server; start one standalone instance. Refresh the browser after updating code.
+
+**Symptom:** Windows launcher says Python 3.12 missing. **Check:** exact interpreter path in `Start_Skope.cmd`; either install that interpreter or consciously edit the launcher.
+
+## Scope profile does not appear
+
+Confirm that your JSON is a `.json` directly inside `scopes/`, not a `.template`. Click **Refresh profiles**, then inspect `/api/scope-profiles/catalog` for per-file errors. Look for duplicate keys/IDs, invalid formats, symlinks, unsupported `both` direction for batch passes, missing allowed PIDs, accepted convergence or `documented_only` geography.
+
+## Preview has fewer nodes than expected
+
+Read `truncated` and `preview_budget`. The HTTP preview is capped at 10,000. Also verify property filter, branch depth, direction, and the actual indexed relations. `max_entities=0` means unlimited **target inventory**, not unlimited **HTTP preview**. A completed collection is only complete within its traversal policy.
+
+## Batch collection stops or cannot resume
+
+`limit_reached` means the requested cap was met before complete traversal; consider reviewing/refining scope or resuming with a larger cap. `paused`/`interrupted`/`failed` may be resumable using the **same** validated recipe (except allowed budget increase). Check disk free space (minimum 2 GiB), job status and the exact 32-hex job ID.
+
+## Extraction shows &quot;reader missing&quot; or &quot;random access unavailable&quot;
+
+Inspect `/api/diagnostics/reader` **in the running server**. A package installed in Python 3.14 does not automatically exist in the Python 3.12 launcher. A usable `indexed_bzip2` import is necessary but insufficient: the corresponding existing QID locator and compression index must also be present. **No full-dump fallback is allowed.**
+
+## Extraction preflight refuses the source
+
+Read `blockers` from `/api/extract/preflight`. Possible causes: no complete inventory; QID counts differ; missing source file or verified manifest; manifest SHA-1 not explicitly verified; filename/byte-size mismatch; insufficient free space; output path outside the intended data root; missing reader or sidecar; source identity changed from a prior job. Repair only after reviewing source provenance.
+
+## Catho campaign says no active workspace or roster invalid
+
+Activate a valid **kristal-catho** workspace in Active Kristal. The workspace must have a valid `kristal.workspace.json` and the expected Catho recognition roster file. A generic Botany/Economics workspace does not satisfy the specialized Catho author orchestration contract.
+
+## Identity review import fails
+
+Check that reviewed CSV is under 55 KB; all rows to confirm have `review_decision=confirm`, a human QID, valid HTTP(S) identity URL, 15–3000 character justification, current `expected_revision` and no duplicate person/QID conflict. Validate the **exact** CSV again if it changed after dry run; affirm documentary source review. Skope cannot verify external URLs&#x27; factual content.
+
+## Windows Explorer/clipboard buttons unavailable
+
+`Open Results folder`, `Open Evidence Folder`, and copy-file-to-clipboard depend on running on Windows. This is a platform limitation, not failure of read-only browsing.
+
+## What to report in a bug
+
+Attach sanitized `server_release`, Python executable/version, test results, relevant API status/error, scope recipe (without sensitive content), job state and the **manifest IDs/hashes, not full private datasets**. Do not upload a production roster, licensed dump or secret workspace paths to a public issue.
+
+
+## Portfolio enrichment problems (0.15.0-alpha.1)
+
+**`No portfolio state`:** run `python -m skope portfolio inventory --input ... --work ...` (or `prepare`) first. `--work` points to a directory containing `portfolio.sqlite`, not the SQLite index itself.
+
+**`Portfolio source/options changed` / `Index/source snapshot changed`:** never reuse a work folder after changing the input ZIP, `--include-metadata` setting or source index identity. Choose a **new** work directory.
+
+**Few or zero lookup candidates:** inspect `status` and `review-candidates.csv`. Many v11 projects lack curated `fr`/`en` labels. The search is bounded and requires an already finalized compact index. Consider separate domain scopes/seeds rather than interpreting missing candidates as absent entities.
+
+**No reviewed QID seeds:** `acquire` defaults to reviewer-attested decisions. Import documented review CSV or, **for ordinary draft data only**, explicitly use `--include-draft` after `suggest-draft`. A-Kristals are excluded from automated suggestions.
+
+**`Verified ... source not ready` / locator missing:** `acquire` requires a configured, verified full Wikidata dump, manifest, source profile and fast-access locator. Discovery from SQLite does not create any of these assets. Do not work around the failure by claiming indexed edges are complete statements.
+
+**Corrupted chunk / mismatched resume:** do not force reuse of a partially written or altered evidence chunk. Preserve diagnostic files, use a fresh output directory and check dump/source identity and available disk space.
+
+**No new canonical Kristal after `propose`:** this is expected; the output is evidence for later diK reconciliation and Authoring Kit publication. See [Portfolio Enrichment](Portfolio-Enrichment).
+</pre></body></html>

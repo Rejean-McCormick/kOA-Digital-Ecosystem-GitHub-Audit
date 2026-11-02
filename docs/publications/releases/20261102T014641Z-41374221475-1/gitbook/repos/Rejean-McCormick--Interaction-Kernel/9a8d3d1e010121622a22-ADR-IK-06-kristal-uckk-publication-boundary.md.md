@@ -1,0 +1,29 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Interaction-Kernel/blob/1d0598456fe8203625f9831ec00c32225422631d/docs/adrs/ADR-IK-06-kristal-uckk-publication-boundary.md | commit: 1d0598456fe8203625f9831ec00c32225422631d | SHA-256: 100b6bf82d497c1a6eb96d432a6ec9a9a904af479e03d9d5b60f3bac3ebac059 -->
+
+# ADR-IK-06 — Kristal → UCKK publication boundary
+
+**Status:** Accepted  
+**Date:** 2026-10-02
+
+## Decision
+
+UCKK publication is an Interaction Kernel participant integration, implemented as a UCKK adapter and versioned IK Profiles. It is not a Kristal Framework transport concern and not an IK artifact store.
+
+The canonical Kristal and its source/corpus bytes remain owned by their authoritative systems. In the reference deployment, the kOA Mediatheque may own immutable publication bundle bytes. DaaT emits an IK command carrying an `ArtifactRef` to that bundle. UCKK resolves/imports the referenced immutable artifact, creates its own local publication object, and returns a Receipt and/or outcome Event.
+
+## Profiles
+
+- `kristal.publication.request/1.0.0`
+- `kristal.publication.available/1.0.0`
+- `kristal.publication.revoke.request/1.0.0`
+- `kristal.publication.revoked/1.0.0`
+
+Publication replacement uses `supersedes_publication_id`. Revocation is explicit and preserves historical provenance. Neither operation mutates the canonical Kristal corpus.
+
+## Consequences
+
+1. UCKK-specific mapping lives under `adapters/uckk/`.
+2. Kristal Framework remains independent of UCKK implementation details.
+3. IK carries references, authority context and lifecycle acknowledgements; it does not persist publication payloads.
+4. The kOA Mediatheque can remain the artifact owner while DaaT remains the IK boundary participant.
+5. Production UCKK implementations must persist idempotency and publication state locally; the reference adapter only demonstrates the semantics.

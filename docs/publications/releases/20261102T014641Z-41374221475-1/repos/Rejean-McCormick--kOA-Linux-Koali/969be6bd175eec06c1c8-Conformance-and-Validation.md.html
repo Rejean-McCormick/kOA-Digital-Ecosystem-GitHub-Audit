@@ -1,0 +1,76 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · Conformance-and-Validation.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · Conformance-and-Validation.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · a014d6b410b4 · SHA-256 32c7540ec9a1f7d0</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/wiki/Conformance-and-Validation' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- Navigational projection. Normative authority remains in the repository docs/ corpus. --&gt;
+
+# Conformance and Validation
+
+&gt; **Authority notice:** This wiki is a readable navigation layer. Source contracts, accepted ADRs, normative documents, and executable validators in the repository remain authoritative.
+
+## Complete pipeline
+
+Run from the repository root:
+
+```bash
+python docs/tools/validate_docs.py
+```
+
+The pipeline runs the specialized documentation controls before a documentation release can be considered valid.
+
+## Specialized validators
+
+| Validator | Purpose |
+| --- | --- |
+| `check_ai_boundary.py` | AI and external-integration authority boundaries |
+| `check_artifact_contracts.py` | Artifact schemas and examples |
+| `check_canonical_ownership.py` | Canonical ownership uniqueness |
+| `check_component_boundaries.py` | Component and subsystem separation |
+| `check_decision_closure.py` | Decision closure and unresolved choices |
+| `check_document_graph.py` | Document identities and dependency graph |
+| `check_generated_blocks.py` | Generated blocks inside source documents |
+| `check_generated_content.py` | Deterministic generated outputs |
+| `check_greenfield_architecture.py` | Active architecture constraints |
+| `check_interfile_locks.py` | Cross-file alignment locks |
+| `check_language.py` | Active documentation language policy |
+| `check_no_unresolved_state.py` | Unresolved authority or placeholder states |
+| `check_normative_language.py` | Normative language use |
+| `check_profile_inheritance.py` | Profile and overlay composition |
+| `check_release_sets.py` | Release-set and channel compatibility |
+| `check_subsystem_alignment.py` | Subsystem boundary contracts and mounts |
+| `check_traceability.py` | Decision, requirement, test, and evidence traceability |
+
+## Generated-content rebuild
+
+```bash
+python docs/tools/build_indexes.py
+python docs/tools/build_ai_context.py
+python docs/tools/check_generated_content.py
+```
+
+## Subsystem mounts
+
+Normal validation permits reserved paths to remain unmounted:
+
+```bash
+python docs/tools/check_subsystem_alignment.py
+```
+
+After all six official documentation trees are linked, require their presence:
+
+```bash
+python docs/tools/check_subsystem_alignment.py --require-mounted
+```
+
+## Evidence model
+
+Conformance claims require traceable requirements, tests, and evidence. Architectural prose alone is not sufficient for an implementation claim.
+
+## Sources
+
+- [`docs/09-conformance/00-conformance-model.md`](../blob/main/docs/09-conformance/00-conformance-model.md)
+- [`docs/09-conformance/01-requirement-identification.md`](../blob/main/docs/09-conformance/01-requirement-identification.md)
+- [`docs/09-conformance/02-requirement-traceability.md`](../blob/main/docs/09-conformance/02-requirement-traceability.md)
+- [`docs/09-conformance/05-test-evidence.md`](../blob/main/docs/09-conformance/05-test-evidence.md)
+- [`docs/09-conformance/06-release-evidence.md`](../blob/main/docs/09-conformance/06-release-evidence.md)
+- [`docs/09-conformance/19-release-gates.md`](../blob/main/docs/09-conformance/19-release-gates.md)
+- [`docs/09-conformance/20-subsystem-documentation-alignment.md`](../blob/main/docs/09-conformance/20-subsystem-documentation-alignment.md)
+- [`docs/09-conformance/21-generated-navigation-rebuild.md`](../blob/main/docs/09-conformance/21-generated-navigation-rebuild.md)
+- [`docs/tools/validate_docs.py`](../blob/main/docs/tools/validate_docs.py)
+</pre></body></html>

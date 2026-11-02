@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · Testing-and-Validation.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · Testing-and-Validation.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · ec94ee500739 · SHA-256 3246831e2f8ad6c5</small><br><a href='https://github.com/Rejean-McCormick/Kompose/wiki/Testing-and-Validation' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Testing — What Has Actually Been Checked
+
+The `0.2.0` source includes Python unit tests for local demonstration rules and additional B6/P1 safety gates. **Passing local tests does not make KOMPOSE production-ready or authorize real Orgo operations.**
+
+## Reproduce the checks
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s tests -v
+PYTHONPATH=src python3 -m kompose.cli validate examples/capsule-rivieres
+PYTHONPATH=src python3 -m kompose.cli demo-flow examples/capsule-rivieres
+PYTHONPATH=src python3 -m kompose.cli preview-kontexte examples/kontexte-boulangerie/data/missions/boulangerie.json examples/kontexte-boulangerie/data/roles
+PYTHONPATH=src python3 -m kompose.cli verify-ekole-preview examples/integrations/ekole-fete-sorciere.synthetic.json
+```
+
+Set `$env:PYTHONPATH=&#x27;src&#x27;` first for PowerShell and invoke `py -m ...`. Optional schema check dependencies: `python3 -m pip install -e &#x27;.[dev]&#x27;`.
+
+## Verified classes of behavior
+
+- Reference capsule cross-references, source/publication safeguards, non-generative Kristal reader and prompts.
+- Example Entry Door preconditions, simulated lifecycle, phase and mission dependencies, controlled transfer proposals.
+- B6 Kontexte synthetic-only preview, no silent curriculum remapping, restricted role views, cycle checks and non-executable output.
+- Synthetic Orgo receipt replay guards: sequencing, duplicate handling, human-review fixture assertions, no protected fragment leakage.
+- Ekole P1 file gate: exact JSON shape, synthetic mode, unknown/secret field rejection, canonical UUID syntax, duplicate JSON key rejection, valid task IDs/states, file-size/UTF-8/symlink restrictions.
+- English wiki navigation/link tests **only when the separate wiki checkout exists**.
+
+## Explicit gaps
+
+- No authenticated teacher, school SSO, operational Orgo/Worlds instance, permission decision, real dispatch or network fallback.
+- No full role-allocation solver, psychometric assessment validation, audited learner records, or certified educational content.
+- A fixture&#x27;s `teacher_authorized` or `authority: orgo` field is **not independent evidence**.
+- If the wiki checkout is absent, wiki tests are **skipped**; do not count skipped checks as passing checks.
+
+[[Home|← Home]] · [[Project-Status|Status]] · [[Ekole-P1-Preview|P1 security gate →]]
+</pre></body></html>

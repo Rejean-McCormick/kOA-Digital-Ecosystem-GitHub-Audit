@@ -1,0 +1,20 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · C3-Collection-Checks.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · C3-Collection-Checks.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 38c0a8bff91ef055</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/C3-Collection-Checks' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># C3 Collection Readiness
+
+`tools/check_c3_readiness.py` delegates to the collection owner&#x27;s **local read-only** verifier, `tools/c3_collection.py`. It deliberately does not create an index or imitate the owner checker.
+
+```bash
+python tools/check_c3_readiness.py \
+  --collection /path/to/kristal-public --mode scan
+
+python tools/check_c3_readiness.py \
+  --collection /path/to/kristal-public --mode validate-index
+```
+
+A missing owner script reports **`NOT_EVALUATED`**. A failed structural check reports **`C3_BLOCKED`**; a successful one reports **`C3_LOCAL_STRUCTURE_PASS`**. Both outcomes explicitly leave C1/C2 authorization and remote publication unverified.
+
+The previously supplied public collection snapshot was missing `kristals/index.json`. This does not authorize the Integration Pack to invent a replacement public index or announce a successful publication.
+
+**C3 structure ≠ independent C1 evidence ≠ C2 visibility grant ≠ deployed public release.** These are separate owner-controlled gates.
+
+See [[Architecture-and-Ownership]], [[Security-and-Trust-Boundaries]], and [[Qualification-and-Testing]].
+</pre></body></html>

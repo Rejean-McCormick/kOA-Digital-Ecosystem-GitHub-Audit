@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Geography.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Geography.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 0ab839df7266b1a5</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Geography' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Geography: document signals, not occurrence proof
+
+Skope supports geography **annotations** attached to a scope recipe, chiefly the Botany North America / Canada priority scenario. Wikidata properties are incomplete and do not establish biological presence/absence by themselves.
+
+## Example
+
+```json
+&quot;geography&quot;: {
+  &quot;mode&quot;: &quot;annotate&quot;,
+  &quot;focus&quot;: &quot;north-america&quot;,
+  &quot;priority&quot;: &quot;canada&quot;,
+  &quot;region_qid&quot;: &quot;Q49&quot;,
+  &quot;priority_qid&quot;: &quot;Q16&quot;,
+  &quot;evidence_properties&quot;: [&quot;P9714&quot;, &quot;P183&quot;, &quot;P2341&quot;]
+}
+```
+
+Supported modes:
+
+- **`off`** — no geography classification.
+- **`annotate`** — annotate/prioritize displayed entities without excluding unknown ones; recommended for research.
+- **`documented_only`** — in **preview only**, display entities with region/priority signals (plus root context). Risk: many false negatives; **not accepted** by batch collector.
+
+## Implementation
+
+Skope inspects compact links for P9714 (*taxon range*), P183 (*endemic to*) and P2341 (*indigenous to*). To classify linked places, it follows at most **two geographic hops** using P17/P131/P30, with bounded queries. The labels `priority`, `region`, `outside_only` and `unknown` describe *indexed signals*, not ecological conclusions.
+
+Geographic annotation happens **after** graph traversal. An unvisited branch cannot be recovered by a Canada-first presentation rule. In the massive QID collection, neither the geographic priority nor `documented_only` acts as a filter.
+
+**Never infer:** “no Canadian link” ⇒ “absent from Canada”; “P9714 exists” ⇒ “verified occurrence”; “the whole scope is complete” ⇒ “a complete flora”. Independent flora/occurrence evidence, e.g. authoritative botanical data, is still needed.
+
+See [Scope Recipes](Scope-Recipes), [QID Collection](QID-Collection), [Safety and Provenance](Safety-and-Provenance).
+</pre></body></html>

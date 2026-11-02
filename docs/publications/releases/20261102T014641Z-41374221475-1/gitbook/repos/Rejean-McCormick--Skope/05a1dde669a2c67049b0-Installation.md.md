@@ -1,0 +1,61 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Skope/wiki/Installation | commit: 3b1bfff4bd6a0f7956f5aacd45ef525bb5f39125 | SHA-256: b1b4c8171988bb955ae08cbf1a51f9ede24a6c9bf79ff315538283642b6c2d7a -->
+
+# Installation and prerequisites
+
+## Supported deployment profile
+
+The supplied standalone launcher targets **Windows + Python 3.12**, with code in `C:\mycode\Skope` and pre-existing Wikidata datasets on `D:\EncyKlopedia`. The package metadata allows **Python 3.11+**, but the bundled `.cmd` launcher hardcodes the user's Python 3.12 executable. A Python version permitted by package metadata does **not** guarantee that optional compression readers are installed there.
+
+This repository is **code-only**. It does **not** ship a Wikidata dump, the large SQLite index, a complete locator/sidecar, or Kristal workspaces. Installing the code cannot create those assets.
+
+## Recommended Windows setup
+
+1. Close earlier Skope/EncyK processes using port `8767`.
+2. Extract the repository to `C:\mycode\Skope` so that `Start_Skope.cmd`, `skope/`, `scopes/` and `config/` are at the top level.
+3. Verify the finalized index exists at `D:\EncyKlopedia\30_working\wikidata\wikidata.compact.sqlite`.
+4. Check `%LOCALAPPDATA%\Programs\Python\Python312\python.exe`; install required Python packages **in that interpreter**, not a different Python installation.
+5. Start `Start_Skope.cmd`, keep its terminal open and visit [http://127.0.0.1:8767](http://127.0.0.1:8767).
+6. In the interface, check the index metadata, choose a profile and use **Calculate scope** before considering an actual collection.
+
+```powershell
+# From the repository root; adapt the path to your Python installation
+& "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe" -m pip install -e ".[fast,test]"
+& "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe" -m pytest tests -q
+```
+
+`indexed-bzip2` is optional for browsing but is normally required to **random-access** the configured `.bz2` dump. Installing it alone does **not** generate the existing locator and compression index that full extraction requires.
+
+## Optional: installing for native v11 portfolio enrichment
+
+The 0.15.0-alpha.1 distribution contains `skope/portfolio.py` and `Run_Portfolio_Prepare.cmd`. This is an **additional CLI workflow**, independent of the browser server. Drag a v11 Kristal ZIP onto the launcher for initial name discovery or follow the commands in [Portfolio Enrichment](Portfolio-Enrichment). On Windows, the batch launcher uses the existing finalized `D:` compact index and creates `portfolio-work` in the Skope folder.
+
+Full-source `acquire` still depends on the **matching verified dump and random-access locator/reader**; the wheel/ZIP does not include them. Portfolio enrichment does not publish new canonical Kristals.
+
+## Cross-platform developer run
+
+```bash
+python -m pip install -e '.[test]'
+python -m skope serve --db /absolute/path/to/finalized/index.sqlite --host 127.0.0.1 --port 8767
+```
+
+This starts a local server **only when a compatible finished SQLite index already exists**. The Windows Explorer/clipboard commands and baked-in `D:` extraction profile paths are not portable. Large collection and extraction expect a prescribed `30_working/wikidata` directory structure, even when the small read-only explorer works elsewhere.
+
+## Initial diagnostics
+
+```text
+GET http://127.0.0.1:8767/api/meta
+GET http://127.0.0.1:8767/api/config
+GET http://127.0.0.1:8767/api/diagnostics/reader
+GET http://127.0.0.1:8767/api/scope-profiles/catalog
+```
+
+A missing/unfinished index is a startup blocker. A failed dump-reader diagnostic blocks full extraction but **may** leave indexed browsing available. Do **not** rebuild a production index merely to make a profile appear.
+
+## Upgrade cautions
+
+- Use **one** launcher, `Start_Skope.cmd`. `Start_Skope_Catho.cmd` was retired in 0.14.1.
+- Retain the existing `scopes/` additions, ignored `config/kristals.local.json`, all jobs and evidence on `D:`.
+- Stop the old server and refresh the browser with `Ctrl+F5` after an overlay upgrade.
+- **No** data move, new dump scan or index rebuilding is required simply to upgrade Skope code.
+
+See [Configuration and Paths](Configuration-and-Paths), [Troubleshooting](Troubleshooting) and [Testing and Validation](Testing-and-Validation).

@@ -1,0 +1,79 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Ekole-Pastorale · Troubleshooting.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Ekole-Pastorale · Troubleshooting.md</h1><p class='meta'><small>Rejean-McCormick/Ekole-Pastorale · 7c73b3852cf8 · SHA-256 c49e070f8f9ddb95</small><br><a href='https://github.com/Rejean-McCormick/Ekole-Pastorale/wiki/Troubleshooting' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Troubleshooting
+
+## Ekole Core was not found
+
+The launcher&#x27;s default path is `../ekole/launcher.py` relative to `ecole-pastorale/`. Verify the sibling layout:
+
+```text
+projects/
+├── ekole/launcher.py
+└── ecole-pastorale/demarrer_pastorale.py
+```
+
+Or pass an explicit location:
+
+```bash
+python3 demarrer_pastorale.py --core /absolute/path/to/ekole --verifier
+```
+
+You can also use the `EKOLE_CORE_PATH` environment variable.
+
+## The content pack is not loading
+
+Start with:
+
+```bash
+python3 demarrer_pastorale.py --verifier
+```
+
+Check that `pack.json` exists at the **root** of `ecole-pastorale/` and has the format `ekole.content-pack/0.1`. The content pack is currently expected to contain **32 courses and 7 pathways**.
+
+If you have both `ekole-quebec/` and `ecole-pastorale/` installed, explicitly use the Pastorale launcher or Core&#x27;s `--contenu` argument; do not rely on auto-discovery to choose the intended school.
+
+## Windows double-click closes or shows an error
+
+Run `LANCER_PASTORALE.bat` from a command prompt so you can read the output. Ensure `py -3` or `python` resolves to Python 3.10 or later.
+
+## Server port is already in use
+
+Select another pair:
+
+```bash
+python3 demarrer_pastorale.py --port 8875 --port-editeur 8876
+```
+
+Use different ports for learner and teacher applications.
+
+## Browser does not open
+
+If the server continues running, open `http://127.0.0.1:8775/` manually. To avoid automatic opening altogether, use `--sans-navigateur`.
+
+## Cannot access the teacher application
+
+Ekole displays a **private teacher URL** in the terminal. Do not assume that visiting port 8776 directly is sufficient. The editor is read-only unless you deliberately use `--edition`.
+
+## Projector says canonical content changed
+
+Do not bypass the guard. Recheck your source edit and rebuild the correct committed state:
+
+```bash
+python3 kristals/lire-bible/tools/kristal.py check-v11 kristals/lire-bible
+python3 kristals/lire-bible/tools/kristal.py check kristals/lire-bible
+python3 kristals/lire-bible/tools/kristal.py build-v9 kristals/lire-bible
+python3 outils/projeter_ekole.py
+```
+
+Adjust the unit path to match the edited Kristal. See [Authoring and Projection](Authoring-and-Projection.md).
+
+## Historical Catho references are unresolved
+
+That is expected. `federation/catho-legacy-bridge.json` is a **hash-pinned legacy inventory**, not an authorized Framework v11 semantic crosswalk. See [Catho Reference Integration](Catho-Reference-Integration.md).
+
+## Tests fail because Core is not next to Pastorale
+
+Some integration tests exercise the real Core when a sibling checkout is present. The core-independent repository tests can still run; to test the full launching path, install Core next to Pastorale or set the explicit Core path supported by the launcher.
+
+## Course content is in French
+
+The **learning pack is currently fr-CA by design**. Only the GitHub-facing README and wiki documentation were translated to English. An English curriculum would be a separate authoring and localization project.
+</pre></body></html>

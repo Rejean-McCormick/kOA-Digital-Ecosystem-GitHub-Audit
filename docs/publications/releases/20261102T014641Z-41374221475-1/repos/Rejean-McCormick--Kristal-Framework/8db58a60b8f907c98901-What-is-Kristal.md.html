@@ -1,0 +1,52 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · What-is-Kristal.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · What-is-Kristal.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 87e286c6aa4d566a</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/What-is-Kristal' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># What is Kristal?
+
+Kristal is a portable, deterministic architecture for structured knowledge, epistemic state and reproducible knowledge artifacts.
+
+It is not one database format or one ontology model.
+
+**Current snapshot:** v10 `10.0.0-draft.3.2` adds a hosted-network layer to unchanged v9 semantic state; see [[Kristal-v10]].
+
+## Five accumulated generations
+
+- **v6** defines portable epistemic state and independently addressable assertions;
+- **v7** adds stable semantic identity, registries, factorization and orchestration;
+- **v8** externalizes language and adds exact semantic query/read models;
+- **v9** separates logical state from build, physical materialization and runtime access;
+- **v10** adds nodes, host bindings, publication and discovery without changing v9 commitments.
+
+## The inherited v9 semantic-state model
+
+```text
+what knowledge means
+        ↓
+Logical Artifact(s)
+        ↓
+immutable State Snapshot
+        ↓
+Derivations + Materializations
+        ↓
+Exchange / Runtime / Query / AI views
+```
+
+## What Kristal tries to preserve
+
+- identity without label coupling;
+- provenance and evidence;
+- applicability and value-state distinctions;
+- explicit disagreement and unknowns;
+- authority boundaries;
+- reproducible build lineage;
+- representation independence;
+- explicit completeness/partial-result semantics;
+- deterministic publication and rollback.
+
+## What it deliberately avoids
+
+Kristal does not require all knowledge to be triples, rows, graph edges or documents. It standardizes the envelope and lifecycle around domain-native structures.
+
+The most compact v9 principle is:
+
+```text
+KNOWLEDGE != BUILD != MATERIALIZATION != READ MODEL
+```
+</pre></body></html>

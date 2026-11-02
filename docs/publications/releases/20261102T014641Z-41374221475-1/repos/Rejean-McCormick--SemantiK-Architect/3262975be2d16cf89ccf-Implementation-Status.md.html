@@ -1,0 +1,48 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · Implementation-Status.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · Implementation-Status.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 acc4585b9f4791b9</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/Implementation-Status' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Implementation Status
+
+## Implemented in SA v1 core
+
+- canonical semantic graph and typed values;
+- semantic statements and communication obligations;
+- communication context and presentation constraints;
+- request validation and stable error envelope;
+- deterministic communication planning;
+- target-language planning to `LanguagePlan` / `RealizationUnit`;
+- extensible planning-support hints;
+- lexical preflight and exact binding;
+- semantic/obligation coverage validation;
+- strict versioned SA↔GF bridge;
+- PGF runtime boundary;
+- filesystem RuntimeSet catalog;
+- artifact hashing and SA-version compatibility;
+- explicit activation when multiple releases coexist;
+- capability profile enforcement;
+- conformance harness and release validation;
+- deterministic result assembly;
+- SDK, CLI and minimal HTTP adapter;
+- health/readiness and output projections.
+
+## External artifacts required for production language output
+
+SA does not bundle an arbitrary grammar and call it production-ready. A language/profile needs a released RuntimeSet containing:
+
+- a real PGF grammar;
+- a compatible bridge artifact;
+- lexical/locale artifacts as required;
+- capability manifest;
+- profile artifact;
+- passing hashed conformance evidence.
+
+## Product ACLs
+
+The canonical ACL boundary exists. Product-specific adapters are implemented when the owning system&#x27;s structured semantic contract is explicit.
+
+## Deliberately outside SA
+
+- raw free-text understanding;
+- task/workflow state authority;
+- truth/provenance authority;
+- independent morphology/syntax engines;
+- best-effort language fallback;
+- article-generation/editorial planning.
+</pre></body></html>

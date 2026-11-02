@@ -1,0 +1,93 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal · Kristal-Lifecycle-in-MediKristal.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal · Kristal-Lifecycle-in-MediKristal.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal · 93fba2ff54b0 · SHA-256 8dc7e2b952a407fd</small><br><a href='https://github.com/Rejean-McCormick/MediKristal/wiki/Kristal-Lifecycle-in-MediKristal' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kristal Lifecycle in MediKristal
+
+MediKristal uses the **Kristal** model to turn a medical claim into a portable, inspectable artifact rather than an anonymous row in a database.
+
+- [Kristal Framework repository](https://github.com/Rejean-McCormick/kristal-framework)
+- [Kristal in the kOA-Linux Wiki](https://github.com/Rejean-McCormick/kOA-Linux/wiki/Kristal)
+- [Portable Knowledge with Kristal](https://github.com/Rejean-McCormick/kOA-Linux/wiki/Portable-Knowledge-with-Kristal)
+
+## What a medical Kristal can carry
+
+Conceptually, a MediKristal artifact can preserve:
+
+```text
+assertion identity
+subject / predicate / object
+source references
+source versions
+jurisdiction
+population / applicability
+certainty / uncertainty
+status
+review history
+semantic relations
+language representations
+reader / disclosure policy
+supersession / revocation links
+```
+
+## Working knowledge and promoted knowledge
+
+A central design principle is that compiling something does not make it medically authoritative.
+
+```text
+working Kristal
+    ↓ validate
+reviewable Kristal
+    ↓ expert review
+reviewed Kristal
+    ↓ governance decision
+promoted Kristal
+    ↓ compile
+Runtime Pack
+```
+
+A working artifact can be useful for research, comparison, testing, or review without being approved for a clinical trust surface.
+
+## Example lifecycle
+
+A new guideline changes the recommended threshold for a test.
+
+1. The new guideline release is imported with source/version metadata.
+2. The affected medical assertion is identified.
+3. A working Kristal is modified.
+4. Automated validation checks structure, provenance, identifiers, and required metadata.
+5. Qualified experts review the proposed change.
+6. Smart Vote produces one or more reproducible expert readings.
+7. A governance authority promotes, rejects, or returns the change for revision.
+8. A new knowledge release is compiled.
+9. kOA-Linux verifies and activates the Runtime Pack.
+10. The previous release remains historically referenceable.
+
+## Runtime Packs
+
+A Runtime Pack is a read-optimized, locally verifiable projection of promoted knowledge.
+
+A MediKristal Runtime Pack may include:
+
+```text
+medical graph subset
+terminology mappings
+protocols
+guideline/source metadata
+jurisdiction
+language artifacts
+integrity metadata
+release identity
+```
+
+The Runtime Pack is not the same thing as the working authoring corpus. This separation allows local systems to consume a stable release while authors and reviewers continue working on the next one.
+
+## Portable knowledge, not central-server dependence
+
+A hospital, clinic, school, research group, or field deployment should be able to carry a verified knowledge package locally rather than depend on a live central server for every query.
+
+This supports:
+
+- offline reference;
+- controlled institutional deployment;
+- reproducible historical behavior;
+- explicit release management;
+- local policy overlays;
+- safe degradation when networks fail.
+</pre></body></html>

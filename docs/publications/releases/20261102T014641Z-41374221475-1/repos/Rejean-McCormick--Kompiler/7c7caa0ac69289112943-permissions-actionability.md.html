@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/05-security/permissions-actionability.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/05-security/permissions-actionability.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 b3df07b6ee4eefc7</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/05-security/permissions-actionability.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Permissions, Actionability, and Human Boundaries
+
+## Fundamental rule
+
+Kristal v6 may represent actionability modes such as `automatic`, `human_review`, `human_decision`, `manual`, `prohibited`, `insufficient_information`, and `not_applicable`.
+
+Kompiler preserves these values as knowledge. It does not treat them as runtime permissions.
+
+```text
+actionability = automatic
+≠ authorization to modify a system
+```
+
+## Kompiler v1 is read-oriented
+
+`kompiler.query/1.1` can invoke only capabilities with `read_only=true`.
+
+A future action system would require a separate protocol with:
+
+- explicit target-system ownership contract;
+- authentication;
+- admission/authorization check;
+- human approval modes where required;
+- idempotency;
+- receipts;
+- rollback/compensation semantics.
+
+None of those are implied by Context Pack data.
+
+## Human review
+
+The desktop UI MAY require explicit user approval before running a large read query, especially when it accesses sensitive local Kristals or adapters that declare network use. This is a Kompiler safety/control policy and is separate from Kristal actionability metadata.
+</pre></body></html>

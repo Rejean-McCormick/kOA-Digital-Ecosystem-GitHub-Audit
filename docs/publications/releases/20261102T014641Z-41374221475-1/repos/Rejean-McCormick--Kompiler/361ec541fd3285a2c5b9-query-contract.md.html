@@ -1,0 +1,148 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/02-protocol/query-contract.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/02-protocol/query-contract.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 13efce221e45b5c1</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/02-protocol/query-contract.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Query Plan Contract
+
+`kompiler.query/1.1` is a declarative DAG of semantic operations.
+
+## Minimal request
+
+```json
+{
+  &quot;protocol&quot;: &quot;kompiler.query&quot;,
+  &quot;version&quot;: &quot;1.1&quot;,
+  &quot;request_id&quot;: &quot;pollution-001&quot;,
+  &quot;capability_snapshot_id&quot;: &quot;cap:sha256:...&quot;,
+  &quot;operations&quot;: [
+    {
+      &quot;id&quot;: &quot;pollutants&quot;,
+      &quot;target&quot;: &quot;Environment&quot;,
+      &quot;operation&quot;: &quot;find&quot;,
+      &quot;params&quot;: {&quot;topic&quot;: &quot;air pollution&quot;}
+    }
+  ]
+}
+```
+
+## Full top-level shape
+
+```json
+{
+  &quot;protocol&quot;: &quot;kompiler.query&quot;,
+  &quot;version&quot;: &quot;1.1&quot;,
+  &quot;request_id&quot;: &quot;...&quot;,
+  &quot;capability_snapshot_id&quot;: &quot;...&quot;,
+  &quot;intent&quot;: &quot;build_context&quot;,
+  &quot;topic&quot;: &quot;pollution&quot;,
+  &quot;parent_context_pack_id&quot;: null,
+  &quot;operations&quot;: [],
+  &quot;context&quot;: {
+    &quot;reader_policy&quot;: null,
+    &quot;locale&quot;: &quot;fr-CA&quot;
+  },
+  &quot;budget&quot;: {
+    &quot;max_items&quot;: 1200,
+    &quot;max_bytes&quot;: 1500000,
+    &quot;target_tokens&quot;: 120000
+  },
+  &quot;execution&quot;: {
+    &quot;max_parallelism&quot;: 4,
+    &quot;default_timeout_ms&quot;: 30000,
+    &quot;on_operation_error&quot;: &quot;fail_dependents&quot;
+  },
+  &quot;return&quot;: {
+    &quot;include_provenance&quot;: true,
+    &quot;include_raw_refs&quot;: true,
+    &quot;include_conflicts&quot;: true,
+    &quot;include_gaps&quot;: true
+  }
+}
+```
+
+## Operation
+
+```json
+{
+  &quot;id&quot;: &quot;human_effects&quot;,
+  &quot;target&quot;: &quot;HumanBody&quot;,
+  &quot;operation&quot;: &quot;mechanisms&quot;,
+  &quot;params&quot;: {&quot;scope&quot;: &quot;health_effects&quot;},
+  &quot;inputs&quot;: [
+    {
+      &quot;from&quot;: &quot;pollutants&quot;,
+      &quot;selector&quot;: &quot;$.records[*].referent&quot;
+    }
+  ],
+  &quot;budget&quot;: {&quot;max_items&quot;: 300},
+  &quot;on_error&quot;: &quot;fail_dependents&quot;
+}
+```
+
+### Required operation fields
+
+- `id`: unique within request;
+- `target`: exact advertised target ID;
+- `operation`: exact advertised operation ID;
+- `params`: object conforming to the capability&#x27;s input schema.
+
+### Inputs
+
+`inputs` references prior operation results. v1 selectors are deliberately constrained. An implementation MUST NOT evaluate arbitrary code or general scripting expressions. The reference implementation supports a small declarative selector grammar over normalized fields.
+
+### DAG rules
+
+- references MUST point to existing operation IDs;
+- self-reference is invalid;
+- cycles are invalid;
+- dependent operations run only after their required inputs are complete;
+- sibling operations MAY run concurrently;
+- ordering between independent operations MUST NOT affect normalized results.
+
+`required=false` bindings may resolve to no data after an upstream failure. Required bindings whose upstream operation failed are not executed. An empty selection from a successful upstream operation remains valid data.
+
+The reference runtime applies an administrator `max_join_items` limit to each selected binding before downstream injection.
+
+## Error policies
+
+Allowed v1 values:
+
+- `abort_run` — any failure terminates the run;
+- `fail_dependents` — failing node and dependent subtree fail; independent nodes continue;
+- `continue` — failure is recorded and downstream nodes receive no input from that node unless their capability permits missing inputs.
+
+`fail_dependents` is the recommended default.
+
+## Read-only rule
+
+The v1 Query Plan is read-oriented. A capability with `semantics.read_only=false` MUST NOT be invokable from `kompiler.query/1.1`. Future action protocols, if any, require a separate contract and explicit authority model.
+
+## Forbidden fields
+
+The core query contract has no `shell`, `command`, `python`, `javascript`, `sql`, `url_to_execute`, or arbitrary executable field. Domain-specific query strings are allowed only when an advertised capability explicitly defines and validates them as data.
+
+## Query identity
+
+`request_id` is an audit/transport identifier and is not part of the reference semantic Query Plan hash. Execution-only preferences that cannot alter content, such as cache usage and scheduling parallelism, are also excluded. Fields that can affect content or failure behavior remain part of semantic identity.
+
+## Boundary constraints
+
+A v1 Query Plan MUST contain a non-empty `request_id` and at least one operation. Each operation MUST have non-empty `id`, `target`, and `operation` strings. Operation IDs MUST be unique within the plan. These constraints are enforced at protocol parsing time before admission.
+
+## Protocol 1.1: v7 Surface selector
+
+`QueryOperation.surface` is optional for ordinary source-plane operations and required when the selected capability advertises `semantics.requires_surface=true`.
+
+```json
+{
+  &quot;surface&quot;: {
+    &quot;subject&quot;: {&quot;subject_id&quot;: &quot;subject:...&quot;},
+    &quot;orientation&quot;: {
+      &quot;primary_axis&quot;: &quot;KQ1001&quot;,
+      &quot;secondary_axis&quot;: &quot;KQ1002&quot;
+    },
+    &quot;context&quot;: {},
+    &quot;source_policy&quot;: {},
+    &quot;conflict_policy&quot;: &quot;preserve_disagreement&quot;
+  }
+}
+```
+
+The Surface selector is semantic input: it participates in query hashing and cache identity. See [v7 Surface Contract](v7-surface-contract.md).
+</pre></body></html>

@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · QID-Collection.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · QID-Collection.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 cc877f153e905424</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/QID-Collection' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Large QID collection: resumable on-disk traversal
+
+**Purpose:** write a complete *within-policy* inventory of Wikidata identifiers to a job directory without loading a massive selection into the browser. It is **not** original source JSON extraction.
+
+## Preconditions
+
+- A finalized, compatible compact index under `&lt;data-root&gt;/30_working/wikidata/`.
+- A validated root QID and an explicit nonempty `allowed_properties` list.
+- Exactly one traversal direction, `in` **or** `out` (no `both`).
+- No accepted convergence candidates (`convergence.include` must be empty).
+- No `geography.mode: documented_only`; geographic priorities are **not** filters for batch jobs.
+- At least **2 GiB free disk space** at start and during the worker&#x27;s progress checks.
+- Explicit operator action; opening or calculating a profile alone does not start collection.
+
+## Procedure
+
+1. Configure the scope and review the bounded preview.
+2. In **Data acquisition**, start **batch QID collection**; the API equivalent is `POST /api/large/start` with `{&quot;recipe&quot;: &lt;validated-recipe&gt;}`.
+3. Inspect `/api/large/status?job=&lt;32-hex-id&gt;`; pause with `POST /api/large/pause` and `{&quot;job&quot;: &quot;&lt;id&gt;&quot;}`.
+4. Resume via `/api/large/start`, passing the **same recipe** and `resume` job ID. Only `max_entities` may be increased (or set to `0` for unlimited).
+5. When status becomes `completed`, download `/api/large/result.zip?job=&lt;id&gt;` or use **Open Results folder** (Windows).
+
+A requested cap may end the run in `limit_reached`, not `completed`. **A job that reached a budget limit is not exhaustive.** An `interrupted` or `failed` job must be assessed and explicitly resumed.
+
+## Files on disk
+
+```text
+30_working/skope-large-scopes/&lt;job-id&gt;/
+  recipe.json                validated exact recipe
+  state.sqlite              selected/QID queue/status
+  selected-qids.jsonl       one {&quot;wikidata_qid&quot;:&quot;Q...&quot;} object per line (completed job)
+  results.zip               generated on explicit result export
+```
+
+The generated ZIP contains `selected-qids.jsonl`, `recipe.json`, `summary.json` and `README.txt` for a normal scope. Specialized author jobs use the same general job root but export additional roster/work evidence files.
+
+## Guarantees and non-guarantees
+
+Selection is driven by indexed relation direction, PIDs and depth; non-Q entity identifiers are excluded. Persisted queue/selected tables protect against an in-memory-only huge inventory. The compact index remains read-only.
+
+**Not guaranteed:** completeness of Wikidata; accurate science; geographic coverage; included preview convergence nodes; provenance of original claims; full source JSON. Consult [Full-Record Extraction](Full-Record-Extraction) for verified source preservation.
+</pre></body></html>

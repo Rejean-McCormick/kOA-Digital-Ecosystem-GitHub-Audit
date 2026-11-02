@@ -1,0 +1,21 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo-Worlds · docs/Technical-Reference/Worlds/06_RUNTIME_CONTEXT_AND_ROUTING.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo-Worlds · docs/Technical-Reference/Worlds/06_RUNTIME_CONTEXT_AND_ROUTING.md</h1><p class='meta'><small>Rejean-McCormick/Orgo-Worlds · c2445db8abf7 · SHA-256 44e46df58e3ce50e</small><br><a href='https://github.com/Rejean-McCormick/Orgo-Worlds/blob/c2445db8abf78afcb647f22615ad3b9dd132bde8/docs/Technical-Reference/Worlds/06_RUNTIME_CONTEXT_AND_ROUTING.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Runtime context and routing
+
+The standalone API exposes World control/routing operations only. With the current bootstrap (`app.setGlobalPrefix(&quot;api&quot;)`), the canonical local endpoints include:
+
+```text
+GET  /api/control/worlds
+POST /api/control/worlds
+GET  /api/control/worlds/{world_key}
+GET  /api/control/worlds/{world_key}/releases
+POST /api/control/worlds/{world_key}/releases
+POST /api/control/worlds/{world_key}/releases/{release_id}/promote
+GET  /api/control/worlds/{world_key}/memberships
+PUT  /api/control/worlds/{world_key}/memberships/{user_id}
+POST /api/control/worlds/{world_key}/archive
+GET  /api/runtime
+```
+
+The request context can carry organization, user, permission, World and release identifiers through the standalone header contract. It is control/routing context; it does not activate a local Signal/Case/Task engine.
+
+Operational routes such as `/tasks`, `/cases`, `/signals` and `/workflows`, plus the Interaction Kernel endpoint, belong to the main `Orgo` product.
+</pre></body></html>

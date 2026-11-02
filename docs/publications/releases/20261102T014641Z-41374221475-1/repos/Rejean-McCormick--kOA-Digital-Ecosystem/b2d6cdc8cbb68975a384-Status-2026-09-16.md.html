@@ -1,0 +1,83 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · Status-2026-09-16.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · Status-2026-09-16.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · dd52671208ae · SHA-256 860e38f6b4504eef</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/wiki/Status-2026-09-16' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># kOA Digital Ecosystem alignment status — 2026-09-16
+
+This page records ecosystem alignment against the supplied Konnaxion, Orgo, Kristal, Interaction Kernel, current kOA-Linux docs/contracts snapshot and current Koali Spaces docs snapshot.
+
+## Overall result
+
+The ecosystem documentation is aligned at the ownership/contract level, but adoption and implementation evidence remain system-specific.
+
+| Area | Ecosystem documentation | Current evidence / remaining work |
+|---|---|---|
+| Kristal v5 epistemic model | Aligned | Structured Epistemic State, Working/Reference separation, Reader Policy and non-universal validation gate are preserved |
+| kOA-Linux Runtime Pack ownership | Corrected | `kristal_runtime` owns verification/compatibility/active-state/activation+rollback receipts/runtime health; Node Agent is the narrow privileged host-transition path |
+| kOA-Linux release model | Corrected | Release Set binds compatible `system`, `services`, `governance`, `knowledge` channel versions; Digital Ecosystem Release Record is deprecated as authority |
+| Runtime Activation State | Corrected | Digital Ecosystem no longer creates a parallel authoritative state beside `kristal_runtime` |
+| Koali Spaces ecosystem placement | Added | Optional presentation/composition subsystem; no product, epistemic or host authority |
+| Koali Space activation vs Runtime Pack activation | Aligned | Explicitly separate lifecycles |
+| Koali↔Konnaxion UI pilot | Later evidence present | 2026-09-08 notice records adapter 15/15, Konnaxion backend 148/148, Koali UI 29/29, readiness HTTP 200 and browser navigation verification |
+| Koali current-reference docs | Drift remains in owner repo | `01-product/04-current-vs-target.md` and `15-reference/04-current-implementation-snapshot.md` still say first Konnaxion onboarding is pending |
+| Interaction Kernel | Target architecture | Must not be presented as replacing current kOA-Linux internal/component contracts until explicit adoption/mapping is published |
+| Konnaxion↔Orgo IK handoff | Target/migration | Direct finalized DecisionRecord→Orgo path still requires explicit implementation/conformance evidence |
+| Orgo→Konnaxion durable publication | Target mapping + historical evidence | Product-level IK Profile conformance still required |
+| Da’at→Kristal v5 | Target mapping | Migration/conformance evidence remains owner-repository work |
+
+## Precise kOA-Linux ownership model
+
+```text
+kOA-Linux platform
+  owns profiles, trust/policy/resource boundaries,
+  artifact admission and release-channel contracts
+
+Release Set
+  binds compatible versions across
+  system / services / governance / knowledge channels
+
+kristal_runtime
+  owns Runtime Pack verification/compatibility,
+  active Runtime Pack record,
+  activation/rollback receipts,
+  runtime health
+
+kOA Node Agent
+  executes narrow authorized privileged node-local
+  activation/recovery transitions when required
+```
+
+This supersedes the coarser earlier wording that “kOA-Linux owns physical Runtime Pack activation” and supersedes the Digital Ecosystem-created Runtime Activation State as an authority.
+
+## Koali Spaces placement
+
+Koali Spaces is an optional global experience/presentation subsystem. It composes admitted application surfaces and owns Space lifecycle/presentation state only.
+
+```text
+Koali Space activation
+≠ product business activation
+≠ kOA-Linux release-channel activation
+≠ Kristal Runtime Pack activation
+```
+
+A Koali view of Kristal/Runtime Pack material must preserve relevant status, certainty, authority and Reader Policy labels. Rendering does not compile, validate or recognize authority.
+
+## Interaction Kernel status
+
+Interaction Kernel remains the target cross-system protocol/Profile layer for selected ecosystem boundaries. Current kOA-Linux documentation already defines its own canonical interaction types and contracts; therefore Digital Ecosystem treats IK adoption as explicit and system-specific rather than already universal.
+
+Claims such as `governance.decision.execute` or `accountability.impact.publish` describe target/mapped Profiles until the owning product/platform contracts publish matching conformance evidence.
+
+## Deprecated Digital Ecosystem authorities
+
+The following are retained only for compatibility/history:
+
+- `Release Record v2` as an authoritative release object — use kOA-Linux Release Set and owner receipts instead;
+- `Runtime Activation State` as a kOA-Linux authoritative record — use `kristal_runtime` owner records instead;
+- `Konnaxion State` as universal Runtime Pack activation state;
+- active Kristal v4 integration pages — retained as historical migration documentation only.
+
+## Product-repository updates still required
+
+1. **Koali Spaces:** update the two current-state reference pages that still say first real Konnaxion onboarding is pending; replace “Kristal: verrou de vérité” / “assertion canonique” terminology with v5 epistemic/authority language.
+2. **kOA-Linux:** mount/link official subsystem documentation at reserved subsystem paths; continue contract/code convergence items already identified in `CODE_ALIGNMENT_NOTES.md` (including language-pack discriminator compatibility and generator/validator alignment).
+3. **Konnaxion + Orgo:** publish explicit IK Profile adoption/conformance for the intended handoff/publication paths.
+4. **Da’at:** publish verified Kristal v5 mapping/conformance against the pinned release.
+5. **Digital Ecosystem:** future updates should reference owner contracts rather than introduce new authority records when a product/platform already owns the state.
+</pre></body></html>

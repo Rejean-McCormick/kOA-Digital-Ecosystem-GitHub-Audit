@@ -1,0 +1,64 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/18-etats-runtime-renderer.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/18-etats-runtime-renderer.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 0d02e8d380104cbb</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/04-runtime-and-security/18-etats-runtime-renderer.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 18. État de surface : quatre axes orthogonaux
+
+La v1.1 remplace l&#x27;enum unique `SurfaceRuntimeState` par quatre axes indépendants.
+
+```ts
+interface SurfaceStatus {
+  access:
+    | &quot;allowed&quot;
+    | &quot;blocked&quot;;
+
+  runtime:
+    | &quot;inactive&quot;
+    | &quot;starting&quot;
+    | &quot;ready&quot;
+    | &quot;degraded&quot;
+    | &quot;failed&quot;
+    | &quot;missing&quot;;
+
+  connectivity:
+    | &quot;online&quot;
+    | &quot;offline&quot;
+    | &quot;unknown&quot;;
+
+  render:
+    | &quot;idle&quot;
+    | &quot;resolving&quot;
+    | &quot;loading&quot;
+    | &quot;ready&quot;
+    | &quot;error&quot;;
+}
+```
+
+Exemple valide :
+
+```text
+access       = allowed
+runtime      = ready
+connectivity = offline
+render       = ready
+```
+
+Il décrit une application locale prête et utilisable hors ligne.
+
+Autre exemple :
+
+```text
+access       = blocked
+runtime      = ready
+connectivity = online
+render       = idle
+```
+
+Le runtime existe, mais Koali ne doit pas le monter.
+
+`LOCK-KS-SURF-067` — **Un état de panne ne peut pas être converti en succès autoritatif.**
+
+`LOCK-KS-SURF-068` — **L&#x27;état `blocked` doit rester distinct de `unavailable`.** Le premier représente une décision de politique/contrat ; le second une indisponibilité technique.
+
+`LOCK-KS-SURF-069` — **Les messages d&#x27;erreur du host ne doivent pas prétendre connaître l&#x27;état métier interne de l&#x27;application.**
+
+`LOCK-KS-SURF-137` — **Access, runtime, connectivity et render sont des axes distincts ; le code ne doit pas les réduire à un enum unique qui perd les combinaisons valides.**
+
+`LOCK-KS-SURF-138` — **`access=blocked` interdit le montage de la surface même si `runtime=ready` et le health check réussit.**
+</pre></body></html>

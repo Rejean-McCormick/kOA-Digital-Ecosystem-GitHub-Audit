@@ -1,0 +1,305 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Konductor/blob/f69b57d0208973ee7508490d0dc221986d653b9c/docs/References/Nexussy_AI_Architecture_Report.md | commit: f69b57d0208973ee7508490d0dc221986d653b9c | SHA-256: 64f34796b2be451a0bbada90cb30bd14409a7d50079a28d78a3c111e64313104 -->
+
+# Nexussy AI Architecture Report
+
+AI-optimized extraction report for reusable multi-agent system design
+
+Source snapshot: nexussy_20260501_192022
+
+> **Note:** Verdict: Nexussy is worth analysis. Its highest value is not agent cognition; it is the production control plane around agentic software delivery: staged pipeline, anchored handoff, worker isolation, artifact contracts, steering, recovery, and event streaming.
+
+# 1. Executive Summary
+
+- Nexussy should be studied as an operational harness for AI-assisted development rather than as a general-purpose multi-agent reasoning framework.
+
+- Its strongest reusable ideas are: explicit staged delivery, contract-first schemas, anchored handoff documents, subagent ownership boundaries, task JSON sidecars, git worktree isolation, parallel worker execution with serial merge, SSE event streaming, and human/agent steering.
+
+- It complements MetaGPT and CrewAI: MetaGPT teaches agent collaboration mechanics; CrewAI teaches simple agent/task abstractions; Nexussy teaches how to make long-running agent work durable, inspectable, and resumable.
+
+# 2. Value Assessment for an AI Builder
+
+| Area | Value | AI takeaway |
+| --- | --- | --- |
+| Production control-plane design | Very high | Copy the idea of core pipeline, events, artifacts, checkpoints, and restart recovery. |
+| Long-running task continuity | Very high | Anchor-based handoff files solve context loss across sessions and agents. |
+| Worker orchestration | High | Parallel worker execution plus serial merge is a strong pattern for multi-agent coding. |
+| Artifact contracts | High | Human-readable markdown plus strict JSON sidecars is a practical hybrid. |
+| Tool safety | Medium-high | It models useful limits and honestly states local worker is not a true sandbox. |
+| Agent cognition loop | Medium | Less rich than MetaGPT observe-think-act or experience-pool mechanics. |
+| General multi-agent framework | Medium-low | Best used as a harness pattern, not copied wholesale as a framework core. |
+
+# 3. What Nexussy Is
+
+```text
+Nexussy = local software-delivery harness
+         + staged pipeline
+         + artifact store
+         + worker swarm
+         + git worktree isolation
+         + event stream
+         + TUI/web/MCP control surfaces
+```
+
+- It is explicitly not a chat app. The TUI and web dashboard are control surfaces for the core pipeline.
+
+- The core workflow is project request -> interview -> design -> validate -> plan -> review -> develop -> merge/report/handoff.
+
+- The architecture is useful because it turns uncertain LLM work into durable, typed, auditable state transitions.
+
+# 4. Core Architectural Pattern
+
+```text
+ControlPlane
+├── API Contract Layer
+│   ├── Strict request/response schemas
+│   ├── SSE event envelope
+│   └── Error codes and tool payloads
+├── Pipeline Engine
+│   ├── interview
+│   ├── design
+│   ├── validate
+│   ├── plan
+│   ├── review
+│   └── develop
+├── Artifact System
+│   ├── devplan.md
+│   ├── phaseNNN.md
+│   ├── handoff.md
+│   └── JSON sidecars
+├── Worker Swarm
+│   ├── role assignment
+│   ├── worktree creation
+│   ├── Pi-compatible RPC
+│   ├── file locks
+│   └── serial merge
+└── Interfaces
+    ├── TUI
+    ├── Web dashboard
+    └── MCP tools
+```
+
+# 5. Reusable Patterns to Extract
+
+| Pattern | What Nexussy does | AI implementation rule |
+| --- | --- | --- |
+| Staged delivery pipeline | Use fixed stages so agent work becomes auditable: interview, design, validate, plan, review, develop. | Every stage must emit typed artifacts and status events. |
+| Contract-first development | Treat SPEC and API schemas as the public contract; do not infer behavior from implementation side effects. | Give agents one authoritative contract file. |
+| Anchored handoff files | Use comment anchors to let agents read only small, stable sections of long artifacts. | Keep quick status, assignments, next task, progress, and phase state in anchor blocks. |
+| Subagent ownership boundaries | Assign each agent explicit allowed and forbidden paths. | Prevent cross-agent write collisions by policy before tool execution. |
+| Markdown + JSON sidecar | Use markdown for human visibility and JSON for machine validation. | Dev plans should have a strict task sidecar with task_id, owner, files_allowed, dependencies, and acceptance criteria. |
+| Parallel workers, serial merge | Spawn workers concurrently but merge their branches one at a time. | Parallelize creation; serialize integration. |
+| Git worktree isolation | Each worker writes in its own worktree and branch. | This is a practical isolation boundary for coding agents. |
+| Steering system | Persist human or external-agent steering events and inject them at stage boundaries or into worker tasks. | Let operators steer the orchestrator or a specific worker. |
+| SSE event stream | Stream stage transitions, worker status, tool calls, output, checkpoint, artifact, git, and done events. | A multi-agent system needs a live event feed, not only final answers. |
+| Honest sandbox model | A stripped subprocess environment is useful for local dev but not a security boundary. | Use container, VM, jail, or external policy layer for real safety. |
+
+# 6. AI-Readable Blueprint
+
+```text
+BUILD_CONTROL_PLANE_FOR_MY_AI:
+
+1. Define canonical stages.
+   STAGES = [interview, design, validate, plan, review, develop]
+
+2. For each stage, define:
+   - input_artifacts
+   - output_artifacts
+   - retry_policy
+   - status transitions
+   - checkpoint behavior
+   - event stream payloads
+
+3. Define strict schemas:
+   - Run
+   - StageStatus
+   - ArtifactRef
+   - Worker
+   - WorkerTask
+   - ToolCall
+   - ToolOutput
+   - ErrorResponse
+   - EventEnvelope
+
+4. Create durable artifacts:
+   - devplan.md with anchors
+   - phaseNNN.md with anchors
+   - handoff.md with anchors
+   - devplan_tasks.json sidecar
+   - merge_report.json
+   - changed_files.json
+   - conflict_report.json
+
+5. Give every worker:
+   - role
+   - allowed files
+   - forbidden files
+   - task_id
+   - branch
+   - worktree
+   - timeout
+   - stream channel
+
+6. Run workers in parallel.
+7. Merge workers serially.
+8. Save checkpoints after stage and worker milestones.
+9. Persist all steering and event data.
+10. Expose TUI, web, and MCP control surfaces.
+```
+
+# 7. Recommended Runtime Objects
+
+| Object | Minimum fields |
+| --- | --- |
+| PipelineRun | run_id, session_id, current_stage, status, usage, started_at, finished_at |
+| StageRun | stage, status, attempt, max_attempts, input_artifacts, output_artifacts, error |
+| ArtifactRef | kind, path, sha256, bytes, updated_at, phase_number |
+| DevplanTask | task_id, title, acceptance_criteria, files_allowed, depends_on, owner, estimated_tokens |
+| Worker | worker_id, run_id, role, status, worktree_path, branch_name, model, task_id |
+| SteerEvent | target, run_id, worker_id, message, priority, consumed_at |
+| EventEnvelope | event_id, sequence, contract_version, type, session_id, run_id, ts, source, payload |
+| Checkpoint | checkpoint_id, run_id, stage, path, sha256, created_at |
+
+# 8. Non-Negotiable Rules for Your AI
+
+1. Do not treat agent chat history as the source of truth. Persist artifacts and checkpoints.
+
+1. Do not let agents infer contracts by reading unrelated source modules. Give them a stable spec.
+
+1. Do not let workers write outside their ownership boundary.
+
+1. Do not run all workers in one shared repo checkout. Use isolated worktrees or equivalent sandboxes.
+
+1. Do not merge in parallel. Merge serially and record conflicts.
+
+1. Do not use markdown alone for task execution. Pair it with strict JSON.
+
+1. Do not pass huge artifacts through prompts. Pass artifact references and summaries.
+
+1. Do not pretend a local subprocess is a security sandbox. Label safety boundaries honestly.
+
+1. Do not hide retries, pauses, blockers, and tool output. Emit them as typed events.
+
+1. Do not allow unbounded work. Enforce rounds, timeouts, token/cost budgets, and cancellation.
+
+# 9. Copy / Modify / Avoid
+
+| Copy | Modify | Avoid |
+| --- | --- | --- |
+| Six-stage pipeline concept | Replace Pi-specific RPC with your own worker protocol if needed | Copying the whole repo structure blindly |
+| Subagent boundaries | Generalize stages beyond coding | Using local worker as a security boundary |
+| Three-read handoff protocol | Add stronger capability/permission system | Letting markdown be the only contract |
+| Anchor blocks | Add full sandbox isolation | Cross-boundary edits |
+| Task JSON sidecar | Add richer agent cognition layer from MetaGPT | Unbounded subprocess execution |
+| Parallel workers + serial merge | Use typed event enums rather than loose strings everywhere | Assuming UI tests equal core correctness |
+| Git worktree isolation |  |  |
+| Steering events |  |  |
+| SSE event envelope |  |  |
+| Typed error codes |  |  |
+| Checkpoint rows |  |  |
+| MCP tool surface |  |  |
+
+# 10. Recommended Workflow Derived From Nexussy
+
+```text
+USER_REQUEST
+  -> InterviewStage
+      output: interview.json
+  -> DesignStage
+      output: design_draft.md
+  -> ValidateStage
+      output: validation_report.json + validated_design.md
+  -> PlanStage
+      output: devplan.md + devplan_tasks.json + phaseNNN.md + handoff.md
+  -> ReviewStage
+      output: review_report.json
+      if failed: route back to PlanStage
+  -> DevelopStage
+      output: develop_report.json + merge_report.json + changed_files.json
+      if conflict: conflict_report.json
+  -> HandoffStage
+      output: compact continuation context for next agent/human
+```
+
+# 11. Files to Inspect First
+
+| File | Why inspect |
+| --- | --- |
+| README.md | Product definition and overall pipeline philosophy. |
+| SPEC.md | Contract-first architecture and non-negotiable build rules. |
+| AGENTS.md | Subagent boundaries, handoff protocol, anchors, token budget, safe file rules. |
+| core/nexussy/api/schemas.py | Strict schema discipline: stages, artifacts, workers, errors, SSE, tool payloads. |
+| core/nexussy/pipeline/engine.py | Pipeline engine, event emission, steering queues, pause/resume, stage dispatch. |
+| core/nexussy/pipeline/stages/develop.py | Worker spawn, task slicing, RPC, checkpoint pause/resume, serial merge, conflict recovery. |
+| core/nexussy/artifacts/store.py | Safe writes, path validation, anchor validation, artifact path mapping. |
+| core/nexussy/checkpoint.py | Checkpoint records and stage-order recovery model. |
+| core/nexussy/swarm/gitops.py | Worktree creation, commit, merge, changed-file extraction. |
+| core/nexussy/swarm/local_pi_worker.py | Local worker adapter and honest subprocess limits. |
+| core/nexussy/mcp.py | External agent control surface. |
+| tui/src/sse.ts and tui/src/client.ts | Client-side stream/reconnect behavior. |
+
+# 12. How to Combine With CrewAI / MetaGPT / LangGraph
+
+```text
+Best synthesis for your AI:
+
+MetaGPT:
+  role lifecycle, message routing, SOP discipline, structured agent outputs
+
+CrewAI:
+  simple Agent + Task + Tool + Crew abstractions
+
+LangGraph:
+  durable graph/state/checkpoint orchestration
+
+Nexussy:
+  production harness: staged delivery, artifacts, workers, handoff, steering, event stream
+
+Recommended architecture:
+  LangGraph-like workflow engine
+  + MetaGPT-like agent roles
+  + CrewAI-like task contracts
+  + Nexussy-like control plane and artifacts
+```
+
+# 13. Final Directive for an AI Builder
+
+```text
+NEXUSSY_EXTRACTION_DIRECTIVE:
+
+Use Nexussy as a reference for operationalizing agentic software delivery.
+Do not copy it as the core reasoning engine.
+Extract the control plane:
+  - stages
+  - artifacts
+  - handoff anchors
+  - task sidecars
+  - worker boundaries
+  - worktree isolation
+  - steering
+  - SSE events
+  - checkpoints
+  - serial merge
+  - conflict reports
+
+Then attach your own agent cognition layer:
+  - observe/think/act loop
+  - typed message bus
+  - structured outputs
+  - experience memory
+  - tool permissions
+  - planner and reviewer agents
+```
+
+# 14. Source Evidence Used
+
+| Source file | Evidence role |
+| --- | --- |
+| README.md | Defines Nexussy as a local software-delivery harness, not a chat app; lists the six-stage workflow and main capabilities. |
+| SPEC.md | Defines non-negotiable build rules: contract-first behavior, strict schemas, path validation, SSE, SQLite discipline, subprocess rules. |
+| AGENTS.md | Defines subagent boundaries, three-read handoff protocol, anchor system, safe file rules, core worker orchestration, steering, sandbox notes, and database notes. |
+| core/nexussy/api/schemas.py | Defines strict Pydantic models, stage names, statuses, artifact kinds, tool names, worker models, devplan tasks, and SSE envelopes. |
+| core/nexussy/pipeline/stages/develop.py | Defines task slicing, worker spawning, Pi RPC, pause/resume checkpointing, merge sequencing, and conflict recovery. |
+| core/nexussy/artifacts/store.py | Defines safe writes, path sanitation, required anchors, backup/temp/atomic replacement, and artifact path mapping. |
+| tui/QA.md | Shows UX expectations for streamed stages, handoff overlay, status strip, and actionable errors. |
+
+End of AI-optimized report

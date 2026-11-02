@@ -1,0 +1,31 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/01-audit/existant.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/01-audit/existant.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · a75b03c6799e · SHA-256 91ef99d5d5e8ff80</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/a75b03c6799e1a8c1e7a5c794aa768210633d078/docs/01-audit/existant.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Audit de l&#x27;existant : code et comportement
+
+## Sources utilisées
+
+Snapshot Manager `znapshot_Kristal-Manager_10310806.zip`, module KristalDiag `KristalDiag_Code_snapshot(2).zip`, overlay du 31-10 `OVERLAY-DIRECT-REFONTE-MANAGER-KRISTALDIAG-2026-10-31.zip`, rapport d&#x27;analyse globale du 31-10 et rapport structurel Arketype des 127. **Ce ne sont pas des preuves que la même combinaison est installée partout sur Windows.**
+
+## Organisation constatée
+
+| Sous-système | Fichiers réels | Constats |
+|---|---|---|
+| Inventaire, Discovery, état | `core.py`, `inventory.py`, `discovery.py`, `workspace_tools.py` | Scan et contrôle local distincts |
+| Catalogue de contenu | `content_catalog.py` | SQLite descriptif/HTML générés, volumineux et séparés |
+| Analyse globale, triage | `global_analysis.py`, `semantic_triage.py`, `global_panel.py` | Rapports, priorités, propositions et tableau d&#x27;analyse |
+| Diagnostics | `diag_bridge.py`, `diag_panel.py`, `tools/KristalDiag` | Moteur source local, preuves hors workspace; profil officiel individuel |
+| Registre revue et taxonomies | `review_registry.py`, `review_panel.py`, `classification_bridge.py`, `archetype_panel.py` | Décisions et propositions réparties |
+| GUI, outils historiques | `gui.py`, `batch_panel.py`, `bundle_panel.py`, `kristalizer_bridge.py` | Navigation techniquement puissante mais étalée |
+| Consolidation récente | `central_store.py`, `diagnostics_batch.py`, `operations_cli.py` | Livrés dans le dernier overlay, à vérifier sur poste réel |
+
+## Limitations établies
+
+- Les 16 contrats natifs ont été reconnus mais le catalogue signale une inférence de contenu limitée.
+- Le batch intégré livré n&#x27;exécute que `V9-State-Reader`, même si le panneau individuel expose aussi des profils V10.
+- `central_store.py` v1 conserve `workspaces` et `observations`, et compare un **sous-ensemble d&#x27;empreintes V9** : couverture v11 incomplète.
+- L&#x27;historique importé depuis CSV sans empreintes est volontairement `STALE_OR_UNVERIFIED`.
+- La suite complète historique n&#x27;est pas entièrement verte; les 54 tests ciblés de l&#x27;overlay étaient verts sous GUI virtuel Linux.
+- L&#x27;archive Manager la plus récente analysée contient de nombreux fichiers historiques et parfois des bases SQLite générées; la future publication doit les séparer.
+
+## Ligne de partage recommandée
+
+Ne pas écraser un moteur indépendant pour unifier l&#x27;interface. **Centraliser l&#x27;identité des résultats, les permissions, les états et les opérations; laisser les calculateurs spécialisés sous leurs contrats.**
+</pre></body></html>

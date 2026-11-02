@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Migration-v7-to-v8.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Migration-v7-to-v8.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 7a29ea00ddb078bb</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Migration-v7-to-v8' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Migration from v7 to v8
+
+Migration is optional because v8 is additive. A valid v7 Kristall can be used unchanged by a v8 processor.
+
+## Recommended adoption
+
+1. keep v7 registries and Mesh unchanged;
+2. declare v8 capability metadata;
+3. create external lexical Kristals for desired languages/domains;
+4. define deterministic lexical stack policy;
+5. build rebuildable query indexes from canonical artifacts;
+6. expose typed KQP query with pagination/completeness;
+7. add AI context compilation and optional compact encoding;
+8. add semantic fingerprint profiles only where they provide value.
+
+Existing v7 labels may seed a lexical worklist or fallback lexicon. Extracting them is a convenience operation, not a semantic migration.
+
+## No forced rewrite
+
+Do not:
+
+- convert every v7 label before using v8;
+- mint new semantic IDs for existing v7 identities;
+- replace inherited hashes with semantic fingerprints;
+- make query indexes or AI bundles canonical.
+
+## Production adoption
+
+Introduce derived indexes and AI query paths as read-side capabilities first. Canonical mutation/admission remains governed by existing source contracts until explicitly upgraded under a separate write protocol.
+</pre></body></html>

@@ -1,0 +1,38 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Karacter · docs/ux/03_COPY_AND_EMPTY_STATES.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Karacter · docs/ux/03_COPY_AND_EMPTY_STATES.md</h1><p class='meta'><small>Rejean-McCormick/Karacter · c50db0afda42 · SHA-256 8f4282d0a81fd47c</small><br><a href='https://github.com/Rejean-McCormick/Karacter/blob/c50db0afda429e4be45e41f67658061e49e9282f/docs/ux/03_COPY_AND_EMPTY_STATES.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># UX microcopy, user education and empty/error states
+
+## Key English / French strings (approved intent; final wording is editable)
+
+| Key | English | Français |
+|---|---|---|
+| `nav.create` | Create | Créer |
+| `nav.understand` | Understand | Comprendre |
+| `nav.simulate` | Simulate | Simuler |
+| `nav.gallery` | Gallery | Galerie |
+| `polarity.explanation` | These values describe a preference in context, not a strength or a flaw. | Ces valeurs indiquent une préférence selon le contexte, pas une qualité ni un défaut. |
+| `polarity.midpoint` | Both approaches are equally available as preferences. | Les deux approches occupent une place équivalente dans les préférences. |
+| `sim.hypothesis` | Possible response — edit it to fit your character. | Réaction possible — modifie-la selon ton personnage. |
+| `sim.why` | Why this might happen | Pourquoi cette réaction est possible |
+| `compare.shared` | Same situation, different perspectives | Même situation, perspectives différentes |
+| `backup.local` | Saved in this browser; export a backup to keep a separate copy. | Enregistré dans ce navigateur; exporte une sauvegarde pour garder une copie distincte. |
+| `prompt.external` | Copy this prompt into an external image generator. | Copie ce prompt dans un générateur d’images externe. |
+| `upload.confirm` | Replace the existing image in this slot? | Remplacer l’image existante dans cet emplacement? |
+
+## Empty states
+
+- No characters: &quot;Create your first character or import a TXT sheet.&quot; / &quot;Crée ton premier personnage ou importe une fiche TXT.&quot;
+- No image: &quot;No image saved for this character, theme and mode.&quot; / &quot;Aucune image enregistrée pour ce personnage, ce thème et ce mode.&quot;
+- No relationship: &quot;Add another character to explore a relationship.&quot; / &quot;Ajoute un autre personnage pour explorer une relation.&quot;
+- No scenario result: &quot;Choose a scenario to explore possible reactions.&quot; / &quot;Choisis une situation pour explorer des réactions possibles.&quot;
+- Missing narrative details: &quot;Suggestions use the details you&#x27;ve provided; add motivations for richer explanations.&quot; / &quot;Les suggestions utilisent les informations fournies; ajoute des motivations pour obtenir davantage de nuances.&quot;
+
+## Destructive action copy
+
+- Delete character: mention number of linked images, relationships and saved references; offer cancel.
+- Import full backup: mention collection replacement, show differences and offer export-current-first.
+- Rebuild prompt: warn if user manually edited current text.
+- Regenerate simulation: warn if an existing choice is edited/locked; don&#x27;t discard it silently.
+
+## Pedagogical note
+
+Avoid labeling children or real people. The explainer should say: &quot;These are invented characters and narrative choices. A person can behave differently in different situations.&quot;
+</pre></body></html>

@@ -1,0 +1,31 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Ekole · SemantiK-et-multilinguisme.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Ekole · SemantiK-et-multilinguisme.md</h1><p class='meta'><small>Rejean-McCormick/Ekole · fef1626a87db · SHA-256 fe7d3002327f3447</small><br><a href='https://github.com/Rejean-McCormick/Ekole/wiki/SemantiK-et-multilinguisme' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># SemantiK Architect : du sens vers des phrases
+
+## Pourquoi séparer les connaissances de la langue ?
+
+Une relation sémantique peut être stable même lorsque sa formulation varie selon la langue ou l&#x27;âge de l&#x27;élève. C&#x27;est le rôle visé de **SemantiK Architect** : produire des **phrases** à partir d&#x27;une structure de sens et de règles linguistiques explicites, plutôt que demander à un modèle de langage distant d&#x27;inventer une réponse au moment de l&#x27;apprentissage.
+
+```text
+Assertion contextualisée et sourcée
+       │
+       ▼
+Contrat de réalisation (langue, registre, variantes permises)
+       │
+       ▼
+SemantiK Architect (réalisation contrôlée d&#x27;une phrase)
+       │
+       ▼
+Phrase relue, liée à sa source, présentée par Ekole
+```
+
+Cette séparation est prometteuse pour la **cohérence multilingue** : une même assertion peut recevoir plusieurs réalisations linguistiques sans modifier sa vérité. Elle facilite également la vérification des nombres, des négations et du contexte.
+
+## Fiabilité = architecture + tests linguistiques
+
+Il serait excessif d&#x27;affirmer que toutes les traductions sont déjà fiables. Dans le dépôt de conception examiné, **`fr-CA` est la seule langue documentée comme originale**, et le port de réalisation SemantiK reste à qualifier. Le multilinguisme fiable est donc **un objectif techniquement bien posé**, conditionné à des grammaires, vocabulaires, tests et validations humaines dans chaque langue.
+
+SemantiK produit des **phrases** et non automatiquement des pages ou paragraphes pédagogiques complets. Ekole organise ces phrases en explications, activités et parcours par une couche éditoriale distincte.
+
+## Le bénéfice hors ligne
+
+Une réalisation grammaticale installée sur place peut, si son implémentation et ses données sont incluses, fonctionner sans API de génération distante. Cela réduit l&#x27;exposition des données des enfants à un service externe et peut limiter les coûts d&#x27;usage. Cela ne supprime ni les besoins de contrôle de qualité ni le coût du développement initial.
+</pre></body></html>
