@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="kOA Graph — graphe des composants, qualification par preuve et Engineering Profiles.">
-<title>kOA Graph · Centre de pilotage</title><link rel="stylesheet" href="assets/atlas.css"><link rel="stylesheet" href="assets/focused-graph.css"><style>
+<title>kOA Graph · Centre de pilotage</title><link rel="stylesheet" href="assets/atlas.css"><link rel="stylesheet" href="assets/focused-graph.css"><link rel="stylesheet" href="assets/graph-home.css?v=20261102-vertical"><style>
 /* Publication controlled on GitHub Actions: external link and static help only. */
 .koa-pages-entry{display:inline-flex;gap:7px;align-items:center;position:relative;flex-shrink:0}
 .koa-pages-entry .koa-pages-link{display:inline-block;background:#236e62;border-color:#51aa98;color:#fff;text-decoration:none;font-weight:700;white-space:nowrap}
@@ -18,15 +18,17 @@
 html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{display:none}
 .koa-public-docs-notice{margin:0 0 20px;padding:12px 16px;border:1px solid #3a7364;border-radius:12px;background:#14392f;color:#e1f5eb;line-height:1.6}
 .koa-public-docs-notice a{color:#a5f3d6;text-decoration:underline}
+
+/* Sidebar cleanup — keep a single green logo in the header. */
+.rail > a.brand { display:none; }
+.rail { padding-top:18px; }
 </style></head>
 <body>
 <div class="layout">
   <nav class="rail" aria-label="Navigation principale">
-    <a class="brand" href="#validations" aria-label="kOA · Accueil"><img alt="kOA" src="assets/logo.svg"></a>
-    <a class="workspace-nav active" href="#validations" data-nav="validations" aria-current="page"><span aria-hidden="true">✓</span> Validations</a>
+<a class="workspace-nav active" href="#validations" data-nav="validations" aria-current="page"><span aria-hidden="true">✓</span> Validations</a>
     <a class="workspace-nav" href="#apps" data-nav="applications"><span aria-hidden="true">▦</span> Applications</a>
     <a class="workspace-nav" href="#historique-campagnes" data-nav="campagnes"><span aria-hidden="true">◷</span> Campagnes</a>
-    <div class="rail-foot">kOA</div>
   </nav>
   <div class="content">
     <header class="topbar" id="accueil">
@@ -99,7 +101,18 @@ html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{displa
         <div class="footline"><span class="dot teal"></span> Étayé par preuve <span class="dot amber"></span> À documenter <span class="dot gray"></span> Non évalué / non applicable <span class="foot-explain">« À vérifier » ne signifie pas échec.</span></div>
       </section>
       <section class="section map-section" data-workspace="applications" id="cartographie" hidden>
-        <div class="heading"><div><div class="eyebrow"><a href="#apps">← Revenir aux fiches</a> · GRAPHE DES RESPONSABILITÉS</div><h2>Comment tes systèmes se parlent.</h2><p>Relations conceptuelles tirées du référentiel kOA, non des tests d'intégration exécutés.</p></div><div class="map-legend"><span><i class="legend-line"></i> Documenté</span><span><i class="legend-line dashed"></i> Proposé</span></div></div>
+        <div class="graph-home-header" data-no-translate>
+          <div><span class="focus-eyebrow">kOA GRAPH · TABLE DES MATIÈRES INTERACTIVE / INTERACTIVE CONTENTS</span>
+          <h1 class="graph-home-title"><span class="graph-fr">Explore l’écosystème.</span><span class="graph-en">Explore the ecosystem.</span></h1>
+          <p class="graph-home-lede graph-fr">Cinq parcours pour comprendre comment tes applications coopèrent. Choisis un trajet, puis explore les composants, leurs contrats, leurs preuves et leurs documents.</p>
+          <p class="graph-home-lede graph-en">Five paths show how your applications work together. Choose a path, then explore its components, contracts, evidence and documentation.</p></div>
+          <div class="graph-home-shortcuts" role="navigation" aria-label="Accès rapide / Quick access">
+            <a href="#apps"><span class="graph-fr">Applications</span><span class="graph-en">Applications</span></a>
+            <a href="#validations"><span class="graph-fr">Validations</span><span class="graph-en">Evidence checks</span></a>
+            <a href="#historique-campagnes"><span class="graph-fr">Campagnes</span><span class="graph-en">Campaigns</span></a>
+            <a href="publications/index.html"><span class="graph-fr">Publications datées ↗</span><span class="graph-en">Frozen publications ↗</span></a>
+          </div>
+        </div>
         <div class="focus-graph" id="focus-graph" data-no-translate>
           <div class="focus-topline">
             <div class="focus-heading"><span class="focus-eyebrow">kOA Graph · Parcours focalisés / Focused paths</span>
@@ -112,11 +125,15 @@ html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{displa
             <div id="focus-route-chooser" class="focus-route-chooser" role="group" aria-label="Choisir un parcours / Choose a path"></div>
             <div class="focus-actions"><button type="button" id="focus-disclosure" aria-pressed="true">Masquer les branches</button>
               <p>Chemin principal + circuits complémentaires / Main path + supporting circuits</p></div>
-            <div class="focus-scroll" tabindex="0" role="region" aria-label="Graphe de parcours défilant / Scrollable path graph">
-              <div id="focus-board" class="focus-board"></div>
+            <div class="focus-explorer">
+              <div class="focus-timeline-column">
+                <div class="focus-scroll" role="region" aria-label="Parcours vertical / Vertical path">
+                  <div id="focus-board" class="focus-board"></div>
+                </div>
+                <div id="focus-legend" class="focus-legend" aria-label="État des relations / Relationship status"></div>
+              </div>
+              <aside id="focus-detail" class="focus-detail" aria-live="polite" aria-label="Détail du parcours / Path details"></aside>
             </div>
-            <div id="focus-legend" class="focus-legend" aria-label="État des relations / Relationship status"></div>
-            <div id="focus-detail" class="focus-detail" aria-live="polite"></div>
           </div>
         </div>
         <details class="focus-legacy"><summary>Autres vues du graphe : responsabilités, constellation, Kristal local / Other graph views</summary>
@@ -152,5 +169,6 @@ if (location.hostname.toLowerCase().endsWith('.github.io')) {
   },{once:true});
 }
 </script>
-<script defer src="assets/i18n.js"></script><script defer src="assets/atlas.js"></script><script defer src="assets/focused-graph.js"></script><script>fetch('data/publication-current.json').then(r=>r.ok?r.json():null).then(x=>{if(x){document.getElementById('publication-stamp').textContent='UTC '+(x.deployed_at||x.published_at);}}).catch(()=>{});</script>
+<script>if(!location.hash){history.replaceState(null,'',location.pathname+location.search+'#cartographie');}</script>
+<script defer src="assets/i18n.js"></script><script defer src="assets/atlas.js"></script><script defer src="assets/focused-graph.js?v=20261102-vertical"></script><script>fetch('data/publication-current.json').then(r=>r.ok?r.json():null).then(x=>{if(x){document.getElementById('publication-stamp').textContent='UTC '+(x.deployed_at||x.published_at);}}).catch(()=>{});</script>
 </body></html>

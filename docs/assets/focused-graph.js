@@ -66,38 +66,71 @@
     const code = elem('code','',source.repo.split('/').pop() + ' / ' + source.path);
     add(parent, a, code);
   }
+  // Navigation to owner records remains scoped to the application/validation view.
+  // Do not equate a repository page with a proof of deployment.
+  function linkToLocalView(parent, hash, value, repoName) {
+    const a=elem('a','focus-context-link',value);
+    a.href=hash;
+    if (repoName) a.addEventListener('click',()=>{
+      setTimeout(()=>{
+        const search = document.getElementById(hash==='#validations'?'validation-search':'search');
+        if(search){search.value=repoName;search.dispatchEvent(new Event('input',{bubbles:true}));}
+      },30);
+    });
+    parent.appendChild(a);
+  }
+  function makeContextLinks(parent,repo) {
+    const row=elem('div','focus-context-actions');
+    const name=safeRepo(repo)?repo.split('/')[1]:'';
+    linkToLocalView(row,'#apps',language()==='fr'?'Fiche application →':'Application profile →',name);
+    linkToLocalView(row,'#validations',language()==='fr'?'Validations →':'Evidence checks →',name);
+    const release=elem('a','focus-context-link',language()==='fr'?'Publications datées ↗':'Frozen publications ↗');
+    release.href='publications/index.html';row.appendChild(release);
+    parent.appendChild(row);
+  }
   function renderDetails(path) {
     const holder = $('focus-detail'); holder.replaceChildren();
-    const heading = elem('div','focus-detail-heading');
-    const details = chosen ? chosen.value : null;
-    const isBranch = chosen?.kind === 'branch';
-    const isNode = chosen?.kind === 'node';
-    add(heading, elem('span','focus-eyebrow', isBranch ? labels().below : isNode ? labels().path : labels().contract),
-      elem('h3','', details ? t(details.label) : t(path.title)));
-    holder.appendChild(heading);
-    if (!details) {
-      add(holder, elem('p','',t(path.summary)),elem('p','focus-caution',labels().click));
+    const details = chosen?.value;
+    const isBranch=chosen?.kind==='branch', isNode=chosen?.kind==='node';
+    add(holder,elem('span','focus-eyebrow',language()==='fr'?'EXPLORER / ACCÉDER':'EXPLORE / OPEN'),
+      elem('h3','',details?t(details.label):t(path.title)));
+    if(!details){
+      add(holder,elem('p','',t(path.summary)),elem('p','focus-caution',labels().click));
+      makeContextLinks(holder,null);
+      add(holder,elem('p','focus-caution',labels().noProof));
       return;
     }
-    if (isNode) {
-      add(holder, elem('p','',t(details.description)),elem('p','focus-caution',labels().noProof));
-      if (safeRepo(details.repo)) {
-        const a=elem('a','focus-source-link',details.repo.split('/')[1]+' ↗');
-        a.href='https://github.com/'+details.repo; a.target='_blank'; a.rel='noopener noreferrer';
-        holder.append(elem('h4','',labels().owner),a);
+    if(isNode){
+      add(holder,elem('p','',t(details.description)),elem('p','focus-caution',labels().noProof));
+      if(safeRepo(details.repo)){
+        const a=elem('a','focus-source-link',details.repo+' ↗');
+        a.href='https://github.com/'+details.repo;a.target='_blank';a.rel='noopener noreferrer';
+        add(holder,elem('h4','',labels().owner),a);
       }
-      const maybeLink=path.spine_links.find(l=>l.from===details.id || l.to===details.id);
-      if (maybeLink) { holder.append(elem('h4','',labels().evidence)); makeSource(maybeLink.evidence,holder); }
+      const adjacent=path.spine_links.filter(l=>l.from===details.id||l.to===details.id);
+      if(adjacent.length){holder.appendChild(elem('h4','',labels().evidence));adjacent.forEach(l=>makeSource(l.evidence,holder));}
+      makeContextLinks(holder,details.repo);
       return;
     }
-    add(holder,elem('p','focus-status focus-'+details.status,uniqueStatus(details.status)));
-    if (isBranch) {
-      add(holder,elem('p','',t(details.description)),elem('p','focus-caution',details.steps.map(n=>t(n.label)).join(' → ')));
-    } else {
-      add(holder,elem('p','',t(details.label)),elem('p','focus-caution',labels().noProof));
+    holder.appendChild(elem('p','focus-status focus-'+details.status,uniqueStatus(details.status)));
+    add(holder,elem('p','',t(details.description||details.label)),elem('p','focus-caution',labels().noProof));
+    if(isBranch){
+      const steps=elem('div','focus-detail-steps');
+      for(const step of details.steps){
+        const line=elem('div','focus-detail-step');
+        add(line,elem('strong','',t(step.label)),elem('small','',t(step.description)));
+        if(safeRepo(step.repo)){
+          const a=elem('a','focus-source-link',language()==='fr'?'Dépôt ↗':'Repository ↗');
+          a.href='https://github.com/'+step.repo;a.target='_blank';a.rel='noopener noreferrer';line.appendChild(a);
+        }
+        steps.appendChild(line);
+      }
+      holder.appendChild(steps);
     }
-    if (details.contract) { add(holder,elem('h4','',labels().contract),elem('code','focus-contract',details.contract)); }
-    add(holder,elem('h4','',labels().evidence)); makeSource(details.evidence,holder);
+    if(details.contract){add(holder,elem('h4','',labels().contract),elem('code','focus-contract',details.contract));}
+    add(holder,elem('h4','',labels().evidence));makeSource(details.evidence,holder);
+    const repo = isBranch ? (details.steps.find(step=>safeRepo(step.repo))||{}).repo : null;
+    makeContextLinks(holder,repo);
   }
   function focusButton(value, cls, kind, path) {
     const button=elem('button',cls);
@@ -106,64 +139,62 @@
     button.addEventListener('click',()=>{chosen={kind,value}; renderPath(path);});
     return button;
   }
-  function addLayer(board, path, side) {
-    const layer=elem('div','focus-branches focus-branches-'+side);
-    layer.style.setProperty('--focus-cols',String(path.spine.length));
-    for(let i=0;i<path.spine.length;i++){
-      const cell=elem('div','focus-branch-cell');
-      for(const branch of path.branches.filter(b=>b.anchor===i&&b.side===side)){
-        const btn=focusButton(branch,'focus-branch focus-'+branch.status,'branch',path);
-        add(btn,elem('span','focus-status focus-'+branch.status,uniqueStatus(branch.status)),
-          elem('strong','',t(branch.label)),elem('small','',branch.steps.map(n=>t(n.label)).join(' → ')));
-        cell.append(btn);
-      }
-      layer.append(cell);
-    }
-    board.append(layer);
+  function renderBranch(branch,path) {
+    const btn=focusButton(branch,'focus-branch focus-'+branch.status,'branch',path);
+    add(btn,elem('span','focus-status focus-'+branch.status,uniqueStatus(branch.status)),
+      elem('strong','',t(branch.label)),elem('small','',branch.steps.map(n=>t(n.label)).join(' → ')));
+    return btn;
   }
   function renderPath(path) {
     const routes=$('focus-route-chooser');routes.replaceChildren();
-    const guide=elem('span','focus-eyebrow',labels().pathways);routes.appendChild(guide);
-    for(const p of data.paths){
-      const btn=elem('button','focus-route-button'+(p.id===path.id?' active':''),t(p.title));
+    routes.appendChild(elem('span','focus-eyebrow',labels().pathways));
+    const choices=elem('div','focus-route-cards');
+    data.paths.forEach((p,index)=>{
+      const btn=elem('button','focus-route-button'+(p.id===path.id?' active':''));
       btn.type='button';btn.setAttribute('aria-pressed',String(p.id===path.id));
+      add(btn,elem('span','focus-route-number',String(index+1).padStart(2,'0')),
+        elem('strong','',t(p.title)),elem('small','',t(p.summary)));
       btn.addEventListener('click',()=>{
         pathId=p.id;chosen=null;
         const url=new URL(location.href);
         url.searchParams.set('parcours',p.id);
-        history.replaceState(null,'',url.pathname+url.search+url.hash);
+        try{history.replaceState(null,'',url.pathname+url.search+'#cartographie');}catch(_){/* restricted previews */}
         renderPath(p);
-      });routes.append(btn);
-    }
+      });
+      choices.appendChild(btn);
+    });
+    routes.appendChild(choices);
     $('focus-title').textContent=t(path.title);
     $('focus-summary').textContent=t(path.summary);
     $('focus-disclosure').textContent=branchesVisible?labels().fewer:labels().more;
     $('focus-disclosure').setAttribute('aria-pressed',String(branchesVisible));
-    const board=$('focus-board');board.replaceChildren();board.style.setProperty('--focus-cols',String(path.spine.length));
-    if(branchesVisible) addLayer(board,path,'above');
-    const spine=elem('div','focus-spine');spine.style.setProperty('--focus-cols',String(path.spine.length));
+    const board=$('focus-board');board.replaceChildren();
     path.spine.forEach((node,i)=>{
-      const cell=elem('div','focus-spine-cell');
+      const stage=elem('div','focus-vertical-stage');
+      const left=elem('div','focus-vertical-branches focus-left');
+      const right=elem('div','focus-vertical-branches focus-right');
+      if(branchesVisible){
+        path.branches.filter(b=>b.anchor===i&&b.side==='above').forEach(b=>left.appendChild(renderBranch(b,path)));
+        path.branches.filter(b=>b.anchor===i&&b.side==='below').forEach(b=>right.appendChild(renderBranch(b,path)));
+      }
+      const core=elem('div','focus-vertical-core');
       const btn=focusButton(node,'focus-spine-node','node',path);
       add(btn,elem('span','focus-spine-index',String(i+1).padStart(2,'0')),
         elem('strong','',t(node.label)),elem('small','',t(node.description)));
-      cell.append(btn);
+      core.appendChild(btn);
+      add(stage,left,core,right);board.appendChild(stage);
       const link=path.spine_links[i];
       if(link){
-        const edge=focusButton(link,'focus-spine-edge focus-'+link.status,'link',path);
-        add(edge,elem('span','focus-arrow','→'),
-          elem('small','',link.contract||t(link.label)));
-        edge.title=t(link.label)+' · '+uniqueStatus(link.status);
-        cell.append(edge);
+        const flow=elem('div','focus-vertical-flow');
+        const edge=focusButton(link,'focus-flow-link focus-'+link.status,'link',path);
+        add(edge,elem('span','focus-down','↓'),elem('span','focus-flow-label',t(link.label)),
+          elem('small','',link.contract||uniqueStatus(link.status)));
+        flow.appendChild(edge);board.appendChild(flow);
       }
-      spine.append(cell);
     });
-    board.append(spine);
-    if(branchesVisible) addLayer(board,path,'below');
     const legend=$('focus-legend');legend.replaceChildren();
-    for(const status of ['qualified_local','implemented_owner','documented','candidate','optional']){
-      const pill=elem('span','focus-status focus-'+status,uniqueStatus(status));legend.append(pill);
-    }
+    ['qualified_local','implemented_owner','documented','candidate','optional'].forEach(status=>
+      legend.appendChild(elem('span','focus-status focus-'+status,uniqueStatus(status))));
     renderDetails(path);
   }
   // Frozen source paths win. Local add-ons are clearly identified as previews.
@@ -178,14 +209,27 @@
     link.append(document.createTextNode(' '));
     link.append(elem('span','',language()==='fr'?'Graphe':'Graph'));
     link.setAttribute('aria-label',language()==='fr'?'Explorer les cinq parcours kOA':'Explore five kOA paths');
-    apps.insertAdjacentElement('afterend',link);
+    const first = document.querySelector('.rail a[data-nav="validations"]');
+    if(first)first.insertAdjacentElement('beforebegin',link);else apps.insertAdjacentElement('afterend',link);
+    const appsNav=document.querySelector('.rail a[data-nav="applications"]');
     const update = () => {
       const active = location.hash==='#cartographie';
-      link.classList.toggle('active',active);
-      if(active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');
-      const appsNav=document.querySelector('.rail a[data-nav="applications"]');
-      if(active){appsNav?.classList.remove('active');appsNav?.removeAttribute('aria-current');}
+      // The audit's asynchronous refresh can reselect Applications after
+      // this menu has initialized. Keep one active entry for this route.
+      if (link.classList.contains('active') !== active) link.classList.toggle('active',active);
+      if (active) {
+        if (link.getAttribute('aria-current')!=='page') link.setAttribute('aria-current','page');
+        if (appsNav?.classList.contains('active')) appsNav.classList.remove('active');
+        if (appsNav?.hasAttribute('aria-current')) appsNav.removeAttribute('aria-current');
+      } else if (link.hasAttribute('aria-current')) {
+        link.removeAttribute('aria-current');
+      }
     };
+    // Observe only Applications, avoiding changes to the audit engine.
+    // Idempotent updates prevent observer loops.
+    if (appsNav) new MutationObserver(update).observe(appsNav, {
+      attributes:true, attributeFilter:['class','aria-current']
+    });
     window.addEventListener('hashchange',update);
     update();
   }
