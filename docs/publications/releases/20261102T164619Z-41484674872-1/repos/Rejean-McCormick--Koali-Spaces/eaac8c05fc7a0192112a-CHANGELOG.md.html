@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/CHANGELOG.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/CHANGELOG.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 c1bc358e757479b2</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/CHANGELOG.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Changelog — Koali Spaces Surface Layer
+
+## 1.1.0 — 2026-09-06
+
+Hardening architectural avant implémentation de masse.
+
+### Changements normatifs
+
+- la source normative des locks est désormais unique : déclarations Markdown ; JSON = projection générée ;
+- le registre machine-readable couvre la totalité des locks ;
+- ajout de provenance pinnée des context packs dans `sources/SOURCES.lock.json` ;
+- séparation `ResolvedSurfaceInternal` / `SurfaceDescriptorPublic` ;
+- `ApplicationHost` ne résout plus les runtime targets ;
+- séparation `RuntimeRegistration` / `SurfacePresentationPolicy` ;
+- remplacement de l’enum runtime unique par quatre axes : access, runtime, connectivity, render ;
+- verrouillage du lifecycle : le renderer ne lance pas Docker/systemd/process directement ;
+- transport abstrait par application via un `transport_profile_ref` fermé côté runtime ;
+- ajout d’un threat model embed/browser ;
+- propriété du router enfant explicitée après le deep link initial ;
+- chrome framed réduit au minimum ;
+- ajout de règles explicites sur focus et contrôle de sortie immersive ;
+- clarification : exclusion de VotingMachine ≠ suppression de Smart Vote dans les systèmes qui le possèdent ;
+- clarification : exclusion d’Ame-Artificielle ≠ interdiction des outils AI optionnels déjà propriétaires d’une application admise ;
+- ajout d’un `ApplicationConformanceProfile` obligatoire pour l’onboarding ;
+- ajout du gate `validate:surface-spec`.
+
+### Nouveaux locks
+
+`LOCK-KS-SURF-131` à `LOCK-KS-SURF-154`.
+
+### Décisions toujours ouvertes
+
+Les `OPEN-KS-SURF-001` à `OPEN-KS-SURF-006` restent ouvertes. La v1.1 n’invente pas une solution de transport, SSO, bridge, palette, Browser Fullscreen ou persistance de mode.
+</pre></body></html>

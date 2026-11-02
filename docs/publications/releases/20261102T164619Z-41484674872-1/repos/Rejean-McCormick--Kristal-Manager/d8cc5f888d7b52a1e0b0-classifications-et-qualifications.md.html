@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/03-modele/classifications-et-qualifications.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/03-modele/classifications-et-qualifications.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 a0380dcd8fce7d89</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/03-modele/classifications-et-qualifications.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Classifications ARK, PRF, UNESCO et preuves
+
+## Modèle conceptuel
+
+| Catégorie | Que décrit-elle ? | Qu&#x27;est-ce qui établit sa validité ? |
+|---|---|---|
+| ARK | Forme/structure Arketype | Preuves structurelles + validation appropriée |
+| PRF | Usage dominant d&#x27;un Kristal | Analyse fonctionnelle du modèle natif, non simple correspondance domaine |
+| UNESCO | Domaine/microthésaurus | Codes valides + adéquation sémantique contrôlée |
+| Wikidata Q/P | Alignement externe d&#x27;identités/propriétés | Source/provenance, contrôle du référent, statut |
+| Framework C1/C2/C3 | Qualification/autorisation selon contrats normatifs | Procédures officielles distinctes |
+
+## Statuts de classification cibles
+
+`UNOBSERVED`, `PROPOSED`, `REVIEWED`, `ACCEPTED`, `REJECTED`, `SUPERSEDED`. Un code correct mais non validé reste `PROPOSED`. `REVIEWED` atteste un examen, pas une acceptation. Les identifiants externes ne sont pas légitimés simplement parce que leur format est valide.
+
+## Structure de décision cible
+
+```json
+{
+  &quot;target_state_ref&quot;: &quot;urn:kristal:state:physics&quot;,
+  &quot;axis&quot;: &quot;arketype&quot;,
+  &quot;code&quot;: &quot;ARK-09&quot;,
+  &quot;status&quot;: &quot;PROPOSED&quot;,
+  &quot;proposed_by&quot;: &quot;arketype-scanner&quot;,
+  &quot;evidence_refs&quot;: [&quot;report:...&quot;],
+  &quot;notes&quot;: &quot;Score structurel indicatif 2/3; sens non inspecté&quot;,
+  &quot;decision_id&quot;: null,
+  &quot;supersedes&quot;: null
+}
+```
+
+## Faits actuels du corpus
+
+Le scanner Arketype fourni retourne 127 résultats, dont 36 à candidats multiples et des scores structuraux limités à 3 critères. Le batch PRF antérieur contenait 96 attributions générales `PRF-20`, qui ne doivent **pas être gonflées en validations spécialisées**. Des mappings UNESCO proposés ont été ajoutés localement, sans certification.
+
+## Règles produit
+
+Une analyse peut suggérer; seule une action d&#x27;approbation traçable modifie une classification de référence. Les observations sont toujours conservées même si une décision ultérieure les rejette. Les informations de classement et les preuves peuvent évoluer sans réécrire des assertions KQ/KP.
+</pre></body></html>

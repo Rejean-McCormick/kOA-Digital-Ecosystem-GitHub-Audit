@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion · CertifiKation.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion · CertifiKation.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion · 62c3bb451bac · SHA-256 7f05825c00c1637a</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion/wiki/CertifiKation' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># CertifiKation — KonnectED Certification Capability
+
+CertifiKation is the certification/credential capability inside **KonnectED**. It is not a separate ecosystem system.
+
+Canonical backend:
+
+```text
+backend/konnaxion/konnected/
+```
+
+## Current model families
+
+- `CertificationPath`;
+- `Evaluation`;
+- `PeerValidation`;
+- `Portfolio`;
+- `InteropMapping`.
+
+## Responsibilities
+
+- define certification/learning paths;
+- record evaluation attempts/results;
+- support peer validation;
+- maintain user portfolio evidence;
+- map internal certification concepts to external systems when required.
+
+## Current UI
+
+Certification surfaces live under:
+
+```text
+/konnected/certifications/*
+```
+
+including programs, exam preparation/registration and result dashboards.
+
+## Ownership
+
+Certification state remains KonnectED-owned. An external attestation or interoperability mapping can be referenced without becoming a second source of certification truth.
+</pre></body></html>

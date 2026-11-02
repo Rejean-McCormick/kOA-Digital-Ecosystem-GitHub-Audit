@@ -1,0 +1,25 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/12-references/sources-et-guides.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/12-references/sources-et-guides.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 15462e42de0839dc</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/12-references/sources-et-guides.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Traçabilité des sources de cette documentation
+
+## Sources de code effectivement examinées
+
+- Snapshot Manager `znapshot_Kristal-Manager_10310806.zip` : `kristal_manager/core.py`, `gui.py`, `discovery.py`, `content_catalog.py`, `global_analysis.py`, `diag_bridge.py`, `classification_bridge.py`, `review_registry.py` et autres modules.
+- Overlay Manager/Diag `OVERLAY-DIRECT-REFONTE-MANAGER-KRISTALDIAG-2026-10-31.zip` : `central_store.py`, `diagnostics_batch.py`, `operations_cli.py`, adaptations GUI/panels, `tests/test_central_refactor.py`, `tests/test_unified_gui_flow.py`, note d&#x27;architecture.
+- Snapshot Diag `KristalDiag_Code_snapshot(2).zip` : `kristaldiag/`, `contracts/`, `docs/OPERATING_MODEL.md`, `docs/CONFORMANCE.md`, `README.md`, `pyproject.toml`.
+- `RAPPORT_ARKETYPE_STRUCTURE(1).json` : 127 comparaisons structurelles et limites explicites.
+- Rapports d&#x27;analyse globale Manager du 31 octobre 2026 : 127 workspaces, 16 observations natives limitées, 111 autres à revoir.
+
+## Guides d&#x27;architecture et d&#x27;interface joints
+
+- `guide-architecture-interfaces-ia-v2(7).zip` → `senior-interface-ux-patterns-v2/`, particulièrement `AI_INGESTION.md`, `GUIDE_RAPIDE.md`, `UX_PATTERN_MATRIX.md` et UX-15 à UX-18.
+- `senior-architecture-patterns(5).zip` → `senior-architecture-patterns/`, particulièrement #31 (modular monolith), #07 (strangler), #08 (anti-corruption layer), #10 (hexagonal), #12 (CQRS), #15 (idempotency), #04 (graceful degradation), #06 (timeout budgets).
+
+Les guides apportent des principes de design; **les noms de modules, formats et commandes spécifiques** proviennent des sources Kristal inspectées. Les schémas `v2` dans cette documentation sont des propositions d&#x27;architecture, pas des normes déjà acceptées.
+
+## Documents historiques à conserver
+
+Les anciennes pages `docs/C2_PUBLICATION_CONTROL.md`, `CONTENT_CATALOG.md`, `V10_ALIGNMENT.md`, `KONSTELLATION_INVENTORY.md`, documents de snapshot et `REFONTE-CENTRE-CONTROLE-2026-10-31.md` sont des preuves d&#x27;évolution. Leur présence dépend de l&#x27;état du dépôt. Ne pas les effacer au motif qu&#x27;un nouvel index est créé.
+
+## Règle de vérification
+
+Avant un changement de norme Framework, revoir les contrats officiels et le code Diag épinglé. Aucune source fournie ne démontre ici une couverture générale d&#x27;un **Framework v11** ou une certification universelle des 127.
+</pre></body></html>

@@ -1,0 +1,69 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/08-examples/query-recipes.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/08-examples/query-recipes.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 819725e48b0b7712</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/08-examples/query-recipes.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Query Plan Recipes
+
+These are structural recipes. Concrete targets/operations MUST exist in the active capability snapshot.
+
+## Parallel breadth scan
+
+```text
+A ──┐
+B ──┼──&gt; compiler
+C ──┘
+```
+
+Use independent operations with no `inputs`.
+
+## Pipeline
+
+```text
+A → B → C
+```
+
+Use when B consumes normalized referents/results from A and C consumes B.
+
+## Fan-out
+
+```text
+       ┌→ B
+A ─────┼→ C
+       └→ D
+```
+
+Useful when one discovery set should be analyzed by multiple domain Kristals.
+
+## Fan-in
+
+```text
+B ──┐
+C ──┼→ D
+E ──┘
+```
+
+D receives selected outputs from multiple upstream operations. Capability must explicitly support that input cardinality.
+
+## Bounded heavy query
+
+Specify both operation and global budgets:
+
+```json
+{
+  &quot;budget&quot;: {&quot;max_items&quot;: 1000, &quot;max_bytes&quot;: 1500000},
+  &quot;operations&quot;: [
+    {
+      &quot;id&quot;: &quot;heavy&quot;,
+      &quot;target&quot;: &quot;HumanBody&quot;,
+      &quot;operation&quot;: &quot;cross_layer&quot;,
+      &quot;params&quot;: {},
+      &quot;budget&quot;: {&quot;max_items&quot;: 400}
+    }
+  ]
+}
+```
+
+## Conflict-focused query
+
+Ask for an operation/projection advertising conflict/tension capability and set `return.include_conflicts=true`. The compiler preserves competing records instead of silently selecting one.
+
+## Legacy v5 reader-policy query
+
+Only use reader-policy fields when the active capability advertises them. Never assume `validated_only` means maximum certainty or universal truth.
+</pre></body></html>

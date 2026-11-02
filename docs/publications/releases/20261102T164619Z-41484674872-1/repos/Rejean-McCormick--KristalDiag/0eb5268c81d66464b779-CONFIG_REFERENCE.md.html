@@ -1,0 +1,60 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/KristalDiag · docs/CONFIG_REFERENCE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/KristalDiag · docs/CONFIG_REFERENCE.md</h1><p class='meta'><small>Rejean-McCormick/KristalDiag · 6a14d72ffec4 · SHA-256 2485e8d9160d9851</small><br><a href='https://github.com/Rejean-McCormick/KristalDiag/blob/6a14d72ffec4d7b92186111a515d64b87f78de27/docs/CONFIG_REFERENCE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Configuration reference
+
+Default file: `kristaldiag.config.json`. Optional uncommitted override: `kristaldiag.config.local.json`.
+
+```json
+{
+  &quot;control_dir&quot;: &quot;.kristaldiag&quot;,
+  &quot;max_json_files&quot;: 100000,
+  &quot;max_target_files&quot;: 500000,
+  &quot;strict_warnings&quot;: false,
+  &quot;require_external_interop_for_release&quot;: false,
+  &quot;execution&quot;: {
+    &quot;max_parallel&quot;: 4,
+    &quot;default_timeout_seconds&quot;: 120,
+    &quot;capture_limit_kb&quot;: 256,
+    &quot;fail_fast&quot;: false,
+    &quot;protect_target&quot;: true,
+    &quot;allow_target_mutation&quot;: false,
+    &quot;allow_network&quot;: false
+  },
+  &quot;scan&quot;: {
+    &quot;max_files&quot;: 300000,
+    &quot;max_file_bytes&quot;: 1048576,
+    &quot;max_security_files&quot;: 4000,
+    &quot;large_file_bytes&quot;: 10485760
+  },
+  &quot;toolchain&quot;: {&quot;required&quot;: [], &quot;optional&quot;: []},
+  &quot;validators&quot;: [],
+  &quot;security&quot;: {&quot;enabled&quot;: true, &quot;additional_patterns&quot;: []},
+  &quot;redaction&quot;: {&quot;enabled&quot;: true}
+}
+```
+
+## Declared validators
+
+N05 never guesses a build/test command. A validator must be declared explicitly:
+
+```json
+{
+  &quot;validators&quot;: [
+    {
+      &quot;id&quot;: &quot;native-tck&quot;,
+      &quot;name&quot;: &quot;Native TCK&quot;,
+      &quot;required&quot;: true,
+      &quot;command&quot;: [&quot;python&quot;, &quot;scripts/run_tck.py&quot;],
+      &quot;cwd&quot;: &quot;.&quot;,
+      &quot;timeout_seconds&quot;: 300,
+      &quot;mutates_target&quot;: false,
+      &quot;network&quot;: false
+    }
+  ]
+}
+```
+
+Even declared validators require `--allow-exec`.
+
+## Large GitHub collections
+
+The draft.3.1 defaults are raised so repositories with thousands of `kristals/&lt;slug&gt;/` read surfaces do not fail the read-only fingerprint gate merely because they exceed the earlier 50k-file ceiling. K29 still performs exact byte/digest verification of hosted subtrees with bounded parallel workers. If a collection is materially larger than these limits, increase them explicitly rather than disabling target protection.
+</pre></body></html>

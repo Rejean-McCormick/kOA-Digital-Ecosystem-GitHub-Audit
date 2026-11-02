@@ -1,0 +1,44 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kolor · Command-Line-Reference.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kolor · Command-Line-Reference.md</h1><p class='meta'><small>Rejean-McCormick/Kolor · a0c1ee2fbd91 · SHA-256 3927d573161100df</small><br><a href='https://github.com/Rejean-McCormick/Kolor/wiki/Command-Line-Reference' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Command-Line Reference
+
+Run commands from the extracted `Kolor_Studio` directory. The CLI&#x27;s command names remain in French for backward compatibility, even when the desktop UI is set to English.
+
+```powershell
+py Kolor_Studio_CLI.py &lt;action&gt; [options]
+```
+
+| Action | Purpose |
+| --- | --- |
+| `etat` | Show number of imported and approved roles |
+| `palettes` | List available palette and skin-tone IDs |
+| `prompts` | Write 38 French technical prompts to `projet/prompts/` |
+| `importer-dossier` | Import files from a directory (`&lt;role-id&gt;.png`) |
+| `choisir-palette` | Assign palette and skin tone to one role |
+| `choisir-couleur` | Override or reset a non-skin channel |
+| `exporter` | Create all exports and manifests |
+
+## Examples
+
+```powershell
+py Kolor_Studio_CLI.py etat
+py Kolor_Studio_CLI.py palettes
+py Kolor_Studio_CLI.py prompts
+py Kolor_Studio_CLI.py importer-dossier &quot;C:\mycode\Ekole\Kolor\source&quot;
+py Kolor_Studio_CLI.py importer-dossier &quot;C:\mycode\Ekole\Kolor\source&quot; --ecraser
+py Kolor_Studio_CLI.py choisir-palette --role pecheur --palette ocean --skin-tone caramel
+py Kolor_Studio_CLI.py choisir-couleur --role pecheur --region haut --hex &#x27;#E97B35&#x27;
+py Kolor_Studio_CLI.py choisir-couleur --role pecheur --region haut --hex RESET
+py Kolor_Studio_CLI.py exporter
+```
+
+`--projet` selects another project folder. `--ecraser` allows reimport of existing sheets. For `choisir-couleur`, available regions are `cheveux`, `haut`, `bas`, `chaussures`, and `accessoires`. The skin color is controlled with `--skin-tone`, not `--region peau`. `RESET` removes a region&#x27;s custom override.
+
+## Safety and automation
+
+- CLI imports do not call the image-generation API.
+- CLI exports do not modify source PNGs.
+- Reimport of a source sheet resets that role&#x27;s reviewed status.
+- Pure black and white are locked, including from the CLI.
+- CLI output and action names currently remain French; the `Français / English` setting applies to the **desktop UI**.
+
+Next: [Bilingual Interface](Bilingual-Interface.md).
+</pre></body></html>

@@ -1,0 +1,52 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Akor · docs/wiki/Information-Sharing-and-Joins.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Akor · docs/wiki/Information-Sharing-and-Joins.md</h1><p class='meta'><small>Rejean-McCormick/Akor · cc86fccc9dd9 · SHA-256 8a763583ddd0cce8</small><br><a href='https://github.com/Rejean-McCormick/Akor/blob/cc86fccc9dd9a73aec937486a7e3cfbc917d0fdb/docs/wiki/Information-Sharing-and-Joins.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Information Sharing and Joins
+
+One way to make children interact is to distribute **complementary fictional information** and help them combine it through discussion. However, controlling information is a **security-sensitive runtime function**, not just a visual trick.
+
+## Existing Kontexte source
+
+The bakery draft contains:
+
+- `indice-un`: held by role `boulanger`, released when `orgo_authorized`.
+- `indice-deux`: held by role `fermier`, released when `orgo_authorized`.
+- `jointure-infos`: combines those references before unlocking `phase-3`.
+
+The source *describes an intention*. It does not prove that Orgo already enforces the fragment join in a school session. kompose&#x27;s current preview explicitly marks such enforcement as **not implemented in Orgo for this pilot**.
+
+## Proposed safe release flow
+
+```text
+Teacher approves a reviewed mission version
+    ↓
+Orgo creates/advances a mission session and authenticates actors
+    ↓
+Orgo decides that fragment A is available to participant 1
+    ↓
+Akor receives only the authorized recipient projection
+    ↓
+Child 1 discusses or shares an approved fact with child 2
+    ↓
+Orgo validates required receipt, join or checkpoint
+    ↓
+Akor updates both role views from authoritative state
+```
+
+**Never** download the whole mission JSON to all learners and hide private fragments with CSS, client-side filters or a role dropdown.
+
+## Interaction must not become a trap
+
+A partner may be absent, refuse, need more time or disconnect. A safe mission needs a teacher-approved fallback with traceable origin, and must never simulate another child&#x27;s contribution as genuine evidence.
+
+Disclosure rules should cover membership changes, late joins, reassignments, stale tabs, reconnects and repeated submissions. Every operation should be idempotent where appropriate, and sensitive projections should fail closed when permission checks cannot be completed.
+
+## Join guarantees to qualify with Orgo
+
+- Deterministic workflow version and pinned WorldRelease.
+- Authorized recipient and trusted actor identities.
+- Replay/duplicate event handling and revision conflict detection.
+- Server-side verification of required contributions and human review.
+- Explicit override/fallback path and corresponding audit event.
+- Content release history without unnecessary personal details.
+- No peer-owned secret or teacher answer in a public learner endpoint.
+
+These guarantees are acceptance criteria, **not claims of completed Akor functionality**.
+</pre></body></html>

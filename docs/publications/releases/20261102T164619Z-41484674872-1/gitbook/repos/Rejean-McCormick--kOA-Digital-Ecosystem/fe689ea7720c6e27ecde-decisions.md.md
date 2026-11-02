@@ -1,0 +1,27 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/58a5fa07c18b360a1abd7a213023c6ceaa9d1533/docs/2-Technical-Reference/40-integration/kristal-v10-alignment/decisions.md | commit: 58a5fa07c18b360a1abd7a213023c6ceaa9d1533 | SHA-256: ddf5f64e19a547d88f7bec78dfe0baa7d2bf54cebbbe8bde88f0eb93beb345fc -->
+
+# Decisions, conditions and unresolved approvals
+
+## Existing explicit user policy (carried forward)
+
+- **D-001 — Authorized in principle:** A user may authorize public distribution **once for one specific Kristal and a defined file scope**. Later revisions *may* be distributed automatically **only after each revision passes independent qualification** and scope/recipient/rights remain within the original authorization.
+- This is a **policy statement**, not a grant for Zoology or any other Kristal. New visibility, paths, audience or revoked permissions require a renewed decision; public GitHub pushes can disclose data **before** immutable release creation.
+
+## Navigation decision — 2026-10-12
+
+- **D-005 — User decision:** Reuse **Konstellation** to navigate across the accessible Kristal fleet and explore content inside an individual Kristal. **Manager** supplies the local instance inventory and operational readiness. **Arketype** supplies archetype types and optional visual patterns. **Kompiler** supplies read-only semantic context. Konstellation Light remains a derived public/static reader.
+- **Implementation status: PROPOSED**, not completed. Konstellation already offers an instance selector and a GitHub v10 adapter but lacks a unified Manager-local fleet view. This decision does not authorize deployment, broadening ACLs or inventing domain structure.
+
+## Open decisions and evidence
+
+| ID | Decision required | Responsible owner(s) | Blocker |
+|---|---|---|---|
+| O-006 | Select exact approved Framework draft.3.1 revision and contract-set digest | Framework + C0 | Unverified remote SHAs |
+| O-007 | Resolve C1 independent receipts, C2 trust, authorization TTL and paths, and C3 protected execution | C1/C2/C3 | No E2E qualification |
+| O-008 | Obtain full Manager checkout and specify the read-only registry export accepted by Konstellation | Manager + Konstellation | Supplied Manager runtime missing |
+| O-009 | Decide local/hosted/private fleet visibility policies, including metadata and counts | User/owners + Konstellation | Private ACL/status not verified |
+| O-010 | Approve Arketype repository visibility, licensing and ownership of pattern hints | Arketype owner | Not a Kristal-public collection |
+| O-011 | Resolve historical Kollection aliases and UCKK stubs against distinct v9 state refs | Kollection + local owners | Legacy≠current identity |
+| O-012 | Determine per-Kristal eligibility and legal authority of a safe pilot | User + C1/C2 | No inferred Zoology authorization |
+
+All approval outcomes must cite a specific artifact revision, owner and test evidence in the source repository. C0 coordinates their references but cannot sign on behalf of those owners.

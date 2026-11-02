@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/00-vision/glossaire.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/00-vision/glossaire.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 c4bbef445c9d785e</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/00-vision/glossaire.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Glossaire opérationnel
+
+| Terme | Sens retenu |
+|---|---|
+| Kristal local | Répertoire avec contrat de workspace/état, source analysée |
+| `state_ref` | Identité d&#x27;état déclarée; ne pas la confondre avec le nom du dossier |
+| Canon | Artefacts et engagements faisant autorité du côté Kristal/Kit, non du côté Manager |
+| KQ/KP/KA/KS | Familles d&#x27;identités/relations/sources propres à Kristal; ne jamais générer par simple appariement lexical |
+| Discovery | Métadonnées dérivées décrivant le workspace et sa fraîcheur |
+| Catalogue de contenu | Index descriptif et recherche sur contenus KQ/KP et fichiers observés |
+| Registre opérationnel | SQLite léger des workspaces, observations, dates, profils et liens vers preuves |
+| Observation | Résultat attribué à un outil, avec limite de portée |
+| Verdict | Résultat d&#x27;un profil de diagnostic déterminé (`PASS`, `FAIL`, etc.) |
+| Statut de processus | Le moteur a-t-il été lancé, terminé, échoué ou interrompu ? |
+| Fraîcheur | Concordance entre empreinte de l&#x27;entrée du run et état actuel observable |
+| `NOT_APPLICABLE` | Profil non applicable, **pas** erreur ni succès |
+| `NOT_RUN` | Aucun diagnostic correspondant encore enregistré ou lancé |
+| `STALE_OR_UNVERIFIED` | Preuve historique, empreinte absente ou source modifiée |
+| ARK | Classification structurelle Arketype, distincte du profil d&#x27;usage |
+| PRF | Profil d&#x27;usage, peut être générique et à affiner |
+| UNESCO | Domaine/microthésaurus proposé ou déclaré, non certification sémantique |
+| Wikidata Q/P | Liens externes candidats ou acceptés **selon provenance**, pas validation externe automatique |
+| C1/C2/C3 | Surfaces/étapes de qualification/autorisations distinctes à documenter par contrat Framework officiel |
+| Moteur embarqué | Copie versionnée de KristalDiag fournie avec Manager, utilisée comme processus indépendant |
+| Overlay direct | Archive à extraire à la racine prévue, sans exécution implicite |
+
+## Étiquettes documentaires
+
+`OBSERVÉ`, `LIVRÉ`, `CIBLE`, `HYPOTHÈSE`, `NON ÉTABLI`. Le libellé utilisateur peut être localisé; la valeur machine doit être stable et testée.
+</pre></body></html>

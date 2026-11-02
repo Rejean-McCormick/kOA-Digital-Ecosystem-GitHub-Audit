@@ -1,0 +1,47 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · Capsule-Journey.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · Capsule-Journey.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · ec94ee500739 · SHA-256 8afd7fcee800743d</small><br><a href='https://github.com/Rejean-McCormick/Kompose/wiki/Capsule-Journey' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Capsule Journey — Proposed Experience, Not a Live School Session
+
+&gt; This is the **future classroom design**, not deployed functionality. Real Tandem tasks and workflow transitions belong exclusively to **Orgo** under ADR 0008; KOMPOSE provides only local state simulations and planning previews.
+
+## Before admission
+
+A teacher selects a versioned capsule, configures roles and capacities, diagnostic settings, casting policy, accessibility needs, and private pedagogical constraints. Documentary sources undergo their own review.
+
+## Student journey
+
+1. Open the Entry Door on a Chromebook or tablet and join using a session code **and** an authorized school identity.
+2. Explore the public role descriptions.
+3. Complete an adaptive diagnostic with recovery after interrupted connectivity.
+4. Depending on session policy, select an available role when eligible or receive a proposed assignment.
+5. Wait for the teacher to approve the complete assignment before publication.
+6. Receive personalized missions and events through a client interface.
+7. Discover or obtain access to Kristals; contact a guardian when the story requires it.
+8. Compare sources, complete missions, and contribute to the group&#x27;s synthesis.
+9. Close the adventure and review appropriate learning feedback.
+
+```mermaid
+flowchart TD
+  A[Preparation] --&gt; B[Enrollment]
+  B --&gt; C[Diagnostic]
+  C --&gt; D[Role allocation]
+  D --&gt; E[Teacher approval]
+  E --&gt; F[Adventure / phases]
+  F --&gt; G[Closure]
+  B -. pause .-&gt; H[Suspended]
+  C -. pause .-&gt; H
+  F -. pause .-&gt; H
+  H -. controlled resume .-&gt; F
+```
+
+The diagram simplifies recovery: the controller preserves the **previous state** and resumes in the corresponding phase, not automatically in the adventure phase. See `src/kompose/lifecycle.py` and `docs/02-parcours.md`.
+
+## Interruptions, absences, and deadlocks
+
+- Expired code: deny access without unnecessary disclosure; teacher can generate a new code.
+- Absent student: controlled resumption or teacher-managed manual assignment.
+- Non-comparable diagnostic scores: skip ranking and use guided selection.
+- No valid casting solution: never publish an assignment that breaks safety rules.
+- Absent guardian: supervised transfer or an alternative access route.
+- Blocked mission: inspect prerequisites and provide pedagogically appropriate alternatives.
+
+[[Home|← Home]] · [[Missions-and-Events|Orchestration →]]
+</pre></body></html>

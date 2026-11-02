@@ -1,0 +1,75 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/29-reference-sequences.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/29-reference-sequences.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 e7479e4298a28aef</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/29-reference-sequences.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Séquences de référence
+
+## 1. Sélection d&#x27;une entité
+
+```text
+User -&gt; Shell: select entity
+Shell -&gt; Query Service: entity(entityId, context)
+Query Service -&gt; Reader Policy: evaluate visibility
+Query Service -&gt; Profiler: get FocusProfile
+Query Service -&gt; Planner: build plan(context, lens, focus)
+Planner -&gt; Shell: NavigationPlan
+Shell -&gt; Projection Service: project(primaryRecipe)
+Projection Service -&gt; Shell: bounded DTO + explanation
+Shell -&gt; Renderer: render + inspector
+```
+
+Invariant : aucune mutation QuerySpec sans filtre/pivot explicite.
+
+## 2. Changement de Lens
+
+```text
+User -&gt; Shell: choose Lens B
+Shell: keep QuerySpec if compatible
+Shell -&gt; Planner: recompute with Lens B
+Planner: reorder recipes / labels / facets
+Shell: preserve active filters not represented by Lens
+```
+
+Reader Policy ne change pas.
+
+## 3. Changement de Reader Policy
+
+```text
+User -&gt; Shell: choose Policy B
+Shell -&gt; Query Service: resolve Policy B
+Query Service: invalidate cursor/cache scope
+Query Service: re-evaluate QuerySpec
+Profiler/Planner: recompute visible profile
+Shell: replace results only for newest matching context
+```
+
+## 4. Projection spécialisée indisponible
+
+```text
+Shell -&gt; Projection Service: request dag-proof
+Projection Service: error / budget exceeded
+Shell -&gt; Registry: resolve accessibility fallback
+Registry -&gt; Shell: table or constellation
+Shell: preserve query, focus and history
+```
+
+## 5. Import Kristal v6
+
+```text
+Source -&gt; Adapter: kristal_state
+Adapter: schema validation
+Adapter: identity verification
+Adapter: lossless mapping
+Adapter: loss report
+Adapter -&gt; Query Service: local read index
+Profiler: derive affordances
+Planner: produce initial plan
+Shell: generic view first, enriched views next
+```
+
+## 6. Action context
+
+```text
+Kristal record: actionability=automatic
+Profiler: affordance actionability
+Planner: recipe action-context
+Renderer: show conditions/role/status
+NO execution call is produced
+```
+</pre></body></html>

@@ -1,0 +1,78 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · docs/ALIGNMENT_V11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · docs/ALIGNMENT_V11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · b7e08f384609 · SHA-256 c9aa259bfe1ff91d</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/blob/b7e08f38460917f6e23df59151b1a8b8e447b4f7/docs/ALIGNMENT_V11.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Alignement Kristal Framework v11 / diK / Authoring Kit — Integration Pack 0.3.0-alpha.1
+
+**Statut :** adaptateur de lecture v11 en candidat, **non publié dans Konstellation**. Ce travail étend le Pack 0.1.0-alpha.2 en conservant le pont Kompiler historique v6/v10, son installateur et ses garanties. Il ne change ni l&#x27;autorité sémantique ni les règles d&#x27;accès des applications hôtes.
+
+## Propriétés garanties par l&#x27;adaptateur
+
+1. **Identités canoniques** : un graphe source contient uniquement des KQ/KP/KA/KS dans les champs d&#x27;identité, avec `(namespace_id, id)` comme clé logique. Les Q/P Wikidata sont uniquement des correspondances externes `accepted + exactMatch` contrôlées par le Framework.
+2. **Lexique hors graphe** : toutes les étiquettes sont dans `presentation[].lexical` du fichier *dérivé*, jamais substituées aux identifiants du graphe. Citations et littéraux d&#x27;assertions restent des valeurs de données.
+3. **Souveraineté des dictionnaires** : le Framework v11 draft.4 épinglé (avec des schémas inchangés depuis draft.3) audite catalogue, SHA-256 de toutes les couches, sources Wikidata autorisées, provenances, priorité et replis linguistiques explicites. Le Pack délègue cette responsabilité et n&#x27;invente pas un nouveau résolveur d&#x27;identité.
+4. **Complétude** : la commande `coverage` appelle directement le rapport de référence `kristal_dik_coverage_report` du Framework, sans fusionner repli et traduction directe.
+5. **Provenance et pinning** : `contracts/v11-framework-pin.json` lie cette candidate à la version `11.0.0-draft.4` et aux empreintes exactes des schémas et outils consommés, dont `interop_preflight.py`. Les schémas v11 conservent leurs octets depuis draft.3. Tout changement doit être revu et repinné explicitement.
+6. **Lecture seule** : `check`, `coverage` et `view` ne modifient jamais un graphe, registre, crosswalk, catalogue ou couche lexicale. `--out` crée un *nouveau* fichier par création exclusive (échec s&#x27;il existe).
+7. **Aucune automatisation de la migration** : les plans diK et l&#x27;application de conversions appartiennent à diK / Authoring Kit, pas à ce Pack. `closeMatch`, `candidate` et les égalités de mots ne deviennent pas des identités.
+
+## Contrats produits et consommés
+
+| Entrée ou sortie | Autorité | Usage |
+|---|---|---|
+| `kristal_semantic_graph`, `kristal_identity_registry` | Framework v11 | Entrées canon, validées en lecture |
+| `kristal_external_crosswalk` | Framework v11 | Références Wikidata externes, preuve `KS` |
+| `kristal_dictionary_catalog` + couches | Framework v11 / diK | Lecture de labels, priorités, hash et repli |
+| `kristal_dik_coverage_report` | Framework v11 | Sortie de `coverage`, certitude de couverture lexicalement bornée |
+| `kristal.integration.read-view/v11.0-draft.1` | Ce Pack | **Projection non canonique** de présentation, assertions KQ/KP intactes |
+| `kompiler.context-pack/1.0-1.1` / projection v6 | Kompiler | Compatibilité historique, **pas** un décodeur générique v11 |
+
+## CLI depuis le dépôt du Pack
+
+Prérequis : Python 3.11+ avec `jsonschema` (comme Framework v11), Node 22+ pour le point d&#x27;entrée Node ; prévoir Node 24.15+ pour les environnements historiques de Konstellation.
+
+```bash
+export KRISTAL_FRAMEWORK_ROOT=/chemin/vers/kristal-11.0.0-draft.4
+S=&quot;$KRISTAL_FRAMEWORK_ROOT/examples/v11&quot;
+COMMON=(--framework &quot;$KRISTAL_FRAMEWORK_ROOT&quot; \
+  --registry &quot;$S/identity-registry.example.json&quot; \
+  --graph &quot;$S/semantic-graph.example.json&quot; \
+  --crosswalk &quot;$S/external-crosswalk.example.json&quot; \
+  --catalog &quot;$S/dictionaries/catalog.json&quot;)
+python tools/v11_integration.py check &quot;${COMMON[@]}&quot;
+python tools/v11_integration.py coverage &quot;${COMMON[@]}&quot; --locales fr-CA,en --out ./coverage-report.json
+python tools/v11_integration.py view &quot;${COMMON[@]}&quot; --locale fr-CA --out ./view-fr-CA.json
+node tools/kristal-bridge.mjs v11 --operation view &quot;${COMMON[@]}&quot; --locale fr
+```
+
+### Garantie de la projection dérivée
+
+- `source`: namespace, graph ID, empreintes SHA-256 des quatre entrées, version exacte du Framework.
+- `presentation`: KQ et KP distincts, status `direct`/`fallback`/`missing`, termes résolus et provenance de couche ; référence Wikidata uniquement si correspondance exacte acceptée.
+- `assertions`: assertions source **inchangées**, références KQ/KP/KA/KS ou valeurs typées.
+- `derived_only: true`: ne vaut ni engagement v9, ni nouveau graphe v11, ni preuve d&#x27;identité ou d&#x27;autorisation.
+
+Le consommateur Node `overlay/server/integrations/kristal-v11-read-view.mjs` effectue une **vérification structurelle défensive** du format `read-view`; il ne remplace PAS la validation Framework et ne vérifie pas les fichiers canoniques sous-jacents. Il n&#x27;est pas activé automatiquement comme une route réseau.
+
+## Régression et protocole de qualification
+
+```bash
+node --test tests/*.test.mjs
+python -m unittest discover -s tests -p &#x27;test_*.py&#x27; -v
+# Validation réelle du Framework (pas exécutée automatiquement par CI sans checkout explicite)
+KRISTAL_FRAMEWORK_ROOT=/chemin/kristal-11.0.0-draft.4 node --test tests/v11.test.mjs
+KRISTAL_FRAMEWORK_ROOT=/chemin/kristal-11.0.0-draft.4 python -m unittest tests.test_v11_integration -v
+python tools/verify_manifest.py
+```
+
+**Refus testés** : propriété textuelle, Q Wikidata utilisé comme KQ, couches modifiées après hachage, Wikidata sans exactMatch accepté, mauvais namespace, conflit lexical, écrasement de sortie, dérive des outils/schémas Framework, entrée/projection invalide.
+
+**Non qualifié / hors périmètre** : installation sur un Konstellation existant, build Astro/Svelte, parcours navigateur, politique de lecture multiutilisateur, authentification C1/C2, publication distante, migration diK/Authoring Kit, performance de 300 langues en production. L&#x27;overlay v10 ne doit pas être réinstallé sur une application Konstellation déjà intégrée.
+
+
+## Handoff diK alpha.7 → Authoring Kit draft.4 (candidat lot 1)
+
+**État au 27 octobre 2026 :** le Pack reste en `0.3.0-alpha.1`, et `docs/LOT1_KIT_ALIGNMENT.md` rapporte l&#x27;alignement de l&#x27;Authoring Kit **`4.0.0-draft.4`** sur le verrou exact Framework `11.0.0-draft.4`. Ce changement de référence documentaire ne constitue pas un nouveau test : la qualification croisée du **17 octobre** portait sur le **Kit `4.0.0-draft.3`**. Le code Kit draft.4 n&#x27;est pas inclus dans le snapshot du Pack. La compatibilité opérationnelle doit être vérifiée sur un checkout Kit approuvé.
+
+Le précontrôle additionnel `tools/v11_handoff.py` lit les vrais contrats épinglés du Framework draft.4 et refuse les couches non Wikidata si `--kit-import-candidate` est sélectionné. Son contrôle facultatif de `dik-job.json` confirme l&#x27;association entre le catalogue, le registre et le crosswalk approuvés. **Le reçu ne prouve pas une approbation humaine ou l&#x27;origine Wikidata.**
+
+Les commandes `import-dik-catalog`, `select-v11-catalog` et `recover-v11` demeurent des opérations de l&#x27;**Authoring Kit**. Ce Pack ne les exécute jamais automatiquement et ne modifie pas le graphe canonique. Le profil dérivé `kristal.integration.read-view/v11.0-draft.1` reste inchangé ; le lecteur Node admet les anciennes vues draft.3 ainsi que les vues draft.4.
+
+Voir [DIK_KIT_HANDOFF_V11](DIK_KIT_HANDOFF_V11.md), [Lot 1 Kit alignment](LOT1_KIT_ALIGNMENT.md) et [Qualification 0.3.0-alpha.1](QUALIFICATION_030_ALPHA1.md) pour distinguer l’alignement courant des preuves historiques et de leurs limites.
+</pre></body></html>

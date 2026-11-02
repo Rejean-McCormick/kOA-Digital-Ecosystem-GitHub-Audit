@@ -1,0 +1,158 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/SenTient/wiki/Home | commit: 73e092ce133d8f92bf005e0e8b2a59760c567955 | SHA-256: 29ff328e7a117d53bc2dde616d6904aba3303beb8233d47e2622b3fa0cd4dbbc -->
+
+# SenTient
+
+**SenTient** is a proposed hybrid entity reconciliation and relation extraction architecture for turning messy, unstructured text into structured knowledge graph candidates for Wikidata/Wikibase-style workflows.
+
+Its design goal is to combine **precision**, **recall**, **reviewability**, and **interactive performance** by splitting the workload across fast tagging, semantic re-ranking, and structured adjudication.
+
+SenTient should be understood as a **conceptual / experimental system design**, not a production-ready release.
+
+## What it is intended to do
+
+SenTient is designed to take raw text, identify likely entity mentions, use sentence context to disambiguate them, and return ranked candidates with explainable scoring.
+
+It is intended for short-text and tabular reconciliation workflows where users need both **automation** and **human review**.
+
+At a high level, the proposed pipeline follows a funnel model:
+
+1. **Ingestion & fingerprinting** normalize text and deduplicate repeat inputs.
+2. **Fast tagging** spots surface forms and retrieves initial candidate entities.
+3. **Semantic analysis** uses context, property clues, and vector similarity to re-rank ambiguous matches.
+4. **Core adjudication** manages jobs, tracks state, and exposes results to the UI.
+5. **Hybrid storage** keeps lightweight grid state in memory while offloading heavy vectors and candidate payloads to a sidecar store such as DuckDB.
+
+These are architectural intentions and implementation patterns, not claims of a completed or benchmarked production system.
+
+## Architecture overview
+
+SenTient is not a monolith. It is a **hybrid orchestration architecture** that combines three complementary layers:
+
+* **Layer 1 — Speed:** Solr-based FST tagging inspired by OpenTapioca-style candidate discovery.
+* **Layer 2 — Semantics:** A Python/Falcon-style NLP service using search indexes and embedding-based contextual disambiguation.
+* **Layer 3 — Structure:** A Java core with OpenRefine-inspired state management, async orchestration, validation, and UI integration.
+
+This structure allows SenTient to stay broad and fast at the top of the funnel while becoming narrower and more precise as evidence accumulates.
+
+## Core components
+
+### 1) Ingestion & fast tagging
+
+Before remote or expensive processing is triggered, SenTient may fingerprint input text locally so repeated variants collapse to the same cache key.
+
+It may then use a Solr **TaggerHandler** backed by an in-memory **Finite State Transducer (FST)**, or an equivalent indexing structure, to scan text and retrieve candidate entities quickly.
+
+This layer is optimized for:
+
+* strict string matching;
+* alias and label discovery;
+* popularity filtering;
+* early pruning;
+* fast candidate generation.
+
+It does not validate claims or decide truth.
+
+### 2) Semantic disambiguation
+
+The semantic layer determines whether a candidate actually fits the sentence or local context.
+
+It may remove noise, generate n-grams, look for likely properties, and compute vector similarity between the surrounding context and candidate descriptions.
+
+This is the layer intended to preserve ambiguity in cases such as whether a mention refers to a place, person, organization, concept, or local project-specific entity.
+
+### 3) Core orchestration
+
+The Java core is intended to act as the system backbone.
+
+It may manage commands, launch long-running reconciliation jobs asynchronously, track status, and return lightweight responses so the UI remains responsive.
+
+A frontend may poll for progress while results are processed in the background.
+
+### 4) Hybrid memory model
+
+To avoid pushing heavy AI payloads into the Java heap, SenTient uses a proposed **split-state architecture**:
+
+* **Hot data in RAM:** row IDs, raw values, and cell status for fast filtering and faceting.
+* **Cold data in DuckDB or equivalent sidecar storage:** vectors, candidate lists, descriptions, and rich scoring telemetry loaded only when needed.
+
+This design is meant to keep the interface responsive while still supporting larger datasets and richer model output.
+
+## Data model
+
+The core unit of exchange is the **SmartCell**.
+
+A SmartCell carries the immutable raw value plus its reconciliation state, consensus score, fingerprint, candidates, and optional NLP context.
+
+Possible status values include:
+
+* `NEW`
+* `PENDING`
+* `AMBIGUOUS`
+* `MATCHED`
+* `REVIEW_REQUIRED`
+* `UNRESOLVED`
+* `BLOCKED`
+
+Candidates may be returned as structured objects with an identifier, label, description, types, and feature-level telemetry such as popularity, semantic context score, string-distance diagnostics, and evidence references.
+
+## API & integration
+
+SenTient uses a proposed command-style backend API exposed by the Java core.
+
+A possible local development topology may use:
+
+* Java core on `127.0.0.1:3333`
+* semantic service on `5005`
+* Solr on `8983`
+* ElasticSearch on `9200`
+* Redis on `6379`
+
+The frontend may consume JSON and communicate with the backend through command routes such as:
+
+```text
+/command/{module}/{action}
+```
+
+All external traffic should flow through the Java core rather than directly to Solr, ElasticSearch, Redis, or Python services.
+
+These ports and routes are implementation examples, not guaranteed production endpoints.
+
+## Quality and trust
+
+SenTient should include a dedicated QA layer built around three mechanisms:
+
+* **Unit and integration tests** for implementation correctness.
+* **Scrutinizers** for runtime data validation and anomaly detection.
+* **Benchmark datasets** for measuring precision, recall, F-score, ambiguity preservation, and latency.
+
+This is especially important because SenTient is probabilistic.
+
+It should not merely return answers. It should expose enough evidence, uncertainty, and review state for safe validation and export into downstream knowledge systems.
+
+## Project direction
+
+The current direction is to develop SenTient from an architectural prototype into a contract-driven reconciliation system.
+
+The main upgrade themes are:
+
+* stricter schemas;
+* centralized configuration;
+* clearer service boundaries;
+* stronger QA gates;
+* better ambiguity preservation;
+* reviewable scoring traces;
+* internationalized labels and aliases;
+* safer export into structured epistemic systems.
+
+This direction does not imply that the platform is currently production-ready.
+
+## Suggested reading
+
+* `00_ARCHITECTURE_BLUEPRINT.md` — system overview and funnel architecture
+* `01_INGESTION_LAYER.md` — ingestion, fingerprinting, and FST tagging
+* `02_SEMANTIC_LAYER.md` — Falcon-style NLP and vector scoring
+* `03_CORE_LAYER.md` — Java orchestration and split-state design
+* `04_DATA_DICTIONARY.md` — SmartCell contract and candidate schema
+* `05_WIRING_AND_CONFIG.md` — ports, topology, and filesystem layout
+* `06_API_AND_FRONTEND.md` — frontend/backend integration
+* `07_QA_AND_VALIDATION.md` — validation strategy and benchmark workflow

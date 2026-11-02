@@ -1,0 +1,25 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/05-moteurs/inventaire-et-discovery.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/05-moteurs/inventaire-et-discovery.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 b2c6867e66bc0dc7</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/05-moteurs/inventaire-et-discovery.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Inventaire, Discovery et lecture de l&#x27;état
+
+## Implémentation observée
+
+`core.scan_roots()` cherche les dossiers Kristal, détecte `kristal.workspace.json`, normalise le `state_ref`, repère les états candidats et les liens parent/enfant; `discovery.py` et `workspace_tools.py` gèrent les métadonnées générées et leur fraîcheur. Le code traite explicitement les workspaces historiques/auxiliaires.
+
+## Contrat du scanner cible
+
+Entrées : racines locales autorisées, options d&#x27;inclusion des archives et chemins exclus. Sorties : `WorkspaceRef`, `state_ref`, `format`, `native_kind`, readiness, engagement observé, candidats de conflit, fingerprint de Discovery, type de contrat, signal d&#x27;incomplétude. Une erreur de lecture d&#x27;un workspace est **isolée**, les 126 autres restent visibles.
+
+## Stratégie de performance
+
+- Phase A : énumérer les répertoires candidats et leurs descripteurs sans recalculer tous les hashes canon.
+- Phase B : invalider uniquement les workspaces dont les fichiers d&#x27;entrée connus changent; enregistrer la portée de chaque empreinte.
+- Phase C : effectuer les lectures et SHA supplémentaires uniquement sur demande ou lorsqu&#x27;un cache n&#x27;est pas fiable.
+- Toujours permettre « rescan complet » avec équivalence de résultats, et profiler les postes Windows (disque local/antivirus).
+
+## Fraîcheur
+
+La suppression ou modification d&#x27;un fichier source invalidant Discovery doit déclencher un avertissement précis, non être masquée par une date de scan récente. Une modification du `kristal.workspace.json` peut légitimement nécessiter une régénération Discovery par le Kit. Cette action **n&#x27;appartient pas** au scanner de Manager.
+
+## Tests
+
+127 principaux reconnus; 16 natifs; dossiers imbriqués; conflit de `state_ref`; répertoire temporairement verrouillé; casse Windows; chemin long; lien symbolique; workspace renommé; Discovery périmé; absence de source sans crash global.
+</pre></body></html>

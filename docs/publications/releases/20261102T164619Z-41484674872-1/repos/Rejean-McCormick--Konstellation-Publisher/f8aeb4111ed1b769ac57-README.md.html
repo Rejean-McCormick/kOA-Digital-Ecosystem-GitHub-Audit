@@ -1,0 +1,21 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation-Publisher · docs/inventory/README.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation-Publisher · docs/inventory/README.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation-Publisher · 35528f27d6e1 · SHA-256 97eb8041659cafa8</small><br><a href='https://github.com/Rejean-McCormick/Konstellation-Publisher/blob/35528f27d6e1445f641e0e677dbe4507a5eacbf4/docs/inventory/README.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Inventaire courant des dépôts kOA
+
+Ce dossier décrit **ce qui figure actuellement dans le périmètre kOA**, sans mélanger l&#x27;inventaire avec des archives de relevés, des clones tiers ou des projets personnels.
+
+- [`repositories.json`](repositories.json) — **source de référence machine**, 49 dépôts retenus.
+- [`repositories.md`](repositories.md) — vue humaine générée du même périmètre.
+- [`GITHUB_DESCRIPTIONS.md`](GITHUB_DESCRIPTIONS.md) — descriptions proposées pour les applications concernées.
+- [`apps-skope-ekole.json`](apps-skope-ekole.json) — métadonnées applicatives Skope / Ékole.
+
+## Règle de périmètre
+
+Une entrée est conservée si elle appartient au portefeuille kOA déclaré, dispose d&#x27;une identité GitHub et d&#x27;un chemin local déclaré, et n&#x27;est pas explicitement exclue ou retirée. Les projets hors périmètre, les espaces de textes et d&#x27;expérimentation, les clones Wiki/tiers, les chemins introuvables et les relevés historiques ne font pas partie du registre.
+
+Le statut de vérification repris dans chaque ligne décrit **la qualité de la dernière observation disponible** ; il ne certifie pas que le disque ou `origin` sont inchangés aujourd&#x27;hui. Une remote locale non vérifiée est signalée telle quelle, pas présentée comme vérifiée.
+
+## Sécurité de synchronisation
+
+L&#x27;inventaire est **descriptif, non prescriptif**. Une entrée `scope=PUBLIC` ne vaut ni autorisation GitSink ni preuve que le dépôt est prêt au push. La sélection explicite, le contrôle de la racine Git, la comparaison directe de `origin`, et les contrôles de publication s&#x27;appliquent au moment de toute opération.
+
+Pour l&#x27;état des intégrations, voir [`../status/current.md`](../status/current.md) et la [carte d&#x27;autorité](../2-Technical-Reference/10-system/authority-map.md).
+</pre></body></html>

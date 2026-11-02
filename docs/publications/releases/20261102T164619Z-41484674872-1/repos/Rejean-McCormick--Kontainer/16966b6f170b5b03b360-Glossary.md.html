@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontainer · Glossary.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontainer · Glossary.md</h1><p class='meta'><small>Rejean-McCormick/Kontainer · c9674410bf4a · SHA-256 ede78ab897f0b212</small><br><a href='https://github.com/Rejean-McCormick/Kontainer/wiki/Glossary' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Glossary
+
+**Kontainer** — Documentation name for the physical Kristal Container engine described here; its distributed Python package remains `kristal_container`.
+
+**`.kristal`** — Versioned single-file physical representation containing selected file bytes and associated integrity/security metadata.
+
+**Kristal State** — A semantic structured knowledge/state artifact under Kristal Framework contracts; not synonymous with a `.kristal` file.
+
+**Logical Commitment** — Framework-level identity/commitment of semantic state; packaging, rewrapping, and file digests do not recompute or grant one.
+
+**Physical manifest** — The inner `_kristal/manifest.json` recording paths, lengths, SHA-256 hashes and optionally an Ed25519 signature.
+
+**ZIP64 STORE** — Uncompressed ZIP storage profile allowing large files. Kontainer places this archive inside a special outer envelope.
+
+**Envelope** — Versioned outer structure containing a public header and either open inner ZIP bytes or framed authenticated ciphertext.
+
+**Content key** — Random key used to encrypt an inner archive; slot mechanisms protect access to this key.
+
+**Key slot** — A declared way of opening an encrypted file. Multiple slots are OR alternatives; a password-factor slot requires two secrets internally.
+
+**Factor secret** — 32-byte external secret needed alongside the password in the shipped password-factor mode; copyable and not inherently hardware-backed.
+
+**Recovery secret** — Independent bearer secret that can decrypt via a recovery slot; keep separately protected.
+
+**X25519 recipient** — Public-key recipient with corresponding private identity that can independently decrypt a designated container.
+
+**Ed25519 manifest signature** — Cryptographic authentication of selected paths/content hashes; origin trust requires an external trusted signer key.
+
+**`valid-untrusted`** — A signature can be mathematically valid without a trusted signing identity.
+
+**Encrypted spool** — Temporary local encrypted staging used for random-access verification without a full plaintext disk copy.
+
+**Reader Policy** — Kristal/framework-level downstream read authorization and visibility rules; not enforced per member by the physical container.
+
+**Read surface** — The explicit ready, error-free Local Kit projection of selected paths/digests eligible for physical packaging.
+
+**Rewrap** — Creates a newly protected representation with a fresh content key and identical inner ZIP bytes, without revoking older copies.
+
+**Konfid / KMS** — Separate organizational authorization and key-management roles; native managed unlocking is not shipped in 1.0.0rc1.
+</pre></body></html>

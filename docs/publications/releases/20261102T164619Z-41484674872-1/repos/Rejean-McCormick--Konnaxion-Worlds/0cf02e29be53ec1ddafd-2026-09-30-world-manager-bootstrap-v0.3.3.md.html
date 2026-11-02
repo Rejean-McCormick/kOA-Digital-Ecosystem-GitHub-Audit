@@ -1,0 +1,16 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Worlds · docs/status/2026-09-30-world-manager-bootstrap-v0.3.3.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Worlds · docs/status/2026-09-30-world-manager-bootstrap-v0.3.3.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Worlds · 0e8d47c147d1 · SHA-256 a04d6863b391edf3</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Worlds/blob/0e8d47c147d13a5721c5ae8e4b1dd7968def51fb/docs/status/2026-09-30-world-manager-bootstrap-v0.3.3.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># World Manager bootstrap v0.3.3
+
+The standalone Windows manager now owns its first-run bootstrap UX. A fresh checkout no longer requires manually launching the PowerShell setup script before opening the `.pyw`.
+
+Changes:
+
+- `Konnaxion_World_Manager.pyw` detects a missing `.venv\Scripts\python.exe`;
+- it automatically launches the repository&#x27;s `SETUP_KONNAXION_WORLDS.ps1`;
+- `pwsh` is preferred, with Windows PowerShell as fallback;
+- the setup process runs with `-ExecutionPolicy Bypass`, hidden behind the GUI, while output is streamed into the Manager log;
+- after setup succeeds, registry loading continues automatically;
+- database URL discovery includes the common sibling checkout `../Konnaxion/backend/.env`;
+- if credentials are still absent, the Manager remains usable and tells the operator to paste the URL in the masked Database field and press Refresh.
+
+The PowerShell script remains the canonical standalone setup recipe and can still be run manually for diagnostics, but normal Windows use is now simply double-clicking `Konnaxion_World_Manager.pyw`.
+</pre></body></html>

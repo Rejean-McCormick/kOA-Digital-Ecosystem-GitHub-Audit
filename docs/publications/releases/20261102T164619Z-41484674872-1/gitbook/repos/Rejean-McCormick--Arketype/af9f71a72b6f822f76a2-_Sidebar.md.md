@@ -1,0 +1,31 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Arketype/wiki/_Sidebar | commit: 92d283605f5bcf6a0cefa6ed6d2182fee474f8e0 | SHA-256: 4d379a300563b8fd8704627f26a3cbfd811ecbdb3c0aee2257dd17bf0f423304 -->
+
+**Arketype Wiki**
+
+- [Home](Home)
+- [Getting Started](Getting-Started)
+- [Semantic Authoring v11](Semantic-Authoring-v11)
+- [Framework v11 and diK](Framework-v11-and-diK)
+- [diK and Dictionaries](diK-and-Dictionaries)
+- [diK Catalog Exchange v11](diK-Catalog-Exchange-v11)
+- [Desktop Launcher](Desktop-Launcher)
+- [Developer Ops](Developer-Ops)
+- [Architecture](Architecture)
+- [Visual Grammar](Visual-Grammar)
+- [Archetype Catalog](Archetype-Catalog)
+- [Use-Case Profiles](Use-Case-Profiles)
+- [Use Cases and Scope](Use-Cases-and-Scope)
+- [Composition Recipes](Composition-Recipes)
+- [Working with Templates](Working-with-Templates)
+- [CLI Reference](CLI-Reference)
+- [Data Formats](Data-Formats)
+- [Validation and Testing](Validation-and-Testing)
+- [Snapshot Verification (2026-10-27)](Snapshot-Verification-2026-10-27)
+- [Security and Boundaries](Security-and-Boundaries)
+- [Extending Arketype](Extending-Arketype)
+- [Publishing the Wiki](Publishing-the-Wiki)
+- [Glossary](Glossary)
+- [FAQ](FAQ)
+
+- [v1.6 Wiki Update Notes](Update-Notes-v1-6)
+- [v1.5 Notes (Historical)](Update-Notes-v1-5)

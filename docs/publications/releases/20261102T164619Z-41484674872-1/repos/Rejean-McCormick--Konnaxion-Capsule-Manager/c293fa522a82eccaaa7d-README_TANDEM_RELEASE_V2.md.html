@@ -1,0 +1,57 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Capsule-Manager · README_TANDEM_RELEASE_V2.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Capsule-Manager · README_TANDEM_RELEASE_V2.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Capsule-Manager · a137f3c1ab5e · SHA-256 a1d136286501b691</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Capsule-Manager/blob/a137f3c1ab5e7a79887074560b11a2a6b0a70518/README_TANDEM_RELEASE_V2.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Capsule Manager — Release tandem V2 (Konnaxion + Orgo)
+
+**Portée actuelle : préflight strict, build de 2 images Docker Orgo, association à une capsule Konnaxion signée, verrou SHA-256, signature Ed25519, vérification.**
+
+**Pas de publication : GO LIVE explicitement bloqué** parce que le Konnaxion Agent existant n&#x27;applique pas de capsule composite et ne sait pas restaurer les deux services. Cette version n&#x27;ajoute ni bouton déployer ni route HTTP privilégiée au Manager, ne touche à aucune base et n&#x27;injecte aucun seed.
+
+## Installation
+
+Décompresser l&#x27;overlay à la racine **`C:\mycode\Konnaxion\Konnaxion_Capsule_Manager`**. Les modules existants `kx_builder`, `kx_agent`, `kx_manager` ne sont pas écrasés.
+
+## Un double-clic pour commencer
+
+Double-cliquer **`START_TANDEM_RELEASE_V2.cmd`**. Il fait uniquement le préflight FakePlant : 6 Worlds Konnaxion et 18 scénarios Orgo attendus. Le script exige que le manifeste `universes/fakeplant/integrations/orgo.tandem.json` (overlay tandem V1 précédent) soit présent; il refuse les dossiers incomplets. Il ne déploie rien.
+
+## Verrouillage / compilation (uniquement après contrôle du tenant)
+
+1. Créer un fichier d&#x27;identité **hors des dépôts / hors des seeds** à partir de `TANDEM_IDENTITY_EXEMPLE.json`. Remplacer `orgo_organization_id` par **l&#x27;UUID réel de la base Orgo de destination**, renseigner un WorkflowVersion publié et vérifier les ACL dans les deux produits. Ne mettre **aucun jeton ni secret** dans ce JSON. Indiquer les vraies origines HTTPS, en prévoyant que `*.konnaxion.com` **ne couvre pas** `fakeplant.orgo.konnaxion.com`.
+2. Construire et vérifier la capsule **Konnaxion signée** par le Builder existant. Utiliser une paire Ed25519 persistante déjà autorisée par ce Builder.
+3. Dans PowerShell 7 à la racine du Capsule Manager (Docker Desktop requis pour la construction Orgo) :
+
+```powershell
+py -3 -m tools.tandem_v2.cli preflight --strict-binding --binding C:\secrets\tandem\fakeplant-binding.json
+py -3 -m tools.tandem_v2.cli build --binding C:\secrets\tandem\fakeplant-binding.json `
+  --kxcap C:\artifacts\ma-capsule-signee.kxcap `
+  --public-key C:\keys\release-ed25519-public.pem `
+  --private-key C:\keys\release-ed25519-private.pem `
+  --release-id fakeplant-v2-001 --out C:\artifacts\tandem
+py -3 -m tools.tandem_v2.cli verify --release-dir C:\artifacts\tandem\fakeplant-v2-001 `
+  --public-key C:\keys\release-ed25519-public.pem --verify-konnaxion-capsule
+```
+
+Le build exige **`Orgo/package-lock.json` sur le disque** pour `npm ci`. Les snapshots SmartDump peuvent l&#x27;omettre; le diagnostic l&#x27;indique séparément. Le build appelle le Builder Konnaxion uniquement en **vérification** (`uv run --no-sync kx-builder capsule verify --strict --require-signature-verifier`) et **Docker** pour compiler/exporter `orgo_api.oci.tar` et `orgo_web.oci.tar`; le worker réutilisera l&#x27;image API. La release immuable comprend la capsule Konnaxion signée, les archives Orgo, `release.json` et `signature.json` (Ed25519). Les sources Orgo et Orgo_Worlds doivent être compatibles avec leur déploiement; la validation du réseau Orgo_Worlds et de son URL interne reste une barrière de production.
+
+La commande `plan` affiche le graphe de déploiement et les barrières de sécurité, **sans** publication :
+
+```powershell
+py -3 -m tools.tandem_v2.cli plan --release-dir C:\artifacts\tandem\fakeplant-v2-001 `
+  --public-key C:\keys\release-ed25519-public.pem
+```
+
+**Ne pas mettre `ORGO_LOCAL_AUTO_LOGIN=true` en production**, ne pas utiliser `host.docker.internal` comme API Orgo_Worlds déployée, ne pas publier les ports 3000/4000 directement; utiliser un proxy TLS / OIDC, des secrets d&#x27;hôte et des ACL par tenant. Le service Orgo possède sa **propre base**, ses migrations et un worker; `accepted` de l&#x27;Interaction Kernel ne signifie pas que le Case est exécuté.
+
+## Limitations / gates avant GO LIVE
+
+- Agent capsule composite absent : mécanisme Konnaxion `.kxcap` reste centré sur les images Konnaxion; **ne pas changer artificiellement le schéma du manifeste pour contourner le vérificateur**.
+- Publication coordonnée (deux migrations + deux bases + deux healthchecks + retour arrière par produit) **non implémentée**.
+- Injecteur FakePlant Orgo `orgo.scenario.v1` **explicit-only**; les 18 scénarios ne sont pas exécutés par le build.
+- Réseau OIDC/IK (scopes, droits, jetons, TLS, liaisons UUID), tests cross-tenant et receipts asynchrones **non validés en réel**.
+- Domaine TLS `fakeplant.orgo.konnaxion.com` nécessite un certificat adapté, pas un wildcard premier niveau.
+- Rollback de base non atomique entre Konnaxion et Orgo; sauvegardes distinctes requises.
+
+## Tests hors ligne
+
+`py -3 -m unittest discover -s tests -p &#x27;test_tandem_release_v2.py&#x27; -v`
+
+Les tests simulés ne constituent pas une preuve Docker, HTTP, IK, DNS ou GO LIVE. Le CLI ne possède volontairement **aucune commande `deploy`**. Le paquet n&#x27;inclut pas Orgo_Worlds comme service runtime; il exige une URL HTTPS disponible dans une release future.
+</pre></body></html>

@@ -1,0 +1,25 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Security-and-Confidentiality-v10.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Security-and-Confidentiality-v10.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 2a11690bd9d2e13f</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Security-and-Confidentiality-v10' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Security, Confidentiality &amp; Host Trust — v10
+
+The hosted-network layer introduces disclosure and execution risks without redefining epistemic trust.
+
+## Required separation
+
+- **No reusable secrets in Host Bindings.** Use least-privilege credentials for the actual host operation.
+- **No private-node leakage** through a public directory, README, profile, receipt or attestation by default.
+- **Visibility is not cryptographic confidentiality.** A public mirror of private knowledge requires an explicit policy decision.
+- **Host attestations are not epistemic authority** and automation is not authorization.
+- **Fail closed** when a required protection is unavailable; do not market a best-effort feature as required protection.
+- **Constrain untrusted workflow inputs**: resolve paths within the workspace, reject traversals/symlink escapes for privileged publication paths, avoid interpolating paths as shell code.
+- **Pin managed workflow dependencies** (third-party Actions and the Framework) to immutable SHAs; update through reviewed changes.
+
+## Operator checklist
+
+1. Decide node/collection visibility and directory disclosure separately.
+2. Keep the all-node registry private where both public and confidential nodes exist.
+3. Verify exact State Commitments and publication resource digests, not just host status flags.
+4. Audit which files enter GitHub read surfaces; do not assume a private directory protects a public repository&#x27;s contents.
+
+See [[GitHub-Reference-Profile-v10]], [[Publication-and-Discovery-v10]] and [[Authority-Provenance-and-Trust-v9]].
+
+*Normative source: Framework `spec/v10/Security-and-Confidentiality.md`.*
+</pre></body></html>

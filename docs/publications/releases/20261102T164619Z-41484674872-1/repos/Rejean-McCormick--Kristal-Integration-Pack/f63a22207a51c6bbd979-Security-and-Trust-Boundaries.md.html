@@ -1,0 +1,32 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · Security-and-Trust-Boundaries.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · Security-and-Trust-Boundaries.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 ef8d9b09b81eac8c</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/Security-and-Trust-Boundaries' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Security and Trust Boundaries
+
+The Pack is intentionally **read-only by default** and rejects operations it cannot authorize or verify.
+
+## Framework v11 / diK
+
+- Run only the **exact SHA-256-pinned** Framework `11.0.0-draft.4` validators and preflight code.
+- Keep KQ/KP/KA/KS separate from display terms and Wikidata Q/P identifiers.
+- Accept only reviewed `accepted + exactMatch` crosswalk semantics; no fuzzy-label identity inference.
+- Preserve originals. Reports generated with `--out` must go to new paths.
+- A diK `dik-job.json` receipt proves consistency of selected files, not approval, upstream authenticity or authority to select a catalog.
+- Kit catalog registration and selection always remain **distinct, explicit owner operations**.
+
+## Local Kompiler access
+
+The stand-alone bridge permits **loopback HTTP only** (`localhost`, `127.0.0.1`, `[::1]`), disallows redirects, embeds no URL credentials and applies a 30-second request timeout and 8 MB response cap. The legacy Konstellation overlay uses its own origin/scope/size checks; the supplied security notes describe a default **2 MB** response cap there.
+
+Secrets belong in scoped environment variables (for example `KOMPILER_TOKEN`), never in committed source or wiki examples. Derived Context Packs and projection receipts can still expose confidential data.
+
+## Multiuser warning
+
+**Do not enable the legacy Kompiler route for shared/multiuser traffic.** The source documentation does not demonstrate an unavoidable mapping from every Konstellation reader&#x27;s policy and target privileges to each upstream Kompiler request. A global service credential is not a substitute for per-reader authorization.
+
+## Publication and owner boundaries
+
+- The Pack does not publish to GitHub, rewrite private/public collections, operate Manager, create signed commitments, or activate Kristals.
+- C3 structural diagnostics are not independent C1 or C2 grants.
+- Historical overlay installation/rollback is guarded and does not supersede Konstellation owner review.
+- `GitSink.bat` and `ZmartZnap.pyw` are retained provenance utilities, not part of the documented v11 operation flow; do not run them for this workflow.
+
+See [[Installer-and-Rollback]], [[diK-to-Authoring-Kit-Handoff]], and [[Limits-and-Roadmap]].
+</pre></body></html>

@@ -1,0 +1,16 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Authoring-Kit · docs/17_MULTI_KRISTAL_COLLECTIONS.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Authoring-Kit · docs/17_MULTI_KRISTAL_COLLECTIONS.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Authoring-Kit · 2a20971ca698 · SHA-256 363d6612e5abc85f</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Authoring-Kit/blob/2a20971ca69828a5168c7a086a14accbbb5cee6f/docs/17_MULTI_KRISTAL_COLLECTIONS.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 17 — Multiple Kristals per hosting collection
+
+One hosting repository can contain multiple independently owned Kristals. Each Kristal keeps its own `state_ref` and v9 State Commitment. A discovery index is a **derived operational projection**, not one big logical knowledge state.
+
+Recommended structural distinction:
+
+```text
+kristals/index.json                          # derived collection index, produced by Manager
+kristals/&lt;slug&gt;/AI_START_HERE.md             # approved reader entrypoint
+kristals/&lt;slug&gt;/ai/INDEX.json                # derived navigation
+kristals/&lt;slug&gt;/state/state-snapshot.json    # exact v9 state
+kristals/&lt;slug&gt;/.kristal/sync-manifest.json  # Manager-owned host inventory
+```
+
+The Local Kit does not create `kristals/index.json` and should not infer access rights from the existence of this directory. The Manager-produced index and C3 checks must preserve per-state ownership, provenance and access policies. Two equal slugs or GitHub paths do not establish equivalent `state_ref` identities.
+</pre></body></html>

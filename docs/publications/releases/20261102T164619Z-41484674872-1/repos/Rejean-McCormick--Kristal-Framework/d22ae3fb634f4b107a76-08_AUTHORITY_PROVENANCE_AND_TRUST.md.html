@@ -1,0 +1,131 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · docs/08_AUTHORITY_PROVENANCE_AND_TRUST.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · docs/08_AUTHORITY_PROVENANCE_AND_TRUST.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · 68ba4c8ca9ff · SHA-256 3f39a7a8ad68b1a8</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/blob/68ba4c8ca9fff5f410d005fc6142b8c018716eb7/docs/08_AUTHORITY_PROVENANCE_AND_TRUST.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Authority, provenance and trust
+
+## 1. Purpose
+
+V9 increases the number of derived artifacts and physical representations in a deployment. That makes existing Kristal trust boundaries more important, not less.
+
+No physical optimization may blur the distinction between:
+
+```text
+integrity
+authenticity
+authority
+validation
+factual correctness
+```
+
+## 2. Integrity
+
+A blob digest can establish that retrieved bytes match referenced bytes.
+
+A logical commitment can establish that reconstructed logical content matches a named commitment profile.
+
+Neither statement proves the truth of a claim.
+
+```text
+HASH IDENTITY != FACTUAL AUTHORITY
+```
+
+## 3. Authenticity
+
+A signature can prove that a holder of a cryptographic key signed a defined payload.
+
+Authenticity does not automatically establish domain authority.
+
+Key governance and authority recognition remain separate policies.
+
+## 4. Epistemic provenance
+
+Epistemic provenance supports interpretation of knowledge.
+
+It can answer questions such as:
+
+- where did a claim originate?
+- which evidence supports it?
+- which authority recognized it?
+- under what applicability and valuation does it hold?
+- which conflicts or supersession relationships apply?
+
+This provenance can be part of the logical artifact when it changes the knowledge state.
+
+## 5. Build provenance
+
+Build provenance describes the computational production path.
+
+Examples:
+
+```text
+source snapshot digest
+transform identifier/version
+configuration
+schema versions
+toolchain
+parameters
+```
+
+A builder can transform a medical or mathematical artifact without becoming an authority over medicine or mathematics.
+
+```text
+EPISTEMIC PROVENANCE != BUILD PROVENANCE
+```
+
+## 6. Publication provenance
+
+A deployment may separately record:
+
+- who published a snapshot;
+- which release process qualified it;
+- what signatures attest the release;
+- what activation decision selected it.
+
+Those records are operational governance and should not be silently folded into the knowledge itself.
+
+## 7. Authority preservation during composition
+
+A state may reference artifacts governed by separate authorities.
+
+For example, a hospital deployment may combine:
+
+```text
+Clinical Commons
+Clinical Practice
+Clinician Identity Vault
+Patient Identity Vault
+Security Audit
+source clinical systems
+```
+
+The composition must preserve those boundaries.
+
+```text
+STATE COMPOSITION != AUTHORITY MERGE
+REFERENCE != OWNERSHIP TRANSFER
+```
+
+## 8. External KOS and external systems
+
+Existing v8 principles remain unchanged:
+
+```text
+EXTERNAL KOS != KRISTALL IDENTITY
+RETRIEVED CONTENT != INSTRUCTION AUTHORITY
+```
+
+V9 physical resolvers must therefore treat retrieved blobs as data. A downloaded manifest cannot grant itself mutation or activation privileges.
+
+## 9. Derived models
+
+Derived artifacts such as:
+
+```text
+query index
+Action Graph
+posterior diagnostic ranking
+AI context bundle
+search/vector index
+```
+
+must not become epistemic authority merely because they are efficient or heavily used.
+
+Their lineage must point back to the logical states they represent.
+</pre></body></html>

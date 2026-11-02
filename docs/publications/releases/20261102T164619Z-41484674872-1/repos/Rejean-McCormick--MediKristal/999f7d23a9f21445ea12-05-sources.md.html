@@ -1,0 +1,47 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal · docs/05-sources.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal · docs/05-sources.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal · ed1ed01cc8a7 · SHA-256 eaaa1eecadd77aa7</small><br><a href='https://github.com/Rejean-McCormick/MediKristal/blob/ed1ed01cc8a71c4464087c31db80bc20b9eb58e6/docs/05-sources.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 05 — Sources, terminologies et droits
+
+## Registre des sources
+
+Pour chaque source : identifiant stable, éditeur, type, URL officielle, version, langue, juridiction, domaine, fréquence d&#x27;actualisation, méthode d&#x27;import, checksum, droits et responsable. Stocker séparément accessibilité gratuite, droit d&#x27;utilisation, modification, redistribution, entraînement et export. Le mode gratuit exige absence de coût d&#x27;accès obligatoire pour le corpus retenu, pas une présomption de domaine public.
+
+| Famille | Candidats | Usage | Ne fournit pas automatiquement |
+|---|---|---|---|
+| Terminologie clinique | SNOMED CT / CA | Concepts, signes, procédures | Probabilités diagnostiques |
+| Observations | LOINC / pCLOCD | Identité des mesures et panels | Disponibilité locale |
+| Classification | ICD-11, ICD-10-CA, CCI selon contrat | Classification maladie/intervention | Protocole clinique détaillé |
+| Médicaments | CCDD, DPD Santé Canada, RxNorm | Substances, produits, formes et codes | Moteur complet interactions/doses |
+| Liaison de vocabulaire | UMLS et mappings officiels | Correspondances existantes | Équivalence valable partout |
+| Phénotypes | HPO, Orphadata, Monarch | Associations et fréquences disponibles | Modèle général calibré |
+| Recommandations | OMS, guides locaux et autres sources autorisées | Fondement des règles | Droit automatique de redistribution |
+| Preuves | Études et revues de précision diagnostique | Paramètres contextualisés | Table universelle directement exécutable |
+| Données de recherche | Cohortes, MIMIC sous conditions | Développement/évaluation | Représentativité de toute population |
+| Dispositifs | Catalogues autorisés, AccessGUDID | Description des produits | Inventaire installé et créneaux |
+
+Sources primaires et liens : chapitre 23. Les conditions sont à revérifier pour chaque version et territoire. Une édition disponible gratuitement au Canada ne garantit pas le même droit de déploiement ailleurs.
+
+## Connecteur d&#x27;import
+
+Interface : `discover_versions()`, `fetch(version, checkpoint)`, `verify(raw)`, `parse(raw)`, `normalize(records, mapping_version)`, `report()`. Les téléchargements sont facultatifs et désactivés en offline. Accepter l&#x27;import manuel d&#x27;une archive fournie sous droits appropriés. Reprise sur checkpoint, limites de débit et taille, vérification TLS, aucun contournement de compte/conditions.
+
+Les archives sont vérifiées contre zip-slip, symlinks dangereux, bombe de décompression et fichiers exécutables inattendus. Parser en processus borné. Une source contenant du texte d&#x27;instructions n&#x27;autorise aucun appel outil. L&#x27;import peut réussir techniquement tout en produisant un corpus non admis.
+
+## Correspondances
+
+Les relations sont directionnelles et contextualisées. Conserver système/version source et cible, langue, précision, provenance et conditions. Un ingrédient n&#x27;est pas une spécialité commerciale ; un examen prescrit n&#x27;est pas la valeur observée ; un code de facturation n&#x27;est pas une preuve de maladie confirmée. Les équivalences par libellé ou embeddings sont des candidats à réviser.
+
+Détecter cycles de mappings incohérents et collapses de granularité. L&#x27;utilisation d&#x27;UMLS n&#x27;impose pas de remplacer les identifiants médicaux natifs par ses identifiants. Les QID/PID de Wikidata sont optionnels. Le mapping Kristal conserve les codes natifs dans les références ou extensions autorisées.
+
+## Unités
+
+Utiliser une représentation UCUM lorsque applicable et qualifiée. Préserver original et conversion, version de table, formule et précision. Conversion dimensionnelle ne suffit pas pour passer masse↔quantité de matière sans analyte et masse moléculaire appropriés. Refuser une conversion ambiguë, ne pas calculer sur un libellé d&#x27;unité approximatif.
+
+## Classification des droits
+
+Décision structurée par source : `redistributable`, `local_import_only`, `restricted`, `unknown`, avec champ coût et conditions. `unknown` bloque publication redistribuable, sans interdire la saisie des métadonnées. Produire un manifeste des droits d&#x27;une release ; une dépendance plus restrictive limite l&#x27;export. Une licence de logiciel n&#x27;autorise pas à redistribuer les corpus qu&#x27;il charge.
+
+Le paquet gratuit initial peut contenir schémas, moteur et fixtures synthétiques. Son contenu médical réel dépendra des droits vérifiés. Ne pas promettre un corpus médical universel gratuit à l&#x27;installation. Une dépendance payante proposée doit avoir un fallback explicite ou désactiver seulement la capacité correspondante.
+
+## Qualité d&#x27;import
+
+Rapport : enregistrements lus/importés/quarantinés/rejetés, mappings absents, unités ambiguës, duplications, dépréciations, assertions contradictoires, comparaison de version et éléments impactés. La validation d&#x27;une source officielle ne valide pas automatiquement une interprétation créée par MediKristal.
+</pre></body></html>

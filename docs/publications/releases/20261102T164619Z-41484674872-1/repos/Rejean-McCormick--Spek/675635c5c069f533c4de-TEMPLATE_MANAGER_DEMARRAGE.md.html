@@ -1,0 +1,29 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · docs/TEMPLATE_MANAGER_DEMARRAGE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · docs/TEMPLATE_MANAGER_DEMARRAGE.md</h1><p class='meta'><small>Rejean-McCormick/Spek · c10e24a5c663 · SHA-256 b47a7e5a3171f07f</small><br><a href='https://github.com/Rejean-McCormick/Spek/blob/c10e24a5c663542c77f490420423b3c792d15404/docs/TEMPLATE_MANAGER_DEMARRAGE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Démarrage du gestionnaire Spek sur Windows
+
+Le lanceur est `Spek_Template_Manager.pyw` à la racine du dépôt Spek. Il requiert **Python 3.10 ou plus récent**, avec **Tkinter** (habituellement inclus dans l&#x27;installation Python pour Windows).
+
+## Si un double-clic ne montre aucune fenêtre
+
+1. Place `Spek_Template_Manager.pyw` à la racine de `C:\mycode\Kristal\Spek`, ou utilise le sélecteur de dépôt qu&#x27;il affiche.
+2. Double-clique `OUVRIR_TEMPLATES.cmd` pour voir les éventuelles erreurs dans une console. Cette commande conserve la fenêtre ouverte jusqu&#x27;à la fermeture de l&#x27;application.
+3. Lance `DIAGNOSTIC_TEMPLATES.cmd` : il confirme le dépôt sélectionné et le nombre de catégories, de layouts et de profils.
+4. Si cela échoue, ouvre `%LOCALAPPDATA%\Spek\TemplateManager\launcher-errors.log` et conserve son contenu pour le diagnostic.
+
+Tu peux également lancer dans PowerShell :
+
+```powershell
+cd C:\mycode\Kristal\Spek
+py -3 .\Spek_Template_Manager.pyw --diagnostic
+py -3 .\Spek_Template_Manager.pyw
+```
+
+## Installation du correctif
+
+Le ZIP correctif est organisé **par rapport à la racine Spek** (il ne contient pas de sous-dossier `Spek/`). Extraire directement dans `C:\mycode\Kristal\Spek` et accepter le remplacement des fichiers.
+
+Si tu utilises le ZIP du dépôt complet, son contenu est sous `Spek/` : extraire dans `C:\mycode\Kristal` ou par-dessus un clone dans ce répertoire. Ne supprime pas `.git` pour appliquer un correctif.
+
+## Comportement
+
+Le lanceur détecte désormais aussi le dépôt dans `C:\mycode\Kristal\Spek` lorsqu&#x27;il est exécuté depuis le dossier Téléchargements. En cas d&#x27;erreur d&#x27;import, de Python incompatible ou d&#x27;échec Tkinter, il crée un journal et tente d&#x27;afficher une erreur Windows. Il ne publie rien sur Internet.
+</pre></body></html>

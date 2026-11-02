@@ -1,0 +1,75 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · Language-Profiles-and-Conformance.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · Language-Profiles-and-Conformance.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 6e9aa48cf5d6a80c</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/Language-Profiles-and-Conformance' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Language Profiles &amp; Conformance
+
+SA releases **language/profile pairs**, not vague claims that a language is “supported”.
+
+## Capability profile
+
+A profile is a versioned workload contract, for example:
+
+```text
+sa-core-1
+orgo-operational-1
+ethikos-dialogue-1
+keenkonnect-system-1
+```
+
+A profile defines:
+
+- required SA↔GF operations;
+- required register/politeness distinctions;
+- required lexical classes;
+- required output block kinds;
+- locale/format requirements;
+- conformance suite identity.
+
+## Production status
+
+Lifecycle states:
+
+```text
+DEVELOPMENT
+CANDIDATE
+RELEASED
+RETIRED
+```
+
+Only `RELEASED` is callable by production policy.
+
+A released profile is binary: every required capability passes, or the profile is not released.
+
+## Conformance dimensions
+
+Depending on the profile, suites can cover:
+
+- positive/negative clauses;
+- intransitive/transitive/ditransitive events;
+- copular constructions;
+- existence/location/possession;
+- questions;
+- directives;
+- coordination and relatives;
+- dates/deadlines;
+- quantities;
+- names/technical identifiers;
+- agreement;
+- address/formality;
+- lists/fragments;
+- semantic role, polarity, modality, time and quantity preservation.
+
+## Release gate
+
+A language/profile becomes `RELEASED` only after:
+
+1. GF build succeeds;
+2. immutable grammar artifact exists;
+3. bridge contract compatibility passes;
+4. lexical artifacts exist;
+5. the profile suite passes completely;
+6. golden/regression tests pass;
+7. semantic/property tests pass;
+8. failure-path tests pass;
+9. RuntimeSet integrity passes;
+10. evidence is recorded and hashed.
+
+There is no production “mostly works” state.
+</pre></body></html>

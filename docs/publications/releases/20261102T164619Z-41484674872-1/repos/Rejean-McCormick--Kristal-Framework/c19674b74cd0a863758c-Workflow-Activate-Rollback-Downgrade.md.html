@@ -1,0 +1,46 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Workflow-Activate-Rollback-Downgrade.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Workflow-Activate-Rollback-Downgrade.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 eb92f3bf51bd7a7a</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Workflow-Activate-Rollback-Downgrade' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Workflow: Activate, Roll Back, Downgrade
+
+V9 makes activation an explicit operation over immutable published snapshots.
+
+## Activation
+
+An activation decision selects an exact State Snapshot commitment for a channel such as `production`.
+
+Typical inputs include:
+
+- target State commitment;
+- expected previous State commitment;
+- validation/recognition status;
+- environment/tenant scope;
+- runtime/materialization compatibility;
+- v8 lexical/query profile compatibility;
+- operational owner policy.
+
+The pointer transition should be atomic within the claimed transport/profile.
+
+## Compare-and-swap
+
+A publisher may require that the current active commitment still equals the base it built from. If not, activation must fail/rebase rather than silently overwrite another publication.
+
+## Rollback
+
+Rollback selects a retained prior immutable snapshot.
+
+```text
+ROLLBACK != HISTORY REWRITE
+```
+
+Do not rewrite newer canonical history to pretend it never existed.
+
+## Downgrade
+
+Dropping from v9 to v8/v7/v6 may lose materialization/lifecycle conveniences. It must not rewrite semantic claims to simulate those capabilities.
+
+```text
+DOWNGRADE LOSS != SEMANTIC REWRITE
+```
+
+## Legacy Runtime Packs
+
+Older Runtime Pack consumers may remain compatibility targets. Treat them as derived materializations bound to inherited canonical source state.
+</pre></body></html>

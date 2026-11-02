@@ -1,0 +1,64 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Scenario-Mosaic · docs/41_RESPONSIVE_PREVIEW_AND_COVER.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Scenario-Mosaic · docs/41_RESPONSIVE_PREVIEW_AND_COVER.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Scenario-Mosaic · 4ac4e787ef01 · SHA-256 cefb5e6e327a7b65</small><br><a href='https://github.com/Rejean-McCormick/Koali-Scenario-Mosaic/blob/4ac4e787ef01295c9100c73d8b5bbf9a19d9ef03/docs/41_RESPONSIVE_PREVIEW_AND_COVER.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Responsive Preview and Cover
+
+## Media states
+
+The initial cover and selected scenario imagery keep separate fitting rules:
+
+- initial cover: `object-fit: contain`;
+- selected scenario image: `object-fit: cover`.
+
+The image shell always remains square. It is never stretched vertically to
+match the copy or profile blocks.
+
+## Container-driven geometry
+
+Responsive geometry follows the width of `.mosaic-experience`, not the browser
+viewport. The element is named `scenario-layout` and supplies the container
+queries used by the preview.
+
+### Wide — 1120 px and above
+
+The preview uses three columns:
+
+```text
+250–292 px image | flexible copy, minimum 480 px | 300–340 px profile
+```
+
+The copy is intentionally dominant. The profile is capped because its system
+and context content does not benefit from unlimited proportional growth.
+
+### Intermediate — 721–1119 px
+
+The image and copy share the first row. The profile spans the complete second
+row:
+
+```text
+┌──────────────┬─────────────────────────┐
+│ cover/image  │ title + summary + CTA   │
+├──────────────┴─────────────────────────┤
+│ scenario profile                       │
+└────────────────────────────────────────┘
+```
+
+This earlier transition prevents the copy column from collapsing just above
+the former 900 px viewport breakpoint.
+
+### Narrow — 720 px and below
+
+The reading order is:
+
+```text
+copy
+scenario profile
+cover/image
+```
+
+The action palette uses a fixed 4 × 2 grid. Only the panoramic Mosaic may
+scroll horizontally; the preview remains container-bound.
+
+## Validation contract
+
+`validate:repo` checks the named container, the three geometry ranges, the
+wide column bounds, the square media behavior, and the two distinct image
+fitting states.
+</pre></body></html>

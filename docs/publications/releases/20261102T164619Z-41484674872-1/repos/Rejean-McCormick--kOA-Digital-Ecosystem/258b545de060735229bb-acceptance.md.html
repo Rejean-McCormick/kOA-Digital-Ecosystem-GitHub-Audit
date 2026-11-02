@@ -1,0 +1,28 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/tandem-vps-capsule-agent/acceptance.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/tandem-vps-capsule-agent/acceptance.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 58a5fa07c18b · SHA-256 a29de2a94a944d46</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/58a5fa07c18b360a1abd7a213023c6ceaa9d1533/docs/2-Technical-Reference/40-integration/tandem-vps-capsule-agent/acceptance.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Owner-by-owner acceptance — Linux VPS Docker Capsule Agent
+
+No C0 document or `deployment-profile.json` can set `allow_runtime_activation=true`. The owner implementation, independent evidence and a separate operational approval must enforce these gates on the **exact target VPS + ReleaseSet**.
+
+| Gate | Owner / accepting party | Required evidence on this profile | Present evidence / blocker |
+|---|---|---|---|
+| **G0** | kOA coordination + Agent operator | Host identity, private network/TLS exposure decision, repos SHA, OCI digests, runtime/migration heads, owner/version matrix | Target type user-decided; target inventory &amp; pins unverified |
+| **G1** | Capsule Agent PEP + KonnaxionDiag | Security Gate mandatory on **all** protected paths; Agent-derived target digest and policy, Ed25519 `verify-activation` `ADMIT`, wrong/expired/tampered/missing tests | Local Lot1A+1B PASS; Lot1C integrated Agent/VPS proof **blocked** |
+| **G2** | Konnaxion + Orgo + optional Konfid/IdP | Standalone remains viable; where common OIDC adopted, distinct sessions, `issuer+sub`, manual bindings, local ACL and denial of intertenant/persona login | Not VPS qualified |
+| **G3** | IK participant owners | Exact world+release+tenant and sender/receiver scopes, replay/divergence/timeout, accepted vs completed vs durable impact | One synthetic local FakePlant E2E; negative and VPS qualification pending |
+| **G4** | Capsule Manager/Agent + both app owners | Composite staged application, health/compatibility checks, rollback/reconcile, preserve Last-Known-Good | Not demonstrated |
+| **G5** | KonnaxionDiag + LevelUpDiag-Orgo | Required independent campaigns on **the same immutable inputs** and target profile; `SKIP`/`WARN` not silently `PASS` | Current runs on VPS missing |
+| **G6** | CI / images / Agent trust owner | SBOM, provenance, immutable images (`@sha256:`), signed receipts, key rotation/revocation, least privilege, TLS/firewall/secrets | Unknown target inventory |
+| **G7** | DB owners + restore operator | Separate backup+restore drills and recovery receipts for Konnaxion and Orgo, outbox fencing and post-restore reconciliation | Not run on target |
+| **G8** | Release authority / operator | Exact signed ReleaseSet approval, complete gates, independent acceptance, bounded rollout/rollback, operational monitoring | **Blocked**, no GO LIVE |
+
+### Fail-closed negative cases (Lot 1C is first)
+
+- Any `run_security_gate=false` or alternate API/Manager/recovery path for a protected activation is denied by Agent itself.
+- Gate `SKIPPED`, missing Compose manifest, `WARN` or exception cannot count as successful protected admission.
+- Wrong source/OCI manifest digest, unverifiable/rotated trust root, unpinned policy, missing/untrusted public key, expired/verdict-not-`PASS`, forged key fingerprint or missing mandatory component → `DENY`, no container mutation.
+- `--measured-digest` from caller, signed verdict or request body rather than independent Agent inventory → `DENY` by the Agent&#x27;s trust boundary.
+- Same signed artifact used for another target environment / World / tenant without authorized binding → `DENY`.
+- Timeout / interrupted mutation → operation `UNKNOWN`/`RECONCILING`, **never** automatic repeat with new idempotency key.
+- Restoration must not resurrect revoked credentials, restart unfenced outbox, or overwrite another tenant.
+
+This is an **acceptance plan**, not a statement that code or tests currently enforce it.
+</pre></body></html>

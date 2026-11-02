@@ -1,0 +1,65 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Linux-Koali · docs/00-governance/13-validation-pipeline.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Linux-Koali · docs/00-governance/13-validation-pipeline.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Linux-Koali · 8f70441f18a2 · SHA-256 3997bf65737ed940</small><br><a href='https://github.com/Rejean-McCormick/kOA-Linux-Koali/blob/8f70441f18a259023a4c0a643bff82d731634cf5/docs/00-governance/13-validation-pipeline.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre>&lt;!-- KOA:DOC-META:BEGIN GENERATED
+{
+  &quot;doc_id&quot;: &quot;DOC-GOV-013&quot;,
+  &quot;document_class&quot;: &quot;normative_markdown&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;layer&quot;: &quot;governance&quot;,
+  &quot;scope&quot;: [
+    &quot;global&quot;
+  ],
+  &quot;canonical_refs&quot;: [
+    &quot;contracts/ai-navigation.contract.json&quot;,
+    &quot;contracts/architecture-patterns.contract.json&quot;,
+    &quot;02-system/34-architecture-patterns.md&quot;,
+    &quot;06-lifecycle/20-resilience-and-projection-artifacts.md&quot;,
+    &quot;08-operations/20-architecture-pattern-operations.md&quot;,
+    &quot;09-conformance/22-architecture-pattern-conformance.md&quot;
+  ],
+  &quot;decision_ids&quot;: [
+    &quot;DEC-RES-001&quot;,
+    &quot;DEC-MSG-001&quot;,
+    &quot;DEC-WF-001&quot;,
+    &quot;DEC-PAYLOAD-001&quot;,
+    &quot;DEC-BFF-001&quot;,
+    &quot;DEC-CQRS-001&quot;,
+    &quot;DEC-CACHE-001&quot;
+  ],
+  &quot;requirement_ids&quot;: [],
+  &quot;lock_ids&quot;: [
+    &quot;LOCK-RES-001&quot;,
+    &quot;LOCK-MSG-001&quot;,
+    &quot;LOCK-WF-001&quot;,
+    &quot;LOCK-PAYLOAD-001&quot;,
+    &quot;LOCK-BFF-001&quot;,
+    &quot;LOCK-CQRS-001&quot;,
+    &quot;LOCK-CACHE-001&quot;
+  ],
+  &quot;exception_ids&quot;: [],
+  &quot;depends_on&quot;: [],
+  &quot;tags&quot;: [
+    &quot;contract-first&quot;,
+    &quot;final-architecture&quot;,
+    &quot;architecture-patterns&quot;
+  ]
+}
+KOA:DOC-META:END --&gt;
+
+# Validation Pipeline
+
+## 1. Checks
+
+Validation covers JSON syntax, Markdown metadata, unique identities, schema resolution, local references, Python compilation, subsystem boundaries, source ownership, generated consistency, and greenfield constraints.
+
+## 2. Generated Checks
+
+build_indexes.py and build_ai_context.py support check mode. Committed generated output must match a clean rebuild.
+
+## 3. Release Gate
+
+Any blocking validation error prevents documentation activation.
+
+## Architecture-pattern validation stage
+
+`check_architecture_patterns.py` runs as a blocking source-contract validator. It verifies the exact seven-pattern policy, artifact-class registration, schema presence, normative documents, UCKK bindings, and kOA Spaces authority guardrails. Pattern validation runs before a release or conformance claim can become active.
+</pre></body></html>

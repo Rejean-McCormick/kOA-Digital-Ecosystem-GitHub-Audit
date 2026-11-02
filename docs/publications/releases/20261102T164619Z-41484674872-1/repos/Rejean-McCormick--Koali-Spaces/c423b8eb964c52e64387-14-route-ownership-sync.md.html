@@ -1,0 +1,28 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/03-routing-and-registry/14-route-ownership-sync.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/03-routing-and-registry/14-route-ownership-sync.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 dab05d547c9caf19</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/03-routing-and-registry/14-route-ownership-sync.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 14. Propriété du routing et synchronisation
+
+Koali possède :
+
+```text
+module selection
+outer namespace
+route contribution admission
+initial deep-link mapping
+return to Koali
+```
+
+L&#x27;application enfant possède ensuite son router interne.
+
+MVP :
+
+```text
+/apps/konnaxion/&lt;declared-deep-link&gt;
+    -&gt; initial path transmis à Konnaxion
+    -&gt; navigation interne ultérieure gérée par Konnaxion
+```
+
+Une synchronisation plus riche peut exister plus tard uniquement par protocole versionné et opt-in.
+
+`LOCK-KS-SURF-146` — **Après le deep link initial, le router interne de l&#x27;application propriétaire reste son autorité de navigation sauf bridge versionné explicitement négocié.**
+
+`LOCK-KS-SURF-147` — **Koali ne synchronise pas silencieusement son URL avec le router enfant par inspection DOM, interception non déclarée ou heuristique de navigation.**
+</pre></body></html>

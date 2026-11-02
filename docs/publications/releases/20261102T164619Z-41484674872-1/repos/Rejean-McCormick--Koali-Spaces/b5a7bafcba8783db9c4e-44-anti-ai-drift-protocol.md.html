@@ -1,0 +1,68 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/00-governance/44-anti-ai-drift-protocol.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/00-governance/44-anti-ai-drift-protocol.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 e9a91470a38fb57e</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/00-governance/44-anti-ai-drift-protocol.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 44. Anti-AI drift protocol
+
+Toute IA travaillant sur cette couche MUST commencer par appliquer ce protocole.
+
+## 44.1 Sources à charger
+
+1. ce document ;
+2. `koali-surface-layer.lock.json` ;
+3. snapshot réel du code Koali ;
+5. contrats hôtes kOA-Linux applicables à Koali Spaces ;
+6. contrat du sous-système touché ;
+7. documentation interne du sous-système si montée/fournie et conforme au pin ;
+8. tests actuels.
+
+## 44.2 Questions obligatoires avant génération
+
+L&#x27;IA doit déterminer :
+
+```text
+- Quelle SurfaceKind est concernée ?
+- Qui possède l&#x27;autorité métier ?
+- Qui possède l&#x27;UI interne ?
+- Est-ce une route shell, un composant enregistré ou une application complète ?
+- La target runtime est-elle enregistrée côté serveur ?
+- Le code concerné est-il control side ou render side ?
+- Le navigateur reçoit-il seulement un SurfaceDescriptorPublic minimisé ?
+- Le lifecycle doit-il être demandé à un owner/broker distinct ?
+- Une capability de présentation est-elle requise ?
+- La modification touche-t-elle un lock ?
+- La modification exige-t-elle un ADR ?
+- Le projet possède-t-il réellement un runtime UI, ou seulement de la documentation ?
+- Le changement créerait-il une copie de business logic ?
+```
+
+## 44.3 Réponses IA interdites
+
+Une IA MUST NOT proposer :
+
+```text
+&quot;Rebuild Konnaxion pages directly in Koali&quot;
+&quot;Copy Orgo Task/Case models into Koali&quot;
+&quot;Use menu visibility as authorization&quot;
+&quot;Put http://... arbitrary module URLs in the manifest&quot;
+&quot;If local app is missing, fall back to its public website&quot;
+&quot;Strip CSP/X-Frame-Options to make embedding work&quot;
+&quot;Use one global Koali token inside every child app&quot;
+&quot;Make UCKK an internal database/module because it is embedded&quot;
+&quot;Merge Moodle and Koali auth automatically&quot;
+&quot;Create a generic iframe for any URL&quot;
+&quot;Load React components dynamically from manifest strings&quot;
+&quot;Treat immersive as browser fullscreen without an ADR&quot;
+&quot;Invent a XKaliber/K-Port/MediKristal runtime from documentation&quot;
+&quot;Integrate Ame-Artificielle&quot;
+ &quot;Integrate VotingMachine / VM Engine&quot;
+&quot;Resolve runtimeRef or choose a host/port in ApplicationHost&quot;
+&quot;Spawn Docker/systemd/processes from the browser renderer&quot;
+&quot;Treat an admitted child app as a trusted Koali origin&quot;
+&quot;Synchronize two routers invisibly by scraping child DOM&quot; 
+```
+
+`LOCK-KS-SURF-128` — **Une IA doit citer les lock IDs affectés dans tout plan ou patch non trivial de Surface Layer.**
+
+`LOCK-KS-SURF-129` — **Si une demande utilisateur contredit un lock, l&#x27;IA doit signaler le conflit avant de modifier le code, sauf si l&#x27;utilisateur demande explicitement de changer le lock et l&#x27;ADR.**
+
+`LOCK-KS-SURF-130` — **Une IA ne peut pas créer un nouvel enum, surface kind, authority owner, SSO scheme ou transport standard en le présentant comme déjà canonique.**
+
+---
+</pre></body></html>

@@ -1,0 +1,10 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · docs/Technical-Reference/TANDEM_EDUCATION_P2_REVIEW_ONLY.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · docs/Technical-Reference/TANDEM_EDUCATION_P2_REVIEW_ONLY.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · 381ab137d087 · SHA-256 58091db66d9a7f39</small><br><a href='https://github.com/Rejean-McCormick/Orgo/blob/381ab137d087794ffcb381532c7d2eabcdd60bb5/docs/Technical-Reference/TANDEM_EDUCATION_P2_REVIEW_ONLY.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Orgo P2 — plan hors ligne des activités Ekole
+
+`node tools/tandem-education/review-plan.mjs &lt;intent.json&gt; &lt;scope-review.json&gt;` consomme une intention Akor synthétique et la revue de portée Orgo_Worlds associée (vérifiée par SHA-256).
+
+Le résultat indique **11 intentions de tâches et 1 intention de Case** dans la fixture Fête de la sorcière, sans appel API, sans workflow publié, sans DB, sans émission de tâche. La sortie `orgo.tandem-synthetic-review-plan/1.0` est un **plan de revue non exécutable**, et non un workflow Orgo prêt à importer.
+
+Aucune identité enfant, approbation enseignante, permission réelle ou release autorisée n&#x27;est validée ici. Tous les champs d&#x27;admission et de publication restent `false`.
+
+L&#x27;étape ultérieure devra raccorder le service d&#x27;identité d&#x27;Orgo et Orgo_Worlds autoritaire, avec l&#x27;ACL réelle tenant/World/release et le consentement/contrôle enseignante, avant d&#x27;appeler les API existantes d&#x27;Orgo. Aucun endpoint et aucune migration ne sont introduits.
+</pre></body></html>

@@ -1,0 +1,130 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/Akor/blob/cc86fccc9dd9a73aec937486a7e3cfbc917d0fdb/README.md | commit: cc86fccc9dd9a73aec937486a7e3cfbc917d0fdb | SHA-256: 9eb4b62b88efa78519e7029540adfb2dd62fd194c256dd5c84872dfb75345a3b -->
+
+# Akor
+
+**Learning in Concert**
+
+> Children do not need to do the same thing to learn together. Their contributions must matter to one another.
+
+Akor helps children **learn in concert** through shared missions, complementary roles, and meaningful interactions. Its name is inspired by *accord*: harmony between children working toward a common goal, and reliable coordination between the systems that support them.
+
+Akor is intended to connect **Kontexte**, **kompose**, **Orgo**, **Orgo_Worlds**, and **Ekole**. The purpose of that integration is human: to give every learner a reason to participate, communicate, listen, contribute, and make decisions together.
+
+## Why Akor?
+
+Working in the same room is not the same as working together. In a meaningful Akor mission:
+
+- Every child has a role and something useful to contribute.
+- Roles provide different but complementary perspectives, information, or actions.
+- Progress depends on exchanging ideas, explaining reasoning, and making shared decisions.
+- Participation remains accessible, including when a child needs more time, another way to communicate, or a partner is absent.
+- The teacher can guide the experience and review individual learning without reducing everyone to one group score.
+
+Collaboration is a learning opportunity, not an obligation for every lesson. Missions should be adaptable to solo, pair, group, and teacher-facilitated formats.
+
+## Responsibilities
+
+Akor is an **integration and interaction layer**, not a replacement for the systems around it.
+
+| System | Responsibility |
+| --- | --- |
+| **Kontexte** | Designs educational situations, narrative settings, roles, and interaction intentions. |
+| **kompose** | Reviews and prepares coordination plans and role-aware previews. |
+| **Orgo_Worlds** | Provides versioned worlds and WorldRelease context. |
+| **Orgo** | Owns the live operational state: cases, tasks, signals, permissions, and transitions. |
+| **Akor** | Validates integration boundaries, connects approved mission definitions to authorized state, and presents role-safe interactions to Ekole. |
+| **Ekole** | Provides learner and teacher interfaces, curriculum connections, student work, and learning evidence. |
+
+Akor must **not** become a second workflow engine, identity provider, automatic grading service, or independent publisher of unreviewed educational content.
+
+## How a mission should work
+
+1. **Design:** Kontexte describes a situation, its learning goals, roles, and opportunities for interaction.
+2. **Prepare:** kompose checks coordination intentions and produces a deterministic preview.
+3. **Review:** An authorized teacher approves the pedagogical content and the intended experience.
+4. **Release:** A compatible WorldRelease and Orgo workflow are explicitly selected and verified.
+5. **Play:** Orgo maintains the authoritative mission state; Akor exposes only the actions and information permitted for each participant in Ekole.
+6. **Reflect:** Ekole stores relevant student work and evidence for teacher review. Completing a mission does not automatically establish mastery.
+
+This is the **target lifecycle**, not a claim that the full runtime has already been implemented.
+
+## Example: The Village Bakery
+
+In a fictional bakery, one child may interpret a customer's order, another may work with supplies, and another may check quantities. The group succeeds by communicating and combining their reasoning, not by completing unrelated worksheets.
+
+The existing bakery prototypes require further review: source materials do not yet agree on the course mapping and multiplication scenario. The original scenarios should remain unchanged until an approved, versioned variant is ready.
+
+## Safety and inclusion by design
+
+- **Teacher governance:** No unreviewed mission is launched or published automatically.
+- **Role-scoped information:** Children see only the fragments, tasks, and feedback they are authorized to access.
+- **No hidden shortcuts:** All live state changes go through Orgo's authorized operations.
+- **Child privacy:** Do not expose peer records, private accommodations, secret answers, or service credentials.
+- **Accessibility:** Offer appropriate visual, text, and teacher-assisted alternatives; avoid deadlocks when a participant is absent.
+- **Learning integrity:** Distinguish participation, mission completion, and demonstrated subject knowledge.
+
+## Project status
+
+**Status: standalone repository foundation available (read-only preflight); production integration not yet released.**
+
+The existing `Ekole_Pont_Missions_v4_1` precursor is a **read-only prequalification prototype**. It can inspect Kontexte and kompose inputs, generate role-aware review materials, and validate a synthetic preparation scenario through Orgo's injector in `validate` / `plan` mode. It does **not** start a live collaborative session, create operational tasks, or provide authenticated multi-child gameplay.
+
+This repository now includes a working read-only preflight CLI, unit tests, source-boundary checks, a Windows launcher, and an English wiki. Live service interfaces, classroom authentication, mission lifecycle integration, and end-to-end collaborative tests have **not** been implemented or qualified.
+
+## Tandem Education — implemented synthetic stages P2 and P3 (2026-10-27)
+
+Beyond the P1 read-only handoff below, the repository contains two **local, non-authoritative** stages:
+
+- **P2 — review intent only:** `src/akor/tandem_intent.py` and `run_akor_tandem_intent.py` check the Kontexte/Kompose/Ekole handoff and produce a synthetic review intention. See [`docs/TANDEM_EDUCATION_P2_REVIEW_ONLY.md`](docs/TANDEM_EDUCATION_P2_REVIEW_ONLY.md) and `tests/test_tandem_intent.py`.
+- **P3 — untrusted authority request only:** `src/akor/tandem_authority_request.py` validates a request envelope derived from P2, preserving `AWAITING_SERVER_VERIFICATION` and **false** authority flags. See [`docs/TANDEM_EDUCATION_P3_AUTHORITY_REQUEST.md`](docs/TANDEM_EDUCATION_P3_AUTHORITY_REQUEST.md) and `tests/test_tandem_authority_request.py`. The P2 hash is an integrity reference, **not a signature or authorization**.
+
+These modules are implemented in source; this document does **not** claim that cross-system end-to-end tests were rerun here. Neither P2 nor P3 grants teacher approval, student identity, enrollment, WorldRelease admission, Orgo task/session creation, publishing, or live classroom operation. The receiving authoritative server must verify those boundaries before any future execution.
+
+## Development roadmap
+
+1. **Foundation (started):** Maintain this standalone `akor` repository, pin source versions, define contracts, and preserve the read-only review flow.
+2. **Solo mission:** Run a reviewed, persistent bakery mission in an isolated Orgo environment using fictional learners.
+3. **Collaborative mission:** Support complementary roles, authorized information sharing, meaningful hand-offs, and recovery from disconnects or absent partners.
+4. **Learning evidence:** Link individual contributions to Ekole for teacher interpretation, without automatic certification.
+5. **School readiness:** Validate accessibility, privacy, operational safety, and classroom usability before deployment with real children.
+
+## Getting started
+
+Run Akor in **non-mutating review mode**, with the six repositories as siblings and Python 3.10+ and Node.js 18+ installed:
+
+```text
+Ekole/
+  akor/
+  ekole/
+  ekole-quebec/
+  Kontexte/
+  kompose/
+  Orgo/
+  Orgo_Worlds/
+```
+
+On Windows, double-click `LANCER_REVUE_AKOR.bat`. From a terminal:
+
+```bash
+python run_akor.py --root /path/to/Ekole --out /path/to/Ekole/akor/output
+python -m unittest discover -s tests -v
+```
+
+A successful preflight produces `output/REVUE_ENSEIGNANT.html`, `output/RAPPORT.md`, and non-published JSON review artifacts. It intentionally reports **blockers** to live mission delivery, including the existing source-mapping mismatch between `qc-pri-ma-006` and `qc-pri-ma-008`. It does not create Orgo tasks, publish a child-facing mission, or use real student records.
+
+For the full guide, read [Development and local usage](docs/DEVELOPMENT.md), [Project status](docs/STATUS.md), and the [Akor wiki](docs/wiki/Home.md).
+
+## Guiding principle
+
+**Akor connects systems so children can connect with one another.**
+
+## Tandem 1.0 synthetic handoff (P1)
+
+Akor also offers an **independent read-only integration check** for the reviewed Kontexte -> Kompose -> Ekole synthetic preview, with **Orgo remaining the sole live operational authority**. This is **not** a second compiler or a classroom authorization. The existing bakery preflight remains available as a legacy, non-publishing review workflow.
+
+See [Tandem Akor interop/security P1](docs/TANDEM_AKOR_INTEROP_SECURITY_P1.md) for the Windows command and scope limitations.
+
+## Vérification des intégrations satellites (27 octobre 2026)
+
+Voir [le contrôle de compatibilité et les limites de qualification](docs/Integration-Verification-2026-10-27.md). Les versions et statuts externes doivent être vérifiés avant tout déploiement.
+

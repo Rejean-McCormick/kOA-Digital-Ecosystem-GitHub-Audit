@@ -1,0 +1,38 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/13-implementation-vnext/commandes-et-interface.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/13-implementation-vnext/commandes-et-interface.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 66d958564cd33f40</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/13-implementation-vnext/commandes-et-interface.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Parcours et commandes exécutables
+
+## GUI
+
+La fenêtre principale possède le bouton **2 · Centre unifié…**. L&#x27;ancien centre
+est toujours disponible via **Actions &gt; Analyser / diagnostiquer (ancien panneau)**.
+Le centre unifié présente un Kristal par ligne et sépare : structure, verdict du
+moteur, fraîcheur, analyse, observation ARK et décisions locales.
+
+- `Inventorier` : reconnaît les workspaces; ajoute un run Discovery.
+- `Analyser` : utilise le catalogue existant, enregistre les observations globales.
+- `Diagnostiquer (V9)` : utilise KristalDiag fourni, un run par lot, et des preuves
+  indépendantes des sources. Progression et bouton d&#x27;arrêt entre deux Kristals.
+- `Importer ARK` : ingère un JSON Arketype structurel sans validation automatique.
+- `Importer Diag` : import historique toujours `UNVERIFIED`.
+- `Actualiser` : lit SQLite; **ne relance pas les moteurs**.
+- Double clic : historique, preuve, profil, limites et décisions.
+
+## CLI
+
+```powershell
+cd C:\mycode\Kristal\Kristal-Manager
+py -3 -m kristal_manager.unified.cli --help
+py -3 -m kristal_manager.unified.cli inventorier --root C:\mycode\Kristal\locals
+py -3 -m kristal_manager.unified.cli analyser --root C:\mycode\Kristal\locals
+py -3 -m kristal_manager.unified.cli diagnostiquer --root C:\mycode\Kristal\locals --max 3
+py -3 -m kristal_manager.unified.cli etat --root C:\mycode\Kristal\locals
+py -3 -m kristal_manager.unified.cli exporter --root C:\mycode\Kristal\locals --out C:\mycode\Kristal\bilan-vnext.json
+py -3 -m kristal_manager.unified.cli importer-diag C:\mycode\Kristal\BILAN-DIAGNOSTICS.json --root C:\mycode\Kristal\locals
+py -3 -m kristal_manager.unified.cli historique C:\mycode\Kristal\locals\Kristal-Accounting --type diagnostic
+py -3 -m kristal_manager.unified.cli executions
+py -3 -m kristal_manager.unified.cli integrite
+```
+
+L&#x27;installation facultative `py -3 -m pip install -e &quot;.[diag]&quot;` apporte
+`jsonschema` pour le moteur KristalDiag. GUI et CLI sont utilisables
+sans cette dépendance pour les opérations autres que le diagnostic V9.
+</pre></body></html>

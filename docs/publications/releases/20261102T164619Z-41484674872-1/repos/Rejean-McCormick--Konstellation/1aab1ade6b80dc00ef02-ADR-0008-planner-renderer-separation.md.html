@@ -1,0 +1,21 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation · docs/adr/ADR-0008-planner-renderer-separation.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation · docs/adr/ADR-0008-planner-renderer-separation.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation · 9d4f7e74ed87 · SHA-256 20c48928744f4c29</small><br><a href='https://github.com/Rejean-McCormick/Konstellation/blob/9d4f7e74ed87b5a4c8d284dad891029d834911e4/docs/adr/ADR-0008-planner-renderer-separation.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR-0008 — Séparer planner, projection et renderer
+
+- Statut : accepté
+
+## Décision
+
+Le Navigation Planner choisit les recettes. Le Projection Service construit des DTOs bornés. Le Renderer affiche ces DTOs.
+
+## Raisons
+
+- testabilité ;
+- sécurité ;
+- déterminisme ;
+- réutilisation cross-domain ;
+- possibilité de fallback ;
+- possibilité d&#x27;optimiser projection et UI indépendamment.
+
+## Interdiction
+
+Un renderer ne doit pas exécuter sa propre logique de policy ou inventer une query cachée hors contrat.
+</pre></body></html>

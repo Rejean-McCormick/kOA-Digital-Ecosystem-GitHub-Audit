@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · docs/14-recette-narrative.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · docs/14-recette-narrative.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · a5a2d855584d · SHA-256 9f812122878a0088</small><br><a href='https://github.com/Rejean-McCormick/Kompose/blob/a5a2d855584d55d7ee5553207cb2e2b95d9c823d/docs/14-recette-narrative.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 14 — Recette narrative d&#x27;une capsule à Kristals
+
+Cette recette met les modules en relation. Elle n&#x27;imite aucun événement historique réel et n&#x27;utilise aucune voix autochtone fictive.
+
+## Mise en scène
+
+**Question motrice :** « Que faut-il savoir pour reconstituer l&#x27;histoire d&#x27;un territoire sans confondre sources, points de vue et preuves ? »
+
+20 élèves / 20 rôles, dont cartographe, archiviste, enquêtrice, messager, diplomate, médiatrice et conservateur. Deux Kristals **de démonstration** sont accessibles seulement via le mode démo : archives administratives (fictives) et méthode d&#x27;analyse de perspectives situées (fictive). Dans une capsule réelle, chaque source devrait être identifiée et approuvée, avec permissions pertinentes.
+
+## Séquence à embranchements
+
+| Étape | Intervention narrative | Action / preuve | Événement |
+|---|---|---|---|
+| 0 | « La capsule est ouverte » | élève rejoint avec code + identité scolaire | `session.inscription_confirmee` |
+| 1 | « Découvre les métiers de l&#x27;enquête » | rôles consultés puis diagnostic accessible | `diagnostic.termine` |
+| 2 | « Chacun a une responsabilité » | enseignant publie les attributions | `session.roles_publies` |
+| 3 | « Le premier Kristal a été confié » | gardien reçoit un indice et une consigne de médiation | `kristal.garde_attribuee` |
+| 4a | « Retrouve le gardien » | demandeur sollicite l&#x27;accès | `kristal.acces_demande` |
+| 4b | « Une piste cartographique apparaît » | autre équipe gagne un accès par découverte | `kristal.acces_accorde` |
+| 5 | « Pose une question précise » | thème + question; lecture texte/sources/limites | `kristal.question_consultee` |
+| 6 | « Les documents ne disent pas tous la même chose » | comparer les provenances, preuves, inconnues | `mission.validee` |
+| 7 | « Transmettre la compréhension » | exposé d&#x27;équipe avec citations et limites | `mission.validee` |
+
+## Exemple d&#x27;acquisition par un élève
+
+- La mission indique qu&#x27;un Kristal existe; son gardien est identifié uniquement si cette révélation est permise par la capsule.
+- L&#x27;élève demande une rencontre ou utilise le bouton **Demander l&#x27;accès**. Un échange structuré permet d&#x27;obtenir un jeton temporaire; un autre accès est possible via l&#x27;enseignant.
+- L&#x27;élève choisit **Territoire → Quelles informations manquent pour identifier les occupants ?**
+- KOMPOSE affiche exactement la réponse préécrite, les références et « ce qu&#x27;on ignore ».
+- La mission demande de comparer avec un autre Kristal; les réponses ne sont pas converties en vérité unique par un calcul automatique.
+
+## Éviter une économie inégalitaire du savoir
+
+La garde n&#x27;est pas un rang. Une bonne performance peut déclencher une attribution dans certaines capsules, mais d&#x27;autres gardes doivent récompenser enquête, transmission, persévérance et rotation. Les élèves ne paient jamais et ne doivent jamais divulguer d&#x27;information personnelle pour accéder à un Kristal. Chaque Kristal essentiel dispose d&#x27;un chemin de secours.
+
+## Simulation de prévisualisation
+
+Voir `examples/capsule-rivieres/allocation.preview.example.json` : 20 affectations fictives, dont 7 rôles sélectionnés dans l&#x27;exemple, et 13 propositions. Ce fichier n&#x27;est **pas** le résultat d&#x27;un véritable solveur ni d&#x27;un examen.
+</pre></body></html>

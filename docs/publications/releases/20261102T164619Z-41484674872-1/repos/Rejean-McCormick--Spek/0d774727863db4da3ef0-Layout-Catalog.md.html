@@ -1,0 +1,27 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · Layout-Catalog.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · Layout-Catalog.md</h1><p class='meta'><small>Rejean-McCormick/Spek · 4eb78305f912 · SHA-256 3b16aa62ba778f33</small><br><a href='https://github.com/Rejean-McCormick/Spek/wiki/Layout-Catalog' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Layout Catalog
+
+Spek 0.5.0 ships **eight reusable editorial layouts**. The authoritative versioned, typed contracts live in `layouts/*.json` in the main Spek repository; cardinalities and allowed kinds are checked by the compiler. These contracts are shared by HTML, PDF and XeLaTeX rendering.
+
+| Layout ID | Purpose | Typical structure |
+| --- | --- | --- |
+| `result-card` | Finding with boundaries | Claim, conditions, evidence, uncertainty, optional implications |
+| `argument-map` | Explicit reasoning | Thesis, premises, inference, conclusion, objections |
+| `comparison` | Two approaches against criteria | Topic, criteria, approaches A/B, synthesis, limitations |
+| `concept-card` | Explain a concept | Definition, examples/counterexamples, context, limits |
+| `learning-path` | Guided learning or procedure | Objective, prerequisites, ordered steps, reflection, limits |
+| `evidence-comparison` | Compare distinct source perspectives | Question, sources A/B, perspectives, synthesis, limits |
+| `observation-inference` | Separate observation from explanation | Observations, interpretation, verification, limits |
+| `chronology` | Document ordered events | Context, events, optional interpretation, limits |
+
+The precise required/optional slots and per-slot cardinalities **must be read from each layout contract**; this overview is not a substitute for the JSON schemas. For example, a `result-card` requires explicit evidence links, while a `chronology` must not invent causality between adjacent events.
+
+## Which layout for a Kristal Wiki page?
+
+The optional Arketype Wiki overlay records 19 Arketype profiles with preferred and admitted layouts in `wiki-templates/archetype-profiles.json`. It **does not add new slot rules** or derive scientific facts from a page template. A single article can contain several compatible sections.
+
+See [[Wiki Templates by Archetype]] and [[Wiki Draft Workflow]]. Specialized graph, taxonomy, mathematical and topological representations may need a new versioned Spek layout rather than an artificial conversion to an existing one.
+
+## Implementing new layouts
+
+A JSON contract alone is not an executable layout. Its rendering, localization, negative tests, semantic traceability and cross-format consistency must be implemented and reviewed. See [[Layout Authoring]].
+</pre></body></html>

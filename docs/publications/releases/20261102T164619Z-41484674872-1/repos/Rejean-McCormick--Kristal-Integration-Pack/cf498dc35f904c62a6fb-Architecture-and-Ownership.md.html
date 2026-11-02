@@ -1,0 +1,52 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · Architecture-and-Ownership.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · Architecture-and-Ownership.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 547b24571064e343</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/Architecture-and-Ownership' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Architecture and Ownership
+
+The Integration Pack is a narrow interoperability layer, **not a new Kristal implementation**.
+
+## Responsibility boundaries
+
+| System | Owns or supplies | What the Integration Pack may do |
+| --- | --- | --- |
+| Kristal Framework v11 | Schemas, semantic identity rules, dictionary audit, coverage and preflight checks | Execute exact SHA-256-pinned readers and validators |
+| Kristal Authoring Kit | Authoring workflow, artifact registration, explicit dictionary selection, migration recovery | Produce a non-mutating preflight report; **never select a catalog** |
+| diK | Dictionary imports and review proposals, including alpha.7 source receipts | Inspect incoming catalog, provenance and receipt without adopting it |
+| Arketype | Template/workspace generation | Document integration baseline; no Arketype installation performed here |
+| Kompiler | Query execution, Context Packs and optional derived projection | Invoke allowlisted local API methods |
+| Konstellation | Navigation and application reader surfaces | Supply a guarded *legacy* overlay candidate; never override owner integration |
+| Manager / collection owner / C3 | Fleet/collection metadata and structural checks | Delegate a local C3 preflight, not recreate the checker |
+
+## Two distinct paths
+
+### Framework v11 path (read-only)
+
+```text
+Registry + Semantic Graph + Crosswalk + Dictionary Catalog
+                          |
+            Pinned Framework draft.4
+                          |
+             check / coverage / view
+                          |
+            Validation or derived output
+```
+
+An additional `v11-handoff` operation checks the dictionary-side interface before a **separate** Kit import. There is no implicit write or activation edge between the Pack and the Kit.
+
+### Historical Kompiler path
+
+```text
+Authorized local Kompiler API -&gt; Context Pack (derived)
+                                  |
+                       optional compatible v7 Surface
+                                  |
+                         v6 projection (derived)
+                                  |
+                     Konstellation reader configuration
+```
+
+The historical bridge is **not** a v9/v10/v11-to-v6 semantic converter. No source commitments or canonical state are published by the Pack.
+
+## Semantic invariant
+
+KQ/KP/KA/KS are canonical identifiers in the Framework v11 semantic graph. Wikidata Q/P identifiers live only in external references governed by approved mappings. Display labels, aliases and translations may *describe* an identity but cannot create or replace one.
+
+See [[Dictionary-and-Wikidata-Rules]], [[Derived-Views-and-Coverage]], and [[Security-and-Trust-Boundaries]].
+</pre></body></html>

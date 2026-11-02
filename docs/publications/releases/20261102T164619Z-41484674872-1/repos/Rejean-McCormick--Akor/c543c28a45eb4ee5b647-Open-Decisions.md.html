@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Akor · docs/wiki/Open-Decisions.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Akor · docs/wiki/Open-Decisions.md</h1><p class='meta'><small>Rejean-McCormick/Akor · cc86fccc9dd9 · SHA-256 aae4df504f4b8439</small><br><a href='https://github.com/Rejean-McCormick/Akor/blob/cc86fccc9dd9a73aec937486a7e3cfbc917d0fdb/docs/wiki/Open-Decisions.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Open Decisions
+
+Akor&#x27;s name and educational direction are established. The following technical and governance decisions are **not yet resolved**.
+
+| Topic | Decision to make | Constraint |
+| --- | --- | --- |
+| Runtime packaging | Library, sidecar or independent server? | No duplicate Orgo mission state |
+| Identity | How does Ekole&#x27;s school session map to Orgo actor/world membership? | Server verified; no implicit email linking |
+| Role assignment | Student choice, teacher assignment or mixed? | Equitable, private, overridable |
+| Social interaction | Face-to-face, structured messaging, co-editing or all three? | Age-appropriate moderation and audit |
+| Distributed information | Which fragments require runtime authorization and what join logic? | Orgo-enforced release; no client-only secrecy |
+| Missing participants | Combine roles, teacher mediator or explicit synthetic substitute? | Never fake a real pupil&#x27;s contribution |
+| Bakery curriculum | Keep addition version and create multiplication variant? | Preserve `qc-pri-ma-006` source and review `qc-pri-ma-008` |
+| Release | How to package a reviewed bakery WorldRelease? | Orgo_Worlds canonical ownership |
+| Student work | What artifacts and personal data should be persisted? | Ekole evidence boundary + retention rules |
+| Teacher intervention | Which actions require human approval/audit? | Authenticated, reversible when appropriate |
+| Offline | Read-only lesson fallback vs mission recovery protocol? | No silent competing mission engine |
+| Accessibility | Which participation modes are supported initially? | No diagnosis labels or coercive speed ranking |
+| Multilingual | Which strings need human translation review? | Narrative role texts are not guaranteed translated |
+
+An architecture decision record (ADR) should be created when each consequential item is resolved and linked here with the date, rationale, version and affected repositories.
+</pre></body></html>

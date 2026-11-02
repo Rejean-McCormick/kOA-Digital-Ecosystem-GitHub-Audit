@@ -1,0 +1,18 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation-Light · README_APPLIQUER_CORRECTIF.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation-Light · README_APPLIQUER_CORRECTIF.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation-Light · b29e9306fd80 · SHA-256 f4af939fc9255fee</small><br><a href='https://github.com/Rejean-McCormick/Konstellation-Light/blob/b29e9306fd809812f65af178e0ea28676b2bda87/README_APPLIQUER_CORRECTIF.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konstellation Light 0.5.2 — complete repository (batch 1)
+
+This archive contains **the full repository**, not a patch to apply. After backing up your data and stopping the tools, extract the **contents** of the archive into the Konstellation Light code directory. Do not replace private data collections or the Kristal canonical content. The `FILETREE.txt` and `SHA256SUMS.txt` files describe the files included in this candidate.
+
+Version 0.5.2 comes from the semantic-display fix reviewed against the 0.5.1 snapshot. The detailed `PATCH_MANIFEST.json` is in **the separate patch archive** `Konstellation-Light-0.5.2-correctif-revision.zip`, not in this complete repository.
+
+## Pre-deployment checks
+
+```sh
+node --test tests/*.test.mjs
+python -m unittest discover -s tests -p &#x27;test_*.py&#x27;
+node scripts/c4-publication-gate.mjs --site light/site
+```
+
+**Publication:** C4 authorizes only the pinned synthetic demo. Real data remains blocked without C1/C2/C3. GUI confirmation, `--public YES`, a transport hash, GitHub commit, or passing test does not authorize publication.
+
+This archive has not been qualified on your Windows machine or for publishing real Kristals. No directory under `D:` needs to be migrated for this installation.
+</pre></body></html>

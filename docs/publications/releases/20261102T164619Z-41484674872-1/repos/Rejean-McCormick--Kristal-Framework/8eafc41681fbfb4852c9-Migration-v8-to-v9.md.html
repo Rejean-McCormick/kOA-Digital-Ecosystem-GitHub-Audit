@@ -1,0 +1,70 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Migration-v8-to-v9.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Migration-v8-to-v9.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 e604f36eb0af1109</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Migration-v8-to-v9' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Migration: v8 → v9
+
+V9 migration should be **additive and authority-first**.
+
+## 1. Inventory authority
+
+Classify existing material as:
+
+```text
+canonical domain payload
+portable projection
+derived index/runtime
+source snapshot
+build metadata
+presentation/view
+external reference
+```
+
+Do not optimize before source-of-truth boundaries are explicit.
+
+## 2. Preserve inherited artifacts
+
+Keep valid v6/v7/v8 artifacts valid under their original contracts. Do not remint identities merely to adopt v9.
+
+## 3. Identify Logical Artifacts
+
+Choose boundaries with coherent:
+
+- schema;
+- identity;
+- authority;
+- lifecycle;
+- commitment rules.
+
+Do not assume “one file = one Logical Artifact”.
+
+## 4. Separate derived duplication
+
+Move rebuildable structures such as `*_by_id`, reverse indexes, query/search indexes and AI context bundles to Runtime/Derived authority.
+
+## 5. Define commitment normalization
+
+Before changing storage, specify:
+
+- ordered versus set-like collections;
+- logical fields;
+- excluded physical/presentation fields;
+- null/absent/default semantics;
+- commitment profile.
+
+## 6. Create a State Snapshot
+
+Compose the logical artifacts and pin external dependencies. At this point, physical storage can remain exactly as before.
+
+## 7. Record Derivations
+
+Make source normalization, projections and runtime builds explicit where reproducibility matters.
+
+## 8. Optimize only where useful
+
+Large relations may benefit from factorization/segmentation. Small research corpora may remain inline. Graph/DAG/AST can remain native.
+
+## 9. Introduce immutable publication/atomic activation
+
+Replace in-place release mutation with immutable snapshots selected by a mutable activation pointer.
+
+## 10. Qualify independently
+
+Use the Framework TCK and an independent examiner such as [[KristalDiag-v9]].
+</pre></body></html>

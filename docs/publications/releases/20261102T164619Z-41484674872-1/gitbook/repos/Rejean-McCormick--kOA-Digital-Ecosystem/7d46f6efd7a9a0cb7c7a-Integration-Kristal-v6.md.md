@@ -1,0 +1,68 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/58a5fa07c18b360a1abd7a213023c6ceaa9d1533/docs/1-Overview/Integration-Kristal-v6.md | commit: 58a5fa07c18b360a1abd7a213023c6ceaa9d1533 | SHA-256: dfb1e4f5efe00c613a51355e71bb07b15253b091bdc536e2c2d91f6b85bcaa64 -->
+
+# Integration — Kristal v6
+
+The active kOA knowledge boundary targets **Kristal Standard 6.0.0**. Kristal remains the normative owner of Kristal State semantics; Digital Ecosystem only defines cross-system ownership and integration constraints.
+
+## Pin
+
+- standard: `6.0.0`;
+- canonicalization: `kristal.v6:jcs-rfc8785`;
+- canonicalization version: `1`;
+- standard-manifest SHA-256: `sha256:1cc531c918d8c97c0caca8ced7560e54f9c8a98c5527fc90e32cb569dbdbb9b9`;
+- Kristal State schema SHA-256: `sha256:47e5cd7fd3a801adfd230a7591a70a62ff89a39d42023d87fe99851bc32725c5`;
+- Reader Policy schema SHA-256: `sha256:e5b8f8741a1736e8a7ce1204cf0ce1e0345b1a7e4b2fa19b19980b9b66e34599`.
+
+## Core model
+
+Kristal v6 separates:
+
+```text
+identity / assertion content
+typed valuation
+coordinates
+applicability
+record role
+actionability
+provenance / evidence
+validation / recognition
+reader visibility
+derived projection
+operational execution
+```
+
+The canonical structured artifact is **Kristal State** (`artifact_type: kristal_state`). The old v5 `certainty_level`/`uncertainty`, `qualifiers`, and `scope` vocabulary is replaced by `valuations[]`, `coordinates`, and `applicability`. Value states such as `unknown` and `not_applicable` are not numeric values.
+
+## Data roles
+
+`record_role` lets one state distinguish authoritative constraints, observations, organizational rules, derived states, decisions, actions, reference knowledge and structural records. The role describes what a record *is*; it does not transfer system ownership.
+
+A legal rule mapped as `authoritative_constraint` remains authoritative because of its source/authority chain, not because Kristal declares it so. An operational observation mapped as `observed_state` remains a snapshot of source-owned state.
+
+## Actionability without authority transfer
+
+`actionability.mode` may classify a represented action as `automatic`, `human_review`, `human_decision`, `manual`, `prohibited`, `insufficient_information`, or `not_applicable`.
+
+This is deliberately separate from execution authority:
+
+```text
+Kristal actionability
+      ↓ informs
+IK / owner-specific command eligibility
+      ↓ admitted by
+receiving system authority + policy
+      ↓
+owner-local state transition
+```
+
+`automatic` therefore means “eligible for automation under the declared knowledge/policy context”; it never means “Kristal may mutate another owner's state.”
+
+## Lifecycle
+
+The v6 `kristal_state` carries `artifact_status` directly (`draft`, `working`, `under_review`, `recognized`, `reference`, etc.). Validation and authority recognition remain separate from artifact status. Derived Runtime Packs, indexes and consumer projections remain rebuildable materializations, not a second canon.
+
+## Current knowledge boundary
+
+The active boundary combines Referent Registry `1.0.0`, EncyKlopedia handoff `encyklopedia.corpus-harvest-handoff/1.0.0`, IK `kristal.build.request/2.0.0` / `kristal.artifact.ready/2.0.0`, and UCKK projection `uckk.univers-cite-projection/1.0.0`.
+
+See the technical [knowledge projection boundary](../2-Technical-Reference/40-integration/knowledge-projection.md).

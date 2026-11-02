@@ -1,0 +1,30 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Operations.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Operations.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 58a5fa07c18b · SHA-256 731bb996d028433c</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/58a5fa07c18b360a1abd7a213023c6ceaa9d1533/docs/1-Overview/Operations.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Operations
+
+Operations follow system ownership and explicit integration contracts rather than a single global pipeline.
+
+## Cross-system flow
+
+```text
+Konnaxion &lt;---- Interaction Kernel ----&gt; Orgo
+     \                                  /
+      \------ IK Profiles to Da&#x27;at ----/
+                         |
+                      Kristal v6
+                         |
+                  Runtime Pack / refs
+                         |
+           deployment activation owner
+              (kOA-Linux when present)
+```
+
+## Operational rules
+
+- no cross-system database writes;
+- at-least-once delivery with idempotent processing and reconciliation;
+- source-system domain state remains authoritative at its owner;
+- Kristal compilation, validation, recognition, publication and activation are tracked separately;
+- exactly one authoritative physical Runtime Pack activation owner exists per deployment;
+- production/reference gates are Profile/policy decisions, not universal compile semantics.
+
+Current product snapshots do not yet prove full IK adapter/conformance coverage. Runbooks must identify whether they describe implemented behavior or target migration behavior.
+</pre></body></html>

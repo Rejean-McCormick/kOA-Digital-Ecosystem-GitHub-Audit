@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Configuration-and-Paths.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Configuration-and-Paths.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 12d5345b8ebe37f5</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Configuration-and-Paths' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Configuration and filesystem paths
+
+## Default deployment
+
+| Component | Source / default | Access intent |
+| --- | --- | --- |
+| Code repository | `C:\mycode\Skope` | Code and scope JSON |
+| Main launcher | `Start_Skope.cmd` | Starts Python 3.12 server on `127.0.0.1:8767` |
+| Scope catalog | `&lt;repo&gt;/scopes/*.json` | Validated read of JSON; refreshed in UI |
+| Extraction profiles | `&lt;repo&gt;/config/extraction-profiles/*.json` | Read-only profile definitions |
+| Workspace settings | `&lt;repo&gt;/config/kristals.local.json` | Local, gitignored selection/paths; written only on user action |
+| Kristal discovery | `C:\mycode\Kristal\locals` | Read `kristal.workspace.json` manifests |
+| Compact index | `D:\EncyKlopedia\30_working\wikidata\wikidata.compact.sqlite` | **Read only** |
+| Dump | `D:\EncyKlopedia\10_sources\wikidata\dumps\current\...json.bz2` | Existing source, **read only** |
+| Fast locator and sidecars | `D:\EncyKlopedia\30_working\wikidata-fast` (with compatibility fallback) | Existing access aids, not rebuilt by Skope |
+| QID jobs | `D:\EncyKlopedia\30_working\skope-large-scopes/&lt;job&gt;` | New working files |
+| Extraction jobs | `D:\EncyKlopedia\30_working\skope-extractions/&lt;job&gt;` | New working files |
+| Full-record evidence | `D:\EncyKlopedia\20_evidence\scope-snapshots/&lt;scope&gt;/wikidata-*` | New evidence snapshots |
+| Portfolio working state | `--work` argument (`portfolio.sqlite`, CSV, cached lookup and outputs) | New local files only, never a source corpus write |
+| `Run_Portfolio_Prepare.cmd` default | `&lt;repo&gt;/portfolio-work` | First-pass working CSV/state; choose another path for large jobs |
+| Identity decisions | `D:\EncyKlopedia\30_working\skope-reconciliation/&lt;job&gt;` | Separate reviewer decisions and reports |
+
+**Important:** paths in the bundled extraction profiles refer to a specific historical dump (`wikidata-20260922-all.json.bz2`) and manifest. They are *configuration examples*, **not proof that that dump exists on another installation**. Adapt profiles in a controlled manner only after matching the verified local source.
+
+**Portfolio prerequisites:** the existing compact index is used for discovery, while the already verified full dump and fast locator are needed for `skope portfolio acquire`. An installed extraction profile chooses that source; its filename/domain label does not filter the portfolio. Portfolio state pins the input source and index identity; change either and use a **new** work folder.
+
+## Overrides
+
+- `SKOPE_DB` is the default database for `python -m skope` unless `--db` is explicitly supplied.
+- The bundled launcher uses an explicit `--db` value, which takes precedence over `SKOPE_DB`.
+- `KRISTAL_LOCALS_ROOT` changes the default scan root before server startup.
+- `--kristal &lt;folder&gt;` selects an initial workspace for CLI/scripted starts; selection is also possible in the UI.
+- `--host` must be `127.0.0.1`, `localhost`, or `::1`; `--port` defaults to `8767`.
+
+## Data-root contract for large jobs
+
+QID collection and extraction derive their data root from the index location. For those workflows, the SQLite file must reside under a directory literally named `30_working/wikidata`. Simply passing any arbitrary test `.sqlite` path may allow a read-only preview but **will not** satisfy their working-directory checks.
+
+Do not put secrets or private workspace paths into the committed scope profile library. No complete production corpus is bundled with Skope.
+</pre></body></html>

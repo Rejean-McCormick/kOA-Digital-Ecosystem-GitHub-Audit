@@ -1,0 +1,29 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/01-audit/inventaire-fonctionnel.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/01-audit/inventaire-fonctionnel.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 c6fc9b780654e62e</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/01-audit/inventaire-fonctionnel.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Inventaire des fonctions — à préserver pendant la refonte
+
+| Capacité existante | UI future | Adaptateur ou service cible | Risque de perte |
+|---|---|---|---|
+| Scanner des dossiers | Inventaire | `inventory` | Dossiers imbriqués/historiques |
+| Découvrir identité/état | Fiche Kristal | `discovery` | Conflits de `state_ref` |
+| Contrôler intégrité locale | Fiche → Vérifier | `local_integrity` | Coût hachage |
+| Produire catalogue KQ/KP | Analyser / Contenu | `catalog` | Temps/189 Mo |
+| Analyse globale | Centre de contrôle | `analysis` | Provenance des suggestions |
+| UNESCO | Fiche → Classification | `classification` | `proposed` ≠ `approved` |
+| Arketype structurel | Fiche → Classification | `arketype` | 3 critères indicatifs |
+| PRF | Fiche → Usage | `classification` | 96 profils généraux |
+| Registre de 14 revues | Fiche → Historique | `review_registry` | Repères historiques devenus changés |
+| Diag V9/V10 individuel | Fiche → Diagnostiquer | `diag_bridge` | Processus externe borné |
+| Diag V9 en lot | Centre → Diagnostiquer lot | `diagnostics_batch` | Applicabilité et reprise |
+| Import rapports historiques | Historique → Import | `operations_cli`/port | Ancien verdict non vérifié |
+| Bundle/inventaire constellation | Avancé | `bundle_inventory` | Intégrité des archives |
+| Kristalizer imports | Avancé / fiche | `kristalizer_bridge` | Problèmes d&#x27;identité temporelle |
+| Icônes locales | Avancé / préférences | `icon_bridge` | Effets secondaires Windows |
+| Publication/GitHub | Avancé, séparé et gardé | `publication_gate` | Ne jamais activer automatiquement |
+
+## Méthode de déduplication
+
+Pour chaque fonction, conserver **un déclencheur principal** et rediriger les anciens menus vers la même commande du service. Les anciens contrôles pourront subsister transitoirement comme raccourcis, mais ne doivent pas entretenir une deuxième implémentation du résultat. Une fonction ne doit pas être supprimée simplement parce qu&#x27;elle est peu visible.
+
+## Preuves attendues avant suppression
+
+Matrice ancien → nouveau; parité des rapports; migration de préférences; scénario d&#x27;un Kristal natif, d&#x27;un Kristal v11 et d&#x27;un Kristal v9; test de non-publication; retour arrière sur base historique.
+</pre></body></html>

@@ -1,0 +1,40 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/58a5fa07c18b360a1abd7a213023c6ceaa9d1533/docs/2-Technical-Reference/40-integration/orchestration-c0/README.md | commit: 58a5fa07c18b360a1abd7a213023c6ceaa9d1533 | SHA-256: 3fc703651f73c5b4f2cf498ecc9b9695ed415ff35cbab8d67f6b25ffca8bf3db -->
+
+# C0 — Cross-system orchestration coordination
+
+**Status:** architecture / interface coordination, 2026-10-08. **Not an orchestration service** and not a modification of any product's normative contracts. Current source: user-provided snapshots dated 2026-10-08 (not necessarily the latest remote commit).
+
+C0 owns **integration visibility**: which owner provides which interface, versions, qualification evidence, dependencies and open decisions. It does not own Kristal semantics, EncyK evidence, Médiathèque storage, Manager sync state, GitHub publication/activation, Kompiler Context Packs or Konstellation Lens state.
+
+## Two lanes, not one silent migration
+
+1. **Historical frozen lane:** the existing kOA projection baseline is **Kristal v6 / IK v2 / UCKK**, and its `encyklopedia.corpus-harvest-handoff/1.0.0` reference is retained as a historical frozen contract. It must not be rewritten without its own consumer-migration evidence.
+2. **Current owner interfaces / GitHub v10 lane:** EncyKlopedia `0.12.0` produces `encyk.source-evidence-handoff/2.0.0` for Médiathèque; GitHub v10 uses `kristal.github-read-surface/1.0`, `kristal.github-sync-manifest/1.0` and `kristal.github-collection-index/1.0`; publication remains separate from semantic v9 commitments and separate from activation.
+
+**A schema existing does not prove an integration passed.** The handoff EncyK v2 → actual Médiathèque receiver and the Zoology v10 chain both remain *unqualified* in this coordination record.
+
+## C0 files
+
+| File | Purpose |
+|---|---|
+| [`interfaces.json`](interfaces.json) | Machine-readable producer / contract / consumer / evidence / outstanding gate |
+| [`versions.json`](versions.json) | Snapshot versions, evidence paths, unpinned commits and compatibility gaps |
+| [`decisions-and-gates.md`](decisions-and-gates.md) | Decisions adopted, conditional release model and explicit blockers |
+| [`integration-plan.md`](integration-plan.md) | C1–C6 workstreams and dependency graph |
+| [`acceptance.md`](acceptance.md) | Required tests, receipts and merge/release thresholds |
+| [`decision-log.md`](decision-log.md) | Decisions and unresolved questions, with owners |
+| [`source-evidence.md`](source-evidence.md) | Exact evidence source file references and limitations |
+| [`../../../status/current.md`](../../../status/current.md) | Ecosystem-wide maturity map |
+
+Verify the machine-readable register using `python scripts/validate_c0_coordination.py` from repo root. This validates the **coordination metadata**, not semantic conformance, publication eligibility or any external deployment.
+
+## Update protocol
+
+- Workstream returns: repository, branch + commit SHA, owner contract and version, tests executed and results, evidence artifacts, new dependencies, unresolved decisions and next safe integration.
+- C0 checks both sides of shared interfaces; proposals stay provisional until product owners accept them.
+- Update statuses with an exact proof pointer. `documented` / `tested-local` / `qualified-integrated` / `production-proven` are distinct.
+- Never assume a separate conversation can see another conversation's ZIPs; pass files and this directory explicitly.
+
+## 2026-10-12 supplement — C0 v10 harmonization
+
+The original ten-interface `interfaces.json` and frozen historical contract references remain intact. The newer **separate** [v10 alignment register](../kristal-v10-alignment/README.md) records repo-level tasks and blockers without reclassifying those ten interfaces as already qualified. **Konstellation owns interactive fleet and concept navigation; Manager owns the local instance registry; Arketype owns the structural catalogue.** No publication or activation is authorized here.

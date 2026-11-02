@@ -1,0 +1,33 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/10-evolution/definition-de-fini.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/10-evolution/definition-de-fini.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 a5607628d09ec26d</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/10-evolution/definition-de-fini.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Définition de terminé — refonte et documentation
+
+## Fonctionnel
+
+- [ ] Un utilisateur peut inventorier 127 Kristals, filtrer, ouvrir une fiche, diagnostiquer et retrouver la preuve au même endroit.
+- [ ] Les 16 natifs sont expliqués comme tels; le profil V9 n&#x27;est pas requis arbitrairement.
+- [ ] Un diagnostic est persistant, associé au bon workspace, profil, moteur et version.
+- [ ] Après redémarrage, aucun `Not run` erroné; après source modifiée, aucun `PASS` artificiellement actuel.
+- [ ] Arketype/PRF/UNESCO distingués entre proposition et décision; tous les anciens avis restent retrouvables.
+- [ ] Anciens outils avancés accessibles, sans second chemin de traitement concurrent.
+
+## Technique
+
+- [ ] DB migration reversible; WAL et locks testés Windows.
+- [ ] Aucune écriture canonique par les outils de lecture; comparaison de hashes verte.
+- [ ] Profils Diag sélectionnés par applicabilité, versions épinglées, preuves vérifiées.
+- [ ] Traitement robuste des timeouts, annulations, erreurs et sources changeant pendant run.
+- [ ] CI complète sur Windows 3.11+; fixtures v9, v10, v11, natifs et historiques.
+- [ ] Tests de sécurité import/ZIP/symlinks/dépendances et de non-publication.
+- [ ] Performance instrumentée, pas de promesse sans mesure.
+
+## Documentation
+
+- [ ] Chaque commande publique documentée par un exemple exécuté.
+- [ ] Différence OBSERVÉ/LIVRÉ/CIBLE/HYPOTHÈSE conservée.
+- [ ] ADRs et plan de migration à jour; glossaire cohérent.
+- [ ] Schémas SQL et enveloppes JSON synchronisés avec tests de contrat.
+- [ ] Limitations et known issues documentés; code de secours validé.
+
+## Décision de release
+
+Une version peut être livrée en **préversion** même avec des fonctions P2 incomplètes, mais jamais en présentant « tout conforme » si AC-01 à AC-08, AC-11 à AC-14 ou AC-16 échouent. La liste des gates et la preuve doivent accompagner le tag.
+</pre></body></html>

@@ -1,0 +1,73 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Spek · docs/ATELIER_OPTIMISE_IA_V2.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Spek · docs/ATELIER_OPTIMISE_IA_V2.md</h1><p class='meta'><small>Rejean-McCormick/Spek · c10e24a5c663 · SHA-256 ffc65484f9736f30</small><br><a href='https://github.com/Rejean-McCormick/Spek/blob/c10e24a5c663542c77f490420423b3c792d15404/docs/ATELIER_OPTIMISE_IA_V2.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Spek — Atelier optimisé selon le guide UX v2
+
+**Référence de conception** : `guide-architecture-interfaces-ia-v2(8).zip`, principalement `AI_INGESTION.md` et les principes UX-01 à UX-18. La refonte privilégie le parcours réel et conserve les moteurs, contrats, validations et formats existants.
+
+## Travail principal
+
+&gt; Ouvrir un article de projection sélectionné, vérifier ses formulations déjà réalisées par SemantiK, prévisualiser le rendu final; ou inspecter les métadonnées d’un Kristal pour consulter une recette IA explicitement assignée.
+
+Les quatre actions courantes sont réunies **dans la même fenêtre**, au-dessus du même espace de travail :
+
+1. **Ouvrir un article…** : choisir explicitement `article.json` puis `realizations.json` (aucune traduction automatique).
+2. **Ouvrir un Kristal…** : sélectionner le dossier local d’un Kristal. Lecture de `kristal.workspace.json` et/ou `canon/state.index.json` uniquement, sans exploration des données ni inférence de templates.
+3. **Vérifier** : lancer le **compilateur Spek existant** en mode `check`, dans la langue choisie; aucune sortie publique.
+4. **Prévisualiser en HTML** : lancer `spek build --formats html` dans un répertoire temporaire privé, puis ouvrir la page locale. Le statut n&#x27;annonce jamais une publication.
+
+Si le Kristal n&#x27;a pas encore de `article.json` et de `realizations.json` réalisés et validés, l&#x27;atelier montre les **structures déclarées**, pas un faux Wiki rempli. Il ne parle pas à SemantiK Architect et ne sélectionne pas de faits.
+
+## Vue principale, occasionnel, avancé
+
+| Ancien emplacement | Organisation de l&#x27;atelier | Principe |
+| --- | --- | --- |
+| Barre globale avec huit actions de gestion | Groupes contextuels **Gérer l’élément sélectionné**, sous l’arbre de bibliothèque | UX-06 / UX-12 |
+| Aperçu des seuls contrats | **Aperçu et contexte** : projet, Kristal, compositions IA, layouts | UX-05 / UX-11 |
+| Pas de point de départ « ouvrir un projet » | **Mon travail** en premier; ouvrir, vérifier, prévisualiser | UX-07 / UX-15 |
+| Aucun catalogue IA de compositions intégré à l&#x27;arbre | **Wiki → Compositions IA** : 19 recettes éditoriales lisibles | UX-01 / UX-17 |
+| Éditeur JSON affiché comme une facette aussi importante que le travail | Onglet secondaire **Avancé · Éditeur JSON** | UX-09 / UX-12 |
+| Ancien raccourci `OUVRIR_TEMPLATES.cmd` | Alias vers **OUVRIR_SPEK.cmd** et `Spek_Template_Manager.pyw`, une même interface | UX-16 |
+| `START_SPEK.bat` | Alias vers l’atelier unique; ancienne démonstration préservée sous `DEMO_SPEK_LOCAL.bat` | UX-16 / UX-18 |
+
+## Composition éditoriale : autorité et non-inférence
+
+- Les 19 recettes se trouvent sous `template_library/wiki/compositions/`.
+- Leurs IDs et contrats sont dans `template_library/wiki/composition-registry.json`.
+- `kristal-assignments.json` reste vide tant que les 127 Kristals n&#x27;ont pas été analysés par l&#x27;IA à partir des sources réelles.
+- **Spek ne choisit jamais une recette à partir d&#x27;un nom, d&#x27;un type, d&#x27;un graphe ou d&#x27;un archétype deviné.** Le seul rattachement possible est une identité explicite déclarée dans le registre; son empreinte d’état doit être revérifiée avant toute projection ou publication.
+- Le logiciel lit les recettes et peut afficher leurs sections et slots, mais ne substitue pas cette vue structurelle à une page réelle.
+- Les catégories `educational`, `scientific`, `report`, `book` restent réservées : aucun moteur n&#x27;a été inventé.
+
+## Sécurité et états
+
+- **Non chargé** : aucune donnée de travail.
+- **Ouvert, non vérifié** : les chemins sont connus, mais aucun contrôle n&#x27;a été exécuté.
+- **En cours** : un seul contrôle ou build à la fois, sans doublon.
+- **Vérifié localement** : le compilateur accepte les fichiers de la langue sélectionnée; cela n&#x27;atteste ni le RuntimeSet SemantiK, ni les gates C1/C2/C3.
+- **Aperçu construit, non publié** : HTML local temporaire ouvert via navigateur, jamais poussé vers GitHub.
+- **Refusé** : erreur réelle du compilateur affichée; pas de réussite fictive.
+
+Les protections de modification sont conservées : sauvegardes hors dépôt, contrôle d&#x27;empreinte des modifications concurrentes, interdiction de supprimer les layouts référencés par les compositions IA, et édition stricte des contrats.
+
+## Scénarios vérifiés
+
+1. Démarrage depuis la racine Spek et lecture des cinq catégories, 19 compositions et huit layouts.
+2. Ouverture de métadonnées d’un Kristal sans assignation : aucune proposition automatique de templates.
+3. Vérification d&#x27;un couple `article.json`/`realizations.json` du dépôt ; refus si données invalides.
+4. Construction d&#x27;un aperçu HTML en français avec les **fixtures** du dépôt, sans publication ni appel SemantiK.
+5. Tentative de suppression/modification incompatible d&#x27;un layout référencé : refus.
+
+### Lancement
+
+Double-cliquer sur `OUVRIR_SPEK.cmd` (ou `Spek_Template_Manager.pyw`) depuis le dépôt complet. `DIAGNOSTIC_TEMPLATES.cmd` reste disponible en cas d’échec Windows. Python 3.10+ / Tkinter requis. Pas de connexion distante nécessaire.
+
+### Commandes sans interface
+
+```powershell
+python -m spek check-wiki-compositions
+python -m spek list-wiki-compositions
+python -m unittest discover -s tests -v
+```
+
+Le fichier `docs/COMPOSITIONS_IA_WIKI.md` documente la construction initiale des recettes. Le rapport global des 127 Kristals est toujours nécessaire pour produire les assignations individuelles et les éventuels nouveaux layouts spécialisés.
+
+Le dossier historique `wiki-templates/` présent dans les anciens clones GitHub n’est **plus actif**. Après extraction sur un clone neuf, le supprimer manuellement si aucun fichier personnalisé n’y est conservé ; les profils actuels sont sous `template_library/wiki/`.
+</pre></body></html>

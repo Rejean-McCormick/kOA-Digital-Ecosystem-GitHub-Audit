@@ -1,0 +1,15 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Mediatheque · docs/21_deployment_modes.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Mediatheque · docs/21_deployment_modes.md</h1><p class='meta'><small>Rejean-McCormick/Mediatheque · 21e8d732e669 · SHA-256 28990483c5269669</small><br><a href='https://github.com/Rejean-McCormick/Mediatheque/blob/21e8d732e6690ab15ced87179eb5b152386fe716/docs/21_deployment_modes.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Engine et instances
+
+Médiathèque possède un **Engine unique** et un nombre quelconque d’instances.
+
+```text
+mediatheque/                  -&gt; Engine, code uniquement
+mediatheque-privee/           -&gt; données/config locale privée
+mediatheque-uckk/             -&gt; configuration UCKK
+mediatheque-universite-math/  -&gt; configuration Université Math
+```
+
+Une différence de contenu, de site ou de fonds ne crée pas un nouvel Engine. Chaque instance choisit son backend et ses paramètres dans `mediatheque.instance.toml`.
+
+Pour les instances filesystem/SQLite, le dossier d’instance est passé à l’Engine comme `KOA_CONTENT_ROOT`. Pour les instances Moodle, le manifeste sélectionne l’adapter Moodle partagé de l’Engine.
+</pre></body></html>

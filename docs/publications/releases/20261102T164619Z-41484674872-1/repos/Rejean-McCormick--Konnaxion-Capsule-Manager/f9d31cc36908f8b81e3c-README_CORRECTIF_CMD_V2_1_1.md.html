@@ -1,0 +1,21 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Capsule-Manager · README_CORRECTIF_CMD_V2_1_1.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Capsule-Manager · README_CORRECTIF_CMD_V2_1_1.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Capsule-Manager · a137f3c1ab5e · SHA-256 defa06d29ae97943</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Capsule-Manager/blob/a137f3c1ab5e7a79887074560b11a2a6b0a70518/README_CORRECTIF_CMD_V2_1_1.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Correction du lanceur Tandem Orgo Identite V2.1.1
+
+Dépôt cible **uniquement** : `C:\mycode\Konnaxion\Konnaxion_Capsule_Manager`.
+
+Extraire le ZIP à la racine du dépôt en remplaçant seulement `START_TANDEM_ORGO_IDENTITE_DIAG.cmd`, puis double-cliquer sur ce fichier.
+
+Cause corrigée : les parenthèses non échappées dans le `echo` d&#x27;un bloc `if (...)` de l&#x27;ancien CMD déclenchaient `. était inattendu.` sous `cmd.exe`, y compris quand PowerShell 7 était présent.
+
+Le nouveau CMD supprime les blocs `if (...)` et les caractères spéciaux pouvant perturber l&#x27;encodage Windows, vérifie `pwsh.exe` et le script existant, puis transmet le code de sortie du diagnostic.
+
+Le script Python/PowerShell/JavaScript de diagnostic existant **n&#x27;est pas modifié**. Il reste en lecture seule et ne déploie rien.
+
+Alternative sans installer l&#x27;overlay :
+
+```powershell
+cd C:\mycode\Konnaxion\Konnaxion_Capsule_Manager
+pwsh -NoProfile -File .\tools\tandem_v2\DIAG_ORGO_FAKEPLANT_IDENTITY.ps1
+```
+
+Aucune connexion à Orgo n&#x27;a été testée sous Windows dans cet environnement ; seul le lanceur est corrigé et contrôlé statiquement.
+</pre></body></html>

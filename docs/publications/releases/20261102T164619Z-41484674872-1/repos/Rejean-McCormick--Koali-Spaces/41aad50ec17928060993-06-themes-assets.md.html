@@ -1,0 +1,29 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/03-space-model/06-themes-assets.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/03-space-model/06-themes-assets.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 65c4312a2bd970b7</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/03-space-model/06-themes-assets.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Thèmes et assets
+
+**Classe : Contrat + Normatif**
+
+Le theme contract est presentation-only. Le design system courant utilise `koali.ant5`.
+
+## Autorité d&#x27;apparence
+
+L&#x27;apparence effective est résolue dans cet ordre :
+
+1. defaults explicites de `appearance_policy` du Space ;
+2. champs de compatibilité encore présents dans `appearance` ;
+3. defaults sémantiques de l&#x27;`InterfaceTheme` actif ;
+4. defaults Koali internes.
+
+`appearance.density` est un champ de compatibilité : il reste accepté, mais une nouvelle définition de Space peut l&#x27;omettre afin d&#x27;hériter de `InterfaceTheme.tokens.density`.
+
+Les couleurs d&#x27;accent sélectionnables sont définies une seule fois dans `interface/appearance/accent-palette.json`. Les schemas de Space et de préférences valident leur forme ; la validation runtime vérifie ensuite que chaque identifiant appartient au registre canonique. Un `InterfaceTheme` peut déclarer `tokens.primary_accent_id`; lorsqu&#x27;il est présent, sa couleur doit correspondre à la couleur canonique du registre.
+
+Les préférences personnelles ne font jamais partie de l&#x27;activation du Space, de son receipt, des capabilities ou des manifests propriétaires.
+
+## Tokens sémantiques
+
+Après résolution light/dark et accent, Ant Design reste la source des couleurs sémantiques effectives. Koali ne maintient que des aliases CSS (`--koali-color-*`) alimentés à partir des tokens Ant pour les composants shell non-Ant. Les couleurs CSS statiques restantes servent uniquement de fallback de bootstrap avant hydratation.
+
+Les bundles offline-capable doivent être locaux. Les manifests d’assets servent à établir l’inventaire de runtime local et la fermeture offline.
+
+Cette documentation ne prescrit pas de mécanisme de checksum documentaire. Les digests présents dans les artifact contracts restent des mécanismes runtime d’intégrité d’artifacts et sont indépendants de l’organisation de cette documentation.
+</pre></body></html>

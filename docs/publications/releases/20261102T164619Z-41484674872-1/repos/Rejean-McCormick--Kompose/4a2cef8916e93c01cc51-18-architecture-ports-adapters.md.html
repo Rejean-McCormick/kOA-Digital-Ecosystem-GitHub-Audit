@@ -1,0 +1,44 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompose · docs/18-architecture-ports-adapters.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompose · docs/18-architecture-ports-adapters.md</h1><p class='meta'><small>Rejean-McCormick/Kompose · a5a2d855584d · SHA-256 6812b4702275a21c</small><br><a href='https://github.com/Rejean-McCormick/Kompose/blob/a5a2d855584d55d7ee5553207cb2e2b95d9c823d/docs/18-architecture-ports-adapters.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 18 — Architecture indépendante : ports et adaptateurs
+
+KOMPOSE **n&#x27;est pas KOR**. C&#x27;est un modèle de conception, validation et **coordination simulée** qui doit pouvoir fonctionner avec divers fournisseurs de contenus, d&#x27;identité et d&#x27;interfaces. Dans Tandem, **Orgo est seul propriétaire des opérations réelles** (ADR 0008) : les ports de stockage/outbox/session ci-dessous sont des **contrats proposés**, non des interfaces réseau implantées dans ce dépôt. Un partenaire peut ultérieurement reprendre ses contrats et invariants dans ses propres modules; cela constitue une **intégration/migration contrôlée**, pas une identité de marque commune.
+
+## Ports entrants
+
+- `TeacherConsolePort` : configurer, approuver, suspendre, reprendre, clore.
+- `StudentEntryPort` : demander la jonction avec code + identité externe validée.
+- `ExperiencePort` : consulter rôles, missions, Kristals et état autorisés; recevoir événements rendus.
+
+## Ports sortants
+
+- `IdentityProviderPort` : vérifier élève/enseignant et droits scolaires.
+- `DiagnosticPort` : obtenir mesures et comparabilité (privé), aménagements (privé).
+- `AssignmentPort` : produire des propositions sous contraintes, preuves et explications privées.
+- `ContentRegistryPort` : accéder à des contenus et sources versionnés / droits validés.
+- `EventTransportPort` : événement outbox, idempotence et abonnements.
+- `PersistencePort` : session, version, historique et projections.
+- `AuditPort` : actions enseignantes, corrections et motifs autorisés.
+- `PresentationPort` : messages et vues sur Chromebook/tablette (KOR possible).
+
+## Matrice de propriété
+
+| Objet | Propriétaire logique | Ce que KOMPOSE conserve |
+|---|---|---|
+| Identité scolaire | fournisseur IAM / établissement | référence opaque par session |
+| Diagnostic détaillé | service d&#x27;évaluation | statut, version, résultat synthétique privé si nécessaire |
+| Règles/attributions | moteur de rôles | commandes, décisions finales et trace d&#x27;audit |
+| Documents historiques | registre éditorial | identifiant et version épinglée, permissions |
+| Rendu de prompts | application cliente | définition, événement de déclenchement, destinataire autorisé |
+| États de simulation locale | KOMPOSE (`lifecycle`/`coordination`) | règles pures et progression fictive seulement |
+| Case / Task / Signal et états réels Tandem | **Orgo** | intention d&#x27;aperçu et vérification locale sans mutation opérationnelle |
+| World / WorldRelease | **Orgo_Worlds / système canonique** | références synthétiques, aucune preuve d&#x27;existence ni d&#x27;admission |
+
+## Intégration possible à KOR
+
+Un adaptateur peut transformer `session.roles_publies` en notification KOR, rendre un lecteur de Kristal dans son UI et appeler les routes publiques autorisées. **KOR n&#x27;a pas à héberger les dossiers scolaires, le classement privé ni les règles éditoriales.** Voir [integration-manifest.schema.json](../contracts/schemas/integration-manifest.schema.json) et l&#x27;exemple [kor.adapter.example.json](../examples/integrations/kor.adapter.example.json).
+
+## Versionnage
+
+- API et événements en `/v1`; `schema_version` entier pour les enveloppes, `contract_version` semver pour l&#x27;intégration.
+- Schémas conservés comme source de vérité; changements incompatibles = nouvelle version majeure.
+- Contrats testés de chaque côté de la frontière. Évolution via ADR, pas par modification silencieuse.
+</pre></body></html>

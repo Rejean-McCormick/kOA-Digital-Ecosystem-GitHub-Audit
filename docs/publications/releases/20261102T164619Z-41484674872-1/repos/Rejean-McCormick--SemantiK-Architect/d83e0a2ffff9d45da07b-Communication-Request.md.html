@@ -1,0 +1,113 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/SemantiK-Architect · Communication-Request.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/SemantiK-Architect · Communication-Request.md</h1><p class='meta'><small>Rejean-McCormick/SemantiK-Architect · f187a43fc954 · SHA-256 df62dab8bd9bcda3</small><br><a href='https://github.com/Rejean-McCormick/SemantiK-Architect/wiki/Communication-Request' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Communication Request
+
+`CommunicationRequest` is the canonical public input aggregate.
+
+## Shape
+
+```text
+CommunicationRequest
+  schema_version
+  semantic_graph
+  obligations
+  supporting_context
+  context
+  constraints
+  capability_profile
+  runtime_selector?       # optional explicit RuntimeSet pin
+  request_id?             # operational
+  deadline?               # operational
+```
+
+## Example
+
+```json
+{
+  &quot;schema_version&quot;: &quot;1.0&quot;,
+  &quot;request_id&quot;: &quot;example:repair-4356&quot;,
+  &quot;semantic_graph&quot;: {
+    &quot;graph_id&quot;: &quot;graph:repair-4356&quot;,
+    &quot;nodes&quot;: [
+      {
+        &quot;id&quot;: &quot;marcel&quot;,
+        &quot;kind&quot;: &quot;entity_ref&quot;,
+        &quot;external_ref&quot;: &quot;orgo:user/marcel&quot;,
+        &quot;labels&quot;: {&quot;fr&quot;: &quot;Marcel&quot;}
+      },
+      {
+        &quot;id&quot;: &quot;machine&quot;,
+        &quot;kind&quot;: &quot;entity_ref&quot;,
+        &quot;external_ref&quot;: &quot;orgo:machine/4356&quot;,
+        &quot;labels&quot;: {&quot;fr&quot;: &quot;machine 4356&quot;}
+      },
+      {
+        &quot;id&quot;: &quot;repair&quot;,
+        &quot;kind&quot;: &quot;concept_ref&quot;,
+        &quot;concept_ref&quot;: &quot;local-concept:repair&quot;
+      }
+    ],
+    &quot;statements&quot;: [
+      {
+        &quot;id&quot;: &quot;repair_statement&quot;,
+        &quot;predicate_ref&quot;: &quot;local-predicate:repair_event&quot;,
+        &quot;arguments&quot;: [
+          {&quot;role_ref&quot;: &quot;semantic-role:agent&quot;, &quot;value_id&quot;: &quot;marcel&quot;},
+          {&quot;role_ref&quot;: &quot;semantic-role:patient&quot;, &quot;value_id&quot;: &quot;machine&quot;},
+          {&quot;role_ref&quot;: &quot;semantic-role:event_type&quot;, &quot;value_id&quot;: &quot;repair&quot;}
+        ],
+        &quot;polarity&quot;: &quot;positive&quot;
+      }
+    ]
+  },
+  &quot;obligations&quot;: [
+    {
+      &quot;obligation_id&quot;: &quot;repair_task&quot;,
+      &quot;semantic_refs&quot;: [&quot;repair_statement&quot;],
+      &quot;force&quot;: &quot;DIRECT&quot;
+    }
+  ],
+  &quot;context&quot;: {
+    &quot;target_language&quot;: &quot;fr&quot;,
+    &quot;target_locale&quot;: &quot;fr-CA&quot;,
+    &quot;formality&quot;: &quot;informal&quot;,
+    &quot;register&quot;: &quot;operational&quot;
+  },
+  &quot;constraints&quot;: {
+    &quot;allowed_block_kinds&quot;: [&quot;utterance&quot;, &quot;list&quot;],
+    &quot;opening_policy&quot;: &quot;allowed&quot;,
+    &quot;closing_policy&quot;: &quot;allowed&quot;,
+    &quot;list_policy&quot;: &quot;allowed&quot;,
+    &quot;output_format&quot;: &quot;structured&quot;
+  },
+  &quot;capability_profile&quot;: &quot;orgo-operational-1&quot;
+}
+```
+
+## CommunicationContext
+
+Context may control wording, pronouns, register, politeness and segmentation, but it must not alter the obligation set.
+
+Typical fields:
+
+- target language/locale;
+- speaker and recipient;
+- relationship;
+- formality;
+- politeness;
+- register;
+- tone profile;
+- channel;
+- bounded discourse context.
+
+## PresentationConstraints
+
+Constraints describe permitted presentation forms:
+
+- allowed block kinds;
+- opening/closing policy;
+- list policy;
+- terminology profile;
+- optional maximum length;
+- output format.
+
+A hard constraint that can only be met by deleting required meaning makes the request unsatisfiable.
+</pre></body></html>

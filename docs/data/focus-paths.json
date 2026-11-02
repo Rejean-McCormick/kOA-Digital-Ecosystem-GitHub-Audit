@@ -1,10 +1,10 @@
 {
   "format": "koa.graph.focus.public.v1",
   "owner_repository": "Rejean-McCormick/kOA-Digital-Ecosystem",
-  "owner_commit": "90865538b0c16be08423843208f4c5e6785a7523",
-  "source_sha256": "5eb570c983f1ecedb5a3d0c2449b4a91e8fbf5c5c3a3ed2d662dcbb2bf40f55c",
+  "owner_commit": "58a5fa07c18b360a1abd7a213023c6ceaa9d1533",
+  "source_sha256": "617861a2403c8730f7ed13c35e1e4b7fdfbcd205b98402242f31a7d03467c9dd",
   "inventory_sha256": "772cefca4fbe8b61a14e662124482a0f38c1190a4bcf9f1283817e9c97d55c54",
-  "source_date": "2026-10-31",
+  "source_date": "2026-11-01",
   "notice": {
     "fr": "Les parcours illustrent des interfaces et responsabilités documentées, sans prétendre que toutes sont qualifiées en production.",
     "en": "Paths illustrate documented interfaces and ownership, without asserting global production qualification."
@@ -942,6 +942,529 @@
           "evidence": {
             "repo": "Rejean-McCormick/Spek",
             "path": "docs/STANDALONE_AND_CONNECTORS.md"
+          }
+        }
+      ]
+    },
+    {
+      "id": "koali",
+      "title": {
+        "fr": "Koali → Écosystème → UCKK",
+        "en": "Koali → Ecosystem → UCKK"
+      },
+      "summary": {
+        "fr": "Koali articule des systèmes autonomes; une ressource approuvée peut être publiée vers UCKK par un échange explicite, avec preuves, droits et retour. Ce chemin est un scénario de composition, pas un monolithe ni une publication automatiquement qualifiée.",
+        "en": "Koali brings autonomous systems together; an approved resource may be published to UCKK through explicit governed exchange, preserving evidence, rights and receipts. This is a composition path, not a monolith or automatically qualified publication."
+      },
+      "spine": [
+        {
+          "id": "koali-view",
+          "label": {
+            "fr": "Koali",
+            "en": "Koali"
+          },
+          "repo": null,
+          "kind": "interface",
+          "description": {
+            "fr": "Vision de l’écosystème, sans autorité unique sur les sous-systèmes.",
+            "en": "Ecosystem-wide view, without taking ownership of its subsystems."
+          }
+        },
+        {
+          "id": "koali-approved",
+          "label": {
+            "fr": "Ressource approuvée",
+            "en": "Approved resource"
+          },
+          "repo": null,
+          "kind": "artifact",
+          "description": {
+            "fr": "Sélection par l’autorité d’origine : audience, consentement, droits et version.",
+            "en": "Owner-authorized selection: audience, consent, rights and version."
+          }
+        },
+        {
+          "id": "koali-local-media",
+          "label": {
+            "fr": "Médiathèque kOA",
+            "en": "kOA Mediatheque"
+          },
+          "repo": "Rejean-McCormick/Mediatheque",
+          "kind": "application",
+          "description": {
+            "fr": "Source locale, versions, empreintes et provenance; privée par défaut.",
+            "en": "Local source, versions, hashes and provenance; private by default."
+          }
+        },
+        {
+          "id": "koali-gateway",
+          "label": {
+            "fr": "Passerelle kOA-Linux",
+            "en": "kOA-Linux gateway"
+          },
+          "repo": "Rejean-McCormick/kOA-Linux-Koali",
+          "kind": "application",
+          "description": {
+            "fr": "Contrôles de publication inter-domaines, portée et destination explicites.",
+            "en": "Cross-domain publication checks with explicit scope and destination."
+          }
+        },
+        {
+          "id": "koali-uckk",
+          "label": {
+            "fr": "UCKK",
+            "en": "UCKK"
+          },
+          "repo": null,
+          "kind": "interface",
+          "description": {
+            "fr": "Plateforme Moodle externe, qui accepte son propre objet de publication.",
+            "en": "External Moodle platform, accepting its own published object."
+          }
+        },
+        {
+          "id": "koali-receipt",
+          "label": {
+            "fr": "Reçu et suivi",
+            "en": "Receipt and follow-up"
+          },
+          "repo": null,
+          "kind": "artifact",
+          "description": {
+            "fr": "Accusé d’état et traçabilité du contenu accepté; correction ou retrait séparés.",
+            "en": "Status receipt and traceability of accepted content; correction or withdrawal handled separately."
+          }
+        }
+      ],
+      "spine_links": [
+        {
+          "from": "koali-view",
+          "to": "koali-approved",
+          "label": {
+            "fr": "Composition sans transfert d’autorité",
+            "en": "Composition without transfer of authority"
+          },
+          "status": "documented",
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/1-Overview/Components.md"
+          }
+        },
+        {
+          "from": "koali-approved",
+          "to": "koali-local-media",
+          "label": {
+            "fr": "Sélection et provenance locales",
+            "en": "Owner-approved local selection and provenance"
+          },
+          "status": "documented",
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Mediatheque",
+            "path": "README.md"
+          }
+        },
+        {
+          "from": "koali-local-media",
+          "to": "koali-gateway",
+          "label": {
+            "fr": "Paquet de publication borné",
+            "en": "Bounded publication package"
+          },
+          "status": "documented",
+          "contract": "kOA-Linux UCKK publication package/receipt",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/2-Technical-Reference/40-integration/contract-map.md"
+          }
+        },
+        {
+          "from": "koali-gateway",
+          "to": "koali-uckk",
+          "label": {
+            "fr": "Publication explicitement autorisée",
+            "en": "Explicitly authorized publication"
+          },
+          "status": "documented",
+          "contract": "publish_to_uckk",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Linux-Koali",
+            "path": "docs/07-security/17-cross-domain-publication.md"
+          }
+        },
+        {
+          "from": "koali-uckk",
+          "to": "koali-receipt",
+          "label": {
+            "fr": "Réception, suivi et limites",
+            "en": "Receipt, follow-up and limitations"
+          },
+          "status": "documented",
+          "contract": "UCKK publication receipt (contractual boundary)",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/2-Technical-Reference/40-integration/contract-map.md"
+          }
+        }
+      ],
+      "branches": [
+        {
+          "id": "koali-spaces",
+          "anchor": 0,
+          "side": "above",
+          "label": {
+            "fr": "Koali Spaces : présentation facultative",
+            "en": "Koali Spaces: optional presentation"
+          },
+          "status": "optional",
+          "steps": [
+            {
+              "id": "koali-spaces-surface",
+              "label": {
+                "fr": "Koali Spaces",
+                "en": "Koali Spaces"
+              },
+              "repo": "Rejean-McCormick/Koali-Spaces",
+              "kind": "application",
+              "description": {
+                "fr": "Compose des surfaces et routes, pas les décisions métier.",
+                "en": "Composes surfaces and routes, not business decisions."
+              }
+            }
+          ],
+          "description": {
+            "fr": "Interface commune facultative. Ne constitue ni la totalité de Koali ni un hôte obligatoire pour les applications.",
+            "en": "Optional shared experience layer; it is neither all of Koali nor a required application host."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Koali-Spaces",
+            "path": "README.md"
+          }
+        },
+        {
+          "id": "koali-konnaxion",
+          "anchor": 0,
+          "side": "below",
+          "label": {
+            "fr": "Konnaxion : participation et apprentissage",
+            "en": "Konnaxion: participation and learning"
+          },
+          "status": "documented",
+          "steps": [
+            {
+              "id": "koali-konnaxion-app",
+              "label": {
+                "fr": "Konnaxion",
+                "en": "Konnaxion"
+              },
+              "repo": "Rejean-McCormick/Konnaxion",
+              "kind": "application",
+              "description": {
+                "fr": "Délibération, apprentissage, création et décisions civiques.",
+                "en": "Deliberation, learning, creation and civic decisions."
+              }
+            }
+          ],
+          "description": {
+            "fr": "Une application autonome de l’écosystème. La publication d’un contenu vers UCKK demande une autorisation indépendante.",
+            "en": "Autonomous ecosystem application. Publishing its material to UCKK requires independent authorization."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/1-Overview/Components.md"
+          }
+        },
+        {
+          "id": "koali-orgo",
+          "anchor": 0,
+          "side": "above",
+          "label": {
+            "fr": "Orgo : action et reddition",
+            "en": "Orgo: action and accountability"
+          },
+          "status": "documented",
+          "steps": [
+            {
+              "id": "koali-orgo-app",
+              "label": {
+                "fr": "Orgo",
+                "en": "Orgo"
+              },
+              "repo": "Rejean-McCormick/Orgo",
+              "kind": "application",
+              "description": {
+                "fr": "Signaux, workflows, dossiers et tâches.",
+                "en": "Signals, workflows, cases and tasks."
+              }
+            }
+          ],
+          "description": {
+            "fr": "Une application autonome qui gère le travail opérationnel; Koali ne reprend pas ses règles ni ses données.",
+            "en": "Autonomous owner of operational work; Koali does not take over its rules or business data."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Orgo",
+            "path": "README.md"
+          }
+        },
+        {
+          "id": "koali-kristal",
+          "anchor": 1,
+          "side": "below",
+          "label": {
+            "fr": "Kristal : connaissances et preuves",
+            "en": "Kristal: knowledge and evidence"
+          },
+          "status": "documented",
+          "steps": [
+            {
+              "id": "koali-kristal-framework",
+              "label": {
+                "fr": "Kristal Framework",
+                "en": "Kristal Framework"
+              },
+              "repo": "Rejean-McCormick/Kristal-Framework",
+              "kind": "application",
+              "description": {
+                "fr": "Identités, états, relations et provenance sémantiques.",
+                "en": "Semantic identities, states, relations and provenance."
+              }
+            },
+            {
+              "id": "koali-kristal-kit",
+              "label": {
+                "fr": "Authoring Kit",
+                "en": "Authoring Kit"
+              },
+              "repo": "Rejean-McCormick/Kristal-Authoring-Kit",
+              "kind": "application",
+              "description": {
+                "fr": "Construction et projection d’artefacts selon les versions reconnues.",
+                "en": "Artifact authoring and projection under version-specific contracts."
+              }
+            }
+          ],
+          "description": {
+            "fr": "Les artefacts Kristal et les projections autorisées peuvent contribuer au contenu, sans imposer un chemin unique ou publier automatiquement.",
+            "en": "Kristal artifacts and approved projections may contribute content, without mandatory routing or automatic publishing."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/1-Overview/Components.md"
+          }
+        },
+        {
+          "id": "koali-language",
+          "anchor": 1,
+          "side": "above",
+          "label": {
+            "fr": "SemantiK et Spek : mise en forme",
+            "en": "SemantiK and Spek: communication"
+          },
+          "status": "optional",
+          "steps": [
+            {
+              "id": "koali-semantik",
+              "label": {
+                "fr": "SemantiK Architect",
+                "en": "SemantiK Architect"
+              },
+              "repo": "Rejean-McCormick/SemantiK-Architect",
+              "kind": "application",
+              "description": {
+                "fr": "Réalisation linguistique d’obligations de communication structurées.",
+                "en": "Language realization from structured communication obligations."
+              }
+            },
+            {
+              "id": "koali-spek",
+              "label": {
+                "fr": "Spek",
+                "en": "Spek"
+              },
+              "repo": "Rejean-McCormick/Spek",
+              "kind": "application",
+              "description": {
+                "fr": "Composition éditoriale HTML, PDF et autres formats.",
+                "en": "Editorial composition for HTML, PDF and other outputs."
+              }
+            }
+          ],
+          "description": {
+            "fr": "Circuit optionnel : SemantiK peut fournir des formulations, mais Spek fonctionne également seul. Pas de dépendance générale obligatoire.",
+            "en": "Optional route: SemantiK may provide realizations, but Spek also runs standalone; neither is a global mandatory dependency."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/Spek",
+            "path": "docs/STANDALONE_AND_CONNECTORS.md"
+          }
+        },
+        {
+          "id": "koali-disclosure",
+          "anchor": 3,
+          "side": "above",
+          "label": {
+            "fr": "Droits, politique et consentement",
+            "en": "Rights, policy and consent"
+          },
+          "status": "documented",
+          "steps": [
+            {
+              "id": "koali-policy",
+              "label": {
+                "fr": "Autorisation inter-domaines",
+                "en": "Cross-domain authorization"
+              },
+              "repo": null,
+              "kind": "interface",
+              "description": {
+                "fr": "Vérification de l’objet exact, des droits, de l’audience et de la destination.",
+                "en": "Check exact content, rights, audience and destination."
+              }
+            }
+          ],
+          "description": {
+            "fr": "L’autorisation de publier est séparée des autorisations de stockage ou de lecture; une livraison partielle ne vaut pas succès.",
+            "en": "Publication authority is separate from storage and read access; partial delivery is not full success."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Linux-Koali",
+            "path": "docs/07-security/17-cross-domain-publication.md"
+          }
+        },
+        {
+          "id": "koali-uckk-media",
+          "anchor": 4,
+          "side": "above",
+          "label": {
+            "fr": "Médiathèque UCKK distincte",
+            "en": "Separate UCKK Mediatheque"
+          },
+          "status": "documented",
+          "steps": [
+            {
+              "id": "koali-uckk-media-view",
+              "label": {
+                "fr": "Médiathèque UCKK",
+                "en": "UCKK Mediatheque"
+              },
+              "repo": null,
+              "kind": "interface",
+              "description": {
+                "fr": "Contenus et médias en ligne sous l’autorité d’UCKK, sans base partagée.",
+                "en": "Online content and media owned by UCKK, without a shared database."
+              }
+            }
+          ],
+          "description": {
+            "fr": "UCKK reste une destination externe; sa Médiathèque n’est pas une copie automatiquement synchronisée de la Médiathèque kOA.",
+            "en": "UCKK remains an external destination; its Mediatheque is not an automatically synchronized copy of the local kOA library."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/1-Overview/Integration.md"
+          }
+        },
+        {
+          "id": "koali-import",
+          "anchor": 5,
+          "side": "below",
+          "label": {
+            "fr": "Retour séparé : import_from_uckk",
+            "en": "Separate return: import_from_uckk"
+          },
+          "status": "optional",
+          "steps": [
+            {
+              "id": "koali-import-operation",
+              "label": {
+                "fr": "import_from_uckk",
+                "en": "import_from_uckk"
+              },
+              "repo": null,
+              "kind": "interface",
+              "description": {
+                "fr": "Import explicite d’une ressource UCKK sélectionnée.",
+                "en": "Explicit import of a selected UCKK resource."
+              }
+            },
+            {
+              "id": "koali-import-copy",
+              "label": {
+                "fr": "Copie locale distincte",
+                "en": "Separate local copy"
+              },
+              "repo": null,
+              "kind": "artifact",
+              "description": {
+                "fr": "Nouvelle copie avec provenance et autorité locale propres.",
+                "en": "New copy with its own provenance and local authority."
+              }
+            }
+          ],
+          "description": {
+            "fr": "Opération distincte et optionnelle : importer ne fusionne pas les identités, les contenus ni les bases UCKK et kOA.",
+            "en": "Separate optional operation: importing does not merge UCKK and kOA identities, contents or databases."
+          },
+          "contract": "import_from_uckk",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/1-Overview/Integration.md"
+          }
+        },
+        {
+          "id": "koali-republication",
+          "anchor": 5,
+          "side": "above",
+          "label": {
+            "fr": "Sources modifiées : révision et republication",
+            "en": "Changed sources: revision and republication"
+          },
+          "status": "candidate",
+          "steps": [
+            {
+              "id": "koali-revision-impact",
+              "label": {
+                "fr": "Changement de source",
+                "en": "Source change"
+              },
+              "repo": null,
+              "kind": "interface",
+              "description": {
+                "fr": "Identifier les contenus dérivés potentiellement affectés.",
+                "en": "Identify downstream content that may be affected."
+              }
+            },
+            {
+              "id": "koali-republication-review",
+              "label": {
+                "fr": "Nouvelle approbation",
+                "en": "Reapproval before republishing"
+              },
+              "repo": null,
+              "kind": "interface",
+              "description": {
+                "fr": "Réviser, retirer ou republier après une décision explicite.",
+                "en": "Review, withdraw or republish after an explicit decision."
+              }
+            }
+          ],
+          "description": {
+            "fr": "Cas d’usage Koali SCN-113 et SCN-120 (COMPOSED, runtime UNVERIFIED) : le suivi des dépendances et la republication ne sont pas affirmés comme intégration qualifiée.",
+            "en": "Koali use cases SCN-113 and SCN-120 (COMPOSED, runtime UNVERIFIED): dependency tracking and republication are not asserted as qualified integration."
+          },
+          "contract": "",
+          "evidence": {
+            "repo": "Rejean-McCormick/kOA-Digital-Ecosystem",
+            "path": "docs/inventory/KOALI_PARCOURS.md"
           }
         }
       ]

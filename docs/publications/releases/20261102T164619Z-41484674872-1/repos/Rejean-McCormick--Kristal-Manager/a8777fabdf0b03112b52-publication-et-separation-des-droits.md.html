@@ -1,0 +1,22 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/09-securite/publication-et-separation-des-droits.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/09-securite/publication-et-separation-des-droits.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 e02259986cc9df83</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/09-securite/publication-et-separation-des-droits.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Publication, privilèges et intégrité locale
+
+## Principe
+
+**Observer ≠ corriger ≠ approuver ≠ publier ≠ activer**. Ce sont cinq opérations séparées, avec journaux, permissions et confirmations indépendantes. Les scripts d&#x27;analyse et le nouveau registre ne doivent jamais déclencher un commit, push, GitHub sync ou activation.
+
+## État historique
+
+`GitSink.bat` a été désactivé pendant une réparation pour empêcher la publication involontaire; des tests historiques peuvent encore attendre un backend de publication. Ne jamais le réactiver pour satisfaire ces tests. La grosse base SQLite de contenu a été retirée de la branche principale Git afin d&#x27;éviter un fichier supérieur à 100 Mo; il peut rester dans une **ancienne branche locale de sauvegarde**, mais celle-ci ne doit pas être poussée.
+
+## Autorisations cibles
+
+`OBSERVE` : lecture sources et écriture rapports hors `locals`. `DIAGNOSE` : processus examinateur vérifié. `PROPOSE` : écrit dans index des propositions. `APPROVE` : décision traçable dans registre Manager. `APPLY` : Kit auteur sur plan explicite avec sauvegarde et vérification. `PUBLISH` : chemin séparé, consentement explicite et conditions de sécurité. Les rôles peuvent être localement simples, mais les frontières doivent être réelles dans le code.
+
+## Accès réseau
+
+Pas de réseau implicite pour un scan local. Les alignements Wikidata peuvent nécessiter une consultation externe, mais les correspondances nouvelles doivent conserver leur provenance et statut de validation. Les éventuels plugins/réseaux sont optionnels et désactivés par défaut.
+
+## Contrôles d&#x27;intégrité
+
+Comparer hashes source avant/après scans/diag; vérifier schémas et références avant reconstruction; garder l&#x27;historique des engagements logiques. Toute opération qui change des octets canoniques déclenche une nouvelle lecture Discovery et invalide les anciens verdicts associés.
+</pre></body></html>

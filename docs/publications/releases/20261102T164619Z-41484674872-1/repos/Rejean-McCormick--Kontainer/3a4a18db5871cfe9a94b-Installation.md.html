@@ -1,0 +1,57 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontainer · Installation.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontainer · Installation.md</h1><p class='meta'><small>Rejean-McCormick/Kontainer · c9674410bf4a · SHA-256 63521aefb00fbcf3</small><br><a href='https://github.com/Rejean-McCormick/Kontainer/wiki/Installation' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Installation
+
+Kontainer is distributed in the provided archive as a **Python library plus CLI** (`kristal_container`). Version **1.0.0rc1** targets Python **3.11–3.14**. The delivery report records local execution on Linux x86-64/Python 3.12.14; the included CI workflow targets Linux, Windows, and macOS, but is **not evidence that all those CI jobs ran** for this delivery.
+
+## Install from the source repository
+
+From the extracted `Kristal-Container` directory:
+
+```bash
+python -m venv .venv
+.venv/bin/python -m pip install -c constraints.txt .
+.venv/bin/python -m kristal_container capabilities
+```
+
+On Windows PowerShell:
+
+```powershell
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -c constraints.txt .
+.\.venv\Scripts\python.exe -m kristal_container capabilities
+```
+
+The `constraints.txt` file pins qualified **runtime** dependency versions. It is not a complete reproducible, cross-platform lockfile with hashes. Review dependencies in your own deployment pipeline.
+
+## Install the built wheel
+
+The supplied distribution includes `dist/kristal_container-1.0.0rc1-py3-none-any.whl`. With a separate project environment, install the wheel using your deployment&#x27;s reviewed dependency constraints; do not assume the wheel alone includes every dependency or that its existence proves a production review.
+
+## Developer setup
+
+```bash
+python -m pip install -c constraints.txt -e &quot;.[dev]&quot;
+python -m pytest
+python -m ruff check src tests tools
+python -m ruff format --check src tests tools
+python -m build
+```
+
+These commands reproduce the repository&#x27;s development workflow on an appropriately prepared host. Before distributing externally, review `docs/RELEASE.md`, `LICENSE`, and `SECURITY.md` in the source repository.
+
+## Operating-system notes
+
+- **No bundled GUI:** Manager/Konstellation are separate application layers.
+- **No automatic file association:** double-click opening is not installed by this package.
+- **Filesystem controls:** the writer uses a prepared output and atomic publication. Filesystems without required hardlink support can fail closed in no-overwrite mode.
+- **Windows:** POSIX-style file permission modes are not a replacement for appropriate NTFS DACLs. Test protected staging, backups, antivirus interactions, and destination permissions on the actual target system.
+- **Cross-platform conformance:** Python/OS support targets must be qualified through your own CI and integration environment.
+
+## Confirm installed features
+
+```bash
+python -m kristal_container --version
+python -m kristal_container capabilities
+```
+
+The JSON capability response identifies available profiles and explicitly unsupported native TPM/WebAuthn/KMS/post-quantum modes. Do not infer hardware assurance from the presence of an abstract provider interface.
+</pre></body></html>

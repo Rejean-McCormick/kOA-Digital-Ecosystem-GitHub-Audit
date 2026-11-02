@@ -1,0 +1,40 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Worlds · docs/status/2026-10-19-tandem-worlds-outer-acl.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Worlds · docs/status/2026-10-19-tandem-worlds-outer-acl.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Worlds · 0e8d47c147d1 · SHA-256 b82197393f0c831b</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Worlds/blob/0e8d47c147d13a5721c5ae8e4b1dd7968def51fb/docs/status/2026-10-19-tandem-worlds-outer-acl.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># TANDEM — Tour 5/8 — Konnaxion_Worlds P1 (2026-10-19)
+
+## Objet et contrat
+
+Le modèle canonique `KX-UNIVERSES-1` indique que l&#x27;accès à un Universe est une
+**frontière externe de gouvernance** (voir `docs/Technical-Reference/Worlds/20_UNIVERSES.md`).
+Le runtime et le catalogue vérifiaient déjà ce périmètre, mais `can_manage_world()`
+acceptait auparavant un mainteneur/membre ou créateur de World sans vérifier
+que son accès à l&#x27;Universe privé parent était toujours valide.
+
+## Modification ciblée
+
+Le résolveur commun vérifie désormais `can_access_universe()` AVANT les droits
+de gestion d&#x27;un World. Le changement s&#x27;applique aux API et chemins qui réutilisent
+`can_manage_world()`: édition, publications, souscriptions, gestion des membres,
+build, promotion, rollback et snapshots.
+
+- L&#x27;appartenance active à un Universe privé est obligatoire pour les gestionnaires
+  du World (sauf propriétaire/créateur de l&#x27;Universe ou personnel global autorisé).
+- Dans un Universe public, les ACL du World restent inchangées.
+- Un World public ne rend jamais public un Universe privé.
+- Pas de changement au modèle, aux migrations, aux contenus des Universe Packs,
+  aux WorldReleases, ni aux six Worlds FakePlant.
+- Aucune activation du SSO ou connexion à Konfid n&#x27;est incluse.
+
+## Qualification
+
+Les neuf tests autonomes rejouent le code exact des fonctions de permission via
+son AST, sans dépendre de Django et sans accès réseau. Six tests Django natifs
+sont ajoutés au dépôt pour la prochaine campagne **sur une DB de test isolée**.
+L&#x27;installation n&#x27;exécute PAS ces tests Django et n&#x27;ouvre jamais Neon.
+
+Contrôles à terminer : suite Django, séparation des schémas PostgreSQL,
+publication et promotion concurrentes, isolation multi-World sur le runtime,
+FakePlant 900 personas, redéploiement du paquet dans le runtime hôte.
+
+Les environnements hôtes Konnaxion et les services Docker doivent être actualisés
+séparément, avec qualification de release. Cette installation modifie uniquement
+les fichiers sources du dépôt Konnaxion_Worlds.
+</pre></body></html>

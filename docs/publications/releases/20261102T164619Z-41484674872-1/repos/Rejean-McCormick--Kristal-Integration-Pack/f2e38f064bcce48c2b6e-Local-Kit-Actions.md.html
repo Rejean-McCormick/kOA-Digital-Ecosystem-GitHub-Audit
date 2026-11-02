@@ -1,0 +1,26 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Integration-Pack · Local-Kit-Actions.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Integration-Pack · Local-Kit-Actions.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Integration-Pack · 949de422daed · SHA-256 bbdc851a0105a64f</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Integration-Pack/wiki/Local-Kit-Actions' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Guarded Local Kit Actions
+
+The Node CLI&#x27;s historical `author` command delegates a **small allowlist** of actions to an existing Python Local Kit tool. It does not bundle or replace the Authoring Kit runtime.
+
+## Actions
+
+| Action | Default behavior |
+| --- | --- |
+| `inspect` | Read-only |
+| `status` | Read-only |
+| `check` | Read-only |
+| `read-surface` | Read-only; forwarded with `--require-ready` |
+| `build-v9` | Write-capable; explicitly gated |
+| `publish-v9` | Write-capable; explicitly gated |
+
+```bash
+node tools/kristal-bridge.mjs author \
+  --action inspect --tool /kit/tools/tool.py --workspace /kit/workspace
+```
+
+For `build-v9` and `publish-v9`, **both** are required: environment variable `KRISTAL_ALLOW_WRITE=1` **and** `--confirm` equal to the specific action. These flags prevent accidental writes; they do **not** establish owner authorization, domain correctness or full rollback qualification.
+
+The new v11 Authoring Kit actions (`import-dik-catalog`, `select-v11-catalog`, `recover-v11`) are **not** part of the Pack&#x27;s historical `author` allowlist. Execute them separately in the **Authoring Kit** under the project&#x27;s review procedure.
+
+See [[diK-to-Authoring-Kit-Handoff]] and [[Architecture-and-Ownership]].
+</pre></body></html>

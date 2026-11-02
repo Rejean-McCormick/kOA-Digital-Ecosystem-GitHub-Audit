@@ -1,0 +1,34 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Integration-External-systems.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/1-Overview/Integration-External-systems.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 58a5fa07c18b · SHA-256 58c07344c1b13c76</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/58a5fa07c18b360a1abd7a213023c6ceaa9d1533/docs/1-Overview/Integration-External-systems.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Integration — External systems
+
+External systems integrate through explicit adapters/contracts, source-owned exports/references and adopted cross-system Profiles where applicable. Shared mutable state is not an integration contract.
+
+## Safe entry patterns
+
+- command: explicit intent to the owning receiver;
+- query: read/projection without ownership transfer;
+- event: fact already committed by the publisher;
+- artifact: immutable/versioned content with identity/integrity/provenance;
+- durable external effect: idempotency + retry/outbox + terminal reconciliation.
+
+## Knowledge acquisition
+
+EncyKlopedia is the source-discovery/acquisition boundary for the current knowledge pipeline. It hands immutable evidence and referent candidates to Da’at/Kristal through `encyklopedia.corpus-harvest-handoff/1.0.0`. External providers and identifiers never become the Kristal authority.
+
+## kOA-Linux artifact boundary
+
+When an external artifact is adopted by kOA-Linux, use the registered artifact class/release channel and Release Set compatibility rules. Runtime Pack local verification/active state belongs to `kristal_runtime`; privileged node operations use kOA Node Agent only where required.
+
+## Koali
+
+External/product applications may contribute presentation surfaces to Koali Spaces through admission/registration contracts. Presentation registration or Space activation does not grant product, policy or host authority.
+
+## UCKK directional interchange and projection
+
+kOA-Linux defines separate `publish_to_uckk` and `import_from_uckk` contracts. They preserve source/destination authority and do not imply shared databases or background bidirectional synchronization.
+
+Separately, `uckk.univers-cite-projection/1.0.0` defines a rebuildable consumer projection over pinned Kristal state. Moodle/campus state remains UCKK-owned; the projection does not become the epistemic canon.
+
+## SemantiK / GF tooling boundary
+
+GF Wordbench, SemantiK Architect, SemantiK Runtime Orchestrator, LevelUpDiag and GF Observatory retain separate ownership. Release orchestration may coordinate them through external filesystem/process contracts, but does not transfer grammar, semantic, diagnostic or observation authority.
+</pre></body></html>

@@ -1,0 +1,54 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Skope · Scope-Recipes.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Skope · Scope-Recipes.md</h1><p class='meta'><small>Rejean-McCormick/Skope · 3b1bfff4bd6a · SHA-256 bb9dfb2f0873af83</small><br><a href='https://github.com/Rejean-McCormick/Skope/wiki/Scope-Recipes' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Scope recipe reference
+
+A recipe describes **how to traverse the compact Wikidata graph**. It does not contain the entities themselves and cannot execute Python or change canonical data.
+
+## Minimal example
+
+```json
+{
+  &quot;root&quot;: &quot;Q192154&quot;,
+  &quot;direction&quot;: &quot;out&quot;,
+  &quot;allowed_properties&quot;: [&quot;P171&quot;],
+  &quot;default_depth&quot;: 2,
+  &quot;branches&quot;: {},
+  &quot;max_entities&quot;: 1000,
+  &quot;convergence&quot;: {
+    &quot;threshold_percent&quot;: 10,
+    &quot;min_support&quot;: 3,
+    &quot;extra_depth&quot;: 0,
+    &quot;include&quot;: []
+  },
+  &quot;geography&quot;: {&quot;mode&quot;: &quot;off&quot;}
+}
+```
+
+`Q192154` and `P171` are drawn from the bundled botany configuration; **verify applicability to your intended domain and traversal direction** before running anything. For one-property QID inventory, choose a single direction `in` or `out` (the example is illustrative, not a guarantee of intended coverage).
+
+## Fields and enforced constraints
+
+| Field | Meaning | Validation |
+| --- | --- | --- |
+| `root` | Wikidata starting item | `Q` followed by digits; must exist in local index to preview/collect |
+| `direction` | Traversal orientation | `in`, `out`, or `both` for preview; **not** `both` for batch collection |
+| `allowed_properties` | Relation filter | Array of `P` identifiers; **nonempty** for batch collector and catalog passes |
+| `default_depth` | Traversal depth | Integer 0–8 |
+| `branches` | First-hop `P123:in` / `P123:out` depth override | Maximum 500 overrides, each depth 0–8 |
+| `max_entities` | Requested selection cap | `0` = unlimited mass job; previews **still cap at 10,000** |
+| `convergence.threshold_percent` | External-candidate threshold component | Greater than 0, at most 100 |
+| `convergence.min_support` | Minimum supporting internal nodes | 1–10,000 |
+| `convergence.extra_depth` | Approved-candidate expansion depth | 0–6 |
+| `convergence.include` | Explicitly accepted outside QIDs | Valid QID list; **must be empty** for mass collector profiles |
+| `geography` | Evidence annotation/filter policy | See [Geography](Geography) |
+
+For previews, branch provenance is retained, a candidate&#x27;s support counts distinct selected internal nodes, and convergence generates **one wave** of outside candidates. A candidate is not automatically accepted.
+
+## Preview versus collection
+
+`max_entities: 0` **does not** produce an unlimited HTTP preview. It produces a 10,000-node preview budget and a separate plan ZIP when exported. Batch collection persists a traversal to disk but does not apply convergence expansion or geographic exclusion. Choosing `documented_only` can filter the displayed preview, but it is rejected by the mass collector.
+
+## Contract file caveat
+
+`contracts/scope.recipe.schema.json` is a descriptive draft. The operational validator is **`skope/scope.py::validate_recipe`**, with stricter catalog/batch restrictions in `skope/scope_profiles.py` and `skope/massive.py`. Always trust runtime validation over assumptions made from the draft schema alone.
+
+See [Scope Catalog](Scope-Catalog), [Scope Explorer](Scope-Explorer), [QID Collection](QID-Collection).
+</pre></body></html>

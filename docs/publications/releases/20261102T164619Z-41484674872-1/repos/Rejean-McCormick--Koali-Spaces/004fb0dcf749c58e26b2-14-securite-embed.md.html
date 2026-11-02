@@ -1,0 +1,29 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/14-securite-embed.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Koali-Spaces · docs/06-surface-layer/04-runtime-and-security/14-securite-embed.md</h1><p class='meta'><small>Rejean-McCormick/Koali-Spaces · 74e321432844 · SHA-256 32af054bf2dd806d</small><br><a href='https://github.com/Rejean-McCormick/Koali-Spaces/blob/74e321432844bcf102f6671e6f5449afae8acf08/docs/06-surface-layer/04-runtime-and-security/14-securite-embed.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 14. Sécurité de l&#x27;embed
+
+Pour une application web hostée, les contrôles minimums sont :
+
+- target local enregistré ;
+- schéma autorisé ;
+- host/port ou runtime ref allowlisté ;
+- pas de userinfo dans URL ;
+- pas de redirection ouverte ;
+- pas de navigation externe implicite ;
+- CSP Koali explicite ;
+- `sandbox` iframe évalué par application ;
+- permissions browser (`allow`) minimales ;
+- pas de `allow-same-origin + allow-scripts` ajouté sans justification lorsque l&#x27;isolation dépend du sandbox ;
+- pas de secrets dans URL ;
+- pas de transfert automatique de token Koali.
+
+`LOCK-KS-SURF-051` — **Koali ne partage pas automatiquement ses credentials avec l&#x27;application hostée.**
+
+`LOCK-KS-SURF-052` — **Koali ne lit pas les cookies privés du module pour fabriquer une identité.**
+
+`LOCK-KS-SURF-053` — **Koali ne réécrit pas les décisions d&#x27;autorisation du module.**
+
+`LOCK-KS-SURF-054` — **Toute permission navigateur accordée à une iframe doit être déclarée et minimale.** Caméra, micro, clipboard, geolocation, fullscreen et autres permissions ne sont pas autorisées par défaut.
+
+`LOCK-KS-SURF-055` — **Une redirection de la surface vers une origine non allowlistée doit être bloquée ou sortir explicitement du host dans un nouveau contexte contrôlé.**
+
+---
+</pre></body></html>

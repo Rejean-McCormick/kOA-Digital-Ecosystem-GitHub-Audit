@@ -1,0 +1,28 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal-LevelUpDiag- · docs/RESULT_MODEL.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal-LevelUpDiag- · docs/RESULT_MODEL.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal-LevelUpDiag- · ce1c0dead573 · SHA-256 88889c3ee567b5f8</small><br><a href='https://github.com/Rejean-McCormick/MediKristal-LevelUpDiag-/blob/ce1c0dead57361ef21f9e3fcd8043711124ba41d/docs/RESULT_MODEL.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Result and campaign model
+
+Each level writes:
+
+```text
+.levelupdiag/runs/&lt;run-id&gt;/levels/&lt;level-id&gt;/result.json
+```
+
+A campaign writes:
+
+```text
+.levelupdiag/runs/&lt;run-id&gt;/summary.json
+.levelupdiag/runs/&lt;run-id&gt;/summary.txt
+```
+
+`latest/` contains convenience copies and does not replace history.
+
+Campaign aggregation rules:
+
+1. diagnostics/config errors cannot become target success;
+2. any executed target `FAIL` makes the campaign `FAIL`;
+3. required `SKIP`, `BLOCKED`, `PARTIAL`, or `INFRA_ERROR` makes evidence incomplete (`BLOCKED`);
+4. equivalent statuses on optional levels degrade to `WARN`;
+5. `WARN` remains accepted but visible;
+6. missing results are never final evidence.
+
+A level&#x27;s `required` flag affects completeness, not whether an observed `FAIL` matters. An optional level that actually executes and finds a target failure is still a failure.
+</pre></body></html>

@@ -1,0 +1,302 @@
+<!-- Frozen source: https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/58a5fa07c18b360a1abd7a213023c6ceaa9d1533/docs/3-Layer-Model/LAYER_INDEX.md | commit: 58a5fa07c18b360a1abd7a213023c6ceaa9d1533 | SHA-256: bfe974ff213d6f26026f01a9d4b1fc6f6598b9d81991c436806021f2a964d000 -->
+
+# kOA Layer Index
+
+**File:** `docs/3-Layer-Model/LAYER_INDEX.md`  
+**Status:** Conceptual orientation  
+**Normative for kOA:** NO  
+**External normative references:** None
+
+---
+
+## 1. Purpose
+
+This file indexes the functional layers of the broader kOA architecture.
+
+The layer model does not replace the kOA Digital Ecosystem technical documentation. It provides a conceptual map of how the system moves from orientation and meaning to knowledge, decision, action, memory, learning, narrative adoption, and deployment translation.
+
+The technical documentation remains responsible for system architecture, node responsibilities, kOA-owned artifacts, operational workflows, trust boundaries, determinism, and integration constraints.
+
+---
+
+## 2. Core Flow
+
+```text
+Meaning → Knowledge → Decision → Action → Memory → Capacity
+```
+Expanded:
+
+```text
+Orientation
+→ Semantics
+→ Provenance
+→ Structured Knowledge
+→ Validation
+→ Deliberation
+→ Decision
+→ Execution
+→ Memory
+→ Resilience
+→ Learning
+→ Narrative
+→ Deployment Translation
+```
+
+Canonical kOA cycle:
+
+```text
+Know → Choose → Act → Remember
+```
+
+---
+
+## 3. Layer Index
+
+| Layer | Name                     | Core Function                                                                                                                  | Layer File                             |
+| ----: | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
+|     0 | Separation of Functions  | Separates movement, school, digital infrastructure, narrative interface, ethical safeguard, collective legitimacy, and memory. | `layers/00_separation_of_functions.md` |
+|     1 | Orientation / Mandate    | Defines purpose, mandate, ethical direction, constraints, and intended impact before the system acts.                          | `layers/01_orientation_mandate.md`     |
+|     2 | Semantics / Meaning      | Clarifies terms, concepts, categories, relationships, ambiguity, and translation.                                              | `layers/02_semantics_meaning.md`       |
+|     3 | Provenance / Ingestion   | Captures sources, contributions, inputs, context, and origin with traceability.                                                | `layers/03_provenance_ingestion.md`    |
+|     4 | Structured Knowledge     | Turns raw sources and contributions into reusable, verifiable knowledge artifacts.                                             | `layers/04_structured_knowledge.md`    |
+|     5 | Validation / Canon       | Stabilizes knowledge, releases, and artifacts without hidden mutation or unsupported claims.                                   | `layers/05_validation_canon.md`        |
+|     6 | Deliberation             | Structures disagreement, consultation, argument, synthesis, and public reasoning.                                              | `layers/06_deliberation.md`            |
+|     7 | Decision / Legitimacy    | Makes choices visible, comparable, contestable, and legitimate through multiple decision readings.                             | `layers/07_decision_legitimacy.md`     |
+|     8 | Execution                | Converts decisions into tasks, roles, workflows, follow-up, responsibility, and closure.                                       | `layers/08_execution.md`               |
+|     9 | Memory / Learning        | Turns action, results, errors, and feedback into institutional memory and future capacity.                                     | `layers/09_memory_learning.md`         |
+|    10 | Resilience / Autonomy    | Protects portability, offline use, redundancy, deterministic behavior, and non-dependence.                                     | `layers/10_resilience_autonomy.md`     |
+|    11 | Learning / Interface     | Makes the system teachable, usable, navigable, and appropriable by learners and communities.                                   | `layers/11_learning_interface.md`      |
+|    12 | Narrative / Adoption     | Makes the architecture memorable, publicly transmissible, symbolically accessible, and culturally adoptable.                   | `layers/12_narrative_adoption.md`      |
+|    13 | Deployment / Translation | Translates the layer model for pilots, partners, institutions, external vocabularies, and adoption pathways.                   | `layers/13_deployment_translation.md`  |
+
+---
+
+## 4. Layer Groups
+
+The layers can be read in four groups.
+
+### A. Foundation Layers
+
+```text
+0. Separation of Functions
+1. Orientation / Mandate
+2. Semantics / Meaning
+3. Provenance / Ingestion
+```
+
+These layers define what the system is, why it acts, what its terms mean, and where its inputs come from.
+
+Without these layers, the system becomes ambiguous, ungrounded, or vulnerable to hidden capture.
+
+### B. Knowledge and Legitimacy Layers
+
+```text
+4. Structured Knowledge
+5. Validation / Canon
+6. Deliberation
+7. Decision / Legitimacy
+```
+
+These layers transform input into knowledge, knowledge into public reasoning, and public reasoning into legitimate choices.
+
+Without these layers, information remains scattered, decisions become opaque, and expertise can become either invisible or authoritarian.
+
+### C. Action and Memory Layers
+
+```text
+8. Execution
+9. Memory / Learning
+10. Resilience / Autonomy
+```
+
+These layers convert choices into action, action into learning, and learning into durable capacity.
+
+Without these layers, the system remains performative: people discuss, decide, and announce, but do not reliably execute, remember, or improve.
+
+### D. Transmission and Adoption Layers
+
+```text
+11. Learning / Interface
+12. Narrative / Adoption
+13. Deployment / Translation
+```
+
+These layers make the system teachable, usable, memorable, and translatable for real communities, partners, and institutions.
+
+Without these layers, the architecture remains technically coherent but socially inaccessible.
+
+---
+
+## 5. Layer Dependencies
+
+Each layer depends on the layers below it.
+
+```text
+Deployment depends on adoption.
+Adoption depends on interface and learning.
+Learning depends on memory.
+Memory depends on execution.
+Execution depends on decision.
+Decision depends on deliberation.
+Deliberation depends on validated knowledge.
+Validated knowledge depends on structured knowledge.
+Structured knowledge depends on provenance.
+Provenance depends on semantic clarity.
+Semantic clarity depends on orientation.
+Orientation depends on separation of functions.
+```
+
+In short:
+
+```text
+No orientation → no coherent meaning.
+No meaning → no reliable knowledge.
+No knowledge → no grounded decision.
+No decision → no legitimate execution.
+No execution → no real action.
+No memory → no learning.
+No learning → no transmission.
+No transmission → no durable collective capacity.
+```
+
+---
+
+## 6. Relation to the kOA Digital Ecosystem Pipeline
+
+The technical kOA Digital Ecosystem pipeline can be summarized as:
+
+```text
+Ingest → Extract → Resolve → Validate → Compile → Distribute → Render → Execute → Feedback
+```
+
+The layer model is broader. It includes the technical pipeline, but also includes institutional, semantic, learning, narrative, and deployment layers.
+
+Approximate mapping:
+
+| Layer Model              | Digital Ecosystem Relation                                       |
+| ------------------------ | ---------------------------------------------------------------- |
+| Orientation / Mandate    | Keter / mandate inputs / operating constraints                   |
+| Semantics / Meaning      | semantic resolution, mappings, definitions, ambiguity handling   |
+| Provenance / Ingestion   | source capture, inputs, snapshots, traceability                  |
+| Structured Knowledge     | Kristal-adjacent knowledge artifacts and structured outputs      |
+| Validation / Canon       | conformance, gates, canonical releases, fail-closed behavior     |
+| Deliberation             | Konnaxion / ethiKos / structured public reasoning                |
+| Decision / Legitimacy    | EkoH / Smart Vote / transparent decision readings                |
+| Execution                | Orgo / SwarmCraft / task and workflow execution                  |
+| Memory / Learning        | feedback, logs, archives, updated artifacts, post-cycle learning |
+| Resilience / Autonomy    | offline operation, deterministic behavior, rollback, portability |
+| Learning / Interface     | UCKK, courses, guides, user-facing interfaces                    |
+| Narrative / Adoption     | King Klown, Kin City, public pedagogy, symbolic interface        |
+| Deployment / Translation | partner-facing explanations, pilots, adoption pathways           |
+
+---
+
+## 7. One-Sentence Definitions
+
+### Layer 0 — Separation of Functions
+
+Separates the major functions of kOA so that movement, school, infrastructure, narrative, ethics, legitimacy, and memory do not collapse into one authority.
+
+### Layer 1 — Orientation / Mandate
+
+Defines why the system acts, what it is allowed to do, and what principles constrain it.
+
+### Layer 2 — Semantics / Meaning
+
+Makes meaning explicit by clarifying words, categories, definitions, relationships, and ambiguities.
+
+### Layer 3 — Provenance / Ingestion
+
+Captures input with enough context and traceability for later verification, comparison, and reuse.
+
+### Layer 4 — Structured Knowledge
+
+Transforms inputs into reusable, verifiable knowledge artifacts.
+
+### Layer 5 — Validation / Canon
+
+Determines what can be stabilized, released, or treated as canonical without hidden mutation.
+
+### Layer 6 — Deliberation
+
+Turns disagreement, contribution, and consultation into structured public reasoning.
+
+### Layer 7 — Decision / Legitimacy
+
+Turns deliberation into transparent, contestable, multi-readable choices.
+
+### Layer 8 — Execution
+
+Turns decisions into tasks, responsibilities, workflows, and follow-through.
+
+### Layer 9 — Memory / Learning
+
+Turns action and feedback into institutional memory and improved future capacity.
+
+### Layer 10 — Resilience / Autonomy
+
+Ensures the system can remain portable, deterministic, recoverable, and usable under constraint.
+
+### Layer 11 — Learning / Interface
+
+Makes the system teachable and usable through learning paths, guides, interfaces, and UCKK.
+
+### Layer 12 — Narrative / Adoption
+
+Makes the system memorable and publicly transmissible through narrative, symbolic interface, and public pedagogy.
+
+### Layer 13 — Deployment / Translation
+
+Translates the layer model into partner-facing, pilot-facing, and institution-facing language.
+
+---
+
+## 8. External Vocabulary Bridge
+
+The layer model can be translated into recognized external vocabularies.
+
+| kOA Layer                | External Vocabulary                                                           |
+| ------------------------ | ----------------------------------------------------------------------------- |
+| Separation of Functions  | governance architecture, separation of roles                                  |
+| Orientation / Mandate    | mission, theory of change, intended impact, operating principles              |
+| Semantics / Meaning      | semantic interoperability, ontology, taxonomy, knowledge graph                |
+| Provenance / Ingestion   | provenance, data lineage, source metadata, evidence chain                     |
+| Structured Knowledge     | verified knowledge artifact, knowledge object, FAIR-aligned knowledge package |
+| Validation / Canon       | quality assurance, conformance, validation gate, canonical release            |
+| Deliberation             | public participation, deliberative democracy, civic engagement                |
+| Decision / Legitimacy    | decision support, legitimacy lens, participatory weighting                    |
+| Execution                | workflow management, case management, operational governance                  |
+| Memory / Learning        | institutional memory, organizational learning, lessons learned                |
+| Resilience / Autonomy    | resilience engineering, offline-first, fail-closed integrity                  |
+| Learning / Interface     | systems literacy, capacity building, competency-based education               |
+| Narrative / Adoption     | narrative change, public pedagogy, civic imagination                          |
+| Deployment / Translation | ecosystem building, scaling strategy, field building                          |
+
+---
+
+## 9. Intended Use
+
+Use this index to:
+
+1. navigate the layer files;
+2. keep layer definitions consistent;
+3. explain kOA without collapsing everything into one module;
+4. translate internal kOA vocabulary into external language;
+5. identify which layer matters for a given partner, pilot, or technical document.
+
+This index is not a technical contract. It is a conceptual navigation document.
+
+---
+
+## 10. Maintenance Rule
+
+When a new layer is added, renamed, merged, or removed:
+
+1. update this file;
+2. update `LAYER_MODEL.md`;
+3. update the corresponding file under `layers/`;
+4. verify that no technical contract in the Digital Ecosystem docs is duplicated or contradicted.
+
+Layer documentation must explain the architecture without redefining technical schemas, artifact formats, or normative Kristal contracts.
+
+

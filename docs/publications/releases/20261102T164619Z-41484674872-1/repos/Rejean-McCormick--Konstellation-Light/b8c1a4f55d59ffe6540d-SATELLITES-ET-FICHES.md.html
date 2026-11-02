@@ -1,0 +1,32 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konstellation-Light · docs/SATELLITES-ET-FICHES.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konstellation-Light · docs/SATELLITES-ET-FICHES.md</h1><p class='meta'><small>Rejean-McCormick/Konstellation-Light · b29e9306fd80 · SHA-256 e3d9ce06e9593777</small><br><a href='https://github.com/Rejean-McCormick/Konstellation-Light/blob/b29e9306fd809812f65af178e0ea28676b2bda87/docs/SATELLITES-ET-FICHES.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Secondary satellites and detail cards — revision 2 (October 13, 2026)
+
+## Behavior
+
+- Hovering over or keyboard-focusing a satellite displays an overlay of **its own neighbors**, without changing the center, history, or edges.
+- Neighbors are ranked under the existing neighborhood rule and selected through an adjacency index built once per render, rather than scanning the graph on every hover. The primary center is excluded **before** the six-neighbor limit.
+- The overlay is informational only and not clickable. Clicking the bubble still navigates.
+- Layout searches across multiple radii while avoiding initial bubbles, already positioned previews, and canvas bounds. This is a heuristic, not a zero-collision guarantee.
+
+## Standardized detail cards
+
+- The “i” badge appears only for recognized families: person, place, organization, work, event (based on types actually loaded from the data).
+- Displayed fields depend on family and declared description/source/aliases/place/period. No documentary inference.
+- The badge is separate from navigation. Focus moves to Close and then returns to the badge; Escape closes the non-modal card.
+- If no image is declared or loading fails, show a pictogram. External HTTP URLs, SVG, requests and unsafe paths are rejected.
+
+## Using an image in local curation
+
+For a `konstellation.semantic-curation/1.0` preview, put an image under `portraits/figure.png` next to `curation.json` and declare `&quot;portrait&quot;: &quot;portraits/figure.png&quot;` on the relevant node.
+
+`node scripts/build-semantic-preview.mjs --input /path/curation.json --out /path/new-site --local YES`
+
+The build checks that the file is local (no symlinks or traversal), its extension matches its raster signature, and it is under 2 MiB. It copies the image to `images/&lt;sha256&gt;.&lt;extension&gt;` and declares `./images/...` in the bundle. This fingerprint names the media; the reader does **not independently reverify** its SHA-256 signature outside the bundle.
+
+The operator must supply and authorize the image. No portrait is downloaded or generated automatically. The default packaged public site remains a **C4-locked demo**; this portrait workflow is for a candidate local site.
+
+## Limitations
+
+- Labels may overlap on small screens and dense graphs.
+- No access to unpublished data: Light shows only nodes/links declared in the verified local bundle.
+- Browser testing could not be performed in this environment; JS and Python suites passed.
+</pre></body></html>

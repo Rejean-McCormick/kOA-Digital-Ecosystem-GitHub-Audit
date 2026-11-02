@@ -1,0 +1,24 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/11-decisions/0002-index-operationnel-separe.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/11-decisions/0002-index-operationnel-separe.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 705595220667a12a</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/11-decisions/0002-index-operationnel-separe.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># ADR 0002 — Index opérationnel séparé du catalogue de contenu
+
+**Date** : 2026-10-31 · **Statut** : PARTIELLEMENT LIVRÉ, évolution v2 CIBLE.
+
+## Contexte
+
+Les catalogues sémantiques de plusieurs dizaines/centaines de Mo ne sont pas adaptés à l&#x27;historique court des verdicts. Les rapports Arketype/Diag vivaient dans des dossiers différents, et rescanner effaçait leur présence en mémoire.
+
+## Décision
+
+Conserver `kristal-contenu-global.sqlite3` comme cache descriptif et `kristal-manager-operations.sqlite3` comme projection centrale des opérations. Référencer les gros rapports par URI/hashes, pas les recopier en entier. Les workspaces restent autorité.
+
+## Conséquences
+
+L&#x27;index se sauvegarde et se migre indépendamment du catalogue lourd. Il peut tomber en panne sans détruire le canon. Il faut cependant un protocole de réconciliation entre source, observation et preuve, et une explication de la fraîcheur.
+
+## Alternatives rejetées
+
+Une seule gigantesque table mélangeant assertions et verdicts; un CSV `BILAN` comme base de vérité; des attributs `row[&#x27;diag_report&#x27;]` exclusifs à la session.
+
+## Validation
+
+Index v1 conservé, migration vers modèle `runs/observations_v2` sans perte et tests AC-05/06/08/12/18. Les données historiques non vérifiées restent non actuelles.
+</pre></body></html>

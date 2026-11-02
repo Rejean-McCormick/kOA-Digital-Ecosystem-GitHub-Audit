@@ -1,0 +1,26 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/05-moteurs/catalogue-global-et-analyse.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/05-moteurs/catalogue-global-et-analyse.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 a95f60f4af1f96fc</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/05-moteurs/catalogue-global-et-analyse.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Catalogue de contenu, analyse globale et triage
+
+## Existant
+
+`content_catalog.py` construit l&#x27;index SQLite de contenu et l&#x27;aperçu HTML; `global_analysis.analyze_all()` peut reconstruire ou réutiliser le catalogue, produire un audit UNESCO, un triage sémantique et des vérifications locales. Les sorties sont dirigées hors des Kristals et une analyse crée un dossier de rapport unique.
+
+## Portée
+
+Le catalogue mesure et indexe les contenus observables; il n&#x27;est pas un moteur de preuve de vérité des KQ/KP. L&#x27;analyse globale affiche les statuts `blocker`, `warning`, `review`, `info` selon leurs règles, mais une action `review` signifie souvent **validation sémantique nécessaire** et non panne technique.
+
+## 16 contrats natifs
+
+La dernière analyse affiche 16 `native_observed`, tous avec `CONTENT_OR_ALIGNMENT_REVIEW: content inference limited`. Ce résultat signifie que le lecteur de contenu a des **limites de couverture**, pas que les sources sont corrompues. L&#x27;optimisation cible ajoute des adaptateurs natifs typés, une mesure « couvert/ignoré/échec » et le lien vers les fichiers réellement inspectés.
+
+## Recommandations
+
+1. Découpler construction de catalogue et calcul des propositions sémantiques : chacun peut être rejoué de façon traçable.
+2. Garder un cache indexé par périmètre et hash; éviter les relectures des versions v11 historiques identiques.
+3. Ne pas relire intégralement des couches de dictionnaires similaires si les hashes l&#x27;autorisent.
+4. Distinguer « métadonnées UNESCO proposées existantes » d&#x27;une incohérence de code.
+5. Centraliser les observations finales dans le registre, conserver les fichiers analytiques détaillés hors SQLite léger.
+
+## Tests de comparaison
+
+Même source + même catalogue = résultat équivalent; modification d&#x27;une seule source = invalidation ciblée; une entrée d&#x27;archive historique ne compte pas comme nouveau Kristal; absence de lecture native = couverture limitée, non verdict négatif sur la vérité métier.
+</pre></body></html>

@@ -1,0 +1,80 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kompiler · docs/03-runtime/adapter-contract.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kompiler · docs/03-runtime/adapter-contract.md</h1><p class='meta'><small>Rejean-McCormick/Kompiler · cf4836ccf274 · SHA-256 8df3a8ab23f55e66</small><br><a href='https://github.com/Rejean-McCormick/Kompiler/blob/cf4836ccf2741b609c562254d09ba47d7e9a6187/docs/03-runtime/adapter-contract.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Kompiler Adapter Contract
+
+## Purpose
+
+An adapter translates semantic Kompiler operations into trusted **read-only knowledge/projection reads** and normalizes the returned shape. It does not acquire or canonically store source material.
+
+## Required adapter interface
+
+Conceptually:
+
+```python
+class Adapter:
+    def describe(self) -&gt; TargetCapability: ...
+    def inspect_source(self) -&gt; SourceSnapshot: ...
+    def execute(self, operation: ResolvedOperation, ctx: RunContext) -&gt; RawResult: ...
+    def normalize(self, raw: RawResult, operation: ResolvedOperation) -&gt; list[NormalizedRecord]: ...
+    def health(self) -&gt; HealthStatus: ...
+```
+
+The concrete Python interface MAY differ, but these responsibilities MUST remain observable.
+
+## Adapter manifest
+
+Each adapter has trusted local metadata:
+
+```toml
+id = &quot;kristal-scolqc&quot;
+version = &quot;1.0.0&quot;
+target_id = &quot;ScolQc&quot;
+kind = &quot;subprocess&quot;
+read_only = true
+
+[source]
+root = &quot;/path/to/Kristal-ScolQc/knowledge-base&quot;
+
+[execution]
+python = &quot;/path/to/python&quot;
+script = &quot;tools/query.py&quot;
+timeout_ms = 30000
+```
+
+Untrusted Query Plans cannot override `source.root`, executable paths, or adapter kind.
+
+## Operation mapping
+
+Adapter mappings are explicit. Example:
+
+```text
+Kompiler: target=ScolQc operation=progression
+    ↓ trusted adapter mapping
+Native:  python tools/query.py progression-grade &lt;grade&gt; &lt;discipline?&gt;
+```
+
+The adapter validates native preconditions and parses the exact output shape.
+
+## Normalization requirements
+
+An adapter MUST:
+
+- preserve source IDs;
+- preserve source epistemic labels;
+- preserve provenance/evidence references when available;
+- label adapter-derived fields;
+- produce stable ordering when its capability declares determinism;
+- reject malformed native output;
+- never infer stronger validation or authority than source data states.
+
+## Source identity
+
+For Kristal v6 state files, adapters SHOULD verify declared identity when feasible before execution, using the active state identity contract. For legacy packs, use the strongest declared integrity mechanism available.
+
+## Versioning
+
+Changing an operation&#x27;s semantic meaning is a breaking adapter capability change even if the native command name is unchanged.
+
+
+## Authority boundary
+
+Adapters MUST NOT turn Kompiler into a source crawler/store, DaaT replacement, or Kristall identity authority. Direct application-owned `source-catalog/` access is not a built-in adapter pattern. Source bytes/snapshots remain Médiathèque-owned; KQ/KP/KA/KS semantics remain Kristal/Kristall-owned.
+</pre></body></html>

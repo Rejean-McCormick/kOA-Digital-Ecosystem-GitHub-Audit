@@ -1,0 +1,853 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Konnaxion-Capsule-Manager · docs/DOC-19_Konnaxion_GUI_Page_Split_Droplet_Payload_Contract.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Konnaxion-Capsule-Manager · docs/DOC-19_Konnaxion_GUI_Page_Split_Droplet_Payload_Contract.md</h1><p class='meta'><small>Rejean-McCormick/Konnaxion-Capsule-Manager · a137f3c1ab5e · SHA-256 dd67f9706daff66a</small><br><a href='https://github.com/Rejean-McCormick/Konnaxion-Capsule-Manager/blob/a137f3c1ab5e7a79887074560b11a2a6b0a70518/docs/DOC-19_Konnaxion_GUI_Page_Split_Droplet_Payload_Contract.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Konnaxion Manager GUI Shared Variable Contract
+
+Use this as the shared variable contract across parallel branches.
+
+Keep these names exact so `static.py`, `page_views.py`, `page_parts/*`,
+`page_forms.py`, `form_targets.py`, `actions.py`, and tests line up.
+
+## 1. Canonical page split contract
+
+Every page-part module should export one renderer with this signature:
+
+```python
+from collections.abc import Mapping
+from typing import Any
+
+def render(context: Mapping[str, Any]) -&gt; str:
+    ...
+````
+
+`page_views.py` imports those renderers and wires them into `PAGE_VIEWS`.
+
+```python
+from collections.abc import Callable, Mapping
+from typing import Any
+
+PageBuilder = Callable[[Mapping[str, Any]], str]
+```
+
+No page-part file should call `html_response(...)`.
+
+Only `page_views.py` may wrap page content in `html_response(...)`.
+
+Deployment actions are split out of the Targets page and rendered by:
+
+```text
+kx_manager/ui/page_parts/deploy.py
+```
+
+## 2. Canonical route variables
+
+Use these routes in `static.py` and `page_views.py`.
+
+```python
+UI_BASE_PATH = &quot;/ui&quot;
+
+UI_PAGE_ROUTES: tuple[str, ...] = (
+    &quot;/ui&quot;,
+    &quot;/ui/capsules&quot;,
+    &quot;/ui/instances&quot;,
+    &quot;/ui/security&quot;,
+    &quot;/ui/network&quot;,
+    &quot;/ui/backups&quot;,
+    &quot;/ui/restore&quot;,
+    &quot;/ui/logs&quot;,
+    &quot;/ui/health&quot;,
+    &quot;/ui/settings&quot;,
+    &quot;/ui/targets&quot;,
+    &quot;/ui/deploy&quot;,
+    &quot;/ui/about&quot;,
+)
+
+PAGE_ROUTES: tuple[str, ...] = UI_PAGE_ROUTES
+```
+
+Use this page map shape in `page_views.py`:
+
+```python
+PAGE_VIEWS: dict[str, PageView] = {
+    &quot;/ui&quot;: PageView(&quot;/ui&quot;, &quot;Dashboard&quot;, &quot;...&quot;, dashboard.render),
+    &quot;/ui/capsules&quot;: PageView(&quot;/ui/capsules&quot;, &quot;Capsules&quot;, &quot;...&quot;, capsules.render),
+    &quot;/ui/instances&quot;: PageView(&quot;/ui/instances&quot;, &quot;Instances&quot;, &quot;...&quot;, instances.render),
+    &quot;/ui/security&quot;: PageView(&quot;/ui/security&quot;, &quot;Security&quot;, &quot;...&quot;, security.render),
+    &quot;/ui/network&quot;: PageView(&quot;/ui/network&quot;, &quot;Network&quot;, &quot;...&quot;, network.render),
+    &quot;/ui/backups&quot;: PageView(&quot;/ui/backups&quot;, &quot;Backups&quot;, &quot;...&quot;, backups.render),
+    &quot;/ui/restore&quot;: PageView(&quot;/ui/restore&quot;, &quot;Restore&quot;, &quot;...&quot;, restore.render),
+    &quot;/ui/logs&quot;: PageView(&quot;/ui/logs&quot;, &quot;Logs&quot;, &quot;...&quot;, logs.render),
+    &quot;/ui/health&quot;: PageView(&quot;/ui/health&quot;, &quot;Health&quot;, &quot;...&quot;, health.render),
+    &quot;/ui/settings&quot;: PageView(&quot;/ui/settings&quot;, &quot;Settings&quot;, &quot;...&quot;, settings.render),
+    &quot;/ui/targets&quot;: PageView(&quot;/ui/targets&quot;, &quot;Targets&quot;, &quot;...&quot;, targets.render),
+    &quot;/ui/deploy&quot;: PageView(&quot;/ui/deploy&quot;, &quot;Deploy&quot;, &quot;...&quot;, deploy.render),
+    &quot;/ui/about&quot;: PageView(&quot;/ui/about&quot;, &quot;About&quot;, &quot;...&quot;, about.render),
+}
+```
+
+Navigation must include:
+
+```text
+/ui/deploy
+```
+
+## 3. Canonical default variables
+
+Put these in:
+
+```text
+kx_manager/ui/page_parts/common.py
+```
+
+```python
+DEFAULT_PUBLIC_EXPIRATION = &quot;2026-04-30T22:00:00Z&quot;
+DEFAULT_PRIVATE_HOST = &quot;konnaxion.local&quot;
+
+DEFAULT_DROPLET_NAME = &quot;konnaxion-droplet&quot;
+DEFAULT_DROPLET_HOST = &quot;&quot;
+DEFAULT_DROPLET_USER = &quot;konnaxion&quot;
+DEFAULT_SSH_KEY_PATH = &quot;&quot;
+DEFAULT_SSH_PORT = 22
+DEFAULT_REMOTE_KX_ROOT = &quot;/opt/konnaxion&quot;
+DEFAULT_REMOTE_CAPSULE_DIR = &quot;/opt/konnaxion/capsules&quot;
+DEFAULT_DROPLET_DOMAIN = &quot;&quot;
+DEFAULT_REMOTE_AGENT_URL = &quot;&quot;
+```
+
+Do not hardcode a real IP as a default. Let it come from submitted/context values.
+
+Do not silently invent `domain` from `droplet_host`.
+
+`domain` must be submitted explicitly by the UI form or caller.
+
+`remote_agent_url` defaults to blank. Blank means Droplet Agent uses SSH-local transport:
+
+```text
+Manager on Windows
+  -&gt; ssh droplet_user@droplet_host
+  -&gt; curl http://127.0.0.1:8765/v1/... on the Droplet
+```
+
+Do not default Droplet Agent transport to a local forwarded tunnel URL such as:
+
+```text
+http://127.0.0.1:18765/v1
+```
+
+## 4. Canonical payload builders
+
+These should live in:
+
+```text
+kx_manager/ui/page_parts/common.py
+```
+
+### 4.1 Default payload
+
+```python
+from collections.abc import Mapping
+from typing import Any
+
+def default_payload(context: Mapping[str, Any]) -&gt; dict[str, Any]:
+    return {
+        &quot;instance_id&quot;: context.get(&quot;instance_id&quot;, DEFAULT_INSTANCE_ID),
+        &quot;capsule_id&quot;: context.get(&quot;capsule_id&quot;, DEFAULT_CAPSULE_ID),
+        &quot;capsule_version&quot;: context.get(&quot;capsule_version&quot;, DEFAULT_CAPSULE_VERSION),
+        &quot;capsule_file&quot;: context.get(&quot;capsule_file&quot;, DEFAULT_CAPSULE_FILE),
+        &quot;capsule_path&quot;: context.get(
+            &quot;capsule_path&quot;,
+            context.get(&quot;capsule_file&quot;, DEFAULT_CAPSULE_FILE),
+        ),
+        &quot;source_dir&quot;: context.get(&quot;source_dir&quot;, DEFAULT_SOURCE_DIR),
+        &quot;capsule_output_dir&quot;: context.get(
+            &quot;capsule_output_dir&quot;,
+            DEFAULT_CAPSULE_OUTPUT_DIR,
+        ),
+        &quot;target_mode&quot;: context.get(&quot;target_mode&quot;, &quot;intranet&quot;),
+        &quot;network_profile&quot;: context.get(&quot;network_profile&quot;, &quot;intranet_private&quot;),
+        &quot;exposure_mode&quot;: context.get(&quot;exposure_mode&quot;, &quot;private&quot;),
+        &quot;runtime_root&quot;: context.get(&quot;runtime_root&quot;, DEFAULT_RUNTIME_ROOT),
+        &quot;capsule_dir&quot;: context.get(
+            &quot;capsule_dir&quot;,
+            f&quot;{DEFAULT_RUNTIME_ROOT}\\capsules&quot;,
+        ),
+        &quot;host&quot;: context.get(&quot;host&quot;, DEFAULT_PRIVATE_HOST),
+        &quot;domain&quot;: context.get(&quot;domain&quot;, &quot;&quot;),
+        &quot;runtime_url&quot;: context.get(&quot;runtime_url&quot;, &quot;http://127.0.0.1&quot;),
+    }
+```
+
+### 4.2 Local payload
+
+```python
+def local_payload(context: Mapping[str, Any]) -&gt; dict[str, Any]:
+    payload = default_payload(context)
+    payload.update(
+        {
+            &quot;target_mode&quot;: &quot;local&quot;,
+            &quot;network_profile&quot;: &quot;local_only&quot;,
+            &quot;exposure_mode&quot;: &quot;private&quot;,
+            &quot;host&quot;: &quot;127.0.0.1&quot;,
+            &quot;domain&quot;: &quot;&quot;,
+            &quot;confirmed&quot;: &quot;true&quot;,
+        }
+    )
+    return payload
+```
+
+### 4.3 Intranet payload
+
+```python
+def intranet_payload(context: Mapping[str, Any]) -&gt; dict[str, Any]:
+    payload = default_payload(context)
+    payload.update(
+        {
+            &quot;target_mode&quot;: &quot;intranet&quot;,
+            &quot;network_profile&quot;: &quot;intranet_private&quot;,
+            &quot;exposure_mode&quot;: context.get(&quot;exposure_mode&quot;, &quot;private&quot;),
+            &quot;host&quot;: context.get(&quot;host&quot;, DEFAULT_PRIVATE_HOST),
+            &quot;domain&quot;: &quot;&quot;,
+            &quot;confirmed&quot;: &quot;true&quot;,
+        }
+    )
+    return payload
+```
+
+### 4.4 Dedicated Droplet payload
+
+```python
+def droplet_payload(context: Mapping[str, Any]) -&gt; dict[str, Any]:
+    capsule_file = (
+        context.get(&quot;capsule_file&quot;)
+        or context.get(&quot;capsule_path&quot;)
+        or DEFAULT_CAPSULE_FILE
+    )
+
+    droplet_host = (
+        context.get(&quot;droplet_host&quot;)
+        or context.get(&quot;host&quot;)
+        or context.get(&quot;target_host&quot;)
+        or DEFAULT_DROPLET_HOST
+    )
+
+    domain = (
+        context.get(&quot;domain&quot;)
+        or context.get(&quot;droplet_domain&quot;)
+        or DEFAULT_DROPLET_DOMAIN
+    )
+
+    remote_kx_root = (
+        context.get(&quot;remote_kx_root&quot;)
+        or context.get(&quot;runtime_root&quot;)
+        or context.get(&quot;remote_root&quot;)
+        or context.get(&quot;droplet_kx_root&quot;)
+        or DEFAULT_REMOTE_KX_ROOT
+    )
+
+    remote_capsule_dir = (
+        context.get(&quot;remote_capsule_dir&quot;)
+        or context.get(&quot;capsule_dir&quot;)
+        or context.get(&quot;target_capsule_dir&quot;)
+        or context.get(&quot;droplet_capsule_dir&quot;)
+        or DEFAULT_REMOTE_CAPSULE_DIR
+    )
+
+    return {
+        &quot;instance_id&quot;: context.get(&quot;instance_id&quot;, DEFAULT_INSTANCE_ID),
+        &quot;capsule_id&quot;: context.get(&quot;capsule_id&quot;, DEFAULT_CAPSULE_ID),
+        &quot;capsule_version&quot;: context.get(&quot;capsule_version&quot;, DEFAULT_CAPSULE_VERSION),
+        &quot;capsule_file&quot;: capsule_file,
+        &quot;capsule_path&quot;: capsule_file,
+        &quot;source_dir&quot;: context.get(&quot;source_dir&quot;, DEFAULT_SOURCE_DIR),
+        &quot;capsule_output_dir&quot;: context.get(
+            &quot;capsule_output_dir&quot;,
+            DEFAULT_CAPSULE_OUTPUT_DIR,
+        ),
+
+        &quot;target_mode&quot;: &quot;droplet&quot;,
+        &quot;network_profile&quot;: &quot;public_vps&quot;,
+        &quot;exposure_mode&quot;: &quot;public&quot;,
+        &quot;public_mode_enabled&quot;: &quot;true&quot;,
+        &quot;public_mode_expires_at&quot;: &quot;&quot;,
+
+        &quot;droplet_name&quot;: context.get(&quot;droplet_name&quot;, DEFAULT_DROPLET_NAME),
+        &quot;droplet_host&quot;: droplet_host,
+        &quot;host&quot;: droplet_host,
+        &quot;droplet_user&quot;: (
+            context.get(&quot;droplet_user&quot;)
+            or context.get(&quot;ssh_user&quot;)
+            or context.get(&quot;user&quot;)
+            or DEFAULT_DROPLET_USER
+        ),
+        &quot;ssh_key_path&quot;: (
+            context.get(&quot;ssh_key_path&quot;)
+            or context.get(&quot;droplet_ssh_key&quot;)
+            or context.get(&quot;ssh_key&quot;)
+            or DEFAULT_SSH_KEY_PATH
+        ),
+        &quot;ssh_port&quot;: context.get(&quot;ssh_port&quot;, DEFAULT_SSH_PORT),
+        &quot;remote_kx_root&quot;: remote_kx_root,
+        &quot;runtime_root&quot;: remote_kx_root,
+        &quot;remote_capsule_dir&quot;: remote_capsule_dir,
+        &quot;capsule_dir&quot;: remote_capsule_dir,
+        &quot;domain&quot;: domain,
+        &quot;droplet_domain&quot;: domain,
+        &quot;remote_agent_url&quot;: (
+            context.get(&quot;remote_agent_url&quot;)
+            or context.get(&quot;droplet_agent_url&quot;)
+            or DEFAULT_REMOTE_AGENT_URL
+        ),
+        &quot;confirmed&quot;: &quot;true&quot;,
+    }
+```
+
+Important: Droplet operation forms must use `droplet_payload(context)`, never `default_payload(context)`.
+
+Important: `droplet_payload(context)` may return `domain=&quot;&quot;` when no domain was supplied. That is intentional. Validation must reject missing `domain`; the payload builder must not hide the missing value by inventing one from the IP.
+
+## 5. Canonical Droplet action sets
+
+Use the same sets in `form_targets.py`, tests, `page_parts/targets.py`, and `page_parts/deploy.py`.
+
+```python
+DROPLET_ACTIONS: frozenset[str] = frozenset(
+    {
+        &quot;set_target_droplet&quot;,
+        &quot;deploy_droplet&quot;,
+        &quot;check_droplet_agent&quot;,
+        &quot;copy_capsule_to_droplet&quot;,
+        &quot;start_droplet_instance&quot;,
+    }
+)
+
+DROPLET_CAPSULE_REQUIRED_ACTIONS: frozenset[str] = frozenset(
+    {
+        &quot;deploy_droplet&quot;,
+        &quot;copy_capsule_to_droplet&quot;,
+        &quot;start_droplet_instance&quot;,
+    }
+)
+```
+
+For these operation actions, force/default:
+
+```python
+target_mode = &quot;droplet&quot;
+network_profile = &quot;public_vps&quot;
+exposure_mode = &quot;public&quot;
+confirmed = True
+```
+
+`set_target_droplet` must still reject missing `confirmed`.
+
+Operation actions may force confirmation because they are explicit Droplet operation forms.
+
+## 6. Canonical target form names
+
+Use these exact form field names in the Droplet target form and operation forms:
+
+```text
+target_mode
+network_profile
+exposure_mode
+instance_id
+capsule_file
+capsule_path
+droplet_name
+droplet_host
+droplet_user
+ssh_key_path
+ssh_port
+remote_kx_root
+remote_capsule_dir
+domain
+droplet_domain
+remote_agent_url
+confirmed
+```
+
+Required visible Droplet target fields:
+
+```text
+instance_id
+droplet_name
+droplet_host
+droplet_user
+ssh_key_path
+ssh_port
+remote_kx_root
+remote_capsule_dir
+domain
+confirmed
+```
+
+Required visible Droplet operation fields when the action copies/deploys a capsule:
+
+```text
+capsule_file
+```
+
+Aliases are allowed only as input aliases:
+
+```text
+target_host -&gt; droplet_host / host
+ssh_user -&gt; droplet_user
+user -&gt; droplet_user
+droplet_ssh_key -&gt; ssh_key_path
+ssh_key -&gt; ssh_key_path
+remote_root -&gt; remote_kx_root
+droplet_kx_root -&gt; remote_kx_root
+droplet_capsule_dir -&gt; remote_capsule_dir
+target_capsule_dir -&gt; capsule_dir
+droplet_domain -&gt; domain
+droplet_agent_url -&gt; remote_agent_url
+```
+
+## 7. Canonical alias normalization additions
+
+In `static.py::normalize_payload_aliases(...)`, ensure these are present:
+
+```python
+if data.get(&quot;droplet_host&quot;) and not data.get(&quot;host&quot;):
+    data[&quot;host&quot;] = data[&quot;droplet_host&quot;]
+if (
+    data.get(&quot;host&quot;)
+    and not data.get(&quot;droplet_host&quot;)
+    and data.get(&quot;target_mode&quot;) == &quot;droplet&quot;
+):
+    data[&quot;droplet_host&quot;] = data[&quot;host&quot;]
+
+if data.get(&quot;remote_kx_root&quot;) and not data.get(&quot;runtime_root&quot;):
+    data[&quot;runtime_root&quot;] = data[&quot;remote_kx_root&quot;]
+if (
+    data.get(&quot;runtime_root&quot;)
+    and not data.get(&quot;remote_kx_root&quot;)
+    and data.get(&quot;target_mode&quot;) == &quot;droplet&quot;
+):
+    data[&quot;remote_kx_root&quot;] = data[&quot;runtime_root&quot;]
+
+if data.get(&quot;remote_capsule_dir&quot;) and not data.get(&quot;capsule_dir&quot;):
+    data[&quot;capsule_dir&quot;] = data[&quot;remote_capsule_dir&quot;]
+if (
+    data.get(&quot;capsule_dir&quot;)
+    and not data.get(&quot;remote_capsule_dir&quot;)
+    and data.get(&quot;target_mode&quot;) == &quot;droplet&quot;
+):
+    data[&quot;remote_capsule_dir&quot;] = data[&quot;capsule_dir&quot;]
+
+if data.get(&quot;domain&quot;) and not data.get(&quot;droplet_domain&quot;):
+    data[&quot;droplet_domain&quot;] = data[&quot;domain&quot;]
+if data.get(&quot;droplet_domain&quot;) and not data.get(&quot;domain&quot;):
+    data[&quot;domain&quot;] = data[&quot;droplet_domain&quot;]
+
+if data.get(&quot;capsule_file&quot;) and not data.get(&quot;capsule_path&quot;):
+    data[&quot;capsule_path&quot;] = data[&quot;capsule_file&quot;]
+if data.get(&quot;capsule_path&quot;) and not data.get(&quot;capsule_file&quot;):
+    data[&quot;capsule_file&quot;] = data[&quot;capsule_path&quot;]
+```
+
+Do not add this fallback:
+
+```python
+if not data.get(&quot;domain&quot;):
+    data[&quot;domain&quot;] = data.get(&quot;droplet_host&quot;) or data.get(&quot;host&quot;)
+```
+
+That would bypass required-domain validation.
+
+## 8. Canonical page-part imports
+
+Every page-part file should import shared helpers from `common.py`, not from `page_views.py`.
+
+Example:
+
+```python
+from kx_manager.ui.page_parts.common import (
+    DEFAULT_DROPLET_DOMAIN,
+    DEFAULT_DROPLET_HOST,
+    DEFAULT_DROPLET_NAME,
+    DEFAULT_DROPLET_USER,
+    DEFAULT_REMOTE_AGENT_URL,
+    DEFAULT_REMOTE_CAPSULE_DIR,
+    DEFAULT_REMOTE_KX_ROOT,
+    DEFAULT_SSH_KEY_PATH,
+    DEFAULT_SSH_PORT,
+    action_bar,
+    action_form,
+    button_form,
+    capsule_file_field,
+    confirmed_field,
+    default_payload,
+    droplet_operation_form,
+    droplet_payload,
+    field,
+    instance_id_field,
+)
+```
+
+Avoid underscored cross-module helpers in the new split. Use public helper names:
+
+```text
+field
+action_form
+button_form
+action_bar
+default_payload
+droplet_payload
+droplet_operation_form
+```
+
+Do not use:
+
+```text
+_field
+_action_form
+_button_form
+_action_bar
+_default_payload
+_droplet_payload
+_droplet_operation_form
+```
+
+## 9. Compatibility `page_forms.py`
+
+`page_forms.py` should become a facade with this stable function:
+
+```python
+from collections.abc import Mapping
+from typing import Any
+
+from kx_manager.ui.page_parts import render_page_body
+
+def render_page_forms(route: str, data: Mapping[str, Any] | None = None) -&gt; str:
+    return render_page_body(route, dict(data or {}))
+```
+
+It must not own page bodies anymore.
+
+## 10. Target page rendering rules
+
+`page_parts/targets.py` should render only target configuration forms:
+
+```text
+set_target_local
+set_target_intranet
+set_target_temporary_public
+set_target_droplet
+```
+
+The Droplet target form must render `domain` as required:
+
+```python
+field(&quot;domain&quot;, &quot;Domain&quot;, payload[&quot;domain&quot;], required=True)
+```
+
+The Targets page must not render these deployment/operation actions anymore:
+
+```text
+deploy_local
+deploy_intranet
+deploy_droplet
+check_droplet_agent
+copy_capsule_to_droplet
+start_droplet_instance
+```
+
+Those belong in:
+
+```text
+page_parts/deploy.py
+```
+
+## 11. Deploy page rendering rules
+
+`page_parts/deploy.py` should render deployment and operation actions:
+
+```text
+deploy_local
+deploy_intranet
+deploy_droplet
+check_droplet_agent
+copy_capsule_to_droplet
+start_droplet_instance
+```
+
+For these actions, use full Droplet operation forms, not hidden-only buttons:
+
+```text
+deploy_droplet
+check_droplet_agent
+copy_capsule_to_droplet
+start_droplet_instance
+```
+
+`deploy_droplet`, `copy_capsule_to_droplet`, and `start_droplet_instance` must include visible `capsule_file`.
+
+`check_droplet_agent` does not require `capsule_file` and must not submit `capsule_file`, even as hidden input.
+
+`deploy_local` and `deploy_intranet` may remain compact button forms, but their payloads must come from `local_payload(context)` and `intranet_payload(context)`.
+
+## 12. Test payload alignment
+
+In tests, `action_payload(...)` must use Droplet values for all Droplet actions:
+
+```python
+if action in {
+    &quot;set_target_droplet&quot;,
+    &quot;deploy_droplet&quot;,
+    &quot;check_droplet_agent&quot;,
+    &quot;copy_capsule_to_droplet&quot;,
+    &quot;start_droplet_instance&quot;,
+}:
+    base.update(
+        {
+            &quot;target_mode&quot;: &quot;droplet&quot;,
+            &quot;network_profile&quot;: &quot;public_vps&quot;,
+            &quot;exposure_mode&quot;: &quot;public&quot;,
+            &quot;droplet_name&quot;: &quot;ubuntu-s-1vcpu-2gb-tor1&quot;,
+            &quot;droplet_host&quot;: &quot;203.0.113.10&quot;,
+            &quot;host&quot;: &quot;203.0.113.10&quot;,
+            &quot;droplet_user&quot;: &quot;konnaxion&quot;,
+            &quot;ssh_key_path&quot;: str(ssh_key_path),
+            &quot;ssh_port&quot;: &quot;22&quot;,
+            &quot;remote_kx_root&quot;: &quot;/opt/konnaxion&quot;,
+            &quot;runtime_root&quot;: &quot;/opt/konnaxion&quot;,
+            &quot;remote_capsule_dir&quot;: &quot;/opt/konnaxion/capsules&quot;,
+            &quot;capsule_dir&quot;: &quot;/opt/konnaxion/capsules&quot;,
+            &quot;domain&quot;: &quot;203.0.113.10.sslip.io&quot;,
+            &quot;droplet_domain&quot;: &quot;203.0.113.10.sslip.io&quot;,
+            &quot;remote_agent_url&quot;: &quot;&quot;,
+            &quot;confirmed&quot;: &quot;true&quot;,
+        }
+    )
+```
+
+Use `konnaxion` as SSH user in UI test payloads, matching the created Droplet user.
+
+Use blank `remote_agent_url` in canonical Droplet tests. Blank means private Agent over SSH-local transport. Only use a non-loopback `remote_agent_url` in tests explicitly covering direct public Agent mode.
+
+## 13. Main invariant
+
+This must be true after the split:
+
+```python
+assert droplet_payload(context)[&quot;target_mode&quot;] == &quot;droplet&quot;
+assert droplet_payload(context)[&quot;network_profile&quot;] == &quot;public_vps&quot;
+assert droplet_payload(context)[&quot;exposure_mode&quot;] == &quot;public&quot;
+```
+
+This must never happen again:
+
+```json
+{
+  &quot;action&quot;: &quot;copy_capsule_to_droplet&quot;,
+  &quot;target_mode&quot;: &quot;intranet&quot;
+}
+```
+
+That submitted payload is the exact bug to prevent.
+
+This validation must remain true:
+
+```python
+payload = droplet_payload({&quot;droplet_host&quot;: &quot;203.0.113.10&quot;})
+assert payload[&quot;domain&quot;] == &quot;&quot;
+
+# Later validation must reject this until domain is supplied.
+```
+
+## 14. Droplet Agent transport invariant
+
+Droplet mode must keep the Agent private by default:
+
+```text
+remote_agent_url = &quot;&quot;
+agent_transport = &quot;ssh&quot;
+agent_health_url = &quot;http://127.0.0.1:8765/v1/health&quot;
+```
+
+Manager must execute Agent calls as:
+
+```text
+ssh droplet_user@droplet_host &quot;curl http://127.0.0.1:8765/v1/&lt;endpoint&gt;&quot;
+```
+
+A loopback `remote_agent_url` such as this must not be treated as a direct HTTP transport:
+
+```text
+http://127.0.0.1:18765/v1
+http://localhost:18765/v1
+http://0.0.0.0:8765/v1
+```
+
+Those values should either be normalized to blank SSH-local mode or rejected by target validation.
+
+## 15. Agent network payload invariant
+
+Manager must send Agent network profile payload using the canonical public-host fields:
+
+```text
+host
+host_aliases
+```
+
+`host` is the canonical public hostname. `host_aliases` is an optional list of
+additional public hostnames that route to the same Konnaxion instance.
+
+Do not send the Manager/UI alias fields:
+
+```text
+domain
+droplet_domain
+public_host
+```
+
+`domain`, `droplet_domain`, and `public_host` are Manager/UI aliases only.
+
+Before calling Agent `/v1/network/set-profile`, normalize:
+
+```python
+payload[&quot;host&quot;] = payload.get(&quot;domain&quot;) or payload.get(&quot;droplet_domain&quot;) or payload.get(&quot;host&quot;)
+payload[&quot;host_aliases&quot;] = normalized_public_host_aliases
+payload.pop(&quot;domain&quot;, None)
+payload.pop(&quot;droplet_domain&quot;, None)
+payload.pop(&quot;public_host&quot;, None)
+```
+
+The Agent schema must accept `host_aliases`, normalize/deduplicate it, remove the
+canonical `host` if repeated, and forward the resulting aliases into runtime
+Compose/env generation. The Agent may accept legacy host-name aliases leniently,
+but the Manager should not rely on them.
+
+## 16. Runtime public VPS invariant
+
+For `target_mode=&quot;droplet&quot;` and `network_profile=&quot;public_vps&quot;`, generated runtime files must contain the explicit domain/public host.
+
+Expected:
+
+```text
+KX_HOST=&lt;domain&gt;
+KX_HOST_ALIASES=&lt;comma-separated aliases or empty&gt;
+DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost,&lt;domain&gt;,&lt;aliases&gt;,django-api,kx-&lt;instance_id&gt;-django-api
+DJANGO_CSRF_TRUSTED_ORIGINS=https://&lt;domain&gt;,https://&lt;alias-1&gt;,...
+NEXT_PUBLIC_API_BASE=/api
+NEXT_PUBLIC_BACKEND_BASE=https://&lt;domain&gt;
+```
+
+Forbidden for public VPS:
+
+```text
+KX_HOST=127.0.0.1
+DJANGO_ALLOWED_HOSTS=127.0.0.1
+NEXT_PUBLIC_API_BASE=https://127.0.0.1/api
+NEXT_PUBLIC_BACKEND_BASE=https://127.0.0.1
+```
+
+## 17. Traefik runtime invariant
+
+Runtime compose for public VPS must route by the public host.
+
+If Traefik uses file provider, the generated dynamic file must include:
+
+```yaml
+http:
+  routers:
+    kx-frontend:
+      rule: &quot;Host(`&lt;domain&gt;`) &amp;&amp; PathPrefix(`/`)&quot;
+      entryPoints:
+        - websecure
+      tls: {}
+      service: kx-frontend
+      priority: 1
+
+    kx-api:
+      rule: &quot;Host(`&lt;domain&gt;`) &amp;&amp; PathPrefix(`/api/`)&quot;
+      entryPoints:
+        - websecure
+      tls: {}
+      service: kx-api
+      priority: 100
+
+    kx-admin:
+      rule: &quot;Host(`&lt;domain&gt;`) &amp;&amp; PathPrefix(`/admin/`)&quot;
+      entryPoints:
+        - websecure
+      tls: {}
+      service: kx-api
+      priority: 100
+
+  services:
+    kx-frontend:
+      loadBalancer:
+        servers:
+          - url: &quot;http://kx-&lt;instance_id&gt;-frontend-next:3000&quot;
+
+    kx-api:
+      loadBalancer:
+        servers:
+          - url: &quot;http://kx-&lt;instance_id&gt;-django-api:5000&quot;
+```
+
+If Traefik uses Docker labels, labels must be attached to the correct target services and `traefik.enable=true` must be present.
+
+Do not rely on labels when the runtime Traefik instance is configured only with file provider.
+
+## 18. Healthcheck invariant
+
+Django healthcheck must not depend on tools missing from the image.
+
+Do not generate this:
+
+```text
+wget -qO- http://127.0.0.1:5000/api/health/
+```
+
+Use a Python socket check:
+
+```text
+python -c &quot;import socket; sock=socket.create_connection((&#x27;127.0.0.1&#x27;,5000),5); sock.close()&quot;
+```
+
+Do not generate malformed hybrid commands such as:
+
+```text
+python -c &quot;... sock.close()&quot;api/health/ &gt;/dev/null 2&gt;&amp;1 || exit 1
+```
+
+## 19. Builder/runtime image invariant
+
+A Droplet-deployable capsule must include runtime image archives.
+
+A verified capsule must not pass if it only contains:
+
+```text
+images/README.json
+```
+
+The capsule must include required `.oci.tar` images or verification must fail.
+
+Required app-owned image archives:
+
+```text
+images/frontend-next.oci.tar
+images/django-api.oci.tar
+```
+
+Any required proxy/runtime images declared as capsule-owned must also exist as image archives.
+
+The frontend runtime image must not download tooling at runtime. It must run Next.js directly:
+
+```text
+node node_modules/next/dist/bin/next start -H 0.0.0.0 -p 3000
+```
+
+The frontend runtime image must include:
+
+```text
+package.json
+node_modules
+.next
+public
+next.config.*
+env.mjs
+```
+
+
+</pre></body></html>

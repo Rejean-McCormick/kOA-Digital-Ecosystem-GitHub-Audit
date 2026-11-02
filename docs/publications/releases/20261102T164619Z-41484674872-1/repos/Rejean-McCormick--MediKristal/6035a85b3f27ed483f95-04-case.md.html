@@ -1,0 +1,46 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/MediKristal · docs/04-case.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/MediKristal · docs/04-case.md</h1><p class='meta'><small>Rejean-McCormick/MediKristal · ed1ed01cc8a7 · SHA-256 b06c82b6d4b54e05</small><br><a href='https://github.com/Rejean-McCormick/MediKristal/blob/ed1ed01cc8a71c4464087c31db80bc20b9eb58e6/docs/04-case.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># 04 — Cycle du cas et observations
+
+## Machine d&#x27;état du cas
+
+États : `draft`, `active`, `waiting`, `closed`, `cancelled`. Transitions autorisées : draft→active/cancelled ; active→waiting/closed/cancelled ; waiting→active/closed/cancelled ; closed→active via commande de réouverture motivée ; cancelled terminal. Toute transition exige permission et révision attendue. L&#x27;état d&#x27;un ordre ou d&#x27;un diagnostic reste indépendant.
+
+## Ingestion
+
+1. Authentifier source et principal ; établir le tenant côté serveur.
+2. Valider structure, identité du sujet, lien au cas et droits.
+3. Rechercher doublon source/identifiant/version. Un doublon identique retourne l&#x27;objet existant ; un contenu divergent au même identifiant produit conflit.
+4. Préserver données brutes dans un stockage protégé, puis normaliser selon versions épinglées.
+5. Vérifier unités et temporalité. Un résultat ambigu est stockable en quarantaine mais inutilisable pour inférence automatique.
+6. Créer la version d&#x27;observation, incrémenter le cas et écrire outbox atomiquement.
+7. Marquer les évaluations dépendantes comme périmées ; programmer une réévaluation selon politique.
+
+Les informations textuelles extraites par IA restent `proposed` jusqu&#x27;à vérification nécessaire. Elles ne remplacent pas un résultat instrumenté. « Pas de mention d&#x27;allergie » n&#x27;est pas « absence d&#x27;allergie ». Une absence de réponse ne déclenche pas une valeur clinique par défaut.
+
+## Temporalité
+
+Chaque feature a une politique de sélection : dernière valeur admissible, maximum dans une fenêtre, tendance, valeur avant intervention, ou ensemble. Cette politique appartient au modèle versionné. La valeur la plus récente n&#x27;est pas toujours pertinente. Un résultat post-traitement ne peut pas servir de prédicteur prétraitement dans une évaluation rétrospective sans déclaration. Fixer l&#x27;instant d&#x27;évaluation au lieu de laisser chaque règle appeler l&#x27;horloge système.
+
+Conserver dates partielles, approximations et contradictions ; ne pas fabriquer une heure. Les fuseaux et changements d&#x27;heure sont testés dans les plannings. Un dispositif dont l&#x27;horloge est incertaine marque ses observations.
+
+## Correction et conflit
+
+Une observation a statut `preliminary`, `final`, `amended`, `entered_in_error` ou `proposed`. La version remplacée reste référencée. `entered_in_error` est exclu des nouveaux snapshots ; les traces historiques indiquent qu&#x27;elles reposaient sur une donnée retirée. Si deux sources se contredisent, ne pas écraser par date de réception : présenter conflit, appliquer une règle de résolution déclarée ou s&#x27;abstenir.
+
+Une fusion d&#x27;identités patient est un processus autorisé distinct : garder les anciennes références et revérifier les liens ; pas de fusion probabiliste automatique de dossiers. Un résultat sans correspondance patient certaine est mis en quarantaine.
+
+## Évaluation atomique
+
+L&#x27;évaluation capture `case_revision`, `knowledge_release_id`, contexte temporel, politiques, modèles et features normalisées. Si le cas change pendant le calcul, le résultat reste consultable mais porte `stale=true` ; aucune commande d&#x27;action fondée sur cette évaluation ne peut s&#x27;exécuter sans revalidation. Le worker ne réécrit pas l&#x27;historique pour s&#x27;aligner sur le nouveau cas.
+
+## Circuit résultats et suivi
+
+Les résultats peuvent être partiels, corrigés ou disponibles par analyte. Le rapport groupé ne bloque pas l&#x27;ingestion d&#x27;un élément exploitable. Chaque résultat critique identifié par un protocole admis produit une tâche/notification durable avec acquittement, propriétaire et politique d&#x27;escalade. Le délai et le destinataire d&#x27;escalade sont configurés cliniquement ; ce dossier ne les invente pas. Aucun résultat attendu ne disparaît à la clôture : il reste dans une file de suivi ou la clôture est bloquée selon politique.
+
+## Révision humaine
+
+Une décision humaine ne remplace pas silencieusement la prédiction du modèle. Conserver résultat calculé et décision séparément. Un désaccord est enregistré avec raison structurée et commentaire. Il peut alimenter une proposition de recherche par export autorisé, jamais un apprentissage clinique immédiat.
+
+## Sorties minimales
+
+Le dossier expose chronologie, observations actives/corrigées, informations manquantes, couverture, évaluations datées, actions proposées et décisions. L&#x27;utilisateur peut inspecter pourquoi une hypothèse est proposée. Pour le patient, traduire les termes sans supprimer les limites ou fabriquer un diagnostic confirmé.
+</pre></body></html>

@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/principles.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/kOA-Digital-Ecosystem · docs/2-Technical-Reference/40-integration/identity-oidc/principles.md</h1><p class='meta'><small>Rejean-McCormick/kOA-Digital-Ecosystem · 58a5fa07c18b · SHA-256 eb33cb419780a61e</small><br><a href='https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem/blob/58a5fa07c18b360a1abd7a213023c6ceaa9d1533/docs/2-Technical-Reference/40-integration/identity-oidc/principles.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Common Identity Principles
+
+**Status:** Normative (kOA)
+
+## 1) Hard invariants
+
+```text
+authentication != authorization
+federated identity != local account
+same person != same role
+same email != same identity
+SSO available != SSO required
+IdP unavailable != application unavailable
+```
+
+## 2) Application ownership
+
+Each application owns its local accounts, memberships, roles, permissions, sessions, and audit records.
+
+No application may authorize ordinary local actions by calling another application at request time.
+
+## 3) No shared credential store
+
+Passwords MUST NOT be synchronized across Orgo, Konnaxion, and UCKK-Moodle. Application-local credentials remain application-owned. IdP credentials remain IdP-owned.
+
+## 4) No shared user database
+
+Cross-system identity linkage MUST use explicit identifiers and supported APIs/configuration. Direct cross-database access to user tables is prohibited.
+
+## 5) Optional federation
+
+OIDC is an additional authentication path. A deployment MAY require federation for ordinary users, but critical deployments MUST retain a documented administrative recovery path independent of the IdP.
+
+## 6) Personas and actors
+
+A domain actor or synthetic persona is not automatically an authenticatable account. Demo fixtures MUST default to `create_login = false` unless account creation is explicitly requested and authorized.
+</pre></body></html>

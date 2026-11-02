@@ -1,0 +1,31 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kontainer · docs/RELEASE.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kontainer · docs/RELEASE.md</h1><p class='meta'><small>Rejean-McCormick/Kontainer · 0d9c208942ff · SHA-256 8cda722e33eff5f9</small><br><a href='https://github.com/Rejean-McCormick/Kontainer/blob/0d9c208942ff9bd23fa7c601e1a455949f03fe67/docs/RELEASE.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Qualification and release
+
+## Delivery checks
+
+1. Isolated environment, runtime constraints, tests and lint.
+2. Wheel + sdist build; install wheel and exercise CLI with synthetic data.
+3. Schema/vector verification and absence of real secrets in the archive.
+4. Dated VALIDATION report distinguishing observed results from steps not executed.
+5. Source archive and SHA-256 hashes. A hash shipped with the package is not a distribution signature from a trusted identity.
+
+## Before sensitive production
+
+- Independent cryptographic review of the envelope and access-method composition.
+- CI actually run across supported Python/OS versions, especially Windows/NTFS and ACLs.
+- Large-volume/ZIP64 tests on target storage, process interruption and disk exhaustion.
+- Dependency/CVE review at release time; platform-appropriate hash-locked dependencies and a complete SBOM for binary distribution.
+- Explicit Framework adoption of the contract and independent interoperability tests.
+- Recovery exercise with actual custodians and fallback procedures.
+- Provider-specific qualification under PROVIDERS.md for hardware/managed providers.
+- Owner-selected license and private security reporting channel before public distribution.
+
+CI workflows do not publish any package or production file. GitHub repository creation, pushes, releases and activation are separate operations.
+
+## Versions and migration
+
+The release candidate freezes a proposed v1 format for review. Incompatible changes before adoption must be declared and accompanied by an explicit, verified conversion tool. A migration must never silently replace existing files or lose recovery mechanisms.
+
+## Rollback
+
+By default the engine writes new files and leaves sources unchanged. Roll back to the previous software version and earlier validated copies. After explicit `--overwrite`, restoration depends on the owner&#x27;s backup: atomicity is not version history.
+</pre></body></html>

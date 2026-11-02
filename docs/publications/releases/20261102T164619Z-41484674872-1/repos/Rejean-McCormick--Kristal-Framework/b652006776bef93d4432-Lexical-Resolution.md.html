@@ -1,0 +1,37 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · Lexical-Resolution.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · Lexical-Resolution.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 380297e2ac25d4ae</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/Lexical-Resolution' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Lexical Resolution
+
+A `kristall_lexicon_stack` declares deterministic lexical precedence.
+
+## Resolution algorithm
+
+For a semantic reference and requested locale:
+
+1. validate locale and stack policy;
+2. select compatible lexicons and explicitly allowed fallbacks;
+3. discard entries not marked `resolved`;
+4. select the matching entry with highest declared precedence;
+5. if equal-precedence entries disagree, return a conflict;
+6. if none resolve, return the semantic reference with `lexical_status: missing`.
+
+Locale fallback such as `fr-CA → fr` is allowed only when declared by policy. Fallback does not create semantic equivalence.
+
+## Recommended precedence
+
+```text
+base language
+  &lt; general domain
+  &lt; specialist domain
+  &lt; education / region
+  &lt; project delta
+```
+
+Precedence is a **rendering rule**, not semantic authority. A project may prefer another display term without changing the concept.
+
+## AI-generated translations
+
+A language model may propose lexical candidates during curation, but generated translations must not become canonical lexical output without an explicit curation/admission step.
+
+## Conflict visibility
+
+Lexical disagreement is data. Resolvers expose conflicting candidates and lexicon provenance instead of silently choosing one.
+</pre></body></html>

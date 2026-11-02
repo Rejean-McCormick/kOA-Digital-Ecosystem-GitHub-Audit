@@ -1,0 +1,44 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/KristalDiag · docs/N03_N06_FILE_CONTEXT.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/KristalDiag · docs/N03_N06_FILE_CONTEXT.md</h1><p class='meta'><small>Rejean-McCormick/KristalDiag · 6a14d72ffec4 · SHA-256 9ccef9497e7a7f0c</small><br><a href='https://github.com/Rejean-McCormick/KristalDiag/blob/6a14d72ffec4d7b92186111a515d64b87f78de27/docs/N03_N06_FILE_CONTEXT.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># N03/N06 — fichiers volumineux, captures HTML et exceptions vérifiables
+
+Cette modification garde **N03** (taille) distinct de **N06** (motifs potentiellement sensibles). Elle ne modifie pas le canon et **n&#x27;exempte jamais automatiquement une correspondance N06**.
+
+## N03-LARGE-003
+
+Chaque fichier supérieur à `scan.large_file_bytes` est accompagné d&#x27;un rôle **indicatif** :
+
+- `canonical_or_committed` : `canon/`, `knowledge-base/corpus/`, `.kristal/v9/`, `.kristal/v11/`, `state/`, portable state v8. **Attendu possible, jamais une preuve de validité.**
+- `derived_or_cache` : `derived/`, `.kristal/v8/index/`, `build/`, `runtime/`, etc. **Ne pas supprimer sans reconstruction vérifiée.**
+- `external_source_archive` : capture tierce conservée pour provenance, pouvant contenir du HTML/MHTML volumineux ou des scripts embarqués. Revue spécifique avant diffusion.
+- `unclassified` : source inconnue, revue requise.
+
+Le statut est `WARN` s&#x27;il reste au moins un fichier volumineux **sans exception approuvée et vérifiée**. L&#x27;exception est un enregistrement local de politique d&#x27;hygiène, pas une validation normative. Pour une exemption explicite, ajouter à `kristaldiag.config.local.json` **dans le dépôt KristalDiag** (ne pas le committer par défaut) :
+
+```json
+{
+  &quot;large_files&quot;: {
+    &quot;exceptions&quot;: [
+      {
+        &quot;path&quot;: &quot;canon/domain/large-graph.json&quot;,
+        &quot;bytes&quot;: 12582912,
+        &quot;sha256&quot;: &quot;sha256:&lt;64 CARACTÈRES HEXADÉCIMAUX RÉELS&gt;&quot;,
+        &quot;status&quot;: &quot;approved&quot;,
+        &quot;reviewed_by&quot;: &quot;responsable-local&quot;,
+        &quot;reason&quot;: &quot;Artefact canonique conservé après contrôle documentaire&quot;
+      }
+    ]
+  }
+}
+```
+
+**Exemple non exécutable tel quel** : taille et hash doivent être réels. L&#x27;exception expire automatiquement si les octets changent. Les paramètres de contrôle sont externes aux Kristals examinés et leurs références doivent être conservées en dehors des sources.
+
+## N06-SECRETS-002
+
+Une correspondance dans une page HTML potentiellement archivée reçoit `file_kind`, `third_party_archive_candidate`, `requires_review`, `assessment`, `values_included=false`. Ces champs précisent le **contexte**, pas le risque réel. L&#x27;alerte reste `WARN`, y compris pour une clé `apiKey` au sein d&#x27;un script de site tiers. Les valeurs détectées ne sont pas recopiées dans les preuves.
+
+Les fichiers non textuels ou dépassant `scan.max_file_bytes` sont exclus de l&#x27;analyse regex. Cela **limite la couverture** : le résultat ne prétend pas vérifier des fichiers géants, ni la validité d&#x27;une clé détectée.
+
+## Manager
+
+Le nouveau `scan-global` offre un tableau **des déclarations présentes et manquantes** pour chaque Kristal, y compris les références canoniques cassées. `PRESENT` ou `DECLARED_UNVERIFIED` ne vaut pas certification.
+</pre></body></html>

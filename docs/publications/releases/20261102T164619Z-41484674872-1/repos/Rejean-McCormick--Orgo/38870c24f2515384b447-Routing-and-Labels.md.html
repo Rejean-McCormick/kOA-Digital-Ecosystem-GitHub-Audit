@@ -1,0 +1,51 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Orgo · Routing-and-Labels.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Orgo · Routing-and-Labels.md</h1><p class='meta'><small>Rejean-McCormick/Orgo · b89ca31f268c · SHA-256 2431441d5a285f0d</small><br><a href='https://github.com/Rejean-McCormick/Orgo/wiki/Routing-and-Labels' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Routing and Labels
+
+Orgo uses **Labels** as a compact routing and classification language.
+
+A label can express three things:
+
+1. a vertical or organizational scope;
+2. a category and subcategory;
+3. an optional horizontal role.
+
+The general form is:
+
+```text
+&lt;BASE&gt;.&lt;CATEGORY&gt;&lt;SUBCATEGORY&gt;[.&lt;HORIZONTAL_ROLE&gt;]
+```
+
+Example:
+
+```text
+100.94.Operations.Safety
+```
+
+The precise codes are configured and documented technically, but public users mainly need to understand the idea: **a label is an address for operational context**.
+
+## Labels are not permissions
+
+A label can help determine where work belongs, but it does not replace authorization.
+
+Seeing a routing label does not automatically grant access to the underlying Case or Task.
+
+## One canonical routing label
+
+Orgo keeps one canonical routing label on the work object rather than trying to encode every possible taxonomy dimension into one string.
+
+Additional classification can live in metadata, tags or domain-specific structures.
+
+## Broadcast labels
+
+Some label bases represent broadcasts.
+
+A broadcast is informational by default:
+
+```text
+broadcast
+≠ mandatory Task
+```
+
+If the information requires action, a workflow must explicitly create or assign that work.
+
+This prevents announcements from silently becoming obligations.
+</pre></body></html>

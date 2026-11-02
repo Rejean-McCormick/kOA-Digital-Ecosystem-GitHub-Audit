@@ -1,0 +1,23 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Manager · docs/07-exploitation/operations-quotidiennes.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Manager · docs/07-exploitation/operations-quotidiennes.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Manager · 4056c084e6f7 · SHA-256 8c84ee52da8ac9ce</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Manager/blob/4056c084e6f705980a875f1b59ba6351a38390f7/docs/07-exploitation/operations-quotidiennes.md' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># Exploitation : routines de contrôle
+
+## Séquence normale
+
+1. Sélectionner le dossier local, inventorier.
+2. Lire le résumé : nombre de workspaces, problèmes de structure, découvertes périmées, diagnostics actuels/anciens/absents.
+3. Examiner les anomalies prioritaires avec le détail du moteur et les sources citées.
+4. Choisir les diagnostics **applicables**; déclencher explicitement; attendre le résumé consolidé.
+5. Exporter les preuves et décisions de classification à revoir.
+6. Pour corriger les sources, passer par un **outil d&#x27;auteur/Kit distinct** avec sauvegarde et plan; refaire Discovery, scan puis Diag.
+
+## Éviter le piège du « tout vert »
+
+Une série de 127 `READY` et 0 erreurs de lecteur valide le scan structural, pas le sens des assertions. De même, 127 diagnostics `PASS V9` (hypothétique) ne qualifieraient pas le contenu v11. Communiquer précisément ce que chaque résultat couvre.
+
+## Reprise d&#x27;un batch
+
+Dans la livraison actuelle, chaque résultat est enregistré pendant le parcours et un bilan est écrit à la fin. Si le processus s&#x27;interrompt, les observations déjà commises sont retrouvables; **la reprise automatique sélective est une capacité cible**, non un comportement assuré. Pour la prochaine version, capturer `run_id`, tasks, checkpoints et décisions de retry.
+
+## Vérifications mensuelles proposées
+
+Intégrité SQLite; taille des catalogues; nombre de `STALE`; dépendance KristalDiag et version des contrats; revue des anciennes propositions UNESCO/ARK; présence de secrets dans les rapports exportés; santé des sauvegardes et qualité des tests Windows.
+</pre></body></html>

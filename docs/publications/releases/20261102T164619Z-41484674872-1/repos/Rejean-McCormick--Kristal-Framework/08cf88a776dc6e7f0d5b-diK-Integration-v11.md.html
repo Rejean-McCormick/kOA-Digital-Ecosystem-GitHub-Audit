@@ -1,0 +1,42 @@
+<!doctype html><html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rejean-McCormick/Kristal-Framework · diK-Integration-v11.md</title><style>body{font:16px system-ui;max-width:1000px;margin:auto;padding:25px;background:#f4f8f6;color:#173733}}a{color:#1e6864}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #d4e3dd;border-radius:12px;padding:22px;line-height:1.6}small{color:#596c68}.meta{margin:14px 0 25px}</style></head><body><p><a href='../../../../index.html'>← Publications</a></p><h1>Rejean-McCormick/Kristal-Framework · diK-Integration-v11.md</h1><p class='meta'><small>Rejean-McCormick/Kristal-Framework · cc9ab116371b · SHA-256 fbb0887abcf369d0</small><br><a href='https://github.com/Rejean-McCormick/Kristal-Framework/wiki/diK-Integration-v11' rel='noopener noreferrer'>Source GitHub / GitHub source</a></p><pre># diK — interopérabilité des dictionnaires (v11 draft.4)
+
+**diK `1.0.0-alpha.7` est une application externe au Framework**, pas un nouveau namespace d&#x27;identités ni un serveur nécessaire à l&#x27;exécution du canon.
+
+## Autorité
+
+**Framework** définit les contrats; **diK** importe, concilie et indexe des couches lexicales, mesure la couverture et propose des migrations; **Authoring Kit `4.0.0-draft.3`** est responsable des graphes et registres canoniques, de l&#x27;enregistrement des nouveaux artefacts et de la sélection explicite. Voir [[diK-Authoring-Exchange-v11]].
+
+## Couverture : ne pas inventer les traductions
+
+Pour chaque graphe, inventorier distinctement les KQ et KP, puis compter par langue déclarée : `direct`, `fallback` explicitement autorisé, `missing`, `conflicted`. Les KP ne doivent jamais être comptés dans les KQ. Les anciens mots non résolus ne produisent **pas** une couverture 100 % canonique.
+
+```bash
+python tools/v11/dik_coverage.py \
+  --graph examples/v11/semantic-graph.example.json \
+  --registry examples/v11/identity-registry.example.json \
+  --crosswalk examples/v11/external-crosswalk.example.json \
+  --catalog examples/v11/dictionaries/catalog.json --locales fr,en,fr-CA
+```
+
+## Flux diK → Kit contrôlé
+
+```bash
+python tools/v11/interop_preflight.py \
+  --catalog /exports/dik/catalog.json \
+  --registry /project/canon/domain/v11/registry.json \
+  --crosswalk /project/canon/domain/v11/crosswalk.json \
+  --kit-import-candidate
+```
+
+La fiche de l&#x27;outil est [[diK-Authoring-Exchange-v11]]. Le corpus Framework illustratif contient une couche *curated* et ne constitue pas un candidat `--kit-import-candidate` prêt à promouvoir.
+
+## Import et évolution des Wikidata Q/P
+
+Le code diK alpha.7 prend en charge des dumps locaux et des checkpoints SQLite, les différences lexicales et des observations de redirection. Cela ne change aucune identité `KQ`/`KP` ni une correspondance `exactMatch` sans revue. Voir [[diK-Synchronization-v11]].
+
+## Plans legacy
+
+Un plan diK est un **document non exécutable** : pointeur JSON exact, valeur source, rôle sémantique, identifiant cible KQ/KP et décision humaine traçable. L&#x27;Authoring Kit ne convertit que les formats qu&#x27;il comprend explicitement, dans une **nouvelle** révision du canon. Aucun remplacement global de mots.
+
+**Attention :** le précontrôle local Framework n&#x27;est ni une certification de toutes les versions de diK ni une approbation d&#x27;édition. Voir [[Conformance-and-Ecosystem-v11]].
+</pre></body></html>
