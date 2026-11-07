@@ -65,7 +65,7 @@ jobs:
           if [ -f docs/data/focus-paths.json ]; then extras+=(docs/data/focus-paths.json); fi
           tar -czf koa-graph-publication-candidate.tar.gz docs/publications docs/data/publication-current.json "${extras[@]}"
       - name: Save candidate for review and repeatable publication
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: koa-graph-publication-candidate
           path: koa-graph-publication-candidate.tar.gz
