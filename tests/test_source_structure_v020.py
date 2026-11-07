@@ -6,10 +6,13 @@ import unittest
 import zipfile
 from pathlib import Path
 from unittest.mock import patch
+from evidence_test_support import requires_private_evidence
+
 from koa_audit import source_structure, specsheets, validation_board, campaigns
 
 ROOT = Path(__file__).resolve().parents[1]
 
+@requires_private_evidence
 class SourceStructureReviewTests(unittest.TestCase):
     def test_47_zip_identity_bound_structures_and_unknown_repos(self):
         index=source_structure.load(ROOT)

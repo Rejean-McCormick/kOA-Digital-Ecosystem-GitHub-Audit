@@ -14,6 +14,8 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 from unittest.mock import patch
 
+from evidence_test_support import requires_private_evidence
+
 from koa_audit.ecosystem import atlas, build_public_atlas
 from koa_audit import qualification
 
@@ -75,6 +77,7 @@ class LocalAtlasServerTest(unittest.TestCase):
         env['_initialize_project'](ROOT)
         cls.handler=env['_NoConsolePreviewHandler']
 
+    @requires_private_evidence
     def test_private_qualification_json_and_full_local_profile(self):
         with tempfile.TemporaryDirectory() as temp, patch.dict(os.environ,{'LOCALAPPDATA':temp}):
             handler=functools.partial(self.handler,directory=str(ROOT/'docs'))

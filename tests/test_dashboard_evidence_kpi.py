@@ -4,6 +4,8 @@ import json
 import unittest
 from pathlib import Path
 
+from evidence_test_support import requires_private_evidence
+
 ROOT = Path(__file__).resolve().parents[1]
 
 class EvidenceCounterTests(unittest.TestCase):
@@ -18,6 +20,7 @@ class EvidenceCounterTests(unittest.TestCase):
         self.assertIn('Campagne figée du',js)
         self.assertIn('registre actuel :',js)
 
+    @requires_private_evidence
     def test_245_review_cases_not_245_evidenced_claims(self):
         d = json.loads((ROOT/'private_evidence/KOA-ADJUDICATION-2026-10-30.json').read_text(encoding='utf8'))
         self.assertEqual(len(d['cases']),245)

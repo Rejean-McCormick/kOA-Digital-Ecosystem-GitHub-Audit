@@ -6,6 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+from evidence_test_support import requires_private_evidence
+
 from koa_audit import campaigns, snapshot_runs, specsheets, validation_board
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -13,6 +15,7 @@ NEW=('Daat','EncyKlopedia','Interaction-Kernel','kOA-Linux-Koali',
      'Koali-Spaces','Konfid','Konnaxion','Kristal-Framework','Orgo')
 
 class NewSpecsheetTests(unittest.TestCase):
+    @requires_private_evidence
     def test_each_nine_repo_has_source_hashed_specs(self):
         index=specsheets.load(ROOT)
         self.assertEqual(index['state'],'verified_index')
@@ -32,6 +35,7 @@ class NewSpecsheetTests(unittest.TestCase):
                         self.assertEqual(len(f['sha256']),64)
                         self.assertFalse(f['path'].startswith('/'))
 
+    @requires_private_evidence
     def test_nine_repos_do_not_award_security_practice_passes(self):
         with tempfile.TemporaryDirectory() as tmp:
             board=validation_board.build(ROOT,Path(tmp)/'q.json',Path(tmp)/'p.json')
@@ -49,6 +53,7 @@ class NewSpecsheetTests(unittest.TestCase):
             rec=specsheets.for_repository(ROOT,'Rejean-McCormick/'+slug)
             self.assertTrue(all(not f['execution_verified'] for f in rec['features']))
 
+    @requires_private_evidence
     def test_archived_junit_matches_manifest_and_fails_closed(self):
         runs=snapshot_runs.load(ROOT)
         self.assertEqual({slug.split('/')[-1]:data['passed'] for slug,data in runs.items()},
@@ -61,6 +66,7 @@ class NewSpecsheetTests(unittest.TestCase):
             self.assertTrue(data['test_files'])
         self.assertIsNone(snapshot_runs.report_for_slug(ROOT,'../../tests'))
 
+    @requires_private_evidence
     def test_campaign_freezes_new_logs_and_index_without_git_conflation(self):
         with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ,{'LOCALAPPDATA':tmp}):
             store=Path(tmp)/'campaigns'

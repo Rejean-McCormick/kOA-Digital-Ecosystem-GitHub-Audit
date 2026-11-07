@@ -2,9 +2,12 @@
 from pathlib import Path
 import hashlib,json,os,tempfile,unittest,zipfile
 from unittest.mock import patch
+from evidence_test_support import requires_private_evidence
+
 from koa_audit import specsheets, validation_board, campaigns, snapshot_runs
 ROOT=Path(__file__).resolve().parents[1]
 
+@requires_private_evidence
 class SmartDump35Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

@@ -2,11 +2,14 @@
 import tempfile
 import unittest
 from pathlib import Path
+from evidence_test_support import requires_private_evidence
+
 from koa_audit import validation_board
 
 ROOT=Path(__file__).resolve().parents[1]
 
 class AutomaticValidationTests(unittest.TestCase):
+    @requires_private_evidence
     def test_source_verified_stages_are_automatic_without_existing_registry(self):
         with tempfile.TemporaryDirectory() as tmp:
             q=Path(tmp)/'missing-qualification.json'

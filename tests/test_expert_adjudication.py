@@ -6,11 +6,14 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from evidence_test_support import requires_private_evidence
+
 from koa_audit import evidence_adjudication as expert, evidence_review, qualification, campaigns
 
 ROOT=Path(__file__).resolve().parents[1]
 
 
+@requires_private_evidence
 class ExpertReviewTests(unittest.TestCase):
     def test_245_complete_with_ten_documentary_support_and_no_prod(self):
         d=expert.load(ROOT)

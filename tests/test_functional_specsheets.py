@@ -5,12 +5,15 @@ import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from evidence_test_support import requires_private_evidence
+
 from koa_audit import specsheets, spec_tests, validation_board
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class FunctionalSpecificationTests(unittest.TestCase):
+    @requires_private_evidence
     def test_three_exact_snapshot_specs_and_all_49_repositories(self):
         with tempfile.TemporaryDirectory() as tmp:
             board = validation_board.build(ROOT,Path(tmp)/'q.json',Path(tmp)/'p.json')
@@ -26,6 +29,7 @@ class FunctionalSpecificationTests(unittest.TestCase):
         self.assertEqual(len(by_slug['Orgo']['specsheet']['features']),7)
         self.assertEqual(board['security_controls_test_verified'],0)
 
+    @requires_private_evidence
     def test_present_feature_is_never_marked_passed(self):
         data=specsheets.load(ROOT)
         self.assertEqual(data['state'],'verified_index')
@@ -40,6 +44,7 @@ class FunctionalSpecificationTests(unittest.TestCase):
                     self.assertEqual(len(source['sha256']),64)
                     self.assertFalse(source['path'].startswith('/'))
 
+    @requires_private_evidence
     def test_vote_is_only_a_manifest_in_snapshot(self):
         spec=specsheets.for_repository(ROOT,'Rejean-McCormick/Konnaxion-Worlds')
         vote=next(x for x in spec['features'] if 'vote' in x['title'].lower())
@@ -47,6 +52,7 @@ class FunctionalSpecificationTests(unittest.TestCase):
         self.assertFalse(vote['test_definitions'])
         self.assertFalse(vote['execution_verified'])
 
+    @requires_private_evidence
     def test_45_targeted_checks_are_source_and_junit_bound(self):
         runs=spec_tests.load(ROOT)
         self.assertEqual(runs['Rejean-McCormick/KonnaxionDiag']['passed'],3)
@@ -56,6 +62,7 @@ class FunctionalSpecificationTests(unittest.TestCase):
             self.assertTrue(r['test_files'])
             self.assertEqual(len(r['junit_sha256']),64)
 
+    @requires_private_evidence
     def test_junit_link_is_only_a_local_endpoint(self):
         r=spec_tests.load(ROOT)['Rejean-McCormick/KonnaxionDiag']
         self.assertEqual(r['junit_link'],'/local/spec-tests/KonnaxionDiag')
@@ -64,6 +71,7 @@ class FunctionalSpecificationTests(unittest.TestCase):
         self.assertNotIn(b'hostname',data)
         self.assertIsNone(spec_tests.report_for_slug(ROOT,'../../private_evidence'))
 
+    @requires_private_evidence
     def test_snapshot_index_tamper_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             dest=Path(tmp)/'private_evidence';dest.mkdir()
@@ -71,6 +79,7 @@ class FunctionalSpecificationTests(unittest.TestCase):
             (dest/specsheets.BUNDLE).write_bytes(raw+b' ')
             self.assertEqual(specsheets.load(Path(tmp))['repositories'],{})
 
+    @requires_private_evidence
     def test_junit_tamper_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             dest=Path(tmp)/'private_evidence';(dest/'test_reports').mkdir(parents=True)
@@ -93,6 +102,7 @@ class FunctionalSpecificationTests(unittest.TestCase):
 if __name__=='__main__': unittest.main()
 
 class FrozenFunctionalEvidenceTest(unittest.TestCase):
+    @requires_private_evidence
     def test_new_campaign_contains_frozen_specs_and_junit_proofs(self):
         import os
         import zipfile

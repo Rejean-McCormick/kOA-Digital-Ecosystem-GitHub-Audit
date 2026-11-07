@@ -10,12 +10,15 @@ from pathlib import Path
 from unittest.mock import patch
 import zipfile
 
+from evidence_test_support import requires_private_evidence
+
 from koa_audit import campaigns, evidence_review, qualification
 
 ROOT=Path(__file__).resolve().parents[1]
 
 
 class HistoricalReviewTests(unittest.TestCase):
+    @requires_private_evidence
     def test_complete_49_by_5_and_no_certification(self):
         review=evidence_review.load_review(ROOT)
         self.assertEqual(len(review['repositories']),49)
@@ -25,6 +28,7 @@ class HistoricalReviewTests(unittest.TestCase):
         self.assertEqual((counts['repositories'],counts['cases']),(49,245))
         self.assertIn('aucun jalon qualifié automatiquement',counts['notice'])
 
+    @requires_private_evidence
     def test_konnaxion_orgo_e2e_report_is_clickable_and_scoped(self):
         for repo in ('Rejean-McCormick/Konnaxion','Rejean-McCormick/Orgo'):
             case=evidence_review.stage_record(ROOT,repo,'integrated')
@@ -35,6 +39,7 @@ class HistoricalReviewTests(unittest.TestCase):
             self.assertIn(b'2026-09-21',content)
             self.assertIn('local',case['summary'].lower())
 
+    @requires_private_evidence
     def test_lack_of_prod_proof_is_not_failure(self):
         stage=evidence_review.stage_record(ROOT,'Rejean-McCormick/Konnaxion','production')
         self.assertFalse(stage['sources'])
@@ -43,6 +48,7 @@ class HistoricalReviewTests(unittest.TestCase):
         self.assertEqual(suggestion['status'],'Non évalué')
         self.assertIn('aucune pièce',suggestion['evidence'])
 
+    @requires_private_evidence
     def test_report_reference_not_in_bundle_is_plain_text(self):
         repo='Rejean-McCormick/Akor'
         stage=evidence_review.stage_record(ROOT,repo,'implemented')
@@ -54,6 +60,7 @@ class HistoricalReviewTests(unittest.TestCase):
         content=evidence_review.render_page(ROOT,'/local/review/app/Akor/implemented')
         self.assertIn('Référence externe non incluse',content)
 
+    @requires_private_evidence
     def test_review_pages_and_source_escape(self):
         page=evidence_review.render_page(ROOT,'/local/review')
         self.assertEqual(page.count('href="/local/review/app/'),49)
@@ -69,6 +76,7 @@ class HistoricalReviewTests(unittest.TestCase):
             with self.subTest(url=url),self.assertRaises((ValueError,FileNotFoundError)):
                 evidence_review.render_page(ROOT,url)
 
+    @requires_private_evidence
     def test_no_claim_written_by_loading_review(self):
         with tempfile.TemporaryDirectory() as temp:
             with patch.object(qualification,'state_path',return_value=Path(temp)/'qualification.json'):
@@ -76,6 +84,7 @@ class HistoricalReviewTests(unittest.TestCase):
                 evidence_review.suggested_qualification(ROOT,'Rejean-McCormick/Orgo','qualified')
                 self.assertFalse((Path(temp)/'qualification.json').exists())
 
+    @requires_private_evidence
     def test_bad_sha_detected_even_when_zip_is_parseable(self):
         with tempfile.TemporaryDirectory() as temp:
             folder=Path(temp)/'private_evidence';folder.mkdir()
@@ -88,6 +97,7 @@ class HistoricalReviewTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 evidence_review.load_review(Path(temp))
 
+    @requires_private_evidence
     def test_campaign_preserves_review_bundle_only_when_manually_referenced(self):
         with tempfile.TemporaryDirectory() as temp:
             temp=Path(temp)
@@ -116,6 +126,6 @@ class HistoricalReviewTests(unittest.TestCase):
         self.assertNotIn('private_evidence',public)
         ignore=(ROOT/'.gitignore').read_text(encoding='utf-8')
         self.assertIn('private_evidence/',ignore)
-        self.assertTrue(evidence_review.archive_path(ROOT).is_file())
+        self.assertFalse(any((ROOT/'docs').rglob(evidence_review.ARCHIVE_NAME)))
 
 if __name__=='__main__':unittest.main()

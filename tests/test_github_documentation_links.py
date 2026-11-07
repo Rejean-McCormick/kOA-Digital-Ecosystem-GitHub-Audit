@@ -13,8 +13,11 @@ class GithubDocumentationLinksTests(unittest.TestCase):
         self.assertIn("root+'/wiki'",js)
         self.assertIn('githubDocumentationLinks(r.repo)',js)
         self.assertIn('githubDocumentationLinks(current.repo)',js)
-        self.assertIn('id="documentary-candidates"',page)
-        self.assertIn('id="documentary-candidate-section"',page)
+        self.assertIn('data-workspace="applications" id="apps"', page)
+        self.assertIn('id="repo-list"', page)
+        self.assertIn("getJSON('data/documentation-candidates.json?", js)
+        self.assertIn('Array.isArray(candidates?.repositories)?candidates.repositories:[]', js)
+        self.assertIn('additional_documented:true', js)
 
     def test_new_candidates_do_not_mutate_official_inventory(self):
         official=json.loads((ROOT/'data/initial_inventory.json').read_text(encoding='utf-8'))

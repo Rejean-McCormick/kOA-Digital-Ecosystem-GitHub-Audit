@@ -4,12 +4,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from evidence_test_support import requires_private_evidence
+
 from koa_audit import evidence_adjudication, profiles, qualification, validation_board
 
 ROOT=Path(__file__).resolve().parents[1]
 
 
 class ValidationBoardTests(unittest.TestCase):
+    @requires_private_evidence
     def test_unreviewed_has_all_categories_without_false_passes(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
@@ -25,6 +28,7 @@ class ValidationBoardTests(unittest.TestCase):
             self.assertEqual(next(c for c in item['categories'] if c['label']=='Architecture')['practice_count'],33)
             self.assertEqual(item['verified_stages'],{'Daat':1,'EncyKlopedia':1,'Konnaxion':4,'Orgo':4}.get(item['slug'],0))
 
+    @requires_private_evidence
     def test_reviewed_sources_only_return_ten_bounded_documentary_checks(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
@@ -47,6 +51,7 @@ class ValidationBoardTests(unittest.TestCase):
                         self.assertTrue(s['scope'])
                     if s['id']=='production':self.assertFalse(s['source_verified'])
 
+    @requires_private_evidence
     def test_applied_security_practice_is_not_pass(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);q=root/'q.json';p=root/'p.json'
@@ -61,6 +66,7 @@ class ValidationBoardTests(unittest.TestCase):
         self.assertFalse(item['source_verified'])
         self.assertEqual(board['security_controls_test_verified'],0)
 
+    @requires_private_evidence
     def test_forged_source_in_user_state_does_not_turn_green(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);q=root/'q.json';p=root/'p.json'
@@ -78,6 +84,7 @@ class ValidationBoardTests(unittest.TestCase):
         self.assertEqual(stage['display'],'✓ Validé')
         self.assertEqual(board['source_checked_documentary_jalons'],10)
 
+    @requires_private_evidence
     def test_historical_ci_success_only_at_same_observed_sha(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
@@ -91,6 +98,7 @@ class ValidationBoardTests(unittest.TestCase):
         self.assertFalse(docs['success_observed']) # old CI SHA != observed repo head
         self.assertFalse(docs['same_observed_head'])
 
+    @requires_private_evidence
     def test_no_inference_from_github_ci_to_qualification(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
