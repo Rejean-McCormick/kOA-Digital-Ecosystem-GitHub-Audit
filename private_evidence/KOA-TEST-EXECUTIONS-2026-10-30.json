@@ -1,0 +1,254 @@
+{
+  "format": "koa.private.snapshot_test_execution.v1",
+  "runs": [
+    {
+      "repository": "Rejean-McCormick/KonnaxionDiag",
+      "snapshot_sha256": "ea707b6cbb58ccc8ab57c1016104737dba8a82fcef72785477f2df999ed97223",
+      "snapshot_commit": null,
+      "framework": "pytest",
+      "test_files": [
+        {
+          "path": "tests/test_core.py",
+          "sha256": "c889b38c752cf8b2684b5c2f193cd0b7d5677e36e5fc1f15f2668f255c0fa5f2"
+        },
+        {
+          "path": "tests/test_signing.py",
+          "sha256": "02ed1fd7c872db625c7b9dca70df70236b274d5d7916668e7a29f400013a0f88"
+        }
+      ],
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_core.py",
+        "tests/test_signing.py"
+      ],
+      "environment": "Python 3.13.5 / Linux / pytest local isolé / sans accès réseau",
+      "timestamp_utc": "2026-10-30T22:16:03.599575+00:00",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "cases": [
+        {
+          "name": "test_shell_false_command",
+          "class": "tests.test_core"
+        },
+        {
+          "name": "test_timeout_is_infra_error",
+          "class": "tests.test_core"
+        },
+        {
+          "name": "test_ed25519_detached_signature_covers_exact_payload",
+          "class": "tests.test_signing"
+        }
+      ],
+      "junit_member": "KonnaxionDiag.junit.xml",
+      "junit_sha256": "ac0d0d19f3ee9b4cf8b540bbe281019f6ddbdc82961fb7460c406de2178f0326",
+      "scope": "Tests unitaires ciblés exécutés sur une copie temporaire extraite du ZIP fourni; ni tests complets ni production."
+    },
+    {
+      "repository": "Rejean-McCormick/Konnaxion-Capsule-Manager",
+      "snapshot_sha256": "9c3041ad9820cf747f91648a4cfa39a9ca1cae090006b47b22809564cde5459e",
+      "snapshot_commit": null,
+      "framework": "pytest",
+      "test_files": [
+        {
+          "path": "tests/test_security_gate.py",
+          "sha256": "666bb8aaa8d78b2cc780a1d7abb61a3675f45ba5c376e0624f522a11e5308ebd"
+        }
+      ],
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_security_gate.py"
+      ],
+      "environment": "Python 3.13.5 / Linux / pytest local isolé / sans accès réseau",
+      "timestamp_utc": "2026-10-30T22:16:07.616979+00:00",
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "cases": [
+        {
+          "name": "test_security_gate_status_values_are_canonical",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_mandatory_security_gate_checks_are_canonical",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_security_gate_checks_are_canonical",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_forbidden_public_ports_are_canonical",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[capsule_signature-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[image_checksums-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[manifest_schema-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[secrets_present-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[secrets_not_default-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[firewall_enabled-False]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[dangerous_ports_blocked-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[postgres_not_public-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[redis_not_public-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[docker_socket_not_mounted-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[no_privileged_containers-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[no_host_network-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[allowed_images_only-True]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[admin_surface_private-False]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_blocking_check_membership[backup_configured-False]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_module_exports_expected_api",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_checks_module_exports_expected_api",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_passes_when_all_checks_pass",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_fails_when_blocking_check_fails",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_fails_when_blocking_check_is_unknown",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_allows_warning_on_nonblocking_check",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_context_passes_with_real_manifest_and_generated_secrets",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_context_fails_with_empty_manifest_and_empty_env",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_context_fails_with_placeholder_secrets",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_context_rejects_missing_manifest_fields",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_context_rejects_public_postgres_port",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_gate_context_rejects_public_redis_port",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_dangerous_public_ports_are_rejected[3000]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_dangerous_public_ports_are_rejected[5000]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_dangerous_public_ports_are_rejected[5432]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_dangerous_public_ports_are_rejected[6379]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_dangerous_public_ports_are_rejected[5555]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_dangerous_public_ports_are_rejected[8000]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_entry_ports_are_not_dangerous_public_ports[80]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_entry_ports_are_not_dangerous_public_ports[443]",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_policy_rejects_docker_socket_mount",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_policy_rejects_privileged_containers",
+          "class": "tests.test_security_gate"
+        },
+        {
+          "name": "test_security_policy_rejects_host_network",
+          "class": "tests.test_security_gate"
+        }
+      ],
+      "junit_member": "Capsule-Manager.junit.xml",
+      "junit_sha256": "a3b221b8852d5bad6e6505415ff66e4f50b983fbfd257cc906bd1448894ed68f",
+      "scope": "Tests unitaires ciblés exécutés sur une copie temporaire extraite du ZIP fourni; ni tests complets ni production."
+    }
+  ]
+}

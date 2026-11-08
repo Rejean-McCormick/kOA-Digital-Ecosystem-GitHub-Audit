@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="KonnaxionDiag : tests ciblés" tests="3" failures="0" errors="0" skipped="0" timestamp_utc="2026-10-30T22:16:03.599575+00:00"><testcase name="test_shell_false_command" classname="tests.test_core" /><testcase name="test_timeout_is_infra_error" classname="tests.test_core" /><testcase name="test_ed25519_detached_signature_covers_exact_payload" classname="tests.test_signing" /></testsuite>

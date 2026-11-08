@@ -1,0 +1,288 @@
+{
+  "format": "koa.private.smartdump35.provenance.v1",
+  "archive": "SmartDump_20261030_200705.zip",
+  "archive_sha256": "0c78167283b9f28fa09259b69710e6dd4146a8c305747c2a3680a20cf7689338",
+  "repos": [
+    {
+      "repository": "Akor",
+      "files_in_snapshot": 114,
+      "functions_documented": 3,
+      "technical_entries": 2,
+      "sources_inspected": 6,
+      "zip_sha256": "79f50bf492ad808083d347b122fd73bd64d3b1803510b8f0c33b8a15862b9716"
+    },
+    {
+      "repository": "Arketype",
+      "files_in_snapshot": 814,
+      "functions_documented": 3,
+      "technical_entries": 3,
+      "sources_inspected": 7,
+      "zip_sha256": "0a6b33cb313a09d83d98ccfc028690b81b79b4b2a8a78ff497d854b8109dcd55"
+    },
+    {
+      "repository": "initkoa-docs",
+      "files_in_snapshot": 8,
+      "functions_documented": 3,
+      "technical_entries": 3,
+      "sources_inspected": 4,
+      "zip_sha256": "59e77645230a221f8dd783dd23332f497adffefc724fe52326aeb1ae1cd2971f"
+    },
+    {
+      "repository": "Ekole-Pastorale",
+      "files_in_snapshot": 1627,
+      "functions_documented": 3,
+      "technical_entries": 3,
+      "sources_inspected": 6,
+      "zip_sha256": "34e4deee5eec446c48eb137f371c3191a2ecdebcb54edd4f6cc0fe9a065e51ca"
+    },
+    {
+      "repository": "Ekole",
+      "files_in_snapshot": 231,
+      "functions_documented": 4,
+      "technical_entries": 4,
+      "sources_inspected": 7,
+      "zip_sha256": "b66a5a25ff89b26677b758b144aadc141d603685fae7d3b0900d4bce0e2b3175"
+    },
+    {
+      "repository": "HomePage-initkoa.org",
+      "files_in_snapshot": 636,
+      "functions_documented": 4,
+      "technical_entries": 6,
+      "sources_inspected": 10,
+      "zip_sha256": "f7dd1d1c0a14be95891f67657b4b69c416e1015f0f9e2a151869419e86d7acc3"
+    },
+    {
+      "repository": "Koali-Control-Panel",
+      "files_in_snapshot": 60,
+      "functions_documented": 4,
+      "technical_entries": 4,
+      "sources_inspected": 8,
+      "zip_sha256": "a2368d75052b8b1ec78bba1664202aa784b405bbc2c1781e01704e6c81e32de6"
+    },
+    {
+      "repository": "Koali-Scenario-Mosaic",
+      "files_in_snapshot": 279,
+      "functions_documented": 4,
+      "technical_entries": 6,
+      "sources_inspected": 9,
+      "zip_sha256": "2379cfde2a73c28116d423a66aa44daa4ac3207156f90080fd2f973376cccf26"
+    },
+    {
+      "repository": "kOA-Digital-Ecosystem",
+      "files_in_snapshot": 215,
+      "functions_documented": 4,
+      "technical_entries": 4,
+      "sources_inspected": 9,
+      "zip_sha256": "d3e5c74a94cb96279c0a4709e10ad965e9444197c5019faecce3566e912999b8"
+    },
+    {
+      "repository": "Kompiler",
+      "files_in_snapshot": 222,
+      "functions_documented": 4,
+      "technical_entries": 6,
+      "sources_inspected": 13,
+      "zip_sha256": "978cfba3457a292c1d34f6ee174551577b2b39e5c77b8baf6f0a690b071670b8"
+    },
+    {
+      "repository": "Konductor",
+      "files_in_snapshot": 13,
+      "functions_documented": 2,
+      "technical_entries": 1,
+      "sources_inspected": 2,
+      "zip_sha256": "3b84dd122dfa21642ff64da983ef50e62592350e6edd56a5afb5029a31ecb582"
+    },
+    {
+      "repository": "Konstellation-Light",
+      "files_in_snapshot": 77,
+      "functions_documented": 4,
+      "technical_entries": 3,
+      "sources_inspected": 11,
+      "zip_sha256": "67305d58575d2e51c784ef5a7682be3c4a834950ccdfede09a99b1dbae83ece9"
+    },
+    {
+      "repository": "Konstellation-Publisher",
+      "files_in_snapshot": 25,
+      "functions_documented": 3,
+      "technical_entries": 2,
+      "sources_inspected": 8,
+      "zip_sha256": "9595c0e3b511a8782c875f22492859b763c1a7903bcb0740e55e8d671b042bab"
+    },
+    {
+      "repository": "Konstellation",
+      "files_in_snapshot": 293,
+      "functions_documented": 4,
+      "technical_entries": 6,
+      "sources_inspected": 11,
+      "zip_sha256": "436a3ceaa8ace6bc6ff40bd7bed84af0eb7bb0066df8e9ded7d075207a114aed"
+    },
+    {
+      "repository": "Kontainer",
+      "files_in_snapshot": 65,
+      "functions_documented": 3,
+      "technical_entries": 4,
+      "sources_inspected": 7,
+      "zip_sha256": "feadecfa7779472504f59ca715eccc97e763e4f80f61f82e602ee2e62bd2309c"
+    },
+    {
+      "repository": "Kristal-Authoring-Kit",
+      "files_in_snapshot": 273,
+      "functions_documented": 4,
+      "technical_entries": 3,
+      "sources_inspected": 8,
+      "zip_sha256": "72f5e0e82c0ed1ed8f18e37b294a60f49570e191e53f4afa47f376eb92b6b5b1"
+    },
+    {
+      "repository": "Kristal-Integration-Pack",
+      "files_in_snapshot": 50,
+      "functions_documented": 4,
+      "technical_entries": 4,
+      "sources_inspected": 11,
+      "zip_sha256": "e8fcec4623e33419789cd3dd90ae7dfaec6e189d777135672884192d93298103"
+    },
+    {
+      "repository": "Kristal-Manager",
+      "files_in_snapshot": 517,
+      "functions_documented": 4,
+      "technical_entries": 5,
+      "sources_inspected": 13,
+      "zip_sha256": "54b340631451522a25727f2b63cd91fb9c2a4242788e030c4d8e35733188003a"
+    },
+    {
+      "repository": "kristal-public",
+      "files_in_snapshot": 30,
+      "functions_documented": 3,
+      "technical_entries": 2,
+      "sources_inspected": 6,
+      "zip_sha256": "187cf90d1f40ab193cea6fac99c408de772b80e0be3dea18d0848f30baacb5f5"
+    },
+    {
+      "repository": "KristalDiag",
+      "files_in_snapshot": 355,
+      "functions_documented": 3,
+      "technical_entries": 4,
+      "sources_inspected": 6,
+      "zip_sha256": "00c2a237df0d8e7fd10a39ebe7bac757227cffecdaf81e48f38d5426f4fdfae4"
+    },
+    {
+      "repository": "LevelUpDiag-kOA-Linux",
+      "files_in_snapshot": 77,
+      "functions_documented": 3,
+      "technical_entries": 3,
+      "sources_inspected": 6,
+      "zip_sha256": "b96bbee3c488238477cdc79cce62df5aa3a6d049c6e35fe1428bb81feb9d9f38"
+    },
+    {
+      "repository": "MediKristal-LevelUpDiag-",
+      "files_in_snapshot": 86,
+      "functions_documented": 3,
+      "technical_entries": 3,
+      "sources_inspected": 8,
+      "zip_sha256": "9ddfe996c90ddfd13349b99451752d8e1729c1f1faadfaae8408495f2bff3bfb"
+    },
+    {
+      "repository": "LevelUpDiag-Orgo",
+      "files_in_snapshot": 121,
+      "functions_documented": 3,
+      "technical_entries": 6,
+      "sources_inspected": 10,
+      "zip_sha256": "6cbfecd3c557b6a483987ce4d7338db8b21a4897c1c699c111fcb944de84ee77"
+    },
+    {
+      "repository": "LevelUpDiag_SemantiK-Architect",
+      "files_in_snapshot": 75,
+      "functions_documented": 3,
+      "technical_entries": 5,
+      "sources_inspected": 10,
+      "zip_sha256": "81ebdacd533c750c177418bbfc73ed9143ef48b7b4b1e82a6902159aaacbbbea"
+    },
+    {
+      "repository": "Mediatheque-blank",
+      "files_in_snapshot": 42,
+      "functions_documented": 3,
+      "technical_entries": 4,
+      "sources_inspected": 5,
+      "zip_sha256": "434cf67400a78e0460676f098b02f1022790422a192a91968ff49bcc70119484"
+    },
+    {
+      "repository": "Mediatheque",
+      "files_in_snapshot": 416,
+      "functions_documented": 4,
+      "technical_entries": 6,
+      "sources_inspected": 12,
+      "zip_sha256": "09494c83c9264e348fc9be4942590a68a8406dc952b45a4fa1e91b8d4d4eec31"
+    },
+    {
+      "repository": "MediKristal",
+      "files_in_snapshot": 126,
+      "functions_documented": 4,
+      "technical_entries": 5,
+      "sources_inspected": 11,
+      "zip_sha256": "3711812a4b6d2ee02fe8ef215aab56214a95c44f41bb9659e0919ad30e336bd5"
+    },
+    {
+      "repository": "Orgo-Worlds",
+      "files_in_snapshot": 200,
+      "functions_documented": 4,
+      "technical_entries": 6,
+      "sources_inspected": 11,
+      "zip_sha256": "16a2eb2d96c30f4cd7cff93343330e4ad3d8ab7f265c006e5122f67db4074b1a"
+    },
+    {
+      "repository": "SemantiK-Architect",
+      "files_in_snapshot": 283,
+      "functions_documented": 4,
+      "technical_entries": 4,
+      "sources_inspected": 12,
+      "zip_sha256": "c074fab82d2eb76f200a3cb1c48ae546d3274f99104cb5b75a273ae3e7ae69c4"
+    },
+    {
+      "repository": "SemantiK_Runtime_Orchestrator",
+      "files_in_snapshot": 44,
+      "functions_documented": 4,
+      "technical_entries": 4,
+      "sources_inspected": 11,
+      "zip_sha256": "7b86f5bcfa0c0269c5dad41691d575ad7a3c786e22a7fe1945db8724c8a88f6b"
+    },
+    {
+      "repository": "SenTient",
+      "files_in_snapshot": 565,
+      "functions_documented": 3,
+      "technical_entries": 6,
+      "sources_inspected": 10,
+      "zip_sha256": "b7cdb77d93f28649799a9d679f97dc8110b22574fe0f7c2eca45e5a68dd2debe"
+    },
+    {
+      "repository": "Skope",
+      "files_in_snapshot": 491,
+      "functions_documented": 4,
+      "technical_entries": 5,
+      "sources_inspected": 10,
+      "zip_sha256": "fc574a49219816bba9ad2929b4734b7384cd4be206dbad9b719ffd57182dff4b"
+    },
+    {
+      "repository": "Spek",
+      "files_in_snapshot": 131,
+      "functions_documented": 4,
+      "technical_entries": 3,
+      "sources_inspected": 10,
+      "zip_sha256": "b0c7d1995f315f5b358d07f6095c8015bc036056ec0f5900a726a6ee0d328996"
+    },
+    {
+      "repository": "UCKK-Assets",
+      "files_in_snapshot": 60,
+      "functions_documented": 3,
+      "technical_entries": 2,
+      "sources_inspected": 5,
+      "zip_sha256": "e8f21134222eba15159b21dd84a66953ffc6e6991243a96944dedf4acb4eff44"
+    },
+    {
+      "repository": "UCKK-Ops-Console",
+      "files_in_snapshot": 52,
+      "functions_documented": 4,
+      "technical_entries": 3,
+      "sources_inspected": 6,
+      "zip_sha256": "943b1ac01e8ad12f5a0dfb08e6d320511252a021df1e331526fa9b91e4bd4633"
+    }
+  ],
+  "policy": "Representative functional source inspection, not a full validation or pass attestation. Source content not redistributed. Git commit unavailable."
+}

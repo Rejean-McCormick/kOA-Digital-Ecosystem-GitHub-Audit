@@ -1,0 +1,132 @@
+{
+  "format": "koa.private.isolated_snapshot_test_runs.v1",
+  "runs": [
+    {
+      "repository": "Rejean-McCormick/Daat",
+      "snapshot_sha256": "edbfc0e2b40ab2ffc310d39f668d17abad419373f4df040a466ce8fdc451a54b",
+      "snapshot_commit": null,
+      "framework": "pytest",
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "tests",
+        "-q",
+        "--junitxml=run.xml"
+      ],
+      "test_files": [
+        {
+          "path": "tests/test_bridge.py",
+          "sha256": "4c075392a944ac141f619bdc6017ab26a65f5f677d11c1fb07457939fe019740"
+        },
+        {
+          "path": "tests/test_cli.py",
+          "sha256": "e2043c95801a0fadb8a4775365f9d3eeb08a865ca52d41092c96cec9f2b5404d"
+        },
+        {
+          "path": "tests/test_contracts.py",
+          "sha256": "2b35edf10b950bbfccfbb289aa9d4a7468f8f83d2ef6c8d852f352e723aeafa9"
+        },
+        {
+          "path": "tests/test_mapping.py",
+          "sha256": "0dc374a2432beb09235a93239b40f713269d10108acbaf9d6322babaf91be7fe"
+        },
+        {
+          "path": "tests/test_security.py",
+          "sha256": "479a13ca1c0d9ddca11b0ba616ba2d58902e22e896964440f803194ca484d7eb"
+        }
+      ],
+      "timestamp_utc": "2026-10-30T23:36:38.109038+00:00",
+      "passed": 99,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_member": "Daat.junit.xml",
+      "junit_sha256": "0ba50dd948f988431c80918693a42811eacdc26c405c71b3c0e408a2bb263e4b",
+      "scope": "Tests autonomes exécutés sur une copie isolée du ZIP utilisateur, sans intégration externe et sans lien SHA Git attesté."
+    },
+    {
+      "repository": "Rejean-McCormick/EncyKlopedia",
+      "snapshot_sha256": "085e9084261ae466cf3b96e41129cc7fba3ba304c9274e494fb67775fa6fcd61",
+      "snapshot_commit": null,
+      "framework": "node:test",
+      "command": [
+        "node",
+        "--test-reporter=junit",
+        "--test",
+        "tests/catalog.test.mjs",
+        "tests/http.test.mjs"
+      ],
+      "test_files": [
+        {
+          "path": "tests/catalog.test.mjs",
+          "sha256": "bf0a6402c6e8abc55a6276e780a831653a9d17cdee16d3891f9856e4f6bdbc0d"
+        },
+        {
+          "path": "tests/http.test.mjs",
+          "sha256": "c345c206e1ab5200c871791a9765f9ccde7b544d74c7e99e0422fb945cd198d5"
+        }
+      ],
+      "timestamp_utc": "2026-10-30T23:36:38.709110+00:00",
+      "passed": 9,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_member": "EncyKlopedia.junit.xml",
+      "junit_sha256": "6b3c2a4bc1a7b2f0463db4ea3316e5613c5423cdd25229856b6e8e24c25fa16e",
+      "scope": "Tests autonomes exécutés sur une copie isolée du ZIP utilisateur, sans intégration externe et sans lien SHA Git attesté."
+    },
+    {
+      "repository": "Rejean-McCormick/Interaction-Kernel",
+      "snapshot_sha256": "2c8246020cf8fed89bd574da4c8da389ba1a34629ecac143a0983a308d3d5d46",
+      "snapshot_commit": null,
+      "framework": "pytest",
+      "command": [
+        "/opt/pyvenv/bin/python",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "runtime/python/tests",
+        "-q",
+        "--junitxml=run.xml"
+      ],
+      "test_files": [
+        {
+          "path": "runtime/python/tests/test_admission.py",
+          "sha256": "fbce5862c9b851d03e41c680ecc82c4defdc9c5c285529f8ec915bd529510287"
+        },
+        {
+          "path": "runtime/python/tests/test_fingerprint.py",
+          "sha256": "c9e2694c3e440f5686878ae67aab0b14c95f9af3465c265a45c31a607dd4f6b1"
+        },
+        {
+          "path": "runtime/python/tests/test_jcs.py",
+          "sha256": "455453f7f3852071820864601a3d4df8e69e3bf39028741ceff85afd8ceaf87c"
+        },
+        {
+          "path": "runtime/python/tests/test_tandem_active_profiles.py",
+          "sha256": "81fe55ad23b7eb4c5393a7eeae65f881ced837147a31e16f0ddac5f133bf413d"
+        },
+        {
+          "path": "runtime/python/tests/test_uckk_adapter.py",
+          "sha256": "5b8d9937e0a0b319b6419b7a05b69ed1eca2c5aefc3af37be66032fa2ebfea91"
+        },
+        {
+          "path": "runtime/python/tests/test_validation.py",
+          "sha256": "b7f008ada7c9370fa92adf872d16cd94c01f65553262d04b415da2cda3a72f4c"
+        }
+      ],
+      "timestamp_utc": "2026-10-30T23:36:44.668612+00:00",
+      "passed": 19,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "junit_member": "Interaction-Kernel.junit.xml",
+      "junit_sha256": "bbb04df7e66ace9978a8988233b4f610da13ddfd76a6f33c2e91467cd63e4024",
+      "scope": "Tests autonomes exécutés sur une copie isolée du ZIP utilisateur, sans intégration externe et sans lien SHA Git attesté."
+    }
+  ]
+}

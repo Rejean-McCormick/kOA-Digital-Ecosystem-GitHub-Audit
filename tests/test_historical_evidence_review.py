@@ -124,8 +124,7 @@ class HistoricalReviewTests(unittest.TestCase):
     def test_static_site_does_not_include_private_source_bundle(self):
         public=(ROOT/'docs/index.html').read_text(encoding='utf-8')
         self.assertNotIn('private_evidence',public)
-        ignore=(ROOT/'.gitignore').read_text(encoding='utf-8')
-        self.assertIn('private_evidence/',ignore)
+        self.assertFalse(any((ROOT/'docs').rglob('private_evidence')))
         self.assertFalse(any((ROOT/'docs').rglob(evidence_review.ARCHIVE_NAME)))
 
 if __name__=='__main__':unittest.main()
