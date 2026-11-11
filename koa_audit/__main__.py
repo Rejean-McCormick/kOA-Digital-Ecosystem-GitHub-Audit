@@ -67,6 +67,10 @@ def make_parser() -> argparse.ArgumentParser:
     p.add_argument("--zip", type=Path, required=True, help="Input ZIP with repos/<name>/...")
     p.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
     p.add_argument("--out", type=Path, required=True, help="New private local .json outside docs/")
+    p = sub.add_parser("ecosystem-diag-import", help="Importer une campagne inter-repos (ZIP, dossier ou summary.json), prive et metadata-only")
+    p.add_argument("--input", type=Path, required=True)
+    p.add_argument("--out", type=Path, help="Fichier JSON de sortie prive (defaut: LOCALAPPDATA)")
+    sub.add_parser("ecosystem-diag-status", help="Afficher les observations inter-repos importees, sans qualification")
     p = sub.add_parser("import-legacy", help="Import a historical summary JSON as metadata-only evidence")
     p.add_argument("--tool", choices=sorted(SCHEMAS), required=True)
     p.add_argument("--repo", required=True, help="Explicit owner/repository binding")
@@ -141,6 +145,19 @@ def execute(args: argparse.Namespace) -> int:
         print(json.dumps({"output": str(dest), "repositories": report["repositories_observed"],
                           "registered": report["registered_observed"],
                           "new_candidates": report["new_candidates"]}, ensure_ascii=False, indent=2))
+        return 0
+    if args.command == "ecosystem-diag-import":
+        from .ecosystem_diag import import_campaign
+        record, output = import_campaign(args.input, args.out)
+        print(json.dumps({"stored": str(output), "run_id": record["run_id"],
+                          "reported_verdict": record["reported_verdict"],
+                          "consistent_levels": record["integrity"]["consistent_level_results"],
+                          "missing_levels": record["integrity"]["missing_level_results"],
+                          "ecosystem_e2e_certification": "NOT_ESTABLISHED"}, ensure_ascii=False, indent=2))
+        return 0
+    if args.command == "ecosystem-diag-status":
+        from .ecosystem_diag import local_summary
+        print(json.dumps(local_summary(), ensure_ascii=False, indent=2))
         return 0
     if args.command == "import-legacy":
         result = ingest(args.tool, args.repo, args.input, member=args.member)

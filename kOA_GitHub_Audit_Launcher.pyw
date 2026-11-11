@@ -469,12 +469,14 @@ class AuditLauncher:
         triage_tab = ttk.Frame(self.advanced_tabs, padding=14)
         audit_tab = ttk.Frame(self.advanced_tabs, padding=14)
         legacy_tab = ttk.Frame(self.advanced_tabs, padding=14)
+        ecosystem_diag_tab = ttk.Frame(self.advanced_tabs, padding=14)
         self.advanced_tabs.add(settings_tab, text="  Sources et publication  ")
         self.advanced_tabs.add(reports_tab, text="  Rapports  ")
         self.advanced_tabs.add(local_tab, text="  Audit local  ")
         self.advanced_tabs.add(triage_tab, text="  Vérification  ")
         self.advanced_tabs.add(audit_tab, text="  GitHub  ")
         self.advanced_tabs.add(legacy_tab, text="  Diagnostics historiques  ")
+        self.advanced_tabs.add(ecosystem_diag_tab, text="  Diagnostic écosystème  ")
         self._build_audit(audit_tab)
         self._build_local(local_tab)
         self._build_triage(triage_tab)
@@ -486,6 +488,7 @@ class AuditLauncher:
         self._build_evidence_review(review_tab)
         self._build_campaigns(campaigns_tab)
         self._build_legacy(legacy_tab)
+        self._build_ecosystem_diag(ecosystem_diag_tab)
 
         line = ttk.Separator(outer)
         line.pack(fill="x", pady=(9, 6))
@@ -570,6 +573,84 @@ class AuditLauncher:
         self._action_button(frame, "Contre-vérifier et créer le ZIP", self._run_triage, primary=True).grid(row=2, column=1, sticky="w", pady=14)
         ttk.Label(tab, text="ZIP de métadonnées expurgées : aucun .env, aucune valeur secrète, aucun fichier source brut.",
                   style="Muted.TLabel", wraplength=900).grid(row=1, column=0, sticky="w", pady=14)
+
+    def _build_ecosystem_diag(self, tab: ttk.Frame) -> None:
+        """Private observation bridge; no application tests or repository mutations."""
+        from koa_audit import ecosystem_diag
+        tab.columnconfigure(0, weight=1)
+        tab.rowconfigure(2, weight=1)
+        ttk.Label(tab, text="Diagnostic du kOA Digital Ecosystem — observations inter-repos",
+                  style="Title.TLabel").grid(row=0, column=0, sticky="w", pady=(5, 12))
+        bar = ttk.Frame(tab)
+        bar.grid(row=1, column=0, sticky="w", pady=(0, 12))
+        ttk.Button(bar, text="Importer ZIP / summary.json", command=self._import_ecosystem_file,
+                   style="Primary.TButton").pack(side="left", padx=(0, 8))
+        ttk.Button(bar, text="Importer dossier de campagne", command=self._import_ecosystem_dir).pack(side="left", padx=(0, 8))
+        ttk.Button(bar, text="Actualiser", command=self._refresh_ecosystem_diag).pack(side="left")
+        self.ecosystem_text = ScrolledText(tab, height=17, font=("Consolas", 10), wrap="word",
+                                          bg="white", fg=NAVY, relief="solid", borderwidth=1)
+        self.ecosystem_text.grid(row=2, column=0, sticky="nsew", pady=(0, 12))
+        ttk.Label(tab, text="Métadonnées privées uniquement ; pas de traces brutes, pas de chemins locaux, "
+                  "pas de certification automatique ni d'export GitHub Pages.",
+                  style="Muted.TLabel", wraplength=900).grid(row=3, column=0, sticky="w")
+        self._refresh_ecosystem_diag()
+
+    def _import_ecosystem_file(self) -> None:
+        file = filedialog.askopenfilename(title="Choisir une campagne du Diagnostic kOA",
+                                           filetypes=(("Campagnes", "*.zip *.json"), ("Tous les fichiers", "*.*")))
+        if file:
+            self._import_ecosystem_source(Path(file))
+
+    def _import_ecosystem_dir(self) -> None:
+        folder = filedialog.askdirectory(title="Dossier contenant summary.json et levels/")
+        if folder:
+            self._import_ecosystem_source(Path(folder))
+
+    def _import_ecosystem_source(self, path: Path) -> None:
+        from koa_audit import ecosystem_diag
+        try:
+            record, _ = ecosystem_diag.import_campaign(path)
+        except (ValueError, OSError, json.JSONDecodeError, zipfile.BadZipFile) as exc:
+            messagebox.showerror("Import diagnostic écosystème", str(exc))
+            return
+        self.status.set("Campagne inter-repos importée : " + record["run_id"] + " · sans qualification automatique")
+        self._refresh_ecosystem_diag()
+
+    def _refresh_ecosystem_diag(self) -> None:
+        from koa_audit import ecosystem_diag
+        result = ecosystem_diag.local_summary()
+        self.ecosystem_text.configure(state="normal")
+        self.ecosystem_text.delete("1.0", END)
+        if result.get("state") == "not_imported":
+            message = ("Aucune campagne inter-repos importée.\n\n"
+                       "Importer le latest.zip ou summary.json produit par Diagnostic du kOA Digital Ecosystem.\n"
+                       "Les fichiers originaux restent à leur emplacement ; l'audit ne stocke que les métadonnées expurgées.")
+        else:
+            last = result["latest"]
+            summary = last["coverage"]
+            inv = summary["inventory"]
+            messages = [
+                "OBSERVATION INTER-REPOS — PAS UNE CERTIFICATION", "",
+                "Campagne : " + str(last.get("run_id")),
+                "Date : " + str(last.get("ended_at")),
+                "Verdict déclaré : " + str(last.get("reported_verdict")),
+                "Dépôts vus par le diagnostic : " + str(inv.get("present")) + "/" + str(inv.get("declared")),
+                "Dépôts tronqués : " + str(inv.get("truncated")),
+                "Relations détectées : " + str(summary.get("relations")),
+                "Appels / routes liés : " + str(summary.get("api", {}).get("routes_matched")),
+                "Traces corrélées : " + str(summary.get("traces", {}).get("correlated_pairs")),
+                "Parcours E2E déclarés : " + str(summary.get("journeys", {}).get("declared")),
+                "Parcours E2E étayés : " + str(summary.get("journeys", {}).get("evidence_complete")),
+                "E2E global rapporté : " + str(summary.get("global_e2e_reported")),
+                "Niveaux cohérents : " + str(last["integrity"]["consistent_level_results"]),
+                "Niveaux sans détail : " + str(last["integrity"]["missing_level_results"]),
+                "Signature indépendante : NON VÉRIFIÉE", "",
+                "Inventaire audit (49) et diagnostic (53) : PAS HARMONISÉS automatiquement.",
+                "Aucun statut de sécurité, d'intégration ou de production modifié.",
+            ]
+            message = "\n".join(messages)
+        self.ecosystem_text.insert("1.0", message)
+        self.ecosystem_text.configure(state="disabled")
 
     def _build_dashboard(self, tab: ttk.Frame) -> None:
         """The daily task has one obvious entrypoint; settings live in Advanced."""

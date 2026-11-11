@@ -5,9 +5,13 @@
 
   **Evidence-based qualification, continuous improvement, engineering profiles, offline auditing, and a public-safe dashboard.**
 
-  **Version 0.21.0 · Automatic evidence recognition, simplified validation labels and 47 functional spec sheets**
+  **Version 0.22.0 · Private ecosystem diagnostic bridge, evidence recognition and 47 functional spec sheets**
 </div>
 
+
+## v0.22.0 — Private bridge with Diagnostic du kOA Digital Ecosystem
+
+The audit can now **import a completed v5 LevelUpDiag ecosystem campaign** from `latest.zip`, `summary.json` or a campaign folder, with no tests or applications executed. Windows: **Outils avancés → Diagnostic écosystème**. CLI: `python -m koa_audit ecosystem-diag-import --input latest.zip` and `python -m koa_audit ecosystem-diag-status`. Imported, redacted observations are stored in the user's local application data; no raw paths, events, credentials or traces are added to the repository or GitHub Pages. Results **never change certification or security maturity**. [Integration guide](docs/ECOSYSTEM_DIAG_BRIDGE.md).
 
 ## kOA Graph — publication datée, sélectionnable / Dated selective publishing
 
