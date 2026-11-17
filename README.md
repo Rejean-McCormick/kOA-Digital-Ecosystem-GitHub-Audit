@@ -9,6 +9,11 @@
 </div>
 
 
+## Public dashboard / Tableau de bord public
+
+**[Open the kOA Graph home dashboard / Ouvrir l’accueil de kOA Graph](https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/)** — official GitHub Pages entry point for the public application directory, graph and dated documentation. Public information is limited to published, evidence-scoped content; private local assessments and campaign records are not exposed.
+
+
 ## v0.22.0 — Private bridge with Diagnostic du kOA Digital Ecosystem
 
 The audit can now **import a completed v5 LevelUpDiag ecosystem campaign** from `latest.zip`, `summary.json` or a campaign folder, with no tests or applications executed. Windows: **Outils avancés → Diagnostic écosystème**. CLI: `python -m koa_audit ecosystem-diag-import --input latest.zip` and `python -m koa_audit ecosystem-diag-status`. Imported, redacted observations are stored in the user's local application data; no raw paths, events, credentials or traces are added to the repository or GitHub Pages. Results **never change certification or security maturity**. [Integration guide](docs/ECOSYSTEM_DIAG_BRIDGE.md).
