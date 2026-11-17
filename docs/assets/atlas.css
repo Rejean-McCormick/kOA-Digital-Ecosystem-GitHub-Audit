@@ -300,3 +300,28 @@ html[lang="fr"] .en, html[lang="en"] .fr {display:none!important}
   .section, .explorer-grid, .directory, .detail { min-width: 0; max-width: 100%; }
   .map-scroller, .publication-doc-scroll { max-width: 100%; overflow-x: auto; }
 }
+
+
+/* kOA Graph v3 correction: mobile application details, November 17, 2026. */
+/* The detail tabs previously determined the grid's min-content width.
+   Keep content inside 390px, and scroll only the tab row (not the whole page). */
+@media (max-width: 740px) {
+  #apps.explorer { min-width: 0; width: auto; max-width: 100%; }
+  #apps .explorer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%; min-width: 0; max-width: 100%;
+  }
+  #apps :is(.directory, .detail) {
+    box-sizing: border-box; min-width: 0; max-width: 100%; width: 100%;
+  }
+  #apps .detail-tabs {
+    display: flex; max-width: 100%; min-width: 0; width: 100%;
+    overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  #apps .detail-tabs button { flex: 0 0 auto; white-space: nowrap; }
+  #apps :is(.detail-links, .search-wrap, .filters, .repo-list) { min-width: 0; max-width: 100%; }
+  #apps .detail-links :is(a, button) { max-width: 100%; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+  #apps .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

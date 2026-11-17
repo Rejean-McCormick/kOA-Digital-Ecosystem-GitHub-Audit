@@ -613,17 +613,21 @@
     try{const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);return await response.json();}
     catch(e){if(optional)return null;throw e;}
   }
+  // GitHub Pages is static: local qualification and private /api/* endpoints
+  // are deliberately not published. Do not request them from the public site.
+  const isPublicPages = location.hostname.toLowerCase().endsWith('.github.io');
+  const getPrivateJSON = url => isPublicPages ? Promise.resolve(null) : getJSON(url, true);
   async function refresh(){
     $('load-status').textContent='Chargement…';
     try{
       const [newAtlas, audit, local, source, campaignSummary, reviewSummary, board, candidates, graph, publishedPointer]=await Promise.all([
         getJSON('data/ecosystem.json?at='+Date.now()),
         getJSON('data/dashboard.json?at='+Date.now(),true),
-        getJSON('data/local-qualification.json?at='+Date.now(),true),
-        getJSON('/api/kristal/atlas?at='+Date.now(),true),
-        getJSON('/api/campaigns/summary?at='+Date.now(),true),
-        getJSON('/api/review/summary?at='+Date.now(),true),
-        getJSON('/api/validation/board?at='+Date.now(),true),
+        getPrivateJSON('data/local-qualification.json?at='+Date.now()),
+        getPrivateJSON('/api/kristal/atlas?at='+Date.now()),
+        getPrivateJSON('/api/campaigns/summary?at='+Date.now()),
+        getPrivateJSON('/api/review/summary?at='+Date.now()),
+        getPrivateJSON('/api/validation/board?at='+Date.now()),
         getJSON('data/documentation-candidates.json?at='+Date.now(),true),
         getJSON('data/graph-public.json?at='+Date.now(),true),
         getJSON('data/publication-current.json?at='+Date.now(),true),
