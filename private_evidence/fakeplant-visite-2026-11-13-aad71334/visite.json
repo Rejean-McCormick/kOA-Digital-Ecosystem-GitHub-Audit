@@ -1,0 +1,71 @@
+{
+  "status": "PARTIEL",
+  "mode": "visite guidée",
+  "journeys": [
+    {
+      "id": "maintenance",
+      "name": "Ingénieur mécanique14",
+      "world": "fp-electromecanique-informatique",
+      "title": "Relancer la ligne",
+      "premise": "L’équipe reprend un incident existant. Elle doit savoir d’où il vient et quelle intervention est encore ouverte.",
+      "objective": "Retrouver le signal d’origine, la tâche liée et son statut réel.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [],
+      "status": "BLOQUÉ",
+      "error": "page.goto: url: expected string, got object"
+    },
+    {
+      "id": "arbitrage",
+      "name": "Gestionnaire13",
+      "world": "fp-direction-management-hr",
+      "title": "Défendre un arbitrage",
+      "premise": "Avant d’annoncer une décision, la direction vérifie comment les résultats publics et les avis experts sont présentés.",
+      "objective": "Changer de lecture dans les résultats, puis ouvrir la méthodologie.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [],
+      "status": "BLOQUÉ",
+      "error": "page.goto: url: expected string, got object"
+    },
+    {
+      "id": "administration",
+      "name": "Secrétaire26",
+      "world": "fp-administration",
+      "title": "Passer le dossier à la relève",
+      "premise": "Un dossier passe à une autre personne. Elle doit retrouver ce qui est assigné et ce qui manque pour le reprendre.",
+      "objective": "Ouvrir une tâche du dossier, retrouver son lien retour et vérifier les commentaires existants.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [],
+      "status": "BLOQUÉ",
+      "error": "page.goto: url: expected string, got object"
+    },
+    {
+      "id": "projet",
+      "name": "Technicien service5",
+      "world": "fp-vente-pr-marketing",
+      "title": "Préparer le prochain jalon",
+      "premise": "Avant une présentation, l’équipe retrouve un projet déjà visible et vérifie ce qu’on peut annoncer à son sujet.",
+      "objective": "Filtrer le catalogue keenKonnect, ouvrir la fiche d’un projet existant et lire son état visible.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [],
+      "status": "BLOQUÉ",
+      "error": "page.goto: url: expected string, got object"
+    },
+    {
+      "id": "impact",
+      "name": "Animateur social2",
+      "world": "fp-activites-sociales",
+      "title": "Rendre compte du retour terrain",
+      "premise": "Le groupe veut savoir ce qui a été observé après la décision et où les retours sont consultables.",
+      "objective": "Ouvrir le suivi d’impact, passer aux résultats puis aux retours, en gardant le même World.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [],
+      "status": "BLOQUÉ",
+      "error": "page.goto: url: expected string, got object"
+    }
+  ]
+}

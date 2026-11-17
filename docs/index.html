@@ -28,12 +28,13 @@ html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{displa
   <nav class="rail" aria-label="Navigation principale">
 <a class="workspace-nav active" href="#validations" data-nav="validations" aria-current="page"><span aria-hidden="true">✓</span> Validations</a>
     <a class="workspace-nav" href="#apps" data-nav="applications"><span aria-hidden="true">▦</span> Applications</a>
+    <a class="workspace-nav" href="connections.html" data-koa-connections-link aria-label="kOA Connections / Passerelles">↔</a>
     <a class="workspace-nav" href="#historique-campagnes" data-nav="campagnes"><span aria-hidden="true">◷</span> Campagnes</a>
   </nav>
   <div class="content">
     <header class="topbar" id="accueil">
-      <div class="brandline"><img alt="" src="assets/logo.svg"><div><strong>kOA Digital Ecosystem</strong><small>Centre de pilotage · Preuves, systèmes et campagnes</small></div></div>
-      <div class="topactions"><div class="koa-pages-entry">
+      <div class="brandline"><img alt="" src="assets/koa-mark.svg"><div><strong>kOA Digital Ecosystem</strong><small>Centre de pilotage · Preuves, systèmes et campagnes</small></div></div>
+      <div class="topactions"><nav class="koa-bridge-toplinks" aria-label="Cross-site navigation" data-no-translate><a href="connections.html" data-koa-connections-link><span class="fr">Connexions</span><span class="en">Connections</span></a><a href="https://initkoa.org/initiative" target="_blank" rel="noopener noreferrer"><span class="fr">The kOA Initiative ↗</span><span class="en">The kOA Initiative ↗</span></a></nav><div class="koa-pages-entry">
   <a class="small-button koa-pages-link" href="https://github.com/Rejean-McCormick/kOA-Digital-Ecosystem-GitHub-Audit/actions/workflows/dashboard-pages.yml" target="_blank" rel="noopener noreferrer" title="Ouvrir le workflow de publication / Open publication workflow">
     <span class="fr">Publier sur Pages ↗</span><span class="en">Publish to Pages ↗</span>
   </a>
@@ -110,6 +111,7 @@ html[lang="fr"] .koa-pages-entry .en,html[lang="en"] .koa-pages-entry .fr{displa
             <a href="#apps"><span class="graph-fr">Applications</span><span class="graph-en">Applications</span></a>
             <a href="#validations"><span class="graph-fr">Validations</span><span class="graph-en">Evidence checks</span></a>
             <a href="#historique-campagnes"><span class="graph-fr">Campagnes</span><span class="graph-en">Campaigns</span></a>
+            <a href="connections.html" data-koa-connections-link><span class="graph-fr">Connexions ↔</span><span class="graph-en">Connections ↔</span></a>
             <a href="publications/index.html"><span class="graph-fr">Publications datées ↗</span><span class="graph-en">Frozen publications ↗</span></a>
           </div>
         </div>
@@ -170,5 +172,5 @@ if (location.hostname.toLowerCase().endsWith('.github.io')) {
 }
 </script>
 <script>if(!location.hash){history.replaceState(null,'',location.pathname+location.search+'#cartographie');}</script>
-<script defer src="assets/i18n.js"></script><script defer src="assets/atlas.js"></script><script defer src="assets/focused-graph.js?v=20261102-vertical"></script><script>fetch('data/publication-current.json').then(r=>r.ok?r.json():null).then(x=>{if(x){document.getElementById('publication-stamp').textContent='UTC '+(x.deployed_at||x.published_at);}}).catch(()=>{});</script>
+<script defer src="assets/koa-connections-bridge.js"></script><script defer src="assets/i18n.js"></script><script defer src="assets/atlas.js"></script><script defer src="assets/focused-graph.js?v=20261102-vertical"></script><script>fetch('data/publication-current.json').then(r=>r.ok?r.json():null).then(x=>{if(x){document.getElementById('publication-stamp').textContent='UTC '+(x.deployed_at||x.published_at);}}).catch(()=>{});</script>
 </body></html>

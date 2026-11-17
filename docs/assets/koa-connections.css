@@ -1,0 +1,28 @@
+:root{--brand:#1e6864;--bg:#0a1b18;--panel:#112c27;--border:#30564d;--text:#e5f5f0;--muted:#afccc3}
+*{box-sizing:border-box}html{color-scheme:dark}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,'Segoe UI',system-ui,sans-serif;line-height:1.6}
+html[lang="fr"] .en,html[lang="en"] .fr{display:none!important}a{color:#a8e3d7}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #80f2cd;outline-offset:3px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--brand);color:white;padding:.8rem}.skip:focus{left:10px;z-index:3}
+.bridge-header{padding:1.2rem clamp(1rem,4vw,3rem);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;align-items:center;gap:1rem 2rem}
+.bridge-brand{display:flex;align-items:center;gap:.8rem;margin-right:auto}.bridge-brand strong,.bridge-brand small{display:block}.bridge-brand strong{font-size:1.05rem}.bridge-brand small{color:var(--muted);font-size:.73rem}
+.bridge-header nav{display:flex;flex-wrap:wrap;gap:1rem;font-size:.9rem}.bridge-language{display:flex;gap:.4rem}
+.bridge-language button{background:var(--panel);border:1px solid var(--border);border-radius:.5rem;color:var(--text);padding:.4rem .7rem;cursor:pointer}.bridge-language button[aria-pressed="true"]{background:var(--brand);border-color:#84cfc2}
+main{max-width:1320px;margin:0 auto;padding:clamp(1rem,4vw,3.5rem)}.bridge-intro{max-width:850px}.eyebrow{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:#8bd7c7}
+h1{font-size:clamp(2.3rem,5.2vw,4.2rem);line-height:1.13;letter-spacing:-.04em;margin:.5rem 0 1.4rem}.bridge-intro>p{font-size:1.07rem;color:var(--muted)}
+.bridge-disclaimer{padding:1.1rem 1.3rem;margin:1.3rem 0 2rem;background:#163b31;border-left:4px solid #56b9a8;border-radius:.5rem;color:#d7eee6}
+.bridge-finder label{display:block;font-size:.9rem;font-weight:700;margin-bottom:.55rem}
+.bridge-finder input{background:var(--panel);border:1px solid #478978;border-radius:.6rem;color:white;padding:.8rem 1rem;width:min(100%,520px);font:inherit}
+#bridge-filters{display:flex;flex-wrap:wrap;gap:.55rem;margin:1.25rem 0}#bridge-filters button{background:var(--panel);border:1px solid var(--border);border-radius:30px;color:var(--text);padding:.55rem .95rem;cursor:pointer}
+#bridge-filters button[aria-pressed="true"]{background:#1e6864;border-color:#8bddc9;color:white}#bridge-count{color:var(--muted);font-size:.9rem}
+.bridge-records{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:1rem}
+.bridge-card{padding:1.4rem;background:var(--panel);border:1px solid var(--border);border-radius:1rem;min-width:0;display:flex;flex-direction:column}
+.bridge-card .kind{font-size:.76rem;color:#9ae6d6;text-transform:uppercase;font-weight:800;letter-spacing:.07em}
+.bridge-card h2{font-size:1.2rem;line-height:1.3;margin:.6rem 0}.bridge-card>p{font-size:.91rem;color:var(--muted);line-height:1.55;overflow-wrap:anywhere}
+.bridge-card .status{font-size:.76rem;color:#a6cebf;margin:.2rem 0 .9rem}.bridge-card .actions{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:auto;padding-top:.8rem}
+.bridge-card .actions a{display:inline-block;border-radius:.5rem;background:#20594d;border:1px solid #478a7b;padding:.45rem .75rem;font-size:.85rem;font-weight:700}
+.bridge-card .crosswalk{border-top:1px solid var(--border);padding-top:.8rem;margin-top:1rem;font-size:.77rem;color:var(--muted)}.crosswalk a{display:inline-block;margin:.25rem .4rem .1rem 0;color:#a8e3d7}
+footer{display:flex;flex-wrap:wrap;gap:1.5rem;border-top:1px solid var(--border);padding:2rem 0;margin:3rem 0 0}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Original user-provided horizontal logo (209:92) on dark Graph header */
+.bridge-brand img{display:block;height:38px;width:auto;max-width:90px;object-fit:contain;background:#e8f4ef;padding:3px 5px;border-radius:6px;box-sizing:content-box;flex-shrink:0}

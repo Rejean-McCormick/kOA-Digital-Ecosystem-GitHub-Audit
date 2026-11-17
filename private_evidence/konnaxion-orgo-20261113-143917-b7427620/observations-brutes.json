@@ -1,0 +1,13 @@
+{
+  "correlation_id": "decision:5416129552885199",
+  "decision_id": "471fa6a8-2399-47f3-9e29-ae287a6b0c30",
+  "decision_sent": "2026-11-13T19:41:12.261418Z",
+  "decision_received": "2026-11-13T19:41:12.971Z",
+  "decision_response": "2026-11-13T19:41:13.018Z",
+  "decision_status": "accepted",
+  "impact_id": "b52ff572-c6cb-44e8-9292-14339bfc0529",
+  "impact_sent": "2026-11-13T19:41:13.489Z",
+  "impact_received": "2026-11-13 19:41:17.793871+00:00",
+  "impact_response": "2026-11-13T19:41:17.797420Z",
+  "impact_status": "succeeded"
+}

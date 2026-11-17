@@ -1,0 +1,1373 @@
+{
+  "schema": "koa.connections.public-navigation.v1",
+  "language": "en",
+  "brand_color": "#1E6864",
+  "release_mode": "local_package_only",
+  "qualification_notice": "Navigation equivalences are not integration evidence. Target design, public audit records and proposed editorial crosswalks remain distinct.",
+  "source_snapshots": {
+    "site": {
+      "archive": "znapshot_HomePage_11161836.zip",
+      "architecture_format": "koa.public-architecture.v1",
+      "as_of": "2026-11-09",
+      "classification": "PUBLIC_DESIGN_METADATA_ONLY",
+      "status": "TARGET_DESIGN_NOT_DEPLOYMENT_EVIDENCE",
+      "source_sha256": "d25789c3e10702e4a17902ae7f83da6a09648605033b5b4462248963520d83b4"
+    },
+    "audit": {
+      "archive": "znapshot_kOA-D-E-GitHub-Audit_11161842.zip",
+      "inventory_as_of": "2026-10-28",
+      "inventory_sha256": "0fff4ea743dc4f25f9069c1b3094b904eab9929f51f0e761e7390ff3ae4aa546",
+      "graph_source_date": "2026-10-31",
+      "graph_source_commit_from_snapshot": "58a5fa07c18b360a1abd7a213023c6ceaa9d1533",
+      "graph_sha256": "7e5529fe336d1c329223d05f4986f72d5d0a51cb6b47ea8ddcc99476cc2c737a",
+      "focus_paths_source_date": "2026-11-01",
+      "focus_source_sha256": "617861a2403c8730f7ed13c35e1e4b7fdfbcd205b98402242f31a7d03467c9dd",
+      "publication_recorded_at": "2026-11-02T16:46:19Z",
+      "verification": "snapshot_only_not_live"
+    }
+  },
+  "repositories": [
+    {
+      "id": "repo:Rejean-McCormick/Akor",
+      "repository": "Rejean-McCormick/Akor",
+      "name": "Akor",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "education",
+      "target_role": "Collaborative educational missions and role-based learning experiences; real operational Tasks remain owned by Orgo.",
+      "audit_slug": "Akor",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Akor#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Arketype",
+      "repository": "Rejean-McCormick/Arketype",
+      "name": "Arketype",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_design",
+      "target_role": "Non-normative modeling and template material for Kristal authoring; cannot define canonical identity.",
+      "audit_slug": "Arketype",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Arketype#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Daat",
+      "repository": "Rejean-McCormick/Daat",
+      "name": "Daat",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "interoperability",
+      "target_role": "Versioned external semantic mapping, identity and policy-boundary adapters with owner-injected security gates.",
+      "audit_slug": "Daat",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Daat#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Ekole",
+      "repository": "Rejean-McCormick/Ekole",
+      "name": "Ekole",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "education",
+      "target_role": "Curriculum-neutral learning engine and student/teacher experience; institution and Moodle data stay separate.",
+      "audit_slug": "Ekole",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Ekole#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Ekole-Pastorale",
+      "repository": "Rejean-McCormick/Ekole-Pastorale",
+      "name": "Ekole-Pastorale",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "education",
+      "target_role": "Independent pastoral content pack and learning material consumed by the neutral Ekole engine.",
+      "audit_slug": "Ekole-Pastorale",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Ekole-Pastorale#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/EncyKlopedia",
+      "repository": "Rejean-McCormick/EncyKlopedia",
+      "name": "EncyKlopedia",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_delivery",
+      "target_role": "Read-only multilingual encyclopedia and public derived knowledge exploration; not a source acquirer.",
+      "audit_slug": "EncyKlopedia",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=EncyKlopedia#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/HomePage-initkoa.org",
+      "repository": "Rejean-McCormick/HomePage-initkoa.org",
+      "name": "HomePage-initkoa.org",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "public_presence",
+      "target_role": "Public initiative website and editorial discovery routes; no normative authority over product software.",
+      "audit_slug": "HomePage-initkoa.org",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=HomePage-initkoa.org#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Interaction-Kernel",
+      "repository": "Rejean-McCormick/Interaction-Kernel",
+      "name": "Interaction-Kernel",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "interoperability",
+      "target_role": "Opt-in typed envelope and cross-owner contract profiles; no ownership of participant business state.",
+      "audit_slug": "Interaction-Kernel",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Interaction-Kernel#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Karacter",
+      "repository": "Rejean-McCormick/Karacter",
+      "name": "Karacter",
+      "admission": "discovered_not_admitted",
+      "in_target_design": true,
+      "in_audit_reference_inventory": false,
+      "target_family": "creative_tooling",
+      "target_role": "Author-controlled fictional character design and narrative creative studio, not clinical or semantic canon.",
+      "audit_slug": null,
+      "audit_app_url": null
+    },
+    {
+      "id": "repo:Rejean-McCormick/Koali-Control-Panel",
+      "repository": "Rejean-McCormick/Koali-Control-Panel",
+      "name": "Koali-Control-Panel",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "platform",
+      "target_role": "Operator and developer workflow UI for safe local build and platform admission preparation.",
+      "audit_slug": "Koali-Control-Panel",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Koali-Control-Panel#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Koali-Scenario-Mosaic",
+      "repository": "Rejean-McCormick/Koali-Scenario-Mosaic",
+      "name": "Koali-Scenario-Mosaic",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "presentation",
+      "target_role": "Bilingual scenario mosaic and explanatory public interface; does not own real workflow effects.",
+      "audit_slug": "Koali-Scenario-Mosaic",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Koali-Scenario-Mosaic#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Koali-Spaces",
+      "repository": "Rejean-McCormick/Koali-Spaces",
+      "name": "Koali-Spaces",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "presentation",
+      "target_role": "Optional product presentation shell, navigation and Space lifecycle, separate from business state.",
+      "audit_slug": "Koali-Spaces",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Koali-Spaces#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kolor",
+      "repository": "Rejean-McCormick/Kolor",
+      "name": "Kolor",
+      "admission": "discovered_not_admitted",
+      "in_target_design": true,
+      "in_audit_reference_inventory": false,
+      "target_family": "creative_tooling",
+      "target_role": "Character-sheet, palette and visual studio with reviewed media exports for educational content.",
+      "audit_slug": null,
+      "audit_app_url": null
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kompiler",
+      "repository": "Rejean-McCormick/Kompiler",
+      "name": "Kompiler",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_consumption",
+      "target_role": "Local context-pack compiler from pinned derived, permitted knowledge views.",
+      "audit_slug": "Kompiler",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kompiler#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kompose",
+      "repository": "Rejean-McCormick/Kompose",
+      "name": "Kompose",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "education",
+      "target_role": "Educational scenario composition, lesson-plan preview and simulation; no direct Orgo Tasks.",
+      "audit_slug": "Kompose",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kompose#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Konductor",
+      "repository": "Rejean-McCormick/Konductor",
+      "name": "Konductor",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "agentic_runtime",
+      "target_role": "Bounded agent jobs, checkpoints, operator review and mediated external action requests.",
+      "audit_slug": "Konductor",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konductor#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Konfid",
+      "repository": "Rejean-McCormick/Konfid",
+      "name": "Konfid",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "security",
+      "target_role": "Scoped identity/policy decisions requiring verification at each product effect-point enforcement port.",
+      "audit_slug": "Konfid",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konfid#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Konnaxion",
+      "repository": "Rejean-McCormick/Konnaxion",
+      "name": "Konnaxion",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "civic",
+      "target_role": "Civic decisions, participation, finalization and accountability state, never Orgo Case/Task ownership.",
+      "audit_slug": "Konnaxion",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konnaxion#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Konnaxion-Capsule-Manager",
+      "repository": "Rejean-McCormick/Konnaxion-Capsule-Manager",
+      "name": "Konnaxion-Capsule-Manager",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "civic_operations",
+      "target_role": "Scoped capsule deployment orchestration, platform admission and privileged agent handoff.",
+      "audit_slug": "Konnaxion-Capsule-Manager",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konnaxion-Capsule-Manager#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Konnaxion-Worlds",
+      "repository": "Rejean-McCormick/Konnaxion-Worlds",
+      "name": "Konnaxion-Worlds",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "civic",
+      "target_role": "World and Universe release/context authority for the Konnaxion civic domain.",
+      "audit_slug": "Konnaxion-Worlds",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konnaxion-Worlds#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/KonnaxionDiag",
+      "repository": "Rejean-McCormick/KonnaxionDiag",
+      "name": "KonnaxionDiag",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "diagnostics",
+      "target_role": "Independent diagnostics over pinned Konnaxion and capsule/deployment revisions.",
+      "audit_slug": "KonnaxionDiag",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=KonnaxionDiag#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Konstellation",
+      "repository": "Rejean-McCormick/Konstellation",
+      "name": "Konstellation",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_consumption",
+      "target_role": "Navigation and read-only exploration of approved semantic collections and source views.",
+      "audit_slug": "Konstellation",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konstellation#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Konstellation-Light",
+      "repository": "Rejean-McCormick/Konstellation-Light",
+      "name": "Konstellation-Light",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_consumption",
+      "target_role": "Lightweight static or offline read-only exploration of pinned knowledge artifacts.",
+      "audit_slug": "Konstellation-Light",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konstellation-Light#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Konstellation-Publisher",
+      "repository": "Rejean-McCormick/Konstellation-Publisher",
+      "name": "Konstellation-Publisher",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "release_tooling",
+      "target_role": "Publication transaction rehearsal and safe packaging; not implicit live deployment permission.",
+      "audit_slug": "Konstellation-Publisher",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konstellation-Publisher#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kontainer",
+      "repository": "Rejean-McCormick/Kontainer",
+      "name": "Kontainer",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_packaging",
+      "target_role": "Integrity-checked, optionally encrypted portable knowledge and artifact containers.",
+      "audit_slug": "Kontainer",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kontainer#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kontexte",
+      "repository": "Rejean-McCormick/Kontexte",
+      "name": "Kontexte",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "education",
+      "target_role": "Reusable culturally scoped pedagogical situations for composition and supervised simulations.",
+      "audit_slug": "Kontexte",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kontexte#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kristal-Authoring-Kit",
+      "repository": "Rejean-McCormick/Kristal-Authoring-Kit",
+      "name": "Kristal-Authoring-Kit",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_authoring",
+      "target_role": "Local semantic authoring workspace, profile-bound validation and deterministic Kristal build tooling.",
+      "audit_slug": "Kristal-Authoring-Kit",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kristal-Authoring-Kit#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kristal-Framework",
+      "repository": "Rejean-McCormick/Kristal-Framework",
+      "name": "Kristal-Framework",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_core",
+      "target_role": "Canonical Kristal semantic identity, KQ/KP/KA/KS rules and versioned conformance profile.",
+      "audit_slug": "Kristal-Framework",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kristal-Framework#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kristal-Integration-Pack",
+      "repository": "Rejean-McCormick/Kristal-Integration-Pack",
+      "name": "Kristal-Integration-Pack",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "interoperability",
+      "target_role": "Versioned derived read views and consumer adapters without canonical state ownership.",
+      "audit_slug": "Kristal-Integration-Pack",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kristal-Integration-Pack#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kristal-Manager",
+      "repository": "Rejean-McCormick/Kristal-Manager",
+      "name": "Kristal-Manager",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_operations",
+      "target_role": "Local instance inventory, coordination and eligible synchronization scope; not an implicit publisher.",
+      "audit_slug": "Kristal-Manager",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kristal-Manager#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/KristalDiag",
+      "repository": "Rejean-McCormick/KristalDiag",
+      "name": "KristalDiag",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "diagnostics",
+      "target_role": "Independent semantic build/release diagnostics on exact pinned source and verifier revisions.",
+      "audit_slug": "KristalDiag",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=KristalDiag#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Kristalizer",
+      "repository": "Rejean-McCormick/Kristalizer",
+      "name": "Kristalizer",
+      "admission": "target_design_only",
+      "in_target_design": true,
+      "in_audit_reference_inventory": false,
+      "target_family": "knowledge_authoring",
+      "target_role": "Reviewed mapping, identity candidate reconciliation and staged authoring import proposals.",
+      "audit_slug": null,
+      "audit_app_url": null
+    },
+    {
+      "id": "repo:Rejean-McCormick/LevelUpDiag-Orgo",
+      "repository": "Rejean-McCormick/LevelUpDiag-Orgo",
+      "name": "LevelUpDiag-Orgo",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "diagnostics",
+      "target_role": "Independent tests and diagnostics of Orgo operational effects and task lifecycles.",
+      "audit_slug": "LevelUpDiag-Orgo",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=LevelUpDiag-Orgo#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/LevelUpDiag-kOA-Linux",
+      "repository": "Rejean-McCormick/LevelUpDiag-kOA-Linux",
+      "name": "LevelUpDiag-kOA-Linux",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "diagnostics",
+      "target_role": "Independent platform profile and release-readiness diagnostics; no permission to deploy.",
+      "audit_slug": "LevelUpDiag-kOA-Linux",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=LevelUpDiag-kOA-Linux#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/LevelUpDiag_SemantiK-Architect",
+      "repository": "Rejean-McCormick/LevelUpDiag_SemantiK-Architect",
+      "name": "LevelUpDiag_SemantiK-Architect",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "diagnostics",
+      "target_role": "Independent tests and language-runtime qualification for SemantiK Architect profiles.",
+      "audit_slug": "LevelUpDiag_SemantiK-Architect",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=LevelUpDiag_SemantiK-Architect#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/MediKristal",
+      "repository": "Rejean-McCormick/MediKristal",
+      "name": "MediKristal",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "domain_application",
+      "target_role": "Medical-domain knowledge/pathways and local domain decisions; requires independent clinical authorization.",
+      "audit_slug": "MediKristal",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=MediKristal#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/MediKristal-LevelUpDiag-",
+      "repository": "Rejean-McCormick/MediKristal-LevelUpDiag-",
+      "name": "MediKristal-LevelUpDiag-",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "diagnostics",
+      "target_role": "Engineering verification of MediKristal domain software, not medical certification.",
+      "audit_slug": "MediKristal-LevelUpDiag-",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=MediKristal-LevelUpDiag-#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Mediatheque",
+      "repository": "Rejean-McCormick/Mediatheque",
+      "name": "Mediatheque",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "source_custody",
+      "target_role": "Durable source, snapshot, representation and file custody with instance-scoped source receipts.",
+      "audit_slug": "Mediatheque",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Mediatheque#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Mediatheque-blank",
+      "repository": "Rejean-McCormick/Mediatheque-blank",
+      "name": "Mediatheque-blank",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "source_custody",
+      "target_role": "Isolated source library instance template using the shared Mediatheque custody engine.",
+      "audit_slug": "Mediatheque-blank",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Mediatheque-blank#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Orgo",
+      "repository": "Rejean-McCormick/Orgo",
+      "name": "Orgo",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "operations",
+      "target_role": "Durable operational Signals, Workflows, Cases, Tasks, outbox, real effects and terminal reconciliation.",
+      "audit_slug": "Orgo",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Orgo#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Orgo-Worlds",
+      "repository": "Rejean-McCormick/Orgo-Worlds",
+      "name": "Orgo-Worlds",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "operations",
+      "target_role": "Operational World context and release definitions under the Orgo domain owner.",
+      "audit_slug": "Orgo-Worlds",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Orgo-Worlds#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/SemantiK-Architect",
+      "repository": "Rejean-McCormick/SemantiK-Architect",
+      "name": "SemantiK-Architect",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "language",
+      "target_role": "Typed semantic-to-language planning and faithful grammatical realization under pinned runtime sets.",
+      "audit_slug": "SemantiK-Architect",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=SemantiK-Architect#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/SemantiK_Runtime_Orchestrator",
+      "repository": "Rejean-McCormick/SemantiK_Runtime_Orchestrator",
+      "name": "SemantiK_Runtime_Orchestrator",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "language",
+      "target_role": "Versioned linguistic RuntimeSet qualification sequencing, promotion and rollback without source truth ownership.",
+      "audit_slug": "SemantiK_Runtime_Orchestrator",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=SemantiK_Runtime_Orchestrator#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/SenTient",
+      "repository": "Rejean-McCormick/SenTient",
+      "name": "SenTient",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "research",
+      "target_role": "Experimental extraction and evidence-derived semantic candidates subject to explicit review.",
+      "audit_slug": "SenTient",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=SenTient#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Skope",
+      "repository": "Rejean-McCormick/Skope",
+      "name": "Skope",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "research",
+      "target_role": "Research scope selection and integrated EncyK source acquisition for noncanonical candidate/evidence packages.",
+      "audit_slug": "Skope",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Skope#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/Spek",
+      "repository": "Rejean-McCormick/Spek",
+      "name": "Spek",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "publication",
+      "target_role": "Reviewed editorial and semantic publishing layout, distinct from canonical source authorization.",
+      "audit_slug": "Spek",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Spek#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/UCKK-Assets",
+      "repository": "Rejean-McCormick/UCKK-Assets",
+      "name": "UCKK-Assets",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "education",
+      "target_role": "Independent institutional educational media and asset packs with provenance and usage rights.",
+      "audit_slug": "UCKK-Assets",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=UCKK-Assets#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/UCKK-Ops-Console",
+      "repository": "Rejean-McCormick/UCKK-Ops-Console",
+      "name": "UCKK-Ops-Console",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "education",
+      "target_role": "Institutional learning/Moodle operations and approval console, not a canonical semantic owner.",
+      "audit_slug": "UCKK-Ops-Console",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=UCKK-Ops-Console#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/diK",
+      "repository": "Rejean-McCormick/diK",
+      "name": "diK",
+      "admission": "target_design_only",
+      "in_target_design": true,
+      "in_audit_reference_inventory": false,
+      "target_family": "lexical",
+      "target_role": "Multilingual lexical dictionaries and reviewed semantic language bindings, separate from KQ/KP identity.",
+      "audit_slug": null,
+      "audit_app_url": null
+    },
+    {
+      "id": "repo:Rejean-McCormick/initkoa-docs",
+      "repository": "Rejean-McCormick/initkoa-docs",
+      "name": "initkoa-docs",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "public_presence",
+      "target_role": "MkDocs documentation portal aggregating approved owner wiki and final-system read-only documentation.",
+      "audit_slug": "initkoa-docs",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=initkoa-docs#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/kOA-Digital-Ecosystem",
+      "repository": "Rejean-McCormick/kOA-Digital-Ecosystem",
+      "name": "kOA-Digital-Ecosystem",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "coordination",
+      "target_role": "C0 coordination, final-system design, evidence and contract traceability; no product state authority.",
+      "audit_slug": "kOA-Digital-Ecosystem",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=kOA-Digital-Ecosystem#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/kOA-Linux-Koali",
+      "repository": "Rejean-McCormick/kOA-Linux-Koali",
+      "name": "kOA-Linux-Koali",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "platform",
+      "target_role": "Platform profiles, release admission, runtime policies and host-specific deployment authorization.",
+      "audit_slug": "kOA-Linux-Koali",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=kOA-Linux-Koali#apps"
+    },
+    {
+      "id": "repo:Rejean-McCormick/kristal-public",
+      "repository": "Rejean-McCormick/kristal-public",
+      "name": "kristal-public",
+      "admission": "reference",
+      "in_target_design": true,
+      "in_audit_reference_inventory": true,
+      "target_family": "knowledge_publication",
+      "target_role": "Authorized immutable public knowledge collection and read release hosting.",
+      "audit_slug": "kristal-public",
+      "audit_app_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=kristal-public#apps"
+    }
+  ],
+  "chains": [
+    {
+      "id": "chain:FC-01",
+      "title_en": "Bounded research and noncanonical acquisition",
+      "outcome": "A reviewed source/candidate batch with provenance and exact export digest",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-01"
+    },
+    {
+      "id": "chain:FC-02",
+      "title_en": "Durable source, snapshot and representation custody",
+      "outcome": "Custody receipt and immutable source/snapshot/representation references under library ACL",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-02"
+    },
+    {
+      "id": "chain:FC-03",
+      "title_en": "Mapping, reviewed external alignment and lexicon",
+      "outcome": "Versioned reversible mapping proposal, lexical catalog and explicit approval state",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-03"
+    },
+    {
+      "id": "chain:FC-04",
+      "title_en": "Canonical Kristal authoring and conformance",
+      "outcome": "Validated local Kristal state and reproducible candidate build, not a public release",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-04"
+    },
+    {
+      "id": "chain:FC-05",
+      "title_en": "Independent qualification and immutable knowledge publication",
+      "outcome": "Immutable authorized release reference or an explicit denial, with qualification and publication receipts separate",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-05"
+    },
+    {
+      "id": "chain:FC-06",
+      "title_en": "Read-only knowledge consumers and context views",
+      "outcome": "Provenance-preserving rebuildable read view, context pack or encyclopedia navigation without canonical write",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-06"
+    },
+    {
+      "id": "chain:FC-07",
+      "title_en": "Civic participation and finalized decisions",
+      "outcome": "Finalized owner DecisionRecord with legitimacy and accountable follow-up reference",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-07"
+    },
+    {
+      "id": "chain:FC-08",
+      "title_en": "Durable operational execution and accountability",
+      "outcome": "Receiver-owned Case/Task and reconciled terminal effects; optional civic accountability",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-08"
+    },
+    {
+      "id": "chain:FC-09",
+      "title_en": "World and Universe context releases",
+      "outcome": "Approved owner WorldRelease with active context reference and safe rollback",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-09"
+    },
+    {
+      "id": "chain:FC-10",
+      "title_en": "Pedagogical situations, plans and supervised missions",
+      "outcome": "Reviewed learning plan, simulated capsule or separately approved real-work intent",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-10"
+    },
+    {
+      "id": "chain:FC-11",
+      "title_en": "Neutral education engine and institutional projections",
+      "outcome": "Rebuildable learning experience and permissioned Moodle/institution receipt",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-11"
+    },
+    {
+      "id": "chain:FC-12",
+      "title_en": "Faithful multilingual realization and grammar runtime",
+      "outcome": "Faithful language realization with RuntimeSet/locale trace or an explicit missing-language verdict",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-12"
+    },
+    {
+      "id": "chain:FC-13",
+      "title_en": "Editorial documents and reviewed multilingual publication",
+      "outcome": "Reviewed accessible editorial artifact with version, provenance and publication approval",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-13"
+    },
+    {
+      "id": "chain:FC-14",
+      "title_en": "Scoped identity, policy and actual enforcement",
+      "outcome": "Bound allow/deny decision and separate effect-point enforcement receipt",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-14"
+    },
+    {
+      "id": "chain:FC-15",
+      "title_en": "Bounded agentic planning and approved owner effects",
+      "outcome": "Inspectible plan, approved typed external request and terminal owner receipt when relevant",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-15"
+    },
+    {
+      "id": "chain:FC-16",
+      "title_en": "Build, runtime admission, deploy and rollback",
+      "outcome": "Measured host lifecycle and recovery receipt distinct from content publication and UI activation",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-16"
+    },
+    {
+      "id": "chain:FC-17",
+      "title_en": "Optional Koali Space app navigation",
+      "outcome": "Admitted, accessible product surface with honest ready/degraded state",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-17"
+    },
+    {
+      "id": "chain:FC-18",
+      "title_en": "Independent diagnostics and time-scoped evidence",
+      "outcome": "Scoped diagnostic verdict and safe evidence metadata, not a release or deploy permission",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-18"
+    },
+    {
+      "id": "chain:FC-19",
+      "title_en": "Portable integrity packages and static reading",
+      "outcome": "Verified offline package with manifest, read-only import and versioned rollback path",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-19"
+    },
+    {
+      "id": "chain:FC-20",
+      "title_en": "Medical knowledge under separate safety governance",
+      "outcome": "Scoped informational or domain pathway feature subject to clinical/privacy policies",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-20"
+    },
+    {
+      "id": "chain:FC-21",
+      "title_en": "Licensed characters, palettes and educational media",
+      "outcome": "Versioned attributable media with reviewed rights and optional content-pack reference",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-21"
+    },
+    {
+      "id": "chain:FC-22",
+      "title_en": "Public discovery, docs portal and explanatory scenarios",
+      "outcome": "Accessible dated public page linking to canonical owner and accurately classified functional requirements",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-22"
+    },
+    {
+      "id": "chain:FC-23",
+      "title_en": "Typed owner-to-owner and third-party exchange",
+      "outcome": "Receiver-owned admission and terminal effect receipt, or an explicit rejection",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-23"
+    },
+    {
+      "id": "chain:FC-24",
+      "title_en": "Observability, incident containment and owner recovery",
+      "outcome": "Owner-scoped incident trace, recovered or openly degraded state and accurate public-safe status",
+      "status_raw": "target_design_not_qualified",
+      "href": "/ecosystem/functional-chains/FC-24"
+    }
+  ],
+  "paths": [
+    {
+      "id": "path:decision",
+      "title_en": "Decision → Work → Return",
+      "summary_en": "A civic decision is delivered to Orgo; results return without merging the two owners’ states.",
+      "audit_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&parcours=decision#cartographie",
+      "spine_repositories": [
+        "Rejean-McCormick/Konnaxion",
+        "Rejean-McCormick/Interaction-Kernel",
+        "Rejean-McCormick/Orgo",
+        "Rejean-McCormick/Interaction-Kernel",
+        "Rejean-McCormick/Konnaxion"
+      ]
+    },
+    {
+      "id": "path:knowledge",
+      "title_en": "Sources → Kristal → Reading",
+      "summary_en": "Source evidence and references cross separate ownership boundaries before being read in an authorized context.",
+      "audit_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&parcours=knowledge#cartographie",
+      "spine_repositories": [
+        "Rejean-McCormick/EncyKlopedia",
+        "Rejean-McCormick/Mediatheque",
+        "Rejean-McCormick/Daat",
+        "Rejean-McCormick/Kristal-Framework",
+        "Rejean-McCormick/Konstellation"
+      ]
+    },
+    {
+      "id": "path:publication",
+      "title_en": "Knowledge → Publication",
+      "summary_en": "An authorized selection feeds editorial composition; language realization remains an independent optional input.",
+      "audit_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&parcours=publication#cartographie",
+      "spine_repositories": [
+        "Rejean-McCormick/Kristal-Framework",
+        "Rejean-McCormick/Konstellation",
+        "Rejean-McCormick/Spek"
+      ]
+    },
+    {
+      "id": "path:koali",
+      "title_en": "Koali → Ecosystem → UCKK",
+      "summary_en": "Koali brings autonomous systems together; an approved resource may be published to UCKK through explicit governed exchange, preserving evidence, rights and receipts. This is a composition path, not a monolith or automatically qualified publication.",
+      "audit_url": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&parcours=koali#cartographie",
+      "spine_repositories": [
+        "Rejean-McCormick/Mediatheque",
+        "Rejean-McCormick/kOA-Linux-Koali"
+      ]
+    }
+  ],
+  "crosswalks": [
+    {
+      "id": "crosswalk:01",
+      "from": "chain:FC-07",
+      "to": "path:decision",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Target decision flow to documented decision/work path"
+    },
+    {
+      "id": "crosswalk:02",
+      "from": "chain:FC-08",
+      "to": "path:decision",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Target operations flow to documented decision/work path"
+    },
+    {
+      "id": "crosswalk:03",
+      "from": "chain:FC-23",
+      "to": "path:decision",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Owner-to-owner exchange to documented decision/work path"
+    },
+    {
+      "id": "crosswalk:04",
+      "from": "chain:FC-01",
+      "to": "path:knowledge",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Research source-custody journey"
+    },
+    {
+      "id": "crosswalk:05",
+      "from": "chain:FC-02",
+      "to": "path:knowledge",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Evidence custody and provenance"
+    },
+    {
+      "id": "crosswalk:06",
+      "from": "chain:FC-03",
+      "to": "path:knowledge",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Mapping and authorized knowledge reading"
+    },
+    {
+      "id": "crosswalk:07",
+      "from": "chain:FC-04",
+      "to": "path:knowledge",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Canonical Kristal authoring boundaries"
+    },
+    {
+      "id": "crosswalk:08",
+      "from": "chain:FC-06",
+      "to": "path:publication",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Read-only consumption and publication route"
+    },
+    {
+      "id": "crosswalk:09",
+      "from": "chain:FC-12",
+      "to": "path:publication",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Language input to publication (optional branch)"
+    },
+    {
+      "id": "crosswalk:10",
+      "from": "chain:FC-13",
+      "to": "path:publication",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Editorial publication route"
+    },
+    {
+      "id": "crosswalk:11",
+      "from": "chain:FC-11",
+      "to": "path:koali",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Education and UCKK composition route"
+    },
+    {
+      "id": "crosswalk:12",
+      "from": "chain:FC-16",
+      "to": "path:koali",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Platform admission and publication gateway"
+    },
+    {
+      "id": "crosswalk:13",
+      "from": "chain:FC-17",
+      "to": "path:koali",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Optional Koali Spaces composition"
+    },
+    {
+      "id": "crosswalk:14",
+      "from": "chain:FC-22",
+      "to": "path:koali",
+      "relation": "illustrated_by",
+      "status": "proposed_navigation_crosswalk_needs_editorial_review",
+      "editorial_note": "Discovery and public experience context"
+    }
+  ],
+  "aliases": [
+    {
+      "path": "/go/graph",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en#cartographie",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/apps",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en#apps",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/validations",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en#validations",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/initiative",
+      "target": "/initiative",
+      "kind": "internal_requires_prior_overlay",
+      "entity_id": null
+    },
+    {
+      "path": "/go/ecosystem",
+      "target": "/ecosystem",
+      "kind": "internal",
+      "entity_id": null
+    },
+    {
+      "path": "/go/connections",
+      "target": "/connections",
+      "kind": "internal_planned",
+      "entity_id": null
+    },
+    {
+      "path": "/go/mosaic",
+      "target": "https://koaliscenariomosaic.netlify.app/",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/docs",
+      "target": "https://docs.initkoa.org/",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/path/decision",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&parcours=decision#cartographie",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/path/knowledge",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&parcours=knowledge#cartographie",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/path/publication",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&parcours=publication#cartographie",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/path/koali",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&parcours=koali#cartographie",
+      "kind": "external_public",
+      "entity_id": null
+    },
+    {
+      "path": "/go/repo/akor",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Akor#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Akor"
+    },
+    {
+      "path": "/go/repo/arketype",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Arketype#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Arketype"
+    },
+    {
+      "path": "/go/repo/daat",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Daat#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Daat"
+    },
+    {
+      "path": "/go/repo/ekole",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Ekole#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Ekole"
+    },
+    {
+      "path": "/go/repo/ekole-pastorale",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Ekole-Pastorale#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Ekole-Pastorale"
+    },
+    {
+      "path": "/go/repo/encyklopedia",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=EncyKlopedia#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/EncyKlopedia"
+    },
+    {
+      "path": "/go/repo/homepage-initkoa.org",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=HomePage-initkoa.org#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/HomePage-initkoa.org"
+    },
+    {
+      "path": "/go/repo/interaction-kernel",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Interaction-Kernel#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Interaction-Kernel"
+    },
+    {
+      "path": "/go/repo/koali-control-panel",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Koali-Control-Panel#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Koali-Control-Panel"
+    },
+    {
+      "path": "/go/repo/koali-scenario-mosaic",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Koali-Scenario-Mosaic#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Koali-Scenario-Mosaic"
+    },
+    {
+      "path": "/go/repo/koali-spaces",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Koali-Spaces#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Koali-Spaces"
+    },
+    {
+      "path": "/go/repo/kompiler",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kompiler#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Kompiler"
+    },
+    {
+      "path": "/go/repo/kompose",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kompose#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Kompose"
+    },
+    {
+      "path": "/go/repo/konductor",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konductor#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Konductor"
+    },
+    {
+      "path": "/go/repo/konfid",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konfid#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Konfid"
+    },
+    {
+      "path": "/go/repo/konnaxion",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konnaxion#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Konnaxion"
+    },
+    {
+      "path": "/go/repo/konnaxion-capsule-manager",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konnaxion-Capsule-Manager#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Konnaxion-Capsule-Manager"
+    },
+    {
+      "path": "/go/repo/konnaxion-worlds",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konnaxion-Worlds#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Konnaxion-Worlds"
+    },
+    {
+      "path": "/go/repo/konnaxiondiag",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=KonnaxionDiag#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/KonnaxionDiag"
+    },
+    {
+      "path": "/go/repo/konstellation",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konstellation#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Konstellation"
+    },
+    {
+      "path": "/go/repo/konstellation-light",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konstellation-Light#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Konstellation-Light"
+    },
+    {
+      "path": "/go/repo/konstellation-publisher",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Konstellation-Publisher#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Konstellation-Publisher"
+    },
+    {
+      "path": "/go/repo/kontainer",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kontainer#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Kontainer"
+    },
+    {
+      "path": "/go/repo/kontexte",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kontexte#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Kontexte"
+    },
+    {
+      "path": "/go/repo/kristal-authoring-kit",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kristal-Authoring-Kit#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Kristal-Authoring-Kit"
+    },
+    {
+      "path": "/go/repo/kristal-framework",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kristal-Framework#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Kristal-Framework"
+    },
+    {
+      "path": "/go/repo/kristal-integration-pack",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kristal-Integration-Pack#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Kristal-Integration-Pack"
+    },
+    {
+      "path": "/go/repo/kristal-manager",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Kristal-Manager#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Kristal-Manager"
+    },
+    {
+      "path": "/go/repo/kristaldiag",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=KristalDiag#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/KristalDiag"
+    },
+    {
+      "path": "/go/repo/levelupdiag-orgo",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=LevelUpDiag-Orgo#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/LevelUpDiag-Orgo"
+    },
+    {
+      "path": "/go/repo/levelupdiag-koa-linux",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=LevelUpDiag-kOA-Linux#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/LevelUpDiag-kOA-Linux"
+    },
+    {
+      "path": "/go/repo/levelupdiag_semantik-architect",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=LevelUpDiag_SemantiK-Architect#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/LevelUpDiag_SemantiK-Architect"
+    },
+    {
+      "path": "/go/repo/medikristal",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=MediKristal#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/MediKristal"
+    },
+    {
+      "path": "/go/repo/medikristal-levelupdiag-",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=MediKristal-LevelUpDiag-#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/MediKristal-LevelUpDiag-"
+    },
+    {
+      "path": "/go/repo/mediatheque",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Mediatheque#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Mediatheque"
+    },
+    {
+      "path": "/go/repo/mediatheque-blank",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Mediatheque-blank#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Mediatheque-blank"
+    },
+    {
+      "path": "/go/repo/orgo",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Orgo#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Orgo"
+    },
+    {
+      "path": "/go/repo/orgo-worlds",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Orgo-Worlds#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Orgo-Worlds"
+    },
+    {
+      "path": "/go/repo/semantik-architect",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=SemantiK-Architect#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/SemantiK-Architect"
+    },
+    {
+      "path": "/go/repo/semantik_runtime_orchestrator",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=SemantiK_Runtime_Orchestrator#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/SemantiK_Runtime_Orchestrator"
+    },
+    {
+      "path": "/go/repo/sentient",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=SenTient#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/SenTient"
+    },
+    {
+      "path": "/go/repo/skope",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Skope#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Skope"
+    },
+    {
+      "path": "/go/repo/spek",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=Spek#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/Spek"
+    },
+    {
+      "path": "/go/repo/uckk-assets",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=UCKK-Assets#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/UCKK-Assets"
+    },
+    {
+      "path": "/go/repo/uckk-ops-console",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=UCKK-Ops-Console#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/UCKK-Ops-Console"
+    },
+    {
+      "path": "/go/repo/initkoa-docs",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=initkoa-docs#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/initkoa-docs"
+    },
+    {
+      "path": "/go/repo/koa-digital-ecosystem",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=kOA-Digital-Ecosystem#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/kOA-Digital-Ecosystem"
+    },
+    {
+      "path": "/go/repo/koa-linux-koali",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=kOA-Linux-Koali#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/kOA-Linux-Koali"
+    },
+    {
+      "path": "/go/repo/kristal-public",
+      "target": "https://rejean-mccormick.github.io/kOA-Digital-Ecosystem-GitHub-Audit/?lang=en&app=kristal-public#apps",
+      "kind": "external_public",
+      "entity_id": "repo:Rejean-McCormick/kristal-public"
+    }
+  ],
+  "relation_counts": {
+    "target_boundaries": 26,
+    "graph_conceptual_links": 7,
+    "editorial_crosswalk_proposals": 14
+  }
+}

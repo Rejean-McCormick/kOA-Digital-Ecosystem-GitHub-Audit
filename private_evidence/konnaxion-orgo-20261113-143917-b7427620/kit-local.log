@@ -1,0 +1,17 @@
+Konnaxion test World: fp-electromecanique-informatique, release ID: 1.
+Decision 5416129552885199, emission 5 queued.
+Konnaxion emission: accepted (attempts=1)
+Orgo accepted Signal c70be978-57a2-4c14-a3e3-c2236b9b0a9a.
+Orgo Signal: PROCESSED
+Orgo impact operation: SUCCEEDED
+Konnaxion impact publication 2 confirmed.
+Replay idempotency confirmed: 1 Signal, 1 impact.
+Divergent replay conflict confirmed.
+
+KONNAXION <-> ORGO IK E2E PASS
+DecisionRecord : 5416129552885199
+Signal         : c70be978-57a2-4c14-a3e3-c2236b9b0a9a
+Case           : 1d162932-29f0-4319-86f9-aae111f0c7e9
+Task           : df15fdbf-dbcb-4e55-aade-54f1b2d1533d
+Impact op      : b52ff572-c6cb-44e8-9292-14339bfc0529
+Impact row     : 2

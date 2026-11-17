@@ -1,0 +1,18 @@
+{
+  "interrepo": {
+    "exchange_trace_files": [
+      {
+        "path": "kOA-Digital-Ecosystem-GitHub-Audit/kOA-D-E-GitHub-Audit/private_evidence/konnaxion-orgo-20261113T222420Z-883ebf2e/konnaxion-observations.json",
+        "owner_repo": "Konnaxion",
+        "mode": "autonome",
+        "sha256": "372885a45fd04ce053115dfdf163f713e17624702956f95ba34356961ba3762f"
+      },
+      {
+        "path": "kOA-Digital-Ecosystem-GitHub-Audit/kOA-D-E-GitHub-Audit/private_evidence/konnaxion-orgo-20261113T222420Z-883ebf2e/orgo-observations.json",
+        "owner_repo": "Orgo",
+        "mode": "autonome",
+        "sha256": "a180cb656d384cebe6b285810eb152d2733e011c0900c8c518dc95e5ad37a358"
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "journey_id": "konnaxion-orgo-decision-impact",
+    "source_repo": "Konnaxion",
+    "target_repo": "Orgo",
+    "contract": "governance.decision.execute/1.0.0",
+    "attempt_id": "87c5d162-e23f-4f44-ac14-d7a050a4f48f",
+    "correlation_id": "decision:6898091560358452",
+    "phase": "sent",
+    "timestamp": "2026-11-13T03:46:48.470624Z"
+  },
+  {
+    "journey_id": "konnaxion-orgo-decision-impact",
+    "source_repo": "Orgo",
+    "target_repo": "Konnaxion",
+    "contract": "accountability.impact.publish/1.0.0",
+    "attempt_id": "03c7b7b9-b1ad-4087-af6f-ce2889225317",
+    "correlation_id": "180e6391-6334-4cf1-b3c4-20c5e86b1443",
+    "phase": "received",
+    "timestamp": "2026-11-13 03:46:50.707432+00:00"
+  }
+]

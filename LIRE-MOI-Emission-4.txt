@@ -1,0 +1,22 @@
+Konnaxion ↔ Orgo · archiver l'émission 4 et importer sa campagne
+
+1. Extraire le contenu du ZIP à la racine du dépôt GitHub Audit,
+   à côté de kOA_GitHub_Audit_Launcher.pyw. Le dépôt doit être sous C:\mycode.
+2. Double-cliquer sur Archiver-Emission-4.cmd. Python 3.11+ et les dépendances
+   habituelles de kOADiag et GitHub Audit doivent être disponibles pour py -3.
+
+Le lanceur utilise les deux exports locaux déjà produits dans
+C:\mycode\preuves\konnaxion-orgo-emission-4. Il archive les originaux et les
+observations dans private_evidence\konnaxion-orgo-emission-4 du dépôt Audit.
+Il accepte une relance après archivage et refuse un fichier divergent.
+
+Il conserve les traces déjà configurées et ajoute les nouvelles par une
+configuration temporaire. Il lance la validation intégrale, exporte les
+métadonnées de la campagne qui vient de finir et les importe dans GitHub Audit.
+Un verdict de campagne non réussi est affiché et renvoyé après l'import.
+L'opération est locale et passive. Elle ne rejoue pas le test métier.
+Les observations gardent la corrélation native de chaque saut. Le résultat
+du kit métier reste distinct de la qualification par kOADiag.
+
+Dossiers personnalisés, depuis PowerShell dans le dépôt Audit :
+  py -3 .\Archiver-Emission-4.py --root C:\mycode --diag 'CHEMIN_KOADIAG' --source 'DOSSIER_DES_EXPORTS'

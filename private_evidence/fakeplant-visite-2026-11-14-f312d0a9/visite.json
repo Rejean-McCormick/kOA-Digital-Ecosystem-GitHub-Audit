@@ -1,0 +1,134 @@
+{
+  "status": "EN COURS",
+  "mode": "visite guidée",
+  "journeys": [
+    {
+      "id": "maintenance",
+      "name": "Ingénieur mécanique14",
+      "world": "fp-electromecanique-informatique",
+      "title": "Suivre une décision en cours",
+      "premise": "Partir de la décision déjà reçue dans Orgo et retrouver le signal et la tâche qui lui sont liés.",
+      "objective": "Retrouver le signal d’origine, la tâche liée et son statut réel.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [
+        {
+          "label": "Portée Orgo",
+          "result": "Tenant Fakeplant · dossier existant ouvert en lecture seule.",
+          "image": "maintenance-1.png"
+        },
+        {
+          "label": "Dossier en cours",
+          "result": "Governed decision 1",
+          "image": "maintenance-2.png"
+        },
+        {
+          "label": "Signal d’origine",
+          "result": "Governed decision 1 · Processed",
+          "image": "maintenance-3.png"
+        },
+        {
+          "label": "Tâche issue de la décision",
+          "result": "Governed decision 1 · To do",
+          "image": "maintenance-4.png"
+        }
+      ],
+      "status": "VISITÉ"
+    },
+    {
+      "id": "arbitrage",
+      "name": "Gestionnaire13",
+      "world": "fp-direction-management-hr",
+      "title": "Défendre un arbitrage",
+      "premise": "Avant d’annoncer une décision, la direction vérifie comment les résultats publics et les avis experts sont présentés.",
+      "objective": "Changer de lecture dans les résultats, puis ouvrir la méthodologie.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [
+        {
+          "label": "Comprendre les deux lectures",
+          "result": "Faits sources uniques, lectures multiples La référence publique demeure visible. EkoH fournit l'expertise contextuelle; Smart Vote peut calculer ou publier une lecture consultative distincte. Une lecture manquante est affichée comme manquante, jamais fabriquée à partir de la référence. · Filtres absents dans cette vue.",
+          "image": "arbitrage-1.png"
+        },
+        {
+          "label": "Règles de lecture",
+          "result": "Méthodologie ouverte dans le même World.",
+          "image": "arbitrage-2.png"
+        }
+      ],
+      "status": "VISITÉ"
+    },
+    {
+      "id": "administration",
+      "name": "Secrétaire26",
+      "world": "fp-administration",
+      "title": "Passer le dossier à la relève",
+      "premise": "Un dossier passe à une autre personne. Elle doit retrouver ce qui est assigné et ce qui manque pour le reprendre.",
+      "objective": "Ouvrir une tâche du dossier, retrouver son lien retour et vérifier les commentaires existants.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [
+        {
+          "label": "Portée Orgo",
+          "result": "Tenant Fakeplant · dossier existant ouvert en lecture seule.",
+          "image": "administration-1.png"
+        },
+        {
+          "label": "Dossier à transmettre",
+          "result": "Révision devis Atlas-47",
+          "image": "administration-2.png"
+        },
+        {
+          "label": "Contexte de la tâche",
+          "result": "Qualifier les coûts et faire valider la combinaison Atlas-47 · 0 commentaire(s) · Unassigned",
+          "image": "administration-3.png"
+        },
+        {
+          "label": "Préparer la relève",
+          "result": "La note est préparée dans la visite. Le mode --apply la consigne dans Orgo.",
+          "image": "administration-4.png"
+        },
+        {
+          "label": "Retour au dossier",
+          "result": "Lien tâche → dossier vérifié.",
+          "image": "administration-5.png"
+        }
+      ],
+      "status": "VISITÉ"
+    },
+    {
+      "id": "projet",
+      "name": "Technicien service5",
+      "world": "fp-vente-pr-marketing",
+      "title": "Préparer le prochain jalon",
+      "premise": "Avant une présentation, l’équipe retrouve un projet déjà visible et vérifie ce qu’on peut annoncer à son sujet.",
+      "objective": "Filtrer le catalogue keenKonnect, ouvrir la fiche d’un projet existant et lire son état visible.",
+      "casting": "rôle et appartenance au World",
+      "sourceScenes": [],
+      "steps": [
+        {
+          "label": "Catalogue vide",
+          "result": "Aucun projet existant dans ce World. Ouverture de l’assistant de création.",
+          "image": "projet-1.png"
+        },
+        {
+          "label": "Brouillon du prochain jalon",
+          "result": "Titre et description saisis dans l’assistant. Brouillon non soumis.",
+          "image": "projet-2.png"
+        },
+        {
+          "label": "Retour au catalogue",
+          "result": "Assistant quitté, World Fakeplant confirmé.",
+          "image": "projet-3.png"
+        }
+      ],
+      "status": "VISITÉ"
+    }
+  ],
+  "entryErrors": [],
+  "authentication": [
+    "Konnaxion : connexion locale vérifiée par le frontend.",
+    "Orgo : connexion locale vérifiée."
+  ],
+  "orgoWorldsProbe": "Port 4100 joignable · HTTP 200"
+}
